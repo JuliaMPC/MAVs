@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="obstacle" params="idx">
+
+    <!-- root link, on the ground just below the model origin -->
+    <link name="base_footprint">
+     <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <box size="0.001 0.001 0.001" />
+        </geometry>
+      </visual>
+    </link>
+
+    <joint name="base_link_joint" type="fixed">
+      <origin xyz="0.0 0 0" rpy="0 0 0" />
+      <parent link="base_footprint"/>
+      <child link="obstacle" />
+    </joint>
+
+
+    <link name="obstacle">
+
+      <inertial>
+        <origin xyz="${x0[idx]} ${y0[idx]} ${length[idx]/2}" rpy="0 0 0"/>
+        <mass value="100.0" />
+        <inertia  ixx="0.0" ixy="0.0"  ixz="0.0"  iyy="0.0"  iyz="0.0"  izz="0.0" />
+      </inertial>
+
+      <visual>
+        <origin xyz="${x0[idx]} ${y0[idx]} ${length[idx]/2}" rpy="0 0 0"/>
+        <geometry>
+          <cylinder radius="${radius[idx]}" length="${length[idx]}"  />
+        </geometry>
+      </visual>
+
+      <collision>
+        <origin xyz="${x0[idx]} ${y0[idx]} ${length[idx]/2}" rpy="0 0 0"/>
+        <geometry>
+          <cylinder radius="${radius[idx]}" length="${length[idx]}" />
+        </geometry>
+      </collision>
+
+    </link>
+
+
+    <gazebo>
+      <material>Gazebo/Black</material>
+      <plugin name="object_controller" filename="libgazebo_ros_planar_move.so">
+        <commandTopic>cmd_vel</commandTopic>
+        <odometryTopic>odomObs</odometryTopic>
+        <odometryFrame>odomObs</odometryFrame>
+        <odometryRate>20.0</odometryRate>
+        <robotBaseFrame>base_footprintObs</robotBaseFrame>
+      </plugin>
+    </gazebo>
+
+<!--https://answers.ros.org/question/11506/different-cmd_vel-msgs-to-multiple-robots-on-gazebo/-->
+  </xacro:macro>
+
+</robot>

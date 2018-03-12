@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="body" params="base_link *base_geometry">
+
+    <!-- Base Footprint -->
+    <!-- base_footprint is a fictitious link(frame) that is on the ground right below base_link origin -->
+    <link name="base_footprint"/>
+
+    <joint name="joint1" type="fixed" >
+      <origin xyz="${x0} ${y0} ${base_clearance}" rpy="0 0 ${psi0}" />
+      <parent link="base_footprint" />
+      <child link="${base_link}" />
+    </joint>
+
+    <!-- Base Link -->
+    <!--Actual body/chassis of the robot-->
+    <link name="${base_link}" >
+      <visual>
+        <xacro:if value="${mesh_mode == 1}">
+          <origin xyz="0 0 ${-wheel_radius}" rpy="0 0 ${pi}" />
+          <geometry>
+            <mesh filename="package://vehicle_description/meshes/body.dae" scale=" ${scale_factor} ${scale_factor} ${scale_factor}"/>
+          </geometry>
+        </xacro:if>
+        <xacro:if value="${mesh_mode == 0}">
+          <origin xyz="0 0 ${base_height/2}" rpy="0 0 0" />
+          <xacro:insert_block name="base_geometry" />
+        </xacro:if>
+      </visual>
+      <collision>
+        <!--selfCollide>false</selfCollide-->
+        <origin xyz="0 0 ${base_height/2}" rpy="0 0 0" />
+        <xacro:insert_block name="base_geometry" />
+      </collision>
+      <inertial>
+        <mass value="1500"/>
+        <origin xyz="0 0 ${base_height/2}" rpy="0 0 0"/>
+        <inertia ixx="1000.0" ixy="0" ixz="0" iyy="1000.0" iyz="0" izz="1000.0"/>
+      </inertial>
+    </link>
+
+    <!-- Link1 -->
+    <gazebo reference="${base_link}">
+      <!--material>Gazebo/Orange</material-->
+      <turnGravityOff>false</turnGravityOff>
+    </gazebo>
+
+
+  </xacro:macro>
+
+</robot>

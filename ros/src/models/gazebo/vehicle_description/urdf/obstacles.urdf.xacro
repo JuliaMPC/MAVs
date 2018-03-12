@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<robot name="obstacle" xmlns:xacro="http://www.ros.org/wiki/xacro" >
+
+  <xacro:arg name="idx" default="-1"/>
+  <xacro:property name="idx" value="$(arg idx)" />
+
+  <!-- obstacles-->
+  <xacro:include filename="$(find vehicle_description)/urdf/obstacle.urdf.xacro"/>
+
+  <xacro:property name="mavs_params_file" value="$(find vehicle_description)/config/mavs_params.yaml"/>
+  <xacro:property name="mavs" value="${load_yaml(mavs_params_file)}"/>
+
+  <xacro:property name="radius" value="${mavs['mavs']['obs']['radius']}" />
+  <xacro:property name="length" value="${mavs['mavs']['obs']['length']}" />
+  <xacro:property name="x0" value="${mavs['mavs']['obs']['x0']}" />
+  <xacro:property name="y0" value="${mavs['mavs']['obs']['y0']}" />
+
+  <obstacle idx="${idx}"/>
+
+</robot>

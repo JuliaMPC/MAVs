@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<robot name="hmmwv" xmlns:xacro="http://www.ros.org/wiki/xacro" >
+
+  <!-- Vehicle body-->
+  <xacro:include filename="$(find vehicle_description)/urdf/body.xacro"/>
+  <body base_link="${base_link}">
+    <xacro:insert_block name="base_geometry" />
+  </body>
+
+  <xacro:include filename="$(find vehicle_description)/urdf/wheel.xacro"/>
+  <xacro:wheel fb="front" lr="right" parent="base_link"/>
+  <xacro:wheel fb="front" lr="left" parent="base_link"/>
+  <xacro:wheel fb="rear" lr="right" parent="base_link"/>
+  <xacro:wheel fb="rear" lr="left" parent="base_link"/>
+
+</robot>

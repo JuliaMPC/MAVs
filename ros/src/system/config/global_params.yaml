@@ -1,0 +1,5 @@
+plannerNamespace: nloptcontrol_planner
+robotNamespace: /mavs
+robotName: hmmwv
+map: map
+ground_truth_topic: base_pose_ground_truth

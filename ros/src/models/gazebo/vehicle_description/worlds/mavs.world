@@ -1,0 +1,33 @@
+<?xml version="1.0" ?>
+<sdf version="1.4">
+
+  <world name="default">
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+
+    <!-- Global light source -->
+    <include>
+      <uri>model://sun</uri>
+    </include>
+
+    <!-- Another an object -->
+    <include>
+      <uri>model://dumpster</uri>
+      <pose>20 7.0 0 0 0 0</pose>
+    </include>
+
+    <!-- Another an object -->
+    <include>
+      <uri>model://polaris_ranger_xp900</uri>
+      <pose>10.0 7.0 0 0 0 0</pose>
+    </include>
+
+    <!-- Another an object -->
+    <include>
+      <uri>model://grey_wall</uri>
+      <pose>5.0 0.0 0 0 0 1.5</pose>
+    </include>
+
+  </world>
+</sdf>
