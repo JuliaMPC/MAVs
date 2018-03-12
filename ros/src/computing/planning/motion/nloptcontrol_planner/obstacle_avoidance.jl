@@ -234,6 +234,7 @@ function loop(pub,n,c)
 
   plannerNamespace = RobotOS.get_param("plannerNamespace")
   init = false
+  useROS = true
   loop_rate = Rate(2.0) # 2 Hz
   while !is_shutdown()
       println("Running model for the: ",n.r.eval_num," time")
@@ -242,7 +243,7 @@ function loop(pub,n,c)
       setObstacleData(n.params)
       setStateData(n)
 
-      updateAutoParams!(n,c)                        # update model parameters
+      updateAutoParams!(n,c,useROS)                 # update model parameters
       status = autonomousControl!(n)                # rerun optimization
       n.mpc.t0_actual = to_sec(get_rostime())
       msg = Control()

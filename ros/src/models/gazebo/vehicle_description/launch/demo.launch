@@ -3,7 +3,6 @@
 
   <!-- teliop TODO make make it possible to initialize with other config files for vehicle and obstacle position-->
   <!-- TODO fix gazebo and RViz views on hmmwv -->
-  <!-- TODO fix display issue on the tires -->
   <!-- TODO add in an option to pause the simulation before it starts -->
 
   <arg name="external_update" default="false" doc="option to update the state of the vehicle based off of /state/ parameter"/>
