@@ -18,7 +18,7 @@ Date Create: 2/28/2018, Last Modified: 2/28/2018 \n
 """
 function loop(pub)
     robotNamespace = RobotOS.get_param("robotNamespace")
-    obs_num = length(RobotOS.get_param(string(robotNamespace,"/obs/radius")))
+    obs_num = length(RobotOS.get_param("/obs/radius"))
 
     loop_rate = Rate(5.0)
 
@@ -28,8 +28,8 @@ function loop(pub)
     while !is_shutdown()
         for i in 1:obs_num
             cmd = Twist()
-            cmd.linear.x = RobotOS.get_param(string(robotNamespace,"/obs/vx"))[i]
-            cmd.linear.y = RobotOS.get_param(string(robotNamespace,"/obs/vy"))[i]
+            cmd.linear.x = RobotOS.get_param("/obs/vx")[i]
+            cmd.linear.y = RobotOS.get_param("/obs/vy")[i]
             publish(pub[i], cmd)
         end
         rossleep(loop_rate)
@@ -45,7 +45,7 @@ Date Create: 2/28/2018, Last Modified: 2/28/2018 \n
 function main()
     init_node("rosjl_move_obstacles")
     robotNamespace = RobotOS.get_param("robotNamespace")
-    obs_num = length(RobotOS.get_param(string(robotNamespace,"/obs/radius")))
+    obs_num = length(RobotOS.get_param("/obs/radius"))
 
     RobotOS.set_param(string(robotNamespace,"/bool/init_move_obstacles"),false)
 

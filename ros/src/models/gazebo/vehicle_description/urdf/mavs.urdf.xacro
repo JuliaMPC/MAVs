@@ -1,16 +1,12 @@
 <?xml version="1.0"?>
 
-<robot name="mavs" xmlns:xacro="http://www.ros.org/wiki/xacro" >
+<robot name="" xmlns:xacro="http://www.ros.org/wiki/xacro" >
 
-  <xacro:property name="global_params_file" value="$(find vehicle_description)/config/global_params.yaml"/>
+  <xacro:property name="global_params_file" value="$(find system)/config/global_params.yaml"/>
   <xacro:property name="global_params" value="${load_yaml(global_params_file)}"/>
 
-  <xacro:property name="vehicle_params_file" value="$(find vehicle_description)/config/hmmwv_params.yaml"/>
+  <xacro:property name="vehicle_params_file" value="$(find system)/config/vehicle/hmmwv_params.yaml"/>
   <xacro:property name="vehicle" value="${load_yaml(vehicle_params_file)}"/>
-
-  <xacro:property name="mavs_params_file" value="$(find vehicle_description)/config/mavs_params.yaml"/>
-  <xacro:property name="mavs" value="${load_yaml(mavs_params_file)}"/>
-
 
   <!-- Frames, topics and names -->
   <xacro:property name="robotNamespace" value="${global_params['robotNamespace']}" />
@@ -20,9 +16,9 @@
 
 
   <!-- initial vehicle states -->
-  <xacro:property name="x0" value="${mavs['mavs']['X0']['x']}" />
-  <xacro:property name="y0" value="${mavs['mavs']['X0']['y']}" />
-  <xacro:property name="psi0" value="${mavs['mavs']['X0']['psi']}" />
+  <xacro:property name="x0" value="${global_params['X0']['x']}" />
+  <xacro:property name="y0" value="${global_params['X0']['y']}" />
+  <xacro:property name="psi0" value="${global_params['X0']['psi']}" />
 
   <xacro:property name="scale_factor" value="${vehicle['scale_factor']}" />
   <xacro:property name="mesh_mode" value="${vehicle['mesh_mode']}"/>

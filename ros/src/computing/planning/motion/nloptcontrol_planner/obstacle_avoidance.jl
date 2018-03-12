@@ -171,14 +171,23 @@ Date Create: 2/28/2018, Last Modified: 2/28/2018 \n
 """
 function setInitStateParams(c)
 
-  RobotOS.set_param("state/x", c["misc"]["X0"][1])
-  RobotOS.set_param("state/y", c["misc"]["X0"][2])
-  RobotOS.set_param("state/sa", c["misc"]["X0"][3])
-  RobotOS.set_param("state/r", c["misc"]["X0"][4])
-  RobotOS.set_param("state/psi", c["misc"]["X0"][5])
-  RobotOS.set_param("state/sa", c["misc"]["X0"][6])
-  RobotOS.set_param("state/ux", c["misc"]["X0"][7])
-  RobotOS.set_param("state/ax", c["misc"]["X0"][8])
+  #RobotOS.set_param("state/x", c["misc"]["X0"][1])
+  #RobotOS.set_param("state/y", c["misc"]["X0"][2])
+  #RobotOS.set_param("state/sa", c["misc"]["X0"][3])
+  #RobotOS.set_param("state/r", c["misc"]["X0"][4])
+  #RobotOS.set_param("state/psi", c["misc"]["X0"][5])
+  #RobotOS.set_param("state/sa", c["misc"]["X0"][6])
+  #RobotOS.set_param("state/ux", c["misc"]["X0"][7])
+  #RobotOS.set_param("state/ax", c["misc"]["X0"][8])
+
+  RobotOS.set_param("state/x", RobotOS.get_param("X0/x"))
+  RobotOS.set_param("state/y", RobotOS.get_param("X0/y"))
+  RobotOS.set_param("state/sa",RobotOS.get_param("X0/sa"))
+  RobotOS.set_param("state/r", RobotOS.get_param("X0/r"))
+  RobotOS.set_param("state/psi", RobotOS.get_param("X0/psi"))
+  RobotOS.set_param("state/sa", RobotOS.get_param("X0/sa"))
+  RobotOS.set_param("state/ux", RobotOS.get_param("X0/ux"))
+  RobotOS.set_param("state/ax", RobotOS.get_param("X0/ax"))
 
   return nothing
 end
@@ -303,7 +312,7 @@ function main()
 
 	# launch the parameters, given the names of the config files
     c = YAML.load(open(string(Pkg.dir("MAVs"),"/config/case/",case_name,".yaml")))
-    c["obstacles"] = YAML.load(open(string(Pkg.dir("MAVs"),"/config/obstacles/",obstacle_name,".yaml")))
+  #  c["obstacles"] = YAML.load(open(string(Pkg.dir("MAVs"),"/config/obstacles/",obstacle_name,".yaml")))
     # NOTE currently not using config files in this package because of this error:
     # ERROR: LoadError: SystemError: opening file /home/febbo/.rosconfig/case/RTPP.yaml: No such file or directory
     # so, when this script is ran it is not ran in its directory

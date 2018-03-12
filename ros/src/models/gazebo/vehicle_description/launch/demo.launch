@@ -8,20 +8,14 @@
 
   <arg name="external_update" default="false" doc="option to update the state of the vehicle based off of /state/ parameter"/>
   <arg name="vehicle_name" default="hmmwv"/>
-  <arg name="global_params_file" default="$(find vehicle_description)/config/global_params.yaml"/>
-  <arg name="vehicle_params_file" default="$(find vehicle_description)/config/mavs_params.yaml"/>
+  <arg name="global_params_file" default="$(find system)/config/global_params.yaml"/>
   <arg name="obstacle_num" default="3"/>
-
   <arg name="name" default="hmmwv"/>
-
 
  <param name="mavs/flags/external_update" value="$(arg external_update)"/>
 
   <!--  ************** Global Parameters ***************  -->
-  <!--param name="/use_sim_time" value="true"/-->
   <rosparam command="load" file="$(arg global_params_file)" />
-  <rosparam command="load" file="$(arg vehicle_params_file)" />
-
 
   <!-- start gazebo and load the world -->
   <include file="$(find vehicle_description)/launch/world.launch" />

@@ -7,13 +7,13 @@
   <!-- obstacles-->
   <xacro:include filename="$(find vehicle_description)/urdf/obstacle.urdf.xacro"/>
 
-  <xacro:property name="mavs_params_file" value="$(find vehicle_description)/config/mavs_params.yaml"/>
-  <xacro:property name="mavs" value="${load_yaml(mavs_params_file)}"/>
+  <xacro:property name="params_file" value="$(find system)/config/global_params.yaml"/>
+  <xacro:property name="mavs" value="${load_yaml(params_file)}"/>
 
-  <xacro:property name="radius" value="${mavs['mavs']['obs']['radius']}" />
-  <xacro:property name="length" value="${mavs['mavs']['obs']['length']}" />
-  <xacro:property name="x0" value="${mavs['mavs']['obs']['x0']}" />
-  <xacro:property name="y0" value="${mavs['mavs']['obs']['y0']}" />
+  <xacro:property name="radius" value="${mavs['obs']['radius']}" />
+  <xacro:property name="length" value="${mavs['obs']['length']}" />
+  <xacro:property name="x0" value="${mavs['obs']['x0']}" />
+  <xacro:property name="y0" value="${mavs['obs']['y0']}" />
 
   <obstacle idx="${idx}"/>
 
