@@ -69,7 +69,12 @@ function setObstacleData(params)
       vx = deepcopy(RobotOS.get_param("obstacle/vx"))
       vy = deepcopy(RobotOS.get_param("obstacle/vy"))
 
-      L = length(r)               # number of obstacles detected
+      if isnan(r[1]) # initilized, no obstacles detected
+        L = 0
+      else
+        L = length(r)               # number of obstacles detected
+      end
+
       N = Q - L;
       if N < 0
         warn(" \n The number of obstacles detected exceeds the number of obstacles the algorithm was designed for! \n
@@ -108,6 +113,7 @@ Date Create: 2/28/2018, Last Modified: 2/28/2018 \n
 --------------------------------------------------------------------------------------\n
 """
 function setInitObstacleParams(c)
+
   radius = c["obstacles"]["A"]
   center_x = c["obstacles"]["xi"]
   center_y = c["obstacles"]["yi"]
@@ -123,12 +129,12 @@ function setInitObstacleParams(c)
       vy = (vy..., velocity_y[i])
     end
 
-    # initialize obstacle field parameters
-    RobotOS.set_param("obstacle/radius",r)
-    RobotOS.set_param("obstacle/x",x)
-    RobotOS.set_param("obstacle/y",y)
-    RobotOS.set_param("obstacle/vx",vx)
-    RobotOS.set_param("obstacle/vy",vy)
+  # initialize obstacle field parameters
+  RobotOS.set_param("obstacle/radius",r)
+  RobotOS.set_param("obstacle/x",x)
+  RobotOS.set_param("obstacle/y",y)
+  RobotOS.set_param("obstacle/vx",vx)
+  RobotOS.set_param("obstacle/vy",vy)
 
   return nothing
 end
@@ -328,9 +334,11 @@ function main()
   n=initializeAutonomousControl(c);
 
   setInitStateParams(c)
+
   if RobotOS.get_param(string(plannerNamespace,"/flags/known_environment"))
     setInitObstacleParams(c)
   end
+
   loop(pub,n,c)
 end
 

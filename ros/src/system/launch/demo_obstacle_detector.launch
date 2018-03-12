@@ -1,74 +1,13 @@
 <?xml version="1.0"?>
 <launch>
-
-  <arg name="case_name" default="RTPP"/>
-  <arg name="obstacle_name" default="s1"/>
-  <arg name="known_environment" default="true"/>
-  <arg name="3DOF_plant" default="true"/>
-  <arg name="global_params_file" default="$(find system)/config/global_params.yaml"/>
+  <arg name="known_environment" default="false"/>
   <arg name="frame_id" default="velodyne_top_link" />
   <arg name="manager" default="$(arg frame_id)_nodelet_manager" />
 
-
-  <!--  ************** Global Parameters ***************  -->
-  <rosparam command="load" file="$(arg global_params_file)" />
-
-  <param name="nloptcontrol_planner/case_name" value="$(arg case_name)"/>
-  <param name="nloptcontrol_planner/obstacle_name" value="$(arg obstacle_name)"/>
-  <!-- indicates if the 3DOF plant model in VehicleModels.jl will be used-->
-  <param name="nloptcontrol_planner/flags/3DOF_plant" value="$(arg 3DOF_plant)"/>
-  <!-- indicates if the obstacle information is assumed to be known -->
-  <param name="nloptcontrol_planner/flags/known_environment" value="$(arg known_environment)"/>
-
-  <!-- Load YAML file to parameter server, currently need X0 -->
-  <!-- rosparam file="$(find nloptcontrol_planner)/config/case/$(arg case_name).yaml" command="load"/-->
-
-  <!-- Obstacle Avoidance-->
-  <node name="obstacle_avoidance" pkg="nloptcontrol_planner" type="obstacle_avoidance.jl" output="screen"/>
-
-
-
-  <!-- teliop TODO make make it possible to initialize with other config files for vehicle and obstacle position-->
-  <!-- TODO fix gazebo and RViz views on hmmwv -->
-  <!-- TODO fix display issue on the tires -->
-  <!-- TODO add in an option to pause the simulation before it starts -->
-
-  <arg name="external_update" default="false" doc="option to update the state of the vehicle based off of /state/ parameter"/>
-  <arg name="vehicle_name" default="hmmwv"/>
-  <arg name="vehicle_params_file" default="$(find vehicle_description)/config/mavs_params.yaml"/>
-  <arg name="obstacle_num" default="3"/>
-
-  <arg name="name" default="hmmwv"/>
-
-
- <param name="mavs/flags/external_update" value="$(arg external_update)"/>
-
-  <!--  ************** Global Parameters ***************  -->
-  <!--param name="/use_sim_time" value="true"/-->
-  <rosparam command="load" file="$(arg global_params_file)" />
-  <rosparam command="load" file="$(arg vehicle_params_file)" />
-
-
-  <!-- start gazebo and load the world -->
-  <include file="$(find vehicle_description)/launch/world.launch" />
-
-  <!-- launch obstacles and make them move -->
-  <include file="$(find vehicle_description)/launch/obstacles.launch">
-      <arg name="obstacle_num" value="$(arg obstacle_num)"/>
+  <include file="$(find vehicle_description)/launch/demo.launch">
+    <arg name="known_environment" value="$(arg known_environment)" />
   </include>
-  <node name="move_obstacles" pkg="vehicle_description" type="move_obstacles.jl" output="screen"/>
 
-  <!-- spawn robot into Gazebo -->
-  <param name="robot_description" command="$(find xacro)/xacro --inorder $(find vehicle_description)/urdf/mavs.urdf.xacro" />
-  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model $(arg vehicle_name)"/>
-  <node name="move_hmmwv" pkg="vehicle_description" type="move_hmmwv.jl" output="screen"/>
-
-  <!-- publish the global position of the robot -->
-  <node name="postion" pkg="vehicle_description" type="link_positions.jl" output="screen"/>
-  <node pkg="vehicle_description" type="frame_tf_broadcaster" name="frame_tf_broadcaster" />
-  <!-- TODO try to remove this and use odom and gps-->
-  <node pkg="vehicle_description" type="position_broadcaster" name="postion_broadcaster" args="$(arg name)"/>
- 
   <include file="$(find system)/launch/obstacle_detector.launch">
     <arg name="frame_id" value="$(arg frame_id)" />
     <arg name="manager" value="$(arg manager)" />
