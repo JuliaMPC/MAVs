@@ -1,0 +1,11 @@
+nodes_test.launch is created in launch folder, which can be used to connect Autoware with the obstacle detector algorithm. 
+
+Node "point_cloud_converter" is added to tranform PointCloud2(published by /points_raw) to PointCloud(subscribed by /pcl)
+*Euclidean Cluster publishes /points_raw
+*Obstacle Detector uses /pcl
+
+Scanner base coordinate transform is set relative to base link in Autoware instead of map.
+
+obstacle_extractor, obstacle_tracker are active, obstacle merger and obstacle publisher are not active.
+
+

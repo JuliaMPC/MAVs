@@ -13,7 +13,9 @@ int main(int argc, char** argv){
   while(n.ok()){
     broadcaster1.sendTransform(
       tf::StampedTransform(
-        tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.0, 0.0, 0.5)),
+        // tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.0, 0.0, 0.5)),
+	// T.Q. 	
+	tf::Transform(tf::Quaternion(0.0, 0.0, 0.7071, 0.7071), tf::Vector3(0.0, 0.0, 0.5)),
         ros::Time::now(),"base_footprint", "base_link"));
 
     broadcaster2.sendTransform(

@@ -1,0 +1,121 @@
+<!-- Reusable launch file for obstacle detection -->
+<launch>
+
+  <arg name="frame_id" default="velodyne_top_link" />
+  <arg name="manager" default="$(arg frame_id)_nodelet_manager" />
+  
+  <node name="obstacle_paramameters" pkg="obstacle_detector" type="obstacle_parameters.jl" output="screen"/>
+  
+  <param name="use_sim_time" value="true"/>  
+  <node name="scans_demo" pkg="rosbag" type="play" output="screen" args="--clock --loop $(find obstacle_detector)/resources/PCL.bag"/>
+
+  <node pkg="tf2_ros" type="static_transform_publisher" name="map_to_scanner_base" args="0 0  0 1.57079632679 0 0 map robot"/>
+  <node pkg="tf2_ros" type="static_transform_publisher" name="scanner_base_to_front_scanner" args="0 0 0 0 0 0 robot $(arg frame_id)"/>
+
+   <!-- Convert PointCloud2 to PointCloud1 -->
+  <node pkg="point_cloud_converter" name="point_cloud_converter" type="point_cloud_converter_node" >
+    <remap from="points2_in" to="/voxel_grid/output"/>
+    <remap from="points_out" to="/pcl" />
+		<!--
+		<remap from="points2_in" to="velodyne_points"/>
+		<remap from="points_out" to="velodyne_points" />
+		-->
+  </node>
+  
+  <node name="$(arg manager)" pkg="nodelet" type="nodelet" args="manager" output="screen">
+    <param name="num_worker_threads" value="20"/>
+  </node>
+
+  <!-- Run a VoxelGrid filter to clean NaNs and downsample the data -->
+  <node name="voxel_grid" pkg="nodelet" type="nodelet" args="load pcl/VoxelGrid $(arg manager)" output="screen">
+    <remap from="~input" to="/lidar_points"/>
+    <rosparam>
+      filter_field_name: z
+      filter_limit_min: 0.01
+      filter_limit_max: 3.5
+      filter_limit_negative: False
+      leaf_size: 0.01
+    </rosparam>
+  </node>
+
+ <!-- remove scan merger -->
+ <node name="scans_merger" pkg="nodelet" type="nodelet" args="load obstacle_detector/ScansMerger $(arg manager)">
+    <param name="active"            value="true"/>
+    <param name="publish_scan"      value="false"/>
+    <param name="publish_pcl"       value="true"/>
+
+    <param name="ranges_num"        value="1000"/>
+
+    <param name="min_scanner_range" value="0.05"/>
+    <param name="max_scanner_range" value="100."/>
+
+    <param name="min_x_range"       value="-100.0"/>
+    <param name="max_x_range"       value="100.0"/>
+    <param name="min_y_range"       value="-100.0"/>
+    <param name="max_y_range"       value="100.0"/>
+
+    <param name="fixed_frame_id"    value="map"/>
+    <param name="target_frame_id"   value="base_link"/>
+  </node>
+
+  <node name="obstacle_extractor" pkg="nodelet" type="nodelet" args="load obstacle_detector/ObstacleExtractor $(arg manager)">
+    <param name="active"               value="true"/>
+    <param name="publish_scan"      value="false"/>
+    <param name="publish_pcl"       value="true"/>
+
+    <param name="use_split_and_merge"    value="true"/>
+    <param name="circles_from_visibles"  value="true"/>
+    <param name="discard_converted_segments" value="false"/>
+    <param name="transform_coordinates"  value="true"/>
+
+    <param name="min_group_points"     value="5"/>
+    <param name="max_group_distance"   value="0.5"/>
+    <param name="distance_proportion"  value="0.001"/>
+    <param name="max_split_distance"   value="5"/>
+    <param name="max_merge_separation" value="3"/>
+    <param name="max_merge_spread"     value="2"/>
+    <param name="max_circle_radius"    value="4"/>
+    <param name="radius_enlargement"   value="0.3"/>
+
+    <param name="frame_id"             value="world" />
+  </node>
+
+  <node name="obstacle_tracker" pkg="nodelet" type="nodelet" args="load obstacle_detector/ObstacleTracker $(arg manager)">
+    <param name="active"                  value="true"/>
+
+    <param name="loop_rate"               value="100.0"/>
+    <param name="tracking_duration"       value="1"/>
+    <param name="min_correspondence_cost" value="0.6"/>
+    <param name="std_correspondence_dev"  value="0.15"/>
+    <param name="process_variance"        value="0.1"/>
+    <param name="process_rate_variance"   value="0.1"/>
+    <param name="measurement_variance"    value="1.0"/>
+
+    <param name="frame_id"                value="world" />
+
+    <remap from="tracked_obstacles" to="obstacles"/>
+  </node>
+
+  <node name="obstacle_publisher" pkg="nodelet" type="nodelet" args="load obstacle_detector/ObstaclePublisher $(arg manager)">
+    <param name="active"           value="false"/>
+    <param name="reset"            value="false"/>
+
+    <param name="fusion_example"   value="false"/>
+    <param name="fission_example"  value="false"/>
+
+    <param name="loop_rate"        value="10.0"/>
+    <param name="radius_margin"    value="0.25"/>
+
+    <rosparam param="x_vector">[10.0]</rosparam>
+    <rosparam param="y_vector">[0.0]</rosparam>
+    <rosparam param="r_vector">[1.0]</rosparam>
+    <rosparam param="vx_vector">[0.0]</rosparam>
+    <rosparam param="vy_vector">[0.0]</rosparam>
+
+    <param name="frame_id"         value="world"/>
+  </node>
+
+  <node name="rviz" pkg="rviz" type="rviz" output="screen" args="-d $(find obstacle_detector)/resources/obstacle_detector.rviz"/>
+
+</launch>
+<!-- -->
