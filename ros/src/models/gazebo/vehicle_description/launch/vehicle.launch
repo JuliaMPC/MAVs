@@ -2,6 +2,7 @@
 <launch>
 
   <arg name="vehicle_name" default="hmmwv"/>
+  <arg name="global_params_file" default="$(find system)/config/global.yaml"/>
   <arg name="vehicle_params_file" default="$(find system)/config/vehicle/hmmwv.yaml"/>
   <arg name="case_params_file" default="$(find system)/config/case/case1.yaml"/>
   <arg name="gui" default="true"/>
@@ -12,7 +13,7 @@
   </include>
 
   <!-- spawn robot into Gazebo -->
-  <param name="robot_description" command="$(find xacro)/xacro --inorder $(find vehicle_description)/urdf/mavs.urdf.xacro vehicle_params_file:=$(arg vehicle_params_file) case_params_file:=$(arg case_params_file)" />
+  <param name="robot_description" command="$(find xacro)/xacro --inorder $(find vehicle_description)/urdf/mavs.urdf.xacro global_params_file:=$(arg global_params_file) vehicle_params_file:=$(arg vehicle_params_file) case_params_file:=$(arg case_params_file)" />
   <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model $(arg vehicle_name)"/>
 
 </launch>

@@ -1,128 +1,129 @@
 <?xml version="1.0"?>
 <launch>
-  <arg name="obstacle_num" default="-1" />
+  <arg name="obstacle_num" default="3"/>
+  <arg name="case_params_file" default="$(find system)/config/case/case1.yaml"/>
+
 
 <!-- spawn obstacles -->
 <group ns="Obstacle1" if="$(eval arg('obstacle_num')  > 0)">
   <arg name="idx" value="0"/>
-  <param name="obstacles" command="$(find xacro)/xacro --inorder $(find vehicle_description)/urdf/obstacles.urdf.xacro idx:=$(arg idx)" />
+  <param name="obstacles" command="$(find xacro)/xacro --inorder $(find vehicle_description)/urdf/obstacles.urdf.xacro idx:=$(arg idx) case_params_file:=$(arg case_params_file)" />
   <node args="-urdf -param obstacles -model obstacle_$(arg idx)" name="spawn_obstacles" output="screen" pkg="gazebo_ros" respawn="false" type="spawn_model" />
 </group>
 
 <group ns="Obstacle2" if="$(eval arg('obstacle_num')  > 1)">
   <arg name="idx" value="1"/>
-  <param name="obstacles" command="$(find xacro)/xacro --inorder $(find vehicle_description)/urdf/obstacles.urdf.xacro idx:=$(arg idx)" />
+  <param name="obstacles" command="$(find xacro)/xacro --inorder $(find vehicle_description)/urdf/obstacles.urdf.xacro idx:=$(arg idx) case_params_file:=$(arg case_params_file)" />
   <node args="-urdf -param obstacles -model obstacle_$(arg idx)" name="spawn_obstacles" output="screen" pkg="gazebo_ros" respawn="false" type="spawn_model" />
 </group>
 
 
 <group ns="Obstacle3" if="$(eval arg('obstacle_num')  > 2)">
   <arg name="idx" value="2"/>
-  <param name="obstacles" command="$(find xacro)/xacro --inorder $(find vehicle_description)/urdf/obstacles.urdf.xacro idx:=$(arg idx)" />
+  <param name="obstacles" command="$(find xacro)/xacro --inorder $(find vehicle_description)/urdf/obstacles.urdf.xacro idx:=$(arg idx) case_params_file:=$(arg case_params_file)" />
   <node args="-urdf -param obstacles -model obstacle_$(arg idx)" name="spawn_obstacles" output="screen" pkg="gazebo_ros" respawn="false" type="spawn_model" />
 </group>
 
 <group ns="Obstacle4" if="$(eval arg('obstacle_num')  > 3)">
   <arg name="idx" value="3"/>
-  <param name="obstacles" command="$(find xacro)/xacro --inorder $(find vehicle_description)/urdf/obstacles.urdf.xacro idx:=$(arg idx)" />
+  <param name="obstacles" command="$(find xacro)/xacro --inorder $(find vehicle_description)/urdf/obstacles.urdf.xacro idx:=$(arg idx) case_params_file:=$(arg case_params_file)" />
   <node args="-urdf -param obstacles -model obstacle_$(arg idx)" name="spawn_obstacles" output="screen" pkg="gazebo_ros" respawn="false" type="spawn_model" />
 </group>
 
 <group ns="Obstacle5" if="$(eval arg('obstacle_num')  > 4)">
   <arg name="idx" value="4"/>
-  <param name="obstacles" command="$(find xacro)/xacro --inorder $(find vehicle_description)/urdf/obstacles.urdf.xacro idx:=$(arg idx)" />
+  <param name="obstacles" command="$(find xacro)/xacro --inorder $(find vehicle_description)/urdf/obstacles.urdf.xacro idx:=$(arg idx) case_params_file:=$(arg case_params_file)" />
   <node args="-urdf -param obstacles -model obstacle_$(arg idx)" name="spawn_obstacles" output="screen" pkg="gazebo_ros" respawn="false" type="spawn_model" />
 </group>
 
 <group ns="Obstacle6" if="$(eval arg('obstacle_num')  > 5)">
   <arg name="idx" value="5"/>
-  <param name="obstacles" command="$(find xacro)/xacro --inorder $(find vehicle_description)/urdf/obstacles.urdf.xacro idx:=$(arg idx)" />
+  <param name="obstacles" command="$(find xacro)/xacro --inorder $(find vehicle_description)/urdf/obstacles.urdf.xacro idx:=$(arg idx) case_params_file:=$(arg case_params_file)" />
   <node args="-urdf -param obstacles -model obstacle_$(arg idx)" name="spawn_obstacles" output="screen" pkg="gazebo_ros" respawn="false" type="spawn_model" />
 </group>
 
 <group ns="Obstacle7" if="$(eval arg('obstacle_num')  > 6)">
   <arg name="idx" value="6"/>
-  <param name="obstacles" command="$(find xacro)/xacro --inorder $(find vehicle_description)/urdf/obstacles.urdf.xacro idx:=$(arg idx)" />
+  <param name="obstacles" command="$(find xacro)/xacro --inorder $(find vehicle_description)/urdf/obstacles.urdf.xacro idx:=$(arg idx) case_params_file:=$(arg case_params_file)" />
   <node args="-urdf -param obstacles -model obstacle_$(arg idx)" name="spawn_obstacles" output="screen" pkg="gazebo_ros" respawn="false" type="spawn_model" />
 </group>
 
 <group ns="Obstacle8" if="$(eval arg('obstacle_num')  > 7)">
   <arg name="idx" value="7"/>
-  <param name="obstacles" command="$(find xacro)/xacro --inorder $(find vehicle_description)/urdf/obstacles.urdf.xacro idx:=$(arg idx)" />
+  <param name="obstacles" command="$(find xacro)/xacro --inorder $(find vehicle_description)/urdf/obstacles.urdf.xacro idx:=$(arg idx) case_params_file:=$(arg case_params_file)" />
   <node args="-urdf -param obstacles -model obstacle_$(arg idx)" name="spawn_obstacles" output="screen" pkg="gazebo_ros" respawn="false" type="spawn_model" />
 </group>
 
 <group ns="Obstacle9" if="$(eval arg('obstacle_num')  > 8)">
   <arg name="idx" value="8"/>
-  <param name="obstacles" command="$(find xacro)/xacro --inorder $(find vehicle_description)/urdf/obstacles.urdf.xacro idx:=$(arg idx)" />
+  <param name="obstacles" command="$(find xacro)/xacro --inorder $(find vehicle_description)/urdf/obstacles.urdf.xacro idx:=$(arg idx) case_params_file:=$(arg case_params_file)" />
   <node args="-urdf -param obstacles -model obstacle_$(arg idx)" name="spawn_obstacles" output="screen" pkg="gazebo_ros" respawn="false" type="spawn_model" />
 </group>
 
 <group ns="Obstacle10" if="$(eval arg('obstacle_num')  > 9)">
   <arg name="idx" value="9"/>
-  <param name="obstacles" command="$(find xacro)/xacro --inorder $(find vehicle_description)/urdf/obstacles.urdf.xacro idx:=$(arg idx)" />
+  <param name="obstacles" command="$(find xacro)/xacro --inorder $(find vehicle_description)/urdf/obstacles.urdf.xacro idx:=$(arg idx) case_params_file:=$(arg case_params_file)" />
   <node args="-urdf -param obstacles -model obstacle_$(arg idx)" name="spawn_obstacles" output="screen" pkg="gazebo_ros" respawn="false" type="spawn_model" />
 </group>
 
 <group ns="Obstacle11" if="$(eval arg('obstacle_num')  > 10)">
   <arg name="idx" value="10"/>
-  <param name="obstacles" command="$(find xacro)/xacro --inorder $(find vehicle_description)/urdf/obstacles.urdf.xacro idx:=$(arg idx)" />
+  <param name="obstacles" command="$(find xacro)/xacro --inorder $(find vehicle_description)/urdf/obstacles.urdf.xacro idx:=$(arg idx) case_params_file:=$(arg case_params_file)" />
   <node args="-urdf -param obstacles -model obstacle_$(arg idx)" name="spawn_obstacles" output="screen" pkg="gazebo_ros" respawn="false" type="spawn_model" />
 </group>
 
 <group ns="Obstacle12" if="$(eval arg('obstacle_num')  > 11)">
   <arg name="idx" value="11"/>
-  <param name="obstacles" command="$(find xacro)/xacro --inorder $(find vehicle_description)/urdf/obstacles.urdf.xacro idx:=$(arg idx)" />
+  <param name="obstacles" command="$(find xacro)/xacro --inorder $(find vehicle_description)/urdf/obstacles.urdf.xacro idx:=$(arg idx) case_params_file:=$(arg case_params_file)" />
   <node args="-urdf -param obstacles -model obstacle_$(arg idx)" name="spawn_obstacles" output="screen" pkg="gazebo_ros" respawn="false" type="spawn_model" />
 </group>
 
 <group ns="Obstacle13" if="$(eval arg('obstacle_num')  > 12)">
   <arg name="idx" value="12"/>
-  <param name="obstacles" command="$(find xacro)/xacro --inorder $(find vehicle_description)/urdf/obstacles.urdf.xacro idx:=$(arg idx)" />
+  <param name="obstacles" command="$(find xacro)/xacro --inorder $(find vehicle_description)/urdf/obstacles.urdf.xacro idx:=$(arg idx) case_params_file:=$(arg case_params_file)" />
   <node args="-urdf -param obstacles -model obstacle_$(arg idx)" name="spawn_obstacles" output="screen" pkg="gazebo_ros" respawn="false" type="spawn_model" />
 </group>
 
 <group ns="Obstacle14" if="$(eval arg('obstacle_num')  > 13)">
   <arg name="idx" value="13"/>
-  <param name="obstacles" command="$(find xacro)/xacro --inorder $(find vehicle_description)/urdf/obstacles.urdf.xacro idx:=$(arg idx)" />
+  <param name="obstacles" command="$(find xacro)/xacro --inorder $(find vehicle_description)/urdf/obstacles.urdf.xacro idx:=$(arg idx) case_params_file:=$(arg case_params_file)" />
   <node args="-urdf -param obstacles -model obstacle_$(arg idx)" name="spawn_obstacles" output="screen" pkg="gazebo_ros" respawn="false" type="spawn_model" />
 </group>
 
 <group ns="Obstacle15" if="$(eval arg('obstacle_num')  > 14)">
   <arg name="idx" value="14"/>
-  <param name="obstacles" command="$(find xacro)/xacro --inorder $(find vehicle_description)/urdf/obstacles.urdf.xacro idx:=$(arg idx)" />
+  <param name="obstacles" command="$(find xacro)/xacro --inorder $(find vehicle_description)/urdf/obstacles.urdf.xacro idx:=$(arg idx) case_params_file:=$(arg case_params_file)" />
   <node args="-urdf -param obstacles -model obstacle_$(arg idx)" name="spawn_obstacles" output="screen" pkg="gazebo_ros" respawn="false" type="spawn_model" />
 </group>
 
 <group ns="Obstacle16" if="$(eval arg('obstacle_num')  > 15)">
   <arg name="idx" value="15"/>
-  <param name="obstacles" command="$(find xacro)/xacro --inorder $(find vehicle_description)/urdf/obstacles.urdf.xacro idx:=$(arg idx)" />
+  <param name="obstacles" command="$(find xacro)/xacro --inorder $(find vehicle_description)/urdf/obstacles.urdf.xacro idx:=$(arg idx) case_params_file:=$(arg case_params_file)" />
   <node args="-urdf -param obstacles -model obstacle_$(arg idx)" name="spawn_obstacles" output="screen" pkg="gazebo_ros" respawn="false" type="spawn_model" />
 </group>
 
 <group ns="Obstacle17" if="$(eval arg('obstacle_num')  > 16)">
   <arg name="idx" value="16"/>
-  <param name="obstacles" command="$(find xacro)/xacro --inorder $(find vehicle_description)/urdf/obstacles.urdf.xacro idx:=$(arg idx)" />
+  <param name="obstacles" command="$(find xacro)/xacro --inorder $(find vehicle_description)/urdf/obstacles.urdf.xacro idx:=$(arg idx) case_params_file:=$(arg case_params_file)" />
   <node args="-urdf -param obstacles -model obstacle_$(arg idx)" name="spawn_obstacles" output="screen" pkg="gazebo_ros" respawn="false" type="spawn_model" />
 </group>
 
 <group ns="Obstacle18" if="$(eval arg('obstacle_num')  > 17)">
   <arg name="idx" value="17"/>
-  <param name="obstacles" command="$(find xacro)/xacro --inorder $(find vehicle_description)/urdf/obstacles.urdf.xacro idx:=$(arg idx)" />
+  <param name="obstacles" command="$(find xacro)/xacro --inorder $(find vehicle_description)/urdf/obstacles.urdf.xacro idx:=$(arg idx) case_params_file:=$(arg case_params_file)" />
   <node args="-urdf -param obstacles -model obstacle_$(arg idx)" name="spawn_obstacles" output="screen" pkg="gazebo_ros" respawn="false" type="spawn_model" />
 </group>
 
 <group ns="Obstacle19" if="$(eval arg('obstacle_num')  > 18)">
   <arg name="idx" value="18"/>
-  <param name="obstacles" command="$(find xacro)/xacro --inorder $(find vehicle_description)/urdf/obstacles.urdf.xacro idx:=$(arg idx)" />
+  <param name="obstacles" command="$(find xacro)/xacro --inorder $(find vehicle_description)/urdf/obstacles.urdf.xacro idx:=$(arg idx) case_params_file:=$(arg case_params_file)" />
   <node args="-urdf -param obstacles -model obstacle_$(arg idx)" name="spawn_obstacles" output="screen" pkg="gazebo_ros" respawn="false" type="spawn_model" />
 </group>
 
 <group ns="Obstacle20" if="$(eval arg('obstacle_num')  > 19)">
   <arg name="idx" value="19"/>
-  <param name="obstacles" command="$(find xacro)/xacro --inorder $(find vehicle_description)/urdf/obstacles.urdf.xacro idx:=$(arg idx)" />
+  <param name="obstacles" command="$(find xacro)/xacro --inorder $(find vehicle_description)/urdf/obstacles.urdf.xacro idx:=$(arg idx) case_params_file:=$(arg case_params_file)" />
   <node args="-urdf -param obstacles -model obstacle_$(arg idx)" name="spawn_obstacles" output="screen" pkg="gazebo_ros" respawn="false" type="spawn_model" />
 </group>
-
 
 </launch>

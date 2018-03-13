@@ -1,5 +1,9 @@
-plannerNamespace: nloptcontrol_planner
-robotNamespace: /mavs
-robotName: hmmwv
-map: map
-ground_truth_topic: base_pose_ground_truth
+system:
+ vehicle_description:
+  flags:
+   postion_update_external: false
+   lidar_initialized: false
+   obstacles_initialized: false
+ nloptcontrol_planner:
+  flags:
+    tmp: false

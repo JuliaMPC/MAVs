@@ -2,18 +2,23 @@
 <robot name="obstacle" xmlns:xacro="http://www.ros.org/wiki/xacro" >
 
   <xacro:arg name="idx" default="-1"/>
+  <xacro:arg name="case_params_file" default="-1"/>
+
   <xacro:property name="idx" value="$(arg idx)" />
+
+  <xacro:property name="case_params_file" value="$(arg case_params_file)"/>
+  <xacro:property name="case" value="${load_yaml(case_params_file)}"/>
 
   <!-- obstacles-->
   <xacro:include filename="$(find vehicle_description)/urdf/obstacle.urdf.xacro"/>
 
-  <xacro:property name="params_file" value="$(find system)/config/global_params.yaml"/>
+  <xacro:property name="params_file" value="$(arg case_params_file)"/>
   <xacro:property name="mavs" value="${load_yaml(params_file)}"/>
 
-  <xacro:property name="radius" value="${mavs['obs']['radius']}" />
-  <xacro:property name="length" value="${mavs['obs']['length']}" />
-  <xacro:property name="x0" value="${mavs['obs']['x0']}" />
-  <xacro:property name="y0" value="${mavs['obs']['y0']}" />
+  <xacro:property name="radius" value="${case['case']['actual']['obstacle']['radius']}" />
+  <xacro:property name="length" value="${case['case']['actual']['obstacle']['length']}" />
+  <xacro:property name="x0" value="${case['case']['actual']['obstacle']['x0']}" />
+  <xacro:property name="y0" value="${case['case']['actual']['obstacle']['y0']}" />
 
   <obstacle idx="${idx}"/>
 
