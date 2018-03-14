@@ -6,4 +6,4 @@ system:
    obstacles_initialized: false
  nloptcontrol_planner:
   flags:
-    tmp: false
+   known_environment: true
