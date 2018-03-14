@@ -7,8 +7,8 @@ the initial desired path. The vehicle's states are published in a ROS msg and al
 ## Main Packages
 
  - traj_gen_chrono
- - ros_chrono
- - ros_chrono_msgs
+ - ros_chrono_traj
+ - ros_chrono_traj_msgs
 
 ## How to Build
 
@@ -22,7 +22,7 @@ $ catkin_make
 
 ```
 $ cd $HOME/MAVs/ros
-$ roslaunch ros_chrono path_follower.launch
+$ roslaunch ros_chrono_traj path_follower.launch
 
 ```
 ## Change Vehicle Initial Conditions
@@ -30,7 +30,7 @@ $ roslaunch ros_chrono path_follower.launch
 To change intiial conditions, initial trajectory, or turn off the GUI (work in progress), edit the parameters in the HMMWV YAML config file:
 
 ```
-$ sudo gedit ros/src/system/chrono/ros_chrono/config/hmmwv_params.yaml
+$ sudo gedit ros/src/system/chrono/ros_chrono_traj/config/hmmwv_params.yaml
 
 ```
 

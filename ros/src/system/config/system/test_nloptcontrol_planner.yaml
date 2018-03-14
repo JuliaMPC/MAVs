@@ -1,9 +1,4 @@
 system:
- vehicle_description:
-  flags:
-   postion_update_external: false
-   lidar_initialized: false
-   obstacles_initialized: false
  nloptcontrol_planner:
   namespace: nloptcontrol
   flags:

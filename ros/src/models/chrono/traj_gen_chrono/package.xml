@@ -34,8 +34,8 @@
   <run_depend>roscpp</run_depend>
   <run_depend>rospy</run_depend>
   <run_depend>std_msgs</run_depend>
-  <build_depend>ros_chrono_msgs</build_depend>
-  <run_depend>ros_chrono_msgs</run_depend>
+  <build_depend>ros_chrono_traj_msgs</build_depend>
+  <run_depend>ros_chrono_traj_msgs</run_depend>
 
 
   <!-- for obstacle message service -->
