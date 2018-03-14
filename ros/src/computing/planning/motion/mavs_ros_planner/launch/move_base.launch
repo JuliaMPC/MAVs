@@ -1,0 +1,22 @@
+<!-- Note this launch file presumes that all vechile and sensor nodes
+are up an running -->
+
+ <!--source: http://wiki.ros.org/navigation/Tutorials/RobotSetup -->
+
+ <launch>
+   <master auto="start"/>
+
+   <!-- Convert PointCloud2 to PointCloud1 -->
+    <node pkg="point_cloud_converter" name="point_cloud_converter" type="point_cloud_converter_node" >
+      <remap from="points2_in" to="/lidar_points"/>
+      <remap from="points_out" to="/mavs_pcl" />
+    </node>
+
+   <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+     <rosparam file="$(find system)/config/planner/ros_base_planner/costmap_common_params.yaml" command="load" ns="global_costmap" />
+     <rosparam file="$(find system)/config/planner/ros_base_planner/costmap_common_params.yaml" command="load" ns="local_costmap" />
+     <rosparam file="$(find system)/config/planner/ros_base_planner/local_costmap_params.yaml" command="load" />
+     <rosparam file="$(find system)/config/planner/ros_base_planner/global_costmap_params.yaml" command="load" />
+     <rosparam file="$(find system)/config/planner/ros_base_planner/base_local_planner_params.yaml" command="load" />
+   </node>
+ </launch>
