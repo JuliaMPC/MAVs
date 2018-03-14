@@ -28,10 +28,9 @@ Date Create: 2/28/2018, Last Modified: 2/28/2018 \n
 function loop_straight_line(set_state,get_state)
     loop_rate = Rate(5.0)
 
-    modelName = RobotOS.get_param("robotName")
-    robotNamespace = RobotOS.get_param("robotNamespace")
+    modelName = RobotOS.get_param("vehicle/vehicle_description/robotName")
 
-    RobotOS.set_param(string(robotNamespace,"/flags/init_lidar"),true)
+    RobotOS.set_param("system/vehicle_description/flags/lidar_initialized",true)
     println("lidar simulation in Gazebo has been initialized")
     while !is_shutdown()
 
@@ -75,10 +74,9 @@ Date Create: 2/28/2018, Last Modified: 2/28/2018 \n
 function loop(set_state,get_state)
     loop_rate = Rate(5.0)
 
-    modelName = RobotOS.get_param("robotName")
-    robotNamespace = RobotOS.get_param("robotNamespace")
+    modelName = RobotOS.get_param("vehicle/vehicle_description/robotName")
 
-    RobotOS.set_param(string(robotNamespace,"/flags/init_lidar"),true)
+    RobotOS.set_param("system/vehicle_description/flags/lidar_initialized",true)
     println("lidar simulation in Gazebo has been initialized")
     while !is_shutdown()
 
@@ -114,10 +112,6 @@ Date Create: 2/28/2018, Last Modified: 2/28/2018 \n
 """
 function main()
     init_node("rosjl_move_hmmwv")
-    robotNamespace = RobotOS.get_param("robotNamespace")
-
-    # indicates if the problem has been initialized
-    RobotOS.set_param(string(robotNamespace,"/flags/init_lidar"),false)
 
     # Set up service to get Gazebo model state
     const get_state = ServiceProxy("/gazebo/get_model_state", GetModelState)
@@ -129,7 +123,7 @@ function main()
     println("Waiting for 'gazebo/set_model_state' service...")
     wait_for_service("gazebo/set_model_state")
 
-    if !RobotOS.get_param(string(robotNamespace,"/flags/external_update"))
+    if !RobotOS.get_param("system/vehicle_description/flags/postion_update_external")
         loop_straight_line(set_state,get_state)
     else
         loop(set_state,get_state)

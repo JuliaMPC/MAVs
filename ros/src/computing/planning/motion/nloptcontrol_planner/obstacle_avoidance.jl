@@ -36,7 +36,7 @@ function setTrajParams(msg::Control)
     end
 
     # update trajectory parameters
-    plannerNamespace = RobotOS.get_param("plannerNamespace")
+    plannerNamespace = RobotOS.get_param("system/nloptcontrol_planner/namespace")
 
     RobotOS.set_param(string(plannerNamespace,"/traj/t"),t)
     RobotOS.set_param(string(plannerNamespace,"/traj/x"),x)
@@ -176,24 +176,14 @@ Date Create: 2/28/2018, Last Modified: 2/28/2018 \n
 --------------------------------------------------------------------------------------\n
 """
 function setInitStateParams(c)
-
-  #RobotOS.set_param("state/x", c["misc"]["X0"][1])
-  #RobotOS.set_param("state/y", c["misc"]["X0"][2])
-  #RobotOS.set_param("state/sa", c["misc"]["X0"][3])
-  #RobotOS.set_param("state/r", c["misc"]["X0"][4])
-  #RobotOS.set_param("state/psi", c["misc"]["X0"][5])
-  #RobotOS.set_param("state/sa", c["misc"]["X0"][6])
-  #RobotOS.set_param("state/ux", c["misc"]["X0"][7])
-  #RobotOS.set_param("state/ax", c["misc"]["X0"][8])
-
-  RobotOS.set_param("state/x", RobotOS.get_param("X0/x"))
-  RobotOS.set_param("state/y", RobotOS.get_param("X0/y"))
-  RobotOS.set_param("state/sa",RobotOS.get_param("X0/sa"))
-  RobotOS.set_param("state/r", RobotOS.get_param("X0/r"))
-  RobotOS.set_param("state/psi", RobotOS.get_param("X0/psi"))
-  RobotOS.set_param("state/sa", RobotOS.get_param("X0/sa"))
-  RobotOS.set_param("state/ux", RobotOS.get_param("X0/ux"))
-  RobotOS.set_param("state/ax", RobotOS.get_param("X0/ax"))
+  RobotOS.set_param("state/x", RobotOS.get_param("case/actual/X0/x"))
+  RobotOS.set_param("state/y", RobotOS.get_param("case/actual/X0/y"))
+  RobotOS.set_param("state/sa",RobotOS.get_param("case/actual/X0/sa"))
+  RobotOS.set_param("state/r", RobotOS.get_param("case/actual/X0/r"))
+  RobotOS.set_param("state/psi", RobotOS.get_param("case/actual/X0/psi"))
+  RobotOS.set_param("state/sa", RobotOS.get_param("case/actual/X0/sa"))
+  RobotOS.set_param("state/ux", RobotOS.get_param("case/actual/X0/ux"))
+  RobotOS.set_param("state/ax", RobotOS.get_param("case/actual/X0/ax"))
 
   return nothing
 end
@@ -232,8 +222,8 @@ Date Create: 4/6/2017, Last Modified: 3/10/2018 \n
 """
 function loop(pub,n,c)
 
-  plannerNamespace = RobotOS.get_param("plannerNamespace")
   init = false
+  useROS = true
   loop_rate = Rate(2.0) # 2 Hz
   while !is_shutdown()
       println("Running model for the: ",n.r.eval_num," time")
@@ -242,7 +232,7 @@ function loop(pub,n,c)
       setObstacleData(n.params)
       setStateData(n)
 
-      updateAutoParams!(n,c)                        # update model parameters
+      updateAutoParams!(n,c,useROS)                 # update model parameters
       status = autonomousControl!(n)                # rerun optimization
       n.mpc.t0_actual = to_sec(get_rostime())
       msg = Control()
@@ -261,6 +251,7 @@ function loop(pub,n,c)
       if getvalue(n.tf) < 0.01 # assuming that the final time is a design variable, could check, but this module uses tf as a DV
         if ((n.r.dfs_plant[end][:x][end]-c["goal"]["x"])^2 + (n.r.dfs_plant[end][:y][end]-c.g.y_ref)^2)^0.5 < 4*n.XF_tol[1]
            println("Expanded Goal Attained! \n"); n.mpc.goal_reached=true;
+           RobotOS.set_param("system/nloptcontrol_planner/flags/goal_attained",true)
            break;
        else
            warn("Expanded Goal Not Attained! -> stopping simulation! \n"); break;
@@ -269,19 +260,20 @@ function loop(pub,n,c)
 
       n.mpc.t0_actual = (n.r.eval_num-1)*n.mpc.tex  # external so that it can be updated easily in PathFollowing
 
-      if RobotOS.get_param("nloptcontrol_planner/flags/3DOF_plant") # otherwise an external update on the initial state of the vehicle is needed
+      if RobotOS.get_param("system/nloptcontrol_planner/flags/3DOF_plant") # otherwise an external update on the initial state of the vehicle is needed
         simPlant!(n)      # simulating plant in VehicleModels.jl
-        setStateParams(n) # update X0 parameters in ROS
+        setStateParams(n) # update X0 parameters in ROS and in NLOptControl.jl
       end
 
       if ((n.r.dfs_plant[end][:x][end]-c["goal"]["x"])^2 + (n.r.dfs_plant[end][:y][end]-c["goal"]["y"])^2)^0.5 < 2*n.XF_tol[1]
          println("Goal Attained! \n"); n.mpc.goal_reached=true;
+         RobotOS.set_param("system/nloptcontrol_planner/flags/goal_attained",true)
          break;
       end
 
       if !init  # calling this node initialized after the first solve so that /traj/ parameters are set
         init = true
-        RobotOS.set_param("nloptcontrol_planner/flags/init",true)
+        RobotOS.set_param("system/nloptcontrol_planner/flags/initilized",true)
         println("nloptcontrol_planner has been initialized.")
       end
       rossleep(loop_rate)  # sleep for leftover time
@@ -295,12 +287,6 @@ Date Create: 4/6/2017, Last Modified: 3/10/2018 \n
 --------------------------------------------------------------------------------------\n
 """
 function main()
-
-  # indicates if the problem has been initialized
-  plannerNamespace = RobotOS.get_param("plannerNamespace")
-
-  RobotOS.set_param("nloptcontrol_planner/flags/init",false)
-
   # TODO implement this
   # indicates if the user would like to pause the planner
   # RobotOS.set_param("nloptcontrol_planner/flags/pause",true
@@ -308,34 +294,47 @@ function main()
   println("initializing nloptcontrol_planner node ...")
   init_node("nloptcontrol_planner")
 
-  if !RobotOS.has_param(string(plannerNamespace,"/case_name"))
-      error("Please set the nloptcontrol_planner/case_name")
-  elseif !RobotOS.has_param(string(plannerNamespace,"/obstacle_name"))
-      error("Please set the nloptcontrol_planner/obstacle_name")
-  else
-    case_name = RobotOS.get_param(string(plannerNamespace,"/case_name"))
-    obstacle_name = RobotOS.get_param(string(plannerNamespace,"/obstacle_name"))
-
-	# launch the parameters, given the names of the config files
-    c = YAML.load(open(string(Pkg.dir("MAVs"),"/config/case/",case_name,".yaml")))
-  #  c["obstacles"] = YAML.load(open(string(Pkg.dir("MAVs"),"/config/obstacles/",obstacle_name,".yaml")))
-    # NOTE currently not using config files in this package because of this error:
-    # ERROR: LoadError: SystemError: opening file /home/febbo/.rosconfig/case/RTPP.yaml: No such file or directory
-    # so, when this script is ran it is not ran in its directory
-    #c = YAML.load(open(string(pwd(),"config/case/",case_name,".yaml")))
-    #c["obstacles"] = YAML.load(open(string(pwd(),"config/obstacles/",obstacle_name,".yaml")))
-    setConfig(c, "misc"; (:N=>40), (:solver=>:Ipopt), (:integrationScheme=>:trapezoidal))
-  end
-
   # message for solution to optimal control problem
+  plannerNamespace = RobotOS.get_param("system/nloptcontrol_planner/namespace")
   pub = Publisher{Control}(string(plannerNamespace,"/control"), queue_size=10)
   sub = Subscriber{Control}(string(plannerNamespace, "/control"), setTrajParams, queue_size = 10)
+
+
+  # get the parameters
+  if !RobotOS.has_param("planner/nloptcontrol_planner/misc")
+      error("Please set rosparam:planner/nloptcontrol_planner/misc")
+  elseif !RobotOS.has_param("case")
+      error("Please set rosparam: case")
+  elseif !RobotOS.has_param("planner/nloptcontrol_planner")
+      error("Please set rosparam: planner/nloptcontrol_planner")
+  end
+  c = YAML.load(open(string(Pkg.dir("MAVs"),"/config/empty.yaml")))
+  c["misc"] = RobotOS.get_param("planner/nloptcontrol_planner/misc")
+  c["goal"] = RobotOS.get_param("case/goal")
+  c["X0"] = RobotOS.get_param("case/actual/X0")
+  if RobotOS.get_param("system/nloptcontrol_planner/flags/known_environment")
+    c["obstacle"] = RobotOS.get_param("case/actual/obstacle")
+  else
+    c["obstacle"] = RobotOS.get_param("case/assumed/obstacle")
+  end
+  c["weights"] = RobotOS.get_param("planner/nloptcontrol_planner/weights")
+  c["tolerances"] = RobotOS.get_param("planner/nloptcontrol_planner/tolerances")
+  c["solver"] = RobotOS.get_param("planner/nloptcontrol_planner/solver")
+  # convert to Symbol, integrationScheme, N, Nck
+  #println(typeof(c["misc"]["solver"]) )
+  c["misc"]["integrationScheme"] = Symbol(c["misc"]["integrationScheme"])
+  c["misc"]["model"] = Symbol(c["misc"]["model"])
+  c["misc"]["solver"] = Symbol(c["misc"]["solver"])
+  c["misc"]["N"] = Symbol(c["misc"]["N"])
+
+  println(typeof(c["misc"]["Xlims"]) )
+  println(c["misc"]["Xlims"] )
 
   n=initializeAutonomousControl(c);
 
   setInitStateParams(c)
 
-  if RobotOS.get_param(string(plannerNamespace,"/flags/known_environment"))
+  if RobotOS.get_param("system/nloptcontrol_planner/flags/known_environment")
     setInitObstacleParams(c)
   end
 

@@ -13,23 +13,22 @@ import geometry_msgs.msg: Twist
 """
 --------------------------------------------------------------------------------------\n
 Author: Huckleberry Febbo, Graduate Student, University of Michigan
-Date Create: 2/28/2018, Last Modified: 2/28/2018 \n
+Date Create: 2/28/2018, Last Modified: 3/12/2018 \n
 --------------------------------------------------------------------------------------\n
 """
 function loop(pub)
-    robotNamespace = RobotOS.get_param("robotNamespace")
-    obs_num = length(RobotOS.get_param("/obs/radius"))
+    obs_num = length(RobotOS.get_param("/case/actual/obstacle/radius"))
 
     loop_rate = Rate(5.0)
 
-    RobotOS.set_param(string(robotNamespace,"/bool/init_move_obstacles"),true)
+    RobotOS.set_param("system/vehicle_description/bool/init_move_obstacles",true)
     println("obstacle plugin in julia has been initialized.")
 
     while !is_shutdown()
         for i in 1:obs_num
             cmd = Twist()
-            cmd.linear.x = RobotOS.get_param("/obs/vx")[i]
-            cmd.linear.y = RobotOS.get_param("/obs/vy")[i]
+            cmd.linear.x = RobotOS.get_param("/case/actual/obstacle/vx")[i]
+            cmd.linear.y = RobotOS.get_param("/case/actual/obstacle/vy")[i]
             publish(pub[i], cmd)
         end
         rossleep(loop_rate)
@@ -39,15 +38,13 @@ end
 """
 --------------------------------------------------------------------------------------\n
 Author: Huckleberry Febbo, Graduate Student, University of Michigan
-Date Create: 2/28/2018, Last Modified: 2/28/2018 \n
+Date Create: 2/28/2018, Last Modified: 3/12/2018 \n
 --------------------------------------------------------------------------------------\n
 """
 function main()
     init_node("rosjl_move_obstacles")
-    robotNamespace = RobotOS.get_param("robotNamespace")
-    obs_num = length(RobotOS.get_param("/obs/radius"))
 
-    RobotOS.set_param(string(robotNamespace,"/bool/init_move_obstacles"),false)
+    obs_num = length(RobotOS.get_param("/case/actual/obstacle/radius"))
 
     pub = Array{Publisher{Twist}}(obs_num)
 

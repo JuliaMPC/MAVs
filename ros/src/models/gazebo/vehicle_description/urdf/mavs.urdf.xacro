@@ -1,34 +1,36 @@
 <?xml version="1.0"?>
 
-<robot name="" xmlns:xacro="http://www.ros.org/wiki/xacro" >
+<robot name="mavs" xmlns:xacro="http://www.ros.org/wiki/xacro" >
 
-  <xacro:property name="global_params_file" value="$(find system)/config/global_params.yaml"/>
-  <xacro:property name="global_params" value="${load_yaml(global_params_file)}"/>
+  <xacro:arg name="vehicle_params_file" default="-1"/>
+  <xacro:arg name="case_params_file" default="-1"/>
 
-  <xacro:property name="vehicle_params_file" value="$(find system)/config/vehicle/hmmwv_params.yaml"/>
+  <xacro:property name="vehicle_params_file" value="$(arg vehicle_params_file)"/>
   <xacro:property name="vehicle" value="${load_yaml(vehicle_params_file)}"/>
 
-  <!-- Frames, topics and names -->
-  <xacro:property name="robotNamespace" value="${global_params['robotNamespace']}" />
-  <xacro:property name="robotName" value="${global_params['robotName']}" />
-  <xacro:property name="map" value="${global_params['map']}" />
-  <xacro:property name="ground_truth_topic" value="${global_params['ground_truth_topic']}" />
+  <xacro:property name="case_params_file" value="$(arg case_params_file)"/>
+  <xacro:property name="case" value="${load_yaml(case_params_file)}"/>
 
+  <!-- Frames, topics and names -->
+  <xacro:property name="robotNamespace" value="${vehicle['vehicle']['vehicle_description']['robotNamespace']}" />
+  <xacro:property name="robotName" value="${vehicle['vehicle']['vehicle_description']['robotName']}" />
+  <xacro:property name="frameName" value="${vehicle['vehicle']['vehicle_description']['frameName']}" />
+  <xacro:property name="ground_truth_topic" value="${vehicle['vehicle']['vehicle_description']['ground_truth_topic']}" />
 
   <!-- initial vehicle states -->
-  <xacro:property name="x0" value="${global_params['X0']['x']}" />
-  <xacro:property name="y0" value="${global_params['X0']['y']}" />
-  <xacro:property name="psi0" value="${global_params['X0']['psi']}" />
+  <xacro:property name="x0" value="${case['case']['actual']['X0']['x']}" />
+  <xacro:property name="y0" value="${case['case']['actual']['X0']['yVal']}" />
+  <xacro:property name="psi0" value="${case['case']['actual']['X0']['psi']}" />
 
-  <xacro:property name="scale_factor" value="${vehicle['scale_factor']}" />
-  <xacro:property name="mesh_mode" value="${vehicle['mesh_mode']}"/>
+  <xacro:property name="scale_factor" value="${vehicle['vehicle']['vehicle_description']['scale_factor']}" />
+  <xacro:property name="mesh_mode" value="${vehicle['vehicle']['vehicle_description']['mesh_mode']}"/>
 
   <!-- Vehicle geometry -->
-  <xacro:property name="base_link" value="${vehicle['base_link']}" />
-  <xacro:property name="base_width" value="${vehicle['base_width']}" />
-  <xacro:property name="base_length" value="${vehicle['base_length']}" />
-  <xacro:property name="base_height" value="${vehicle['base_height']}" />
-  <xacro:property name="base_clearance" value="${vehicle['base_clearance']}" />
+  <xacro:property name="base_link" value="${vehicle['vehicle']['vehicle_description']['base_link']}" />
+  <xacro:property name="base_width" value="${vehicle['vehicle']['vehicle_description']['base_width']}" />
+  <xacro:property name="base_length" value="${vehicle['vehicle']['vehicle_description']['base_length']}" />
+  <xacro:property name="base_height" value="${vehicle['vehicle']['vehicle_description']['base_height']}" />
+  <xacro:property name="base_clearance" value="${vehicle['vehicle']['vehicle_description']['base_clearance']}" />
 
   <xacro:property name="base_geometry">
     <geometry>
@@ -37,23 +39,23 @@
   </xacro:property>
 
   <!-- Wheels -->
-  <xacro:property name="wheel_radius" value="${vehicle['wheel_radius']}" />
-  <xacro:property name="wheel_width" value="${vehicle['wheel_width']}" />
-  <xacro:property name="wheel_mass" value="${vehicle['wheel_mass']}" /> <!-- in kg-->
+  <xacro:property name="wheel_radius" value="${vehicle['vehicle']['vehicle_description']['wheel_radius']}" />
+  <xacro:property name="wheel_width" value="${vehicle['vehicle']['vehicle_description']['wheel_width']}" />
+  <xacro:property name="wheel_mass" value="${vehicle['vehicle']['vehicle_description']['wheel_mass']}" /> <!-- in kg-->
 
-  <xacro:property name="la" value="${vehicle['la']}" />
-  <xacro:property name="lb" value="${vehicle['lb']}"/>
-  <xacro:property name="wheel_base" value="${vehicle['wheel_base']}" />
+  <xacro:property name="la" value="${vehicle['vehicle']['vehicle_description']['la']}" />
+  <xacro:property name="lb" value="${vehicle['vehicle']['vehicle_description']['lb']}"/>
+  <xacro:property name="wheel_base" value="${vehicle['vehicle']['vehicle_description']['wheel_base']}" />
 
-  <xacro:property name="mu1" value="${vehicle['mu1']}" />
-  <xacro:property name="mu2" value="${vehicle['mu2']}" />
-  <xacro:property name="minDepth" value="${vehicle['minDepth']}" />
-  <xacro:property name="kp" value="${vehicle['kp']}" />
+  <xacro:property name="mu1" value="${vehicle['vehicle']['vehicle_description']['mu1']}" />
+  <xacro:property name="mu2" value="${vehicle['vehicle']['vehicle_description']['mu2']}" />
+  <xacro:property name="minDepth" value="${vehicle['vehicle']['vehicle_description']['minDepth']}" />
+  <xacro:property name="kp" value="${vehicle['vehicle']['vehicle_description']['kp']}" />
 
   <!-- LiDAR properties -->
-  <xacro:property name="lidar_z" value="${vehicle['lidar_z']}"/>
-  <xacro:property name="lidar_x" value="${vehicle['lidar_x']}"/>
-  <xacro:property name="topic" value="${vehicle['topic']}"/>
+  <xacro:property name="lidar_z" value="${vehicle['vehicle']['vehicle_description']['lidar_z']}"/>
+  <xacro:property name="lidar_x" value="${vehicle['vehicle']['vehicle_description']['lidar_x']}"/>
+  <xacro:property name="topic" value="${vehicle['vehicle']['vehicle_description']['topic']}"/>
 
   <!-- Necessary includes -->
   <xacro:include filename="$(find vehicle_description)/urdf/hmmwv.xacro" />

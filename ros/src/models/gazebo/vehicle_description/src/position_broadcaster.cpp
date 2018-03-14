@@ -2,9 +2,6 @@
 #include <tf/transform_broadcaster.h>
 #include <geometry_msgs/Pose.h>
 
-std::string robot_name;
-
-
 void poseCallback(const geometry_msgs::Pose& msg){
   static tf::TransformBroadcaster br;
   tf::Transform transform;
@@ -18,11 +15,9 @@ void poseCallback(const geometry_msgs::Pose& msg){
 int main(int argc, char** argv){
   //ros::Rate rate(100.0);
   ros::init(argc, argv, "tf_position_broadcaster");
-  if (argc != 2){ROS_ERROR("need robot_name as argument"); return -1;};
-  robot_name = argv[1];
 
   ros::NodeHandle node;
-  ros::Subscriber sub = node.subscribe(robot_name+"/base_footprint_link_pose", 10, &poseCallback);
+  ros::Subscriber sub = node.subscribe("/hmmwv/base_footprint_link_pose", 10, &poseCallback);
 
   ros::spin();
   return 0;

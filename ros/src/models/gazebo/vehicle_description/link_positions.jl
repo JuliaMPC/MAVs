@@ -17,7 +17,7 @@ using gazebo_msgs.msg
 function loop(get_link_state, pub)
     loop_rate = Rate(100.0)
     while ! is_shutdown()
-        linkName = "hmmwv::base_footprint"  # TODO make this a parameter 
+        linkName = "hmmwv::base_footprint"  # TODO make this a parameter
 
         # Get the current position of the Gazebo model
         gs = GetLinkStateRequest()
@@ -41,7 +41,7 @@ function main()
     println("Waiting for 'gazebo/get_link_state' service...")
     wait_for_service("gazebo/get_link_state")
 
-    # TODO use getparam to get robot name
+    # TODO use getparam to get robot name, also in position_broadcaster.cpp
     pub = Publisher{Pose}("/hmmwv/base_footprint_link_pose", queue_size=10)
 
     loop(get_link_state, pub)
