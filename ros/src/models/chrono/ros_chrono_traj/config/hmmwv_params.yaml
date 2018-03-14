@@ -1,8 +1,8 @@
 hmmwv_chrono:
  # initial position
- initial_conditions:
+ X0:
   x: 200.0
-  y: 0.0
+  yVal: 0.0
   z: 0.5
   v: 0.0
   r: 0.0
@@ -25,19 +25,22 @@ hmmwv_chrono:
 #GUI On or Off (set 1 for on, 0 for off)
  gui_status: 1
 
- vehicleinfo:
-  t_chrono: 0.0
-  x_pos: 0.0
-  y_pos: 0.0
-  x_v: 0.0
-  y_v: 0.0
-  x_a: 0.0
-  yaw_curr: 0.0
-  yaw_rate: 0.0
-  sa: 0.0
-  thrt_in: 0.0
-  brk_in: 0.0
-  str_in: 0.0
+ chrono:
+  state:
+   t: 0.0
+   x: 0.0
+   yVal: 0.0
+   ux: 0.0 #Vx
+   v: 0.0 #Vy
+   ax: 0.0
+   psi: 0.0 #yaw
+   r: 0.0 #yaw rate
+   sa: 0.0
+
+   control:
+    thr: 0.0
+    brk: 0.0
+    str: 0.0
 
  vehicle_parameters:
    mass: 0.0

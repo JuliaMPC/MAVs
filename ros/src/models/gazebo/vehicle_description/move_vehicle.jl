@@ -78,6 +78,8 @@ function loop(set_state,get_state)
 
     RobotOS.set_param("system/vehicle_description/flags/lidar_initialized",true)
     println("lidar simulation in Gazebo has been initialized")
+
+    # While loop for waiting goes here
     while !is_shutdown()
 
         # Define the robot state

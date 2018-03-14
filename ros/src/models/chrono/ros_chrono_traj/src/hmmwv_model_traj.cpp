@@ -66,10 +66,10 @@ TireModelType tire_model = TireModelType::RIGID;
 std::string pacejka_tire_file(data_path+"hmmwv/tire/HMMWV_pacejka.tir");
 //std::string pacejka_tire_file("hmmwv/tire/HMMWV_pacejka.tir");
 // Type of powertrain model (SHAFTS or SIMPLE)
-PowertrainModelType powertrain_model = PowertrainModelType::SIMPLE;
+PowertrainModelType powertrain_model = PowertrainModelType::SHAFTS;
 
 // Drive type (FWD, RWD, or AWD)
-DrivelineType drive_type = DrivelineType::RWD;
+DrivelineType drive_type = DrivelineType::AWD;
 
 // Visualization type for vehicle parts (PRIMITIVES, MESH, or NONE)
 VisualizationType chassis_vis_type = VisualizationType::PRIMITIVES;
@@ -937,6 +937,8 @@ int main(int argc, char* argv[]) {
     ros::init(argc, argv, "Chronode");
     ros::NodeHandle n;
     // Desired vehicle speed (m/s)
+    // PRint out that Chrono node is intialized
+    // Wait for system to be initialized
     double target_speed;
     n.getParam("hmmwv_chrono/initial_conditions/v_des",target_speed);
 
