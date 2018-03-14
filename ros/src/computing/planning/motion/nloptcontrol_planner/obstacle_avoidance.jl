@@ -294,24 +294,47 @@ function main()
   println("initializing nloptcontrol_planner node ...")
   init_node("nloptcontrol_planner")
 
-  if !RobotOS.has_param("planner/nloptcontrol_planner/misc")
-      error("Please set rosparam:planner/nloptcontrol_planner/misc")
-  elseif !RobotOS.has_param("case")
-      error("Please set rosparam: case")
-  elseif !RobotOS.has_param("planner/nloptcontrol_planner")
-        error("Please set rosparam: planner/nloptcontrol_planner")
-  end
-
   # message for solution to optimal control problem
   plannerNamespace = RobotOS.get_param("system/nloptcontrol_planner/namespace")
   pub = Publisher{Control}(string(plannerNamespace,"/control"), queue_size=10)
   sub = Subscriber{Control}(string(plannerNamespace, "/control"), setTrajParams, queue_size = 10)
 
+
+  # get the parameters
+  if !RobotOS.has_param("planner/nloptcontrol_planner/misc")
+      error("Please set rosparam:planner/nloptcontrol_planner/misc")
+  elseif !RobotOS.has_param("case")
+      error("Please set rosparam: case")
+  elseif !RobotOS.has_param("planner/nloptcontrol_planner")
+      error("Please set rosparam: planner/nloptcontrol_planner")
+  end
+  c = YAML.load(open(string(Pkg.dir("MAVs"),"/config/empty.yaml")))
+  c["misc"] = RobotOS.get_param("planner/nloptcontrol_planner/misc")
+  c["goal"] = RobotOS.get_param("case/goal")
+  c["X0"] = RobotOS.get_param("case/actual/X0")
+  if RobotOS.get_param("system/nloptcontrol_planner/flags/known_environment")
+    c["obstacle"] = RobotOS.get_param("case/actual/obstacle")
+  else
+    c["obstacle"] = RobotOS.get_param("case/assumed/obstacle")
+  end
+  c["weights"] = RobotOS.get_param("planner/nloptcontrol_planner/weights")
+  c["tolerances"] = RobotOS.get_param("planner/nloptcontrol_planner/tolerances")
+  c["solver"] = RobotOS.get_param("planner/nloptcontrol_planner/solver")
+  # convert to Symbol, integrationScheme, N, Nck
+  #println(typeof(c["misc"]["solver"]) )
+  c["misc"]["integrationScheme"] = Symbol(c["misc"]["integrationScheme"])
+  c["misc"]["model"] = Symbol(c["misc"]["model"])
+  c["misc"]["solver"] = Symbol(c["misc"]["solver"])
+  c["misc"]["N"] = Symbol(c["misc"]["N"])
+
+  println(typeof(c["misc"]["Xlims"]) )
+  println(c["misc"]["Xlims"] )
+
   n=initializeAutonomousControl(c);
 
   setInitStateParams(c)
 
-  if RobotOS.get_param("planner/nloptcontrol_planne/flags/known_environment")
+  if RobotOS.get_param("system/nloptcontrol_planner/flags/known_environment")
     setInitObstacleParams(c)
   end
 
