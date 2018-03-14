@@ -49,38 +49,38 @@ ObstacleTracker::ObstacleTracker(ros::NodeHandle& nh, ros::NodeHandle& nh_local)
 }
 
 ObstacleTracker::~ObstacleTracker() {
-  nh_local_.deleteParam("active");
-  nh_local_.deleteParam("copy_segments");
+  nh_local_.deleteParam("/obstacle_detector/obstacle_trakcer/active");
+  nh_local_.deleteParam("/obstacle_detector/obstacle_trakcer/copy_segments");
 
-  nh_local_.deleteParam("loop_rate");
-  nh_local_.deleteParam("tracking_duration");
-  nh_local_.deleteParam("min_correspondence_cost");
-  nh_local_.deleteParam("std_correspondence_dev");
-  nh_local_.deleteParam("process_variance");
-  nh_local_.deleteParam("process_rate_variance");
-  nh_local_.deleteParam("measurement_variance");
+  nh_local_.deleteParam("/obstacle_detector/obstacle_trakcer/loop_rate");
+  nh_local_.deleteParam("/obstacle_detector/obstacle_trakcer/tracking_duration");
+  nh_local_.deleteParam("/obstacle_detector/obstacle_trakcer/min_correspondence_cost");
+  nh_local_.deleteParam("/obstacle_detector/obstacle_trakcer/std_correspondence_dev");
+  nh_local_.deleteParam("/obstacle_detector/obstacle_trakcer/process_variance");
+  nh_local_.deleteParam("/obstacle_detector/obstacle_trakcer/process_rate_variance");
+  nh_local_.deleteParam("/obstacle_detector/obstacle_trakcer/measurement_variance");
 
-  nh_local_.deleteParam("frame_id");
+  nh_local_.deleteParam("/obstacle_detector/obstacle_trakcer/frame_id");
 }
 
 bool ObstacleTracker::updateParams(std_srvs::Empty::Request &req, std_srvs::Empty::Response &res) {
   bool prev_active = p_active_;
 
-  nh_local_.param<bool>("active", p_active_, true);
-  nh_local_.param<bool>("copy_segments", p_copy_segments_, true);
+  nh_local_.param<bool>("/obstacle_detector/obstacle_trakcer/active", p_active_, true);
+  nh_local_.param<bool>("/obstacle_detector/obstacle_trakcer/copy_segments", p_copy_segments_, true);
 
-  nh_local_.param<double>("loop_rate", p_loop_rate_, 100.0);
+  nh_local_.param<double>("/obstacle_detector/obstacle_trakcer/loop_rate", p_loop_rate_, 100.0);
   p_sampling_time_ = 1.0 / p_loop_rate_;
   p_sensor_rate_ = 10.0;    // 10 Hz for Hokuyo
 
-  nh_local_.param<double>("tracking_duration", p_tracking_duration_, 2.0);
-  nh_local_.param<double>("min_correspondence_cost", p_min_correspondence_cost_, 0.3);
-  nh_local_.param<double>("std_correspondence_dev", p_std_correspondence_dev_, 0.15);
-  nh_local_.param<double>("process_variance", p_process_variance_, 0.01);
-  nh_local_.param<double>("process_rate_variance", p_process_rate_variance_, 0.1);
-  nh_local_.param<double>("measurement_variance", p_measurement_variance_, 1.0);
+  nh_local_.param<double>("/obstacle_detector/obstacle_trakcer/tracking_duration", p_tracking_duration_, 2.0);
+  nh_local_.param<double>("/obstacle_detector/obstacle_trakcer/min_correspondence_cost", p_min_correspondence_cost_, 0.3);
+  nh_local_.param<double>("/obstacle_detector/obstacle_trakcer/std_correspondence_dev", p_std_correspondence_dev_, 0.15);
+  nh_local_.param<double>("/obstacle_detector/obstacle_trakcer/process_variance", p_process_variance_, 0.01);
+  nh_local_.param<double>("/obstacle_detector/obstacle_trakcer/process_rate_variance", p_process_rate_variance_, 0.1);
+  nh_local_.param<double>("/obstacle_detector/obstacle_trakcer/measurement_variance", p_measurement_variance_, 1.0);
 
-  nh_local_.param<string>("frame_id", p_frame_id_, string("map"));
+  nh_local_.param<string>("/obstacle_detector/obstacle_trakcer/frame_id", p_frame_id_, string("map"));
   obstacles_.header.frame_id = p_frame_id_;
 
   TrackedObstacle::setSamplingTime(p_sampling_time_);
