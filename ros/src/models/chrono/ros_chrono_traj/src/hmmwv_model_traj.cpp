@@ -939,6 +939,9 @@ int main(int argc, char* argv[]) {
     // Desired vehicle speed (m/s)
     // PRint out that Chrono node is intialized
     // Wait for system to be initialized
+
+    // Get planner nameSpace  (WHEREVER A TRAJECTORY IS LOADED)
+    // Load trajectory
     double target_speed;
     n.getParam("hmmwv_chrono/initial_conditions/v_des",target_speed);
 

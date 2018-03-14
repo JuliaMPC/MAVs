@@ -13,5 +13,4 @@ system:
   namespace: ros_global_planner
   flags:
    initialized: false
- planner:
-  namespace: vehicle/chrono
+ planner: ros_global_planner
