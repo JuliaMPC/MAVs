@@ -1,0 +1,5 @@
+<launch>
+  <rosparam command="load" file="$(find ros_chrono_traj)/config/hmmwv_params.yaml"/>
+  <node name="Reference" pkg="traj_gen_chrono" type="traj_gen_chrono"/>
+  <node name="Chronode" pkg="ros_chrono_traj" type="hmmwv_model_traj" cwd="node" />
+</launch>
