@@ -1,8 +1,6 @@
 <!-- Reusable launch file for obstacle detection -->
 <launch>
 
-  <rosparam command="load" file="$(find system)/config/detection/obstacle_detector.yaml" />
-
   <arg name="frame_id" doc="frame name" />
   <arg name="manager" doc="nodelet manager name" />
 
@@ -59,7 +57,7 @@
   <node name="obstacle_extractor" pkg="nodelet" type="nodelet" args="load obstacle_detector/ObstacleExtractor $(arg manager)">
     <param name="active"               value="true"/>
     <param name="use_scan"             value="false"/>
-    <!--param name="use_pcl"              value="true"/-->
+    <param name="use_pcl"              value="true"/>
 
     <param name="use_split_and_merge"    value="true"/>
     <param name="circles_from_visibles"  value="true"/>

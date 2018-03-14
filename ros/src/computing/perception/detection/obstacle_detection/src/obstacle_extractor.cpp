@@ -50,7 +50,7 @@ ObstacleExtractor::ObstacleExtractor(ros::NodeHandle& nh, ros::NodeHandle& nh_lo
 ObstacleExtractor::~ObstacleExtractor() {
   nh_local_.deleteParam("active");
   nh_local_.deleteParam("use_scan");
-  nh_local_.deleteParam("use_pcl");
+  nh_local_.deleteParam("/obstacle_detector/obstacle_extractor/use_pcl");
 
   nh_local_.deleteParam("use_split_and_merge");
   nh_local_.deleteParam("circles_from_visibles");
@@ -80,7 +80,7 @@ bool ObstacleExtractor::updateParams(std_srvs::Empty::Request &req, std_srvs::Em
 
   nh_local_.param<bool>("active", p_active_, true);
   nh_local_.param<bool>("use_scan", p_use_scan_, false);
-  nh_local_.param<bool>("use_pcl", p_use_pcl_, true);
+  nh_local_.param<bool>("/obstacle_detector/obstacle_extractor/use_pcl", p_use_pcl_, true);
 
   nh_local_.param<bool>("use_split_and_merge", p_use_split_and_merge_, true);
   nh_local_.param<bool>("circles_from_visibles", p_circles_from_visibles_, true);

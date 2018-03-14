@@ -220,7 +220,7 @@ void ObstacleExtractorPanel::verifyInputs() {
 void ObstacleExtractorPanel::setParams() {
   nh_local_.setParam("active", p_active_);
   nh_local_.setParam("use_scan", p_use_scan_);
-  nh_local_.setParam("use_pcl", p_use_pcl_);
+  nh_local_.setParam("/obstacle_detector/obstacle_extractor/use_pc", p_use_pcl_);
 
   nh_local_.setParam("use_split_and_merge", p_use_split_and_merge_);
   nh_local_.setParam("circles_from_visibles", p_circles_from_visibles_);
@@ -244,7 +244,7 @@ void ObstacleExtractorPanel::setParams() {
 void ObstacleExtractorPanel::getParams() {
   p_active_ = nh_local_.param("active", false);
   p_use_scan_ = nh_local_.param("use_scan", false);
-  p_use_pcl_ = nh_local_.param("use_pcl", false);
+  p_use_pcl_ = nh_local_.param("/obstacle_detector/obstacle_extractor/use_pcl", false);
 
   p_use_split_and_merge_ = nh_local_.param("use_split_and_merge", false);
   p_circles_from_visibles_ = nh_local_.param("circles_from_visibles", false);
