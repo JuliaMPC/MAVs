@@ -1,0 +1,16 @@
+system:
+ vehicle_description:
+  flags:
+   postion_update_external: true
+   lidar_initialized: false
+   obstacles_initialized: false
+ chrono:
+  namespace: chrono
+  flags:
+    initialized: false
+    gui: true
+ ros_global_planner:
+  namespace: ros_global_planner
+  flags:
+   initialized: false
+ planner: ros_global_planner
