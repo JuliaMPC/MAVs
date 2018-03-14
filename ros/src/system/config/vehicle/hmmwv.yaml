@@ -1,0 +1,53 @@
+vehicle:
+ vehicle_description:
+  robotNamespace: hmmwv
+  robotName: hmmwv  # NOTE cannot change, will break vehicle.launch because this is hardcoded in
+  frameName: map
+  ground_truth_topic: base_pose_ground_truth
+
+  # mesh parameters
+  scale_factor: 0.2
+  mesh_mode: 1
+
+  # vehicle geometry
+  base_link: base_link
+  base_width: 1.9
+  base_length: 3.3
+  base_height: 1.2
+  base_clearance: 0.5
+
+  # wheels
+  wheel_radius: 0.393
+  wheel_width: 0.1
+  wheel_mass: 2.5
+  la: 1.6
+  lb: 1.7
+  wheel_base: 1
+  mu1: 0.9
+  mu2: 0.9
+  minDepth: 0.005
+  kp: 1e8
+
+  # LiDAR properties
+  lidar_z: 1.4
+  lidar_x: 1.75
+  topic: lidar_points
+ chrono:
+  control:
+       thr: 0.0
+       brk: 0.0
+       str: 0.0
+  traj:
+   t: [0.0 2.0 3.0 4.0 5.0]
+   x: [199.989, 199.989, 199.989, 199.985, 199.959, 199.882, 199.715, 199.463, 199.19, 198.992,198.943, 198.724, 198.15, 197.127, 195.701, 194.168, 192.939, 192.241, 192.085, 191.439, 190.569, 190.919, 193.045, 195.393, 196.104]
+   y: [0.0381458, 0.0433473, 0.0791504, 0.263096, 0.797216, 1.82058, 3.2641, 4.85751, 6.24848, 7.12986, 7.34851, 8.22214, 10.2693, 13.3859, 17.2667, 21.3574, 24.9169, 27.1953, 27.7639, 30.3015, 35.8857, 43.2004, 49.8849, 53.9329, 54.8829]
+   sa: [0.0 0.0 0.0 0.0 0.0 0.0]
+   thr: [2.5 2.5 2.5 2.5 2.5 2.5]
+   brk: [0.0 0.0 0.0 0.0 0.0 0.0]
+ vehiclemodels:
+
+ common:
+  m: 0.0
+  Izz: 0.0
+  la: 0.0
+  lb: 0.0

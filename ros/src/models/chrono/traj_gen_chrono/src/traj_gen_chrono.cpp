@@ -2,7 +2,7 @@
 #include <ros/console.h>
 #include "std_msgs/String.h"
 #include <sstream>
-#include "traj_gen_chrono/Control.h"
+//#include "traj_gen_chrono/Control.h"
 
 /**
  * This tutorial demonstrates simple sending of messages over the ROS system.
@@ -42,7 +42,7 @@ int main(int argc, char **argv)
   while (ros::ok())
   {
 
-    if (count==1000){
+    if (count==1000000000){
     x2[0]= 200;
     x2[1]=200;
     y2[0]=0;

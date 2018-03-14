@@ -31,7 +31,7 @@
 #include <ros/callback_queue.h>
 #include "ros/ros.h"
 #include "std_msgs/String.h"
-#include "ros_chrono_msgs/veh_status.h"
+#include "ros_chrono_traj_msgs/veh_status.h"
 //#include "tf/tf.h"
 #include <sstream>
 #include "chrono_vehicle/ChVehicleModelData.h"
@@ -54,8 +54,8 @@ using namespace chrono::vehicle::hmmwv;
 // Problem parameters
 // Main Data Path
 //std::string data_path("/home/shreyas/.julia/v0.6/MAVs/catkin_ws/data/vehicle/");
-std::string data_path("../../../src/models/chrono/ros_chrono/src/data/vehicle/");
-//std::string data_path("src/system/chrono/ros_chrono/src/data/vehicle/");
+//std::string data_path("../../../src/models/chrono/ros_chrono_traj/src/data/vehicle/");
+std::string data_path("src/models/chrono/ros_chrono_traj/src/data/vehicle/");
 // Contact method type
 ChMaterialSurface::ContactMethod contact_method = ChMaterialSurface::SMC;
 
@@ -66,10 +66,10 @@ TireModelType tire_model = TireModelType::RIGID;
 std::string pacejka_tire_file(data_path+"hmmwv/tire/HMMWV_pacejka.tir");
 //std::string pacejka_tire_file("hmmwv/tire/HMMWV_pacejka.tir");
 // Type of powertrain model (SHAFTS or SIMPLE)
-PowertrainModelType powertrain_model = PowertrainModelType::SIMPLE;
+PowertrainModelType powertrain_model = PowertrainModelType::SHAFTS;
 
 // Drive type (FWD, RWD, or AWD)
-DrivelineType drive_type = DrivelineType::RWD;
+DrivelineType drive_type = DrivelineType::AWD;
 
 // Visualization type for vehicle parts (PRIMITIVES, MESH, or NONE)
 VisualizationType chassis_vis_type = VisualizationType::PRIMITIVES;
@@ -96,13 +96,13 @@ std::string path_file(data_path+"paths/my_path.txt");
 // Rigid terrain dimensions
 double terrainHeight = 0;
 double terrainLength = 500.0;  // size in X direction
-double terrainWidth = 500.0;   // size in Y direction
+double terrainWidth = 200.0;   // size in Y direction
 
 // Point on chassis tracked by the chase camera
 ChVector<> trackPoint(0.0, 0.0, 1.75);
 
 // Simulation step size
-double step_size = 1e-2;
+double step_size = 0.075;
 double tire_step_size = step_size;
 
 // Simulation end time
@@ -217,6 +217,9 @@ struct parameters
     std::vector<double> y_traj_curr;
     std::vector<double> x_traj_prev;
     std::vector<double> y_traj_prev;
+    std::vector<double> sa_traj;
+    std::vector<double> throttle_traj;
+    std::vector<double> brk_traj;
     double target_speed;
     int render_steps;
     int render_frame;
@@ -231,6 +234,21 @@ void trajChanger1(parameters &hmmwv_params, ChVehicleIrrApp app,ros::Publisher &
   //Load xy parameters for the first timestep
   n.getParam("hmmwv_chrono/traj/x_traj",hmmwv_params.x_traj_curr);
   n.getParam("hmmwv_chrono/traj/y_traj",hmmwv_params.y_traj_curr);
+  n.getParam("hmmwv_chrono/traj/sa_traj",hmmwv_params.sa_traj);
+  n.getParam("hmmwv_chrono/traj/throttle_traj",hmmwv_params.throttle_traj);
+  n.getParam("hmmwv_chrono/traj/brk_traj",hmmwv_params.brk_traj);
+
+  // Normalize throttle trajectory
+  double sa_normalizer=(30/180)*PI;
+  double throttle_normalizer= 5;
+  for (int traj_ctr=0; traj_ctr<hmmwv_params.sa_traj.size(); traj_ctr=traj_ctr+1){
+    hmmwv_params.sa_traj[traj_ctr]=hmmwv_params.sa_traj[traj_ctr]/sa_normalizer;
+    hmmwv_params.throttle_traj[traj_ctr]=hmmwv_params.throttle_traj[traj_ctr]/throttle_normalizer;
+    if (hmmwv_params.throttle_traj[traj_ctr]<0){  //If throttle element is negative, assign it to 0 and assign the brake input to the absolute that value
+      hmmwv_params.brk_traj[traj_ctr]=-hmmwv_params.throttle_traj[traj_ctr];
+      hmmwv_params.throttle_traj[traj_ctr]=0;
+    }
+  }
   hmmwv_params.x_traj_prev=hmmwv_params.x_traj_curr;
   hmmwv_params.y_traj_prev=hmmwv_params.y_traj_curr;
   double num_pts = hmmwv_params.x_traj_curr.size();
@@ -358,7 +376,7 @@ void trajChanger1(parameters &hmmwv_params, ChVehicleIrrApp app,ros::Publisher &
             GetLog() << "CG acceleration:      " << acc_CG.x() << "  " << acc_CG.y() << "  " << acc_CG.z() << "\n";
             GetLog() << "\n";
         }*/
-    ros_chrono_msgs::veh_status data_out;
+    ros_chrono_traj_msgs::veh_status data_out;
 
 /*
         ChVector<> acc_CG = my_hmmwv.GetVehicle().GetChassisBody()->GetPos_dtdt();
@@ -457,6 +475,19 @@ void trajChanger1(parameters &hmmwv_params, ChVehicleIrrApp app,ros::Publisher &
     //  loop_rate.sleep();
     n.getParam("hmmwv_chrono/traj/x_traj",hmmwv_params.x_traj_curr);
     n.getParam("hmmwv_chrono/traj/y_traj",hmmwv_params.y_traj_curr);
+    n.getParam("hmmwv_chrono/traj/sa_traj",hmmwv_params.sa_traj);
+    n.getParam("hmmwv_chrono/traj/throttle_traj",hmmwv_params.throttle_traj);
+    n.getParam("hmmwv_chrono/traj/brk_traj",hmmwv_params.brk_traj);
+
+    // Normalize throttle trajectory
+    for (int traj_ctr=0; traj_ctr<hmmwv_params.sa_traj.size(); traj_ctr=traj_ctr+1){
+      hmmwv_params.sa_traj[traj_ctr]=hmmwv_params.sa_traj[traj_ctr]/sa_normalizer;
+      hmmwv_params.throttle_traj[traj_ctr]=hmmwv_params.throttle_traj[traj_ctr]/throttle_normalizer;
+      if (hmmwv_params.throttle_traj[traj_ctr]<0){  //If throttle element is negative, assign it to 0 and assign the brake input to the absolute that value
+        hmmwv_params.brk_traj[traj_ctr]=-hmmwv_params.throttle_traj[traj_ctr];
+        hmmwv_params.throttle_traj[traj_ctr]=0;
+      }
+    }
   }
 }
 
@@ -467,6 +498,21 @@ void trajChanger2(parameters &hmmwv_params, ChVehicleIrrApp app,ros::Publisher &
   //Load xy parameters for the first timestep
   n.getParam("hmmwv_chrono//traj/x_traj",hmmwv_params.x_traj_curr);
   n.getParam("hmmwv_chrono/traj/y_traj",hmmwv_params.y_traj_curr);
+  n.getParam("hmmwv_chrono/traj/sa_traj",hmmwv_params.sa_traj);
+  n.getParam("hmmwv_chrono/traj/throttle_traj",hmmwv_params.throttle_traj);
+  n.getParam("hmmwv_chrono/traj/brk_traj",hmmwv_params.brk_traj);
+
+  // Normalize throttle trajectory
+  double sa_normalizer=(30/180)*PI;
+  double throttle_normalizer= 5;
+  for (int traj_ctr=0; traj_ctr<hmmwv_params.sa_traj.size(); traj_ctr=traj_ctr+1){
+    hmmwv_params.sa_traj[traj_ctr]=hmmwv_params.sa_traj[traj_ctr]/sa_normalizer;
+    hmmwv_params.throttle_traj[traj_ctr]=hmmwv_params.throttle_traj[traj_ctr]/throttle_normalizer;
+    if (hmmwv_params.throttle_traj[traj_ctr]<0){  //If throttle element is negative, assign it to 0 and assign the brake input to the absolute that value
+      hmmwv_params.brk_traj[traj_ctr]=-hmmwv_params.throttle_traj[traj_ctr];
+      hmmwv_params.throttle_traj[traj_ctr]=0;
+    }
+  }
   hmmwv_params.x_traj_prev=hmmwv_params.x_traj_curr;
   hmmwv_params.y_traj_prev=hmmwv_params.y_traj_curr;
   double num_pts = hmmwv_params.x_traj_curr.size();
@@ -594,7 +640,7 @@ void trajChanger2(parameters &hmmwv_params, ChVehicleIrrApp app,ros::Publisher &
             GetLog() << "CG acceleration:      " << acc_CG.x() << "  " << acc_CG.y() << "  " << acc_CG.z() << "\n";
             GetLog() << "\n";
         }*/
-    ros_chrono_msgs::veh_status data_out;
+    ros_chrono_traj_msgs::veh_status data_out;
 
 /*
         ChVector<> acc_CG = my_hmmwv.GetVehicle().GetChassisBody()->GetPos_dtdt();
@@ -692,12 +738,26 @@ void trajChanger2(parameters &hmmwv_params, ChVehicleIrrApp app,ros::Publisher &
     //  loop_rate.sleep();
     n.getParam("hmmwv_chrono/traj/x_traj",hmmwv_params.x_traj_curr);
     n.getParam("hmmwv_chrono/traj/y_traj",hmmwv_params.y_traj_curr);
+    n.getParam("hmmwv_chrono/traj/sa_traj",hmmwv_params.sa_traj);
+    n.getParam("hmmwv_chrono/traj/throttle_traj",hmmwv_params.throttle_traj);
+    n.getParam("hmmwv_chrono/traj/brk_traj",hmmwv_params.brk_traj);
+
+    // Normalize throttle trajectory
+
+    for (int traj_ctr=0; traj_ctr<hmmwv_params.sa_traj.size(); traj_ctr=traj_ctr+1){
+      hmmwv_params.sa_traj[traj_ctr]=hmmwv_params.sa_traj[traj_ctr]/sa_normalizer;
+      hmmwv_params.throttle_traj[traj_ctr]=hmmwv_params.throttle_traj[traj_ctr]/throttle_normalizer;
+      if (hmmwv_params.throttle_traj[traj_ctr]<0){  //If throttle element is negative, assign it to 0 and assign the brake input to the absolute that value
+        hmmwv_params.brk_traj[traj_ctr]=-hmmwv_params.throttle_traj[traj_ctr];
+        hmmwv_params.throttle_traj[traj_ctr]=0;
+      }
+    }
   }
 }
 //----------------------callback
 /*
 void controlCallback(const traj_gen_chrono::Control::ConstPtr &msg, parameters &hmmwv_params,ChVehicleIrrApp &app,ChIrrGuiDriver &driver_gui,
-double &target_speed,double &time,ros_chrono_msgs::veh_status &data_out, ros::Publisher &vehicleinfo_pub){
+double &target_speed,double &time,ros_chrono_traj_msgs::veh_status &data_out, ros::Publisher &vehicleinfo_pub){
 
   app.SetPaused(1);
 
@@ -877,6 +937,11 @@ int main(int argc, char* argv[]) {
     ros::init(argc, argv, "Chronode");
     ros::NodeHandle n;
     // Desired vehicle speed (m/s)
+    // PRint out that Chrono node is intialized
+    // Wait for system to be initialized
+
+    // Get planner nameSpace  (WHEREVER A TRAJECTORY IS LOADED)
+    // Load trajectory
     double target_speed;
     n.getParam("hmmwv_chrono/initial_conditions/v_des",target_speed);
 
@@ -911,7 +976,7 @@ int main(int argc, char* argv[]) {
     ChQuaternion<> initRot(q0_0,q0_1,q0_2,q0_3);
     //ChQuaternion<> initRot(cos(PI/4), 0, 0, sin(PI/4)); //initial yaw of pi/2
 
-    ros::Publisher vehicleinfo_pub = n.advertise<ros_chrono_msgs::veh_status>("vehicleinfo", 1);
+    ros::Publisher vehicleinfo_pub = n.advertise<ros_chrono_traj_msgs::veh_status>("vehicleinfo", 1);
     //ros::Rate loop_rate(5);
 
     // ------------------------------
@@ -1005,11 +1070,28 @@ int main(int argc, char* argv[]) {
     int render_frame = 0;
 
     double throttle_input, steering_input, braking_input;
-    std::vector<double> x_traj_curr, y_traj_curr,x_traj_prev,y_traj_prev; //Initialize xy trajectory vectors
-    parameters hmmwv_params{terrain,my_hmmwv,realtime_timer,sim_frame,steering_input,throttle_input,braking_input,ballS,ballT,x_traj_curr,y_traj_curr,x_traj_prev,y_traj_prev,target_speed,render_steps,render_frame};
+    std::vector<double> x_traj_curr, y_traj_curr,x_traj_prev,y_traj_prev, sa_traj, throttle_traj,brk_traj; //Initialize xy trajectory vectors
+    parameters hmmwv_params{terrain,my_hmmwv,realtime_timer,sim_frame,steering_input,throttle_input,braking_input,ballS,ballT,x_traj_curr,y_traj_curr,x_traj_prev,y_traj_prev,
+      sa_traj, throttle_traj,brk_traj,target_speed,render_steps,render_frame};
     //Load xy parameters for the first timestep
     n.getParam("hmmwv_chrono/traj/x_traj",hmmwv_params.x_traj_curr);
     n.getParam("hmmwv_chrono/traj/y_traj",hmmwv_params.y_traj_curr);
+    n.getParam("hmmwv_chrono/traj/sa_traj",hmmwv_params.sa_traj);
+    n.getParam("hmmwv_chrono/traj/throttle_traj",hmmwv_params.throttle_traj);
+    n.getParam("hmmwv_chrono/traj/brk_traj",hmmwv_params.brk_traj);
+
+    // Normalize throttle trajectory
+    double sa_normalizer=(30/180)*PI;
+    double throttle_normalizer= 5;
+    for (int traj_ctr=0; traj_ctr<hmmwv_params.sa_traj.size(); traj_ctr=traj_ctr+1){
+      hmmwv_params.sa_traj[traj_ctr]=hmmwv_params.sa_traj[traj_ctr]/sa_normalizer;
+      hmmwv_params.throttle_traj[traj_ctr]=hmmwv_params.throttle_traj[traj_ctr]/throttle_normalizer;
+      if (hmmwv_params.throttle_traj[traj_ctr]<0){  //If throttle element is negative, assign it to 0 and assign the brake input to the absolute that value
+        hmmwv_params.brk_traj[traj_ctr]=-hmmwv_params.throttle_traj[traj_ctr];
+        hmmwv_params.throttle_traj[traj_ctr]=0;
+      }
+    }
+
     hmmwv_params.x_traj_prev=hmmwv_params.x_traj_curr;
     hmmwv_params.y_traj_prev=hmmwv_params.y_traj_curr;
     double num_pts = hmmwv_params.x_traj_curr.size();
@@ -1095,6 +1177,20 @@ int main(int argc, char* argv[]) {
       // Get trajectory parameters again
       n.getParam("hmmwv_chrono/traj/x_traj",hmmwv_params.x_traj_curr);
       n.getParam("hmmwv_chrono/traj/y_traj",hmmwv_params.y_traj_curr);
+      n.getParam("hmmwv_chrono/traj/sa_traj",hmmwv_params.sa_traj);
+      n.getParam("hmmwv_chrono/traj/throttle_traj",hmmwv_params.throttle_traj);
+      n.getParam("hmmwv_chrono/traj/brk_traj",hmmwv_params.brk_traj);
+
+      // Normalize throttle trajectory
+      for (int traj_ctr=0; traj_ctr<hmmwv_params.sa_traj.size(); traj_ctr=traj_ctr+1){
+        hmmwv_params.sa_traj[traj_ctr]=hmmwv_params.sa_traj[traj_ctr]/sa_normalizer;
+        hmmwv_params.throttle_traj[traj_ctr]=hmmwv_params.throttle_traj[traj_ctr]/throttle_normalizer;
+        if (hmmwv_params.throttle_traj[traj_ctr]<0){  //If throttle element is negative, assign it to 0 and assign the brake input to the absolute that value
+          hmmwv_params.brk_traj[traj_ctr]=-hmmwv_params.throttle_traj[traj_ctr];
+          hmmwv_params.throttle_traj[traj_ctr]=0;
+        }
+      }
+
       enum chrono::vehicle::VehicleSide LEFT;
       enum chrono::vehicle::VehicleSide RIGHT;
       ChVector<> veh_com= my_hmmwv.GetVehicle().GetVehicleCOMPos();
@@ -1251,7 +1347,7 @@ int main(int argc, char* argv[]) {
             GetLog() << "CG acceleration:      " << acc_CG.x() << "  " << acc_CG.y() << "  " << acc_CG.z() << "\n";
             GetLog() << "\n";
         }*/
-        ros_chrono_msgs::veh_status data_out;
+        ros_chrono_traj_msgs::veh_status data_out;
 
 /*
         ChVector<> acc_CG = my_hmmwv.GetVehicle().GetChassisBody()->GetPos_dtdt();
