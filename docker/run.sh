@@ -29,7 +29,7 @@ nvidia-docker run \
     --volume=$HOST_DIR:$SHARED_DIR:rw \
     --env="XAUTHORITY=${XAUTH}" \
     --env="DISPLAY=${DISPLAY}" \
-    -u autoware \
+    -u mavs \
     --privileged -v /dev/bus/usb:/dev/bus/usb \
     --net=host \
-    autoware-$1
+    mav-$1
