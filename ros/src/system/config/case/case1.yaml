@@ -1,6 +1,6 @@
 case:
  goal:
-  x: 200.
+  x: 0.
   yVal: 125.
   psi: 1.5701
 
@@ -24,7 +24,7 @@ case:
    vx: [0,0,0.0]
    vy: [0,0,0]
 
- assumed:
+ assumed:  #NOTE THIS IS probably going to fail
   obstacle:
    num: 10
    radius: [1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0]
