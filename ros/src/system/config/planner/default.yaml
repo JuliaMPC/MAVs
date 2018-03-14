@@ -12,12 +12,12 @@ planner:
    L_rd: 5.               # relaxation distance to LiDAR range
    Nck: NaN               # number of points per interval
    N: NaN                 # number of points in :tm methods
-   solver: KNITRO         # either :IPOPT or :KNITRO
+   solver: :KNITRO         # either :IPOPT or :KNITRO
    mpc_max_iter: 60       # an MPC parameter
    PredictX0: true        # if the state that the vehicle will be at when the optimization is finished is to be predicted
    FixedTp: true          # fixed final time for predicting X0
    finalTimeDV: true      # bool to indicate if the final time is a variable
-   integrationScheme: bkwEuler
+   integrationScheme: :bkwEuler
    tfMax: 10 # maximum final time in MPC
    EP: # small number to avoid singularities TODO move this from VehicleModels.jl
 
@@ -70,7 +70,7 @@ planner:
    opttol_abs: 5e-1 # final absolute stopping tolerance for the KKT (optimality) error
    xtol: 1e-12  # optimization process will terminate if the relative change in all components of the solution point estimate is less than xtol for xtol_iters
   # settings for Ipopt
-   warm_start_init_point: yes  #
+   warm_start_init_point: "yes"  #
    dual_inf_tol: 5.   # Absolute tolerance on the dual infeasibility
    compl_inf_tol: 1e-1  # Absolute tolerance on the complementarity.
    acceptable_tol: 1e-2   # Determines which (scaled) overall optimality error is considered to be "acceptable.

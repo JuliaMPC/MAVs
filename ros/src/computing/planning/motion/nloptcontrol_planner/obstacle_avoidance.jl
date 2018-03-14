@@ -114,11 +114,11 @@ Date Create: 2/28/2018, Last Modified: 2/28/2018 \n
 """
 function setInitObstacleParams(c)
 
-  radius = c["obstacles"]["A"]
-  center_x = c["obstacles"]["xi"]
-  center_y = c["obstacles"]["yi"]
-  velocity_x = c["obstacles"]["ux"]
-  velocity_y = c["obstacles"]["uy"]
+  radius = c["obstacle"]["radius"]
+  center_x = c["obstacle"]["x0"]
+  center_y = c["obstacle"]["y0"]
+  velocity_x = c["obstacle"]["vx"]
+  velocity_y = c["obstacle"]["vy"]
   L = length(radius)
     r = (); x = (); y = (); vx = (); vy = ();
     for i in 1:L
@@ -177,7 +177,7 @@ Date Create: 2/28/2018, Last Modified: 2/28/2018 \n
 """
 function setInitStateParams(c)
   RobotOS.set_param("state/x", RobotOS.get_param("case/actual/X0/x"))
-  RobotOS.set_param("state/y", RobotOS.get_param("case/actual/X0/y"))
+  RobotOS.set_param("state/yVal", RobotOS.get_param("case/actual/X0/yVal"))
   RobotOS.set_param("state/sa",RobotOS.get_param("case/actual/X0/sa"))
   RobotOS.set_param("state/r", RobotOS.get_param("case/actual/X0/r"))
   RobotOS.set_param("state/psi", RobotOS.get_param("case/actual/X0/psi"))
@@ -200,7 +200,7 @@ function setStateData(n)
 
   # copy current vehicle state in case it changes
   x=deepcopy(RobotOS.get_param("state/x"))
-  y=deepcopy(RobotOS.get_param("state/y"))
+  y=deepcopy(RobotOS.get_param("state/yVal"))
   v=deepcopy(RobotOS.get_param("state/sa"))
   r=deepcopy(RobotOS.get_param("state/r"))
   psi=deepcopy(RobotOS.get_param("state/psi"))
@@ -223,7 +223,6 @@ Date Create: 4/6/2017, Last Modified: 3/10/2018 \n
 function loop(pub,n,c)
 
   init = false
-  useROS = true
   loop_rate = Rate(2.0) # 2 Hz
   while !is_shutdown()
       println("Running model for the: ",n.r.eval_num," time")
@@ -232,7 +231,7 @@ function loop(pub,n,c)
       setObstacleData(n.params)
       setStateData(n)
 
-      updateAutoParams!(n,c,useROS)                 # update model parameters
+      updateAutoParams!(n,c)                        # update model parameters
       status = autonomousControl!(n)                # rerun optimization
       n.mpc.t0_actual = to_sec(get_rostime())
       msg = Control()
@@ -249,7 +248,7 @@ function loop(pub,n,c)
       # and it can even be negative (due to tolerances in NLP solver). If this is the case, the goal is slightly
       # expanded from the previous check and one final check is performed otherwise the run is failed
       if getvalue(n.tf) < 0.01 # assuming that the final time is a design variable, could check, but this module uses tf as a DV
-        if ((n.r.dfs_plant[end][:x][end]-c["goal"]["x"])^2 + (n.r.dfs_plant[end][:y][end]-c.g.y_ref)^2)^0.5 < 4*n.XF_tol[1]
+        if ((n.r.dfs_plant[end][:x][end]-c["goal"]["x"])^2 + (n.r.dfs_plant[end][:y][end]-c["goal"]["yVal"])^2)^0.5 < 4*n.XF_tol[1]
            println("Expanded Goal Attained! \n"); n.mpc.goal_reached=true;
            RobotOS.set_param("system/nloptcontrol_planner/flags/goal_attained",true)
            break;
@@ -265,7 +264,7 @@ function loop(pub,n,c)
         setStateParams(n) # update X0 parameters in ROS and in NLOptControl.jl
       end
 
-      if ((n.r.dfs_plant[end][:x][end]-c["goal"]["x"])^2 + (n.r.dfs_plant[end][:y][end]-c["goal"]["y"])^2)^0.5 < 2*n.XF_tol[1]
+      if ((n.r.dfs_plant[end][:x][end]-c["goal"]["x"])^2 + (n.r.dfs_plant[end][:y][end]-c["goal"]["yVal"])^2)^0.5 < 2*n.XF_tol[1]
          println("Goal Attained! \n"); n.mpc.goal_reached=true;
          RobotOS.set_param("system/nloptcontrol_planner/flags/goal_attained",true)
          break;
@@ -301,34 +300,49 @@ function main()
 
 
   # get the parameters
-  if !RobotOS.has_param("planner/nloptcontrol_planner/misc")
-      error("Please set rosparam:planner/nloptcontrol_planner/misc")
-  elseif !RobotOS.has_param("case")
-      error("Please set rosparam: case")
-  elseif !RobotOS.has_param("planner/nloptcontrol_planner")
-      error("Please set rosparam: planner/nloptcontrol_planner")
-  end
-  c = YAML.load(open(string(Pkg.dir("MAVs"),"/config/empty.yaml")))
-  c["misc"] = RobotOS.get_param("planner/nloptcontrol_planner/misc")
-  c["goal"] = RobotOS.get_param("case/goal")
-  c["X0"] = RobotOS.get_param("case/actual/X0")
-  if RobotOS.get_param("system/nloptcontrol_planner/flags/known_environment")
-    c["obstacle"] = RobotOS.get_param("case/actual/obstacle")
-  else
-    c["obstacle"] = RobotOS.get_param("case/assumed/obstacle")
-  end
-  c["weights"] = RobotOS.get_param("planner/nloptcontrol_planner/weights")
-  c["tolerances"] = RobotOS.get_param("planner/nloptcontrol_planner/tolerances")
-  c["solver"] = RobotOS.get_param("planner/nloptcontrol_planner/solver")
-  # convert to Symbol, integrationScheme, N, Nck
-  #println(typeof(c["misc"]["solver"]) )
-  c["misc"]["integrationScheme"] = Symbol(c["misc"]["integrationScheme"])
-  c["misc"]["model"] = Symbol(c["misc"]["model"])
-  c["misc"]["solver"] = Symbol(c["misc"]["solver"])
-  c["misc"]["N"] = Symbol(c["misc"]["N"])
+  #if !RobotOS.has_param("planner/nloptcontrol_planner/misc")
+  #    error("Please set rosparam:planner/nloptcontrol_planner/misc")
+  #elseif !RobotOS.has_param("case")
+  #    error("Please set rosparam: case")
+  #elseif !RobotOS.has_param("planner/nloptcontrol_planner")
+  #    error("Please set rosparam: planner/nloptcontrol_planner")
+  #end
 
-  println(typeof(c["misc"]["Xlims"]) )
-  println(c["misc"]["Xlims"] )
+  # using the filenames set as rosparams, the datatypes of the parameters get messed up if they are put on the ROS server
+  # and then loaded into julia through RobotOS.jl; but less is messed up by loading using YAML.jl
+  case = YAML.load(open(RobotOS.get_param("case_params_path")))["case"]
+  planner = YAML.load(open(RobotOS.get_param("planner_params_path")))["planner"]["nloptcontrol_planner"]
+
+  c = YAML.load(open(string(Pkg.dir("MAVs"),"/config/empty.yaml")))
+  c["weights"] = planner["weights"]
+  c["misc"] = planner["misc"]
+  c["solver"] = planner["solver"]
+  c["tolerances"] = planner["tolerances"]
+  c["X0"] = case["actual"]["X0"]
+  c["goal"] = case["goal"]
+
+  if RobotOS.get_param("system/nloptcontrol_planner/flags/known_environment")
+    c["obstacle"] = case["actual"]["obstacle"]
+  else  # NOTE currently the the python parcer does not like assumed/obstacle format!, this will fail!
+    c["obstacle"] = case["assumed"]["obstacle"]
+  end
+  # fix messed up data types
+#  if c["solver"]["warm_start_init_point"]
+#    c["solver"]["warm_start_init_point"] = "yes"
+#  else
+#    c["solver"]["warm_start_init_point"] = "no"
+#  end
+  for keyA in ["weights", "misc", "X0", "solver", "tolerances"]
+    for (key,value) in c[keyA]
+      if isequal(value, "NaN"); c[keyA][key] = NaN; end
+    end
+  end
+  for keyA in ["misc"]
+    for (key,value) in c[keyA]
+      if isequal(typeof(c[keyA][key]),String); c[keyA][key] = Symbol(c[keyA][key]); end
+    end
+  end
+  # fix messed up data types
 
   n=initializeAutonomousControl(c);
 
