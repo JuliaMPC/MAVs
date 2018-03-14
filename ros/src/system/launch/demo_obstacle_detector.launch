@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <launch>
-  <arg name="known_environment" default="false"/>
+  <!--arg name="known_environment" default="false"/-->
   <arg name="frame_id" default="velodyne_top_link" />
   <arg name="manager" default="$(arg frame_id)_nodelet_manager" />
 
   <include file="$(find vehicle_description)/launch/demo.launch">
-    <arg name="known_environment" value="$(arg known_environment)" />
+    <!--arg name="known_environment" value="$(arg known_environment)" /-->
   </include>
 
-  <include file="$(find system)/launch/obstacle_detector.launch">
+  <include file="$(find obstacle_detector)/launch/obstacle_detector.launch">
     <arg name="frame_id" value="$(arg frame_id)" />
     <arg name="manager" value="$(arg manager)" />
   </include>

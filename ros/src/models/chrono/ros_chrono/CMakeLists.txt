@@ -116,7 +116,8 @@ find_package(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES ros_chrono
-   CATKIN_DEPENDS roscpp rospy std_msgs message_runtime
+#  T.Q.
+   CATKIN_DEPENDS roscpp rospy std_msgs message_runtime traj_gen_chrono
 #   DEPENDS system_lib Chrono
 )
 

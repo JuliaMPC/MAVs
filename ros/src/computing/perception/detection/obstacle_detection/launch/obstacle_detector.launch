@@ -55,8 +55,8 @@
 
   <node name="obstacle_extractor" pkg="nodelet" type="nodelet" args="load obstacle_detector/ObstacleExtractor $(arg manager)">
     <param name="active"               value="true"/>
-    <param name="publish_scan"      value="false"/>
-    <param name="publish_pcl"       value="true"/>
+    <!--param name="use_scan"             value="false"/-->
+    <param name="use_pcl"              value="true"/>
 
     <param name="use_split_and_merge"    value="true"/>
     <param name="circles_from_visibles"  value="true"/>
@@ -91,7 +91,7 @@
     <remap from="tracked_obstacles" to="obstacles"/>
   </node>
 
-  <node name="obstacle_publisher_worker" pkg="nodelet" type="nodelet" args="load obstacle_detector/ObstaclePublisher $(arg manager)">
+  <!--node name="obstacle_publisher_worker" pkg="nodelet" type="nodelet" args="load obstacle_detector/ObstaclePublisher $(arg manager)">
     <param name="active"           value="false"/>
     <param name="reset"            value="false"/>
 
@@ -108,7 +108,7 @@
     <rosparam param="vy_vector">[0.0]</rosparam>
 
     <param name="frame_id"         value="world"/>
-  </node>
+  </node-->
 
   <node name="rviz" pkg="rviz" type="rviz" output="screen" args="-d $(find obstacle_detector)/resources/obstacle_detector.rviz"/>
 

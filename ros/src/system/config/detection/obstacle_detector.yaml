@@ -1,0 +1,4 @@
+detection:
+  obstacle_detector:
+    obstacle_extractor:
+      use_scan: 'false'
