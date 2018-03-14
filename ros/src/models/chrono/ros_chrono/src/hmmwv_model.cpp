@@ -54,7 +54,7 @@ using namespace chrono::vehicle::hmmwv;
 // Problem parameters
 // Main Data Path
 //std::string data_path("/home/shreyas/.julia/v0.6/MAVs/catkin_ws/data/vehicle/");
-std::string data_path("../../../src/system/chrono/ros_chrono/src/data/vehicle/");
+std::string data_path("../../../src/models/chrono/ros_chrono/src/data/vehicle/");
 //std::string data_path("src/system/chrono/ros_chrono/src/data/vehicle/");
 // Contact method type
 ChMaterialSurface::ContactMethod contact_method = ChMaterialSurface::SMC;
@@ -77,7 +77,6 @@ VisualizationType suspension_vis_type = VisualizationType::PRIMITIVES;
 VisualizationType steering_vis_type = VisualizationType::PRIMITIVES;
 VisualizationType wheel_vis_type = VisualizationType::NONE;
 VisualizationType tire_vis_type = VisualizationType::PRIMITIVES;
-//double callback_act=0;
 
 // Input file names for the path-follower driver model
 std::string steering_controller_file(data_path+"generic/driver/SteeringController.json");
@@ -96,8 +95,8 @@ std::string path_file(data_path+"paths/my_path.txt");
 
 // Rigid terrain dimensions
 double terrainHeight = 0;
-double terrainLength = 1000.0;  // size in X direction
-double terrainWidth = 1000.0;   // size in Y direction
+double terrainLength = 500.0;  // size in X direction
+double terrainWidth = 500.0;   // size in Y direction
 
 // Point on chassis tracked by the chase camera
 ChVector<> trackPoint(0.0, 0.0, 1.75);
@@ -209,7 +208,6 @@ struct parameters
     HMMWV_Reduced my_hmmwv;
     ChRealtimeStepTimer realtime_timer;
     int sim_frame;
-    double callback_act;
     double steering_input;
     double throttle_input;
     double braking_input;
@@ -223,23 +221,6 @@ struct parameters
     int render_steps;
     int render_frame;
 } ;
-
-static std::vector<double> toQuaternion(double pitch, double roll, double yaw)
-{
-	std::vector<double> q;
-	double t0 = std::cos(yaw * 0.5f);
-	double t1 = std::sin(yaw * 0.5f);
-	double t2 = std::cos(roll * 0.5f);
-	double t3 = std::sin(roll * 0.5f);
-	double t4 = std::cos(pitch * 0.5f);
-	double t5 = std::sin(pitch * 0.5f);
-
-	q[0] = t0 * t2 * t4 + t1 * t3 * t5;
-	q[1] = t0 * t3 * t4 - t1 * t2 * t5;
-	q[2] = t0 * t2 * t5 + t1 * t3 * t4;
-	q[3] = t1 * t2 * t4 - t0 * t3 * t5;
-	return q;
-}
 
 void trajChanger2(parameters &hmmwv_params, ChVehicleIrrApp app,ros::Publisher &vehicleinfo_pub, ros::NodeHandle &n);
 
@@ -302,11 +283,11 @@ void trajChanger1(parameters &hmmwv_params, ChVehicleIrrApp app,ros::Publisher &
           }
           driver_follower.ExportPathPovray(out_dir);
       }
-
+/*
   utils::CSV_writer csv("\t");
   csv.stream().setf(std::ios::scientific | std::ios::showpos);
   csv.stream().precision(6);
-
+*/
   utils::ChRunningAverage fwd_acc_GC_filter(filter_window_size);
   utils::ChRunningAverage lat_acc_GC_filter(filter_window_size);
 
@@ -538,11 +519,11 @@ void trajChanger2(parameters &hmmwv_params, ChVehicleIrrApp app,ros::Publisher &
           }
           driver_follower.ExportPathPovray(out_dir);
       }
-
+/*
   utils::CSV_writer csv("\t");
   csv.stream().setf(std::ios::scientific | std::ios::showpos);
   csv.stream().precision(6);
-
+*/
   utils::ChRunningAverage fwd_acc_GC_filter(filter_window_size);
   utils::ChRunningAverage lat_acc_GC_filter(filter_window_size);
 
@@ -833,7 +814,6 @@ double &target_speed,double &time,ros_chrono_msgs::veh_status &data_out, ros::Pu
 
     // Increment simulation frame number
     hmmwv_params.sim_frame++;
-    hmmwv_params.callback_act=1;
 
     ChVector<> global_pos = hmmwv_params.my_hmmwv.GetVehicle().GetVehicleCOMPos();//global location of chassis reference frame origin
     ChQuaternion<> global_orntn = hmmwv_params.my_hmmwv.GetVehicle().GetVehicleRot();//global orientation as quaternion
@@ -1024,10 +1004,9 @@ int main(int argc, char* argv[]) {
     int sim_frame = 0;
     int render_frame = 0;
 
-    double callback_act;
     double throttle_input, steering_input, braking_input;
     std::vector<double> x_traj_curr, y_traj_curr,x_traj_prev,y_traj_prev; //Initialize xy trajectory vectors
-    parameters hmmwv_params{terrain,my_hmmwv,realtime_timer,sim_frame,callback_act,steering_input,throttle_input,braking_input,ballS,ballT,x_traj_curr,y_traj_curr,x_traj_prev,y_traj_prev,target_speed,render_steps,render_frame};
+    parameters hmmwv_params{terrain,my_hmmwv,realtime_timer,sim_frame,steering_input,throttle_input,braking_input,ballS,ballT,x_traj_curr,y_traj_curr,x_traj_prev,y_traj_prev,target_speed,render_steps,render_frame};
     //Load xy parameters for the first timestep
     n.getParam("hmmwv_chrono/traj/x_traj",hmmwv_params.x_traj_curr);
     n.getParam("hmmwv_chrono/traj/y_traj",hmmwv_params.y_traj_curr);
@@ -1088,11 +1067,11 @@ int main(int argc, char* argv[]) {
         }
         driver_follower.ExportPathPovray(out_dir);
     }
-
+/*
     utils::CSV_writer csv("\t");
     csv.stream().setf(std::ios::scientific | std::ios::showpos);
     csv.stream().precision(6);
-
+*/
     utils::ChRunningAverage fwd_acc_GC_filter(filter_window_size);
     utils::ChRunningAverage lat_acc_GC_filter(filter_window_size);
 
@@ -1372,10 +1351,10 @@ int main(int argc, char* argv[]) {
 
        myfile1 << ' ' << global_pos[0] << ' '<< global_pos[1]  <<' ' << global_pos[2]  << '\n';
     }
-
+/*
     if (state_output){
         csv.write_to_file(out_dir + "/state.out");
-    }
+    }*/
 
 myfile1.close();
     return 0;
