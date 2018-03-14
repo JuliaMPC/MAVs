@@ -1,40 +1,44 @@
 <?xml version="1.0"?>
 <launch>
 
-  <!-- teliop TODO make make it possible to initialize with other config files for vehicle and obstacle position-->
   <!-- TODO fix gazebo and RViz views on hmmwv -->
-  <!-- TODO fix display issue on the tires -->
   <!-- TODO add in an option to pause the simulation before it starts -->
+  <!-- TODO figure out how to parametrically get obstacle_num -->
+  <!-- TODO ask TQ if lidar_data should be launched here -->
 
-  <arg name="external_update" default="false" doc="option to update the state of the vehicle based off of /state/ parameter"/>
-  <arg name="vehicle_name" default="hmmwv"/>
-  <arg name="global_params_file" default="$(find system)/config/global_params.yaml"/>
+  <arg name="global_params_file" default="$(find system)/config/system/global.yaml"/>
+  <arg name="vehicle_params_file" default="$(find system)/config/vehicle/hmmwv.yaml"/>
+  <arg name="case_params_file" default="$(find system)/config/case/case1.yaml"/>
   <arg name="obstacle_num" default="3"/>
-  <arg name="name" default="hmmwv"/>
+  <arg name="gui" default="true"/>
 
- <param name="mavs/flags/external_update" value="$(arg external_update)"/>
-
-  <!--  ************** Global Parameters ***************  -->
+  <!--  ************** Global Parameters ***************  TODO check if these are already loaded -->
   <rosparam command="load" file="$(arg global_params_file)" />
+  <rosparam command="load" file="$(arg vehicle_params_file)" />
+  <rosparam command="load" file="$(arg case_params_file)" />
 
-  <!-- start gazebo and load the world -->
-  <include file="$(find vehicle_description)/launch/world.launch" />
+  <!-- start gazebo and load the world and spawn robot into Gazebo -->
+  <include file="$(find vehicle_description)/launch/vehicle.launch">
+      <arg name="gui" value="$(arg gui)"/>
+      <arg name="vehicle_params_file" value="$(arg vehicle_params_file)"/>
+      <arg name="case_params_file" value="$(arg case_params_file)"/>
+  </include>
 
   <!-- launch obstacles and make them move -->
   <include file="$(find vehicle_description)/launch/obstacles.launch">
       <arg name="obstacle_num" value="$(arg obstacle_num)"/>
+      <arg name="case_params_file" value="$(arg case_params_file)"/>
   </include>
+  <!--make obstacles move -->
   <node name="move_obstacles" pkg="vehicle_description" type="move_obstacles.jl" output="screen"/>
 
-  <!-- spawn robot into Gazebo -->
-  <param name="robot_description" command="$(find xacro)/xacro --inorder $(find vehicle_description)/urdf/mavs.urdf.xacro" />
-  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model $(arg vehicle_name)"/>
-  <node name="move_hmmwv" pkg="vehicle_description" type="move_hmmwv.jl" output="screen"/>
+  <!-- move hmmwv -->
+  <node name="move_vehicle" pkg="vehicle_description" type="move_vehicle.jl" output="screen"/>
 
   <!-- publish the global position of the robot -->
   <node name="postion" pkg="vehicle_description" type="link_positions.jl" output="screen"/>
   <node pkg="vehicle_description" type="frame_tf_broadcaster" name="frame_tf_broadcaster" />
-  <!-- TODO try to remove this and use odom and gps-->
-  <node pkg="vehicle_description" type="position_broadcaster" name="postion_broadcaster" args="$(arg name)"/>
+  <!-- TODO remove this and use odom and gps-->
+  <node pkg="vehicle_description" type="position_broadcaster" name="postion_broadcaster"/>
 
 </launch>
