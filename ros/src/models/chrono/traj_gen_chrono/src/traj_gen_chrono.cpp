@@ -2,7 +2,7 @@
 #include <ros/console.h>
 #include "std_msgs/String.h"
 #include <sstream>
-#include "traj_gen_chrono/Control.h"
+//#include "traj_gen_chrono/Control.h"
 
 /**
  * This tutorial demonstrates simple sending of messages over the ROS system.
