@@ -6,17 +6,34 @@ are up an running -->
  <launch>
    <master auto="start"/>
 
-   <!-- Convert PointCloud2 to PointCloud1 -->
-    <node pkg="point_cloud_converter" name="point_cloud_converter" type="point_cloud_converter_node" >
+    <arg name="case_params_path" default="$(find system)/config/case/case1.yaml"/>
+    <arg name="global_params_path" default="$(find system)/config/system/global.yaml"/>
+    <!--param name="global_params_path" value="$(arg global_params_path)"/-->
+
+    <!--TODO remove this temp config extrr-->
+
+    <!-- Convert PointCloud2 to PointCloud1 -->
+    <node pkg="point_cloud_converter" name="point_cloud_converter" type="point_cloud_converter_node" output="screen">
       <remap from="points2_in" to="/lidar_points"/>
       <remap from="points_out" to="/mavs_pcl" />
     </node>
 
-   <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
      <rosparam file="$(find system)/config/planner/ros_base_planner/costmap_common_params.yaml" command="load" ns="global_costmap" />
      <rosparam file="$(find system)/config/planner/ros_base_planner/costmap_common_params.yaml" command="load" ns="local_costmap" />
      <rosparam file="$(find system)/config/planner/ros_base_planner/local_costmap_params.yaml" command="load" />
      <rosparam file="$(find system)/config/planner/ros_base_planner/global_costmap_params.yaml" command="load" />
      <rosparam file="$(find system)/config/planner/ros_base_planner/base_local_planner_params.yaml" command="load" />
-   </node>
+    </node>
+
+    <!--node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+      <rosparam file="$(arg move_base_params_path)" command="load" ns="planner"/>
+      <rosparam file="$(arg move_base_params_path)" command="load" ns="planner/ros_base_planner/local_costmap"/>
+      <rosparam file="$(arg move_base_params_path)" command="load" ns="planner/ros_base_planner"/>
+    </node-->
+
+   <node pkg="ros_base_planner" type="navsPathConverter" respawn="false" name="navsPathConverter" output="screen">
+     <rosparam file="$(arg global_params_path)" command="load" />
+     <rosparam file="$(arg case_params_path)" command="load">
+    </node>
  </launch>
