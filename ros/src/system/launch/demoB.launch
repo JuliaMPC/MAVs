@@ -9,7 +9,7 @@
   <rosparam command="load" file="$(arg planner_params_path)" />
   <!--  ************* vehicle_description args and parameters ***************  -->
   <arg name="vehicle_params_path" default="$(find system)/config/vehicle/hmmwv.yaml"/>
-  <arg name="obstacle_num" default="3"/>
+  <arg name="obstacle_num" default="1"/>
   <arg name="gui" default="true"/>
 
   <rosparam command="load" file="$(arg vehicle_params_path)" />
