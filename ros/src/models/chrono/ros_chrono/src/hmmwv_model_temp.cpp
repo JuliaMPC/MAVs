@@ -31,6 +31,7 @@
 #include <ros/callback_queue.h>
 #include "ros/ros.h"
 #include "std_msgs/String.h"
+#include <string>
 #include "ros_chrono_msgs/veh_status.h"
 //#include "tf/tf.h"
 #include <sstream>
@@ -229,12 +230,8 @@ void trajChanger1(parameters &hmmwv_params, ChVehicleIrrApp app,ros::Publisher &
   ChIrrGuiDriver driver_gui(app);
   driver_gui.Initialize();
   //Load xy parameters for the first timestep
-  std::string planner_namespace;
-
-  n.getParam("system/planner",planner_namespace);
-  n.getParam("vehicle/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
-  n.getParam("vehicle/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
-
+  n.getParam("hmmwv_chrono/traj/x_traj",hmmwv_params.x_traj_curr);
+  n.getParam("hmmwv_chrono/traj/y_traj",hmmwv_params.y_traj_curr);
   hmmwv_params.x_traj_prev=hmmwv_params.x_traj_curr;
   hmmwv_params.y_traj_prev=hmmwv_params.y_traj_curr;
   double num_pts = hmmwv_params.x_traj_curr.size();
@@ -430,18 +427,18 @@ void trajChanger1(parameters &hmmwv_params, ChVehicleIrrApp app,ros::Publisher &
       yaw_val=5*PI/2-yaw_val;
     }
 
-    n.setParam("vehicle/chrono/state/t",time); //time in chrono simulation
-    n.setParam("vehicle/chrono/state/x", global_pos[0]) ;
-    n.setParam("vehicle/chrono/state/yVal",global_pos[1]);
-    n.setParam("vehicle/chrono/state/ux",fabs(global_velCOM[0])); //speed measured at the origin of the chassis reference frame.
-    n.setParam("vehicle/chrono/state/v", global_velCOM[1]);
-    n.setParam("vehicle/chrono/state/ax", global_accCOM[0]);
-    n.setParam("vehicle/chrono/state/psi",yaw_val); //in radians
-    n.setParam("vehicle/chrono/state/r",-rot_dt[2]);//yaw rate
-    n.setParam("vehicle/chrono/state/sa",slip_angle); //slip angle
-    n.setParam("vehicle/chrono/control/thr",hmmwv_params.throttle_input); //throttle input in the range [0,+1]
-    n.setParam("vehicle/chrono/control/brk",hmmwv_params.braking_input); //braking input in the range [0,+1]
-    n.setParam("vehicle/chrono/control/str",hmmwv_params.steering_input); //steeering input in the range [-1,+1]
+    n.setParam("hmmwv_chrono/vehicleinfo/t_chrono",time); //time in chrono simulation
+    n.setParam("hmmwv_chrono/vehicleinfo/x_pos", global_pos[0]) ;
+    n.setParam("hmmwv_chrono/vehicleinfo/y_pos",global_pos[1]);
+    n.setParam("hmmwv_chrono/vehicleinfo/x_v",fabs(global_velCOM[0])); //speed measured at the origin of the chassis reference frame.
+    n.setParam("hmmwv_chrono/vehicleinfo/y_v", global_velCOM[1]);
+    n.setParam("hmmwv_chrono/vehicleinfo/x_a", global_accCOM[0]);
+    n.setParam("hmmwv_chrono/vehicleinfo/yaw_curr",yaw_val); //in radians
+    n.setParam("hmmwv_chrono/vehicleinfo/yaw_rate",-rot_dt[2]);//yaw rate
+    n.setParam("hmmwv_chrono/vehicleinfo/sa",slip_angle); //slip angle
+    n.setParam("hmmwv_chrono/vehicleinfo/thrt_in",hmmwv_params.throttle_input); //throttle input in the range [0,+1]
+    n.setParam("hmmwv_chrono/vehicleinfo/brk_in",hmmwv_params.braking_input); //braking input in the range [0,+1]
+    n.setParam("hmmwv_chrono/vehicleinfo/str_in",hmmwv_params.steering_input); //steeering input in the range [-1,+1]
 
 
     data_out.t_chrono=time; //time in chrono simulation
@@ -459,10 +456,8 @@ void trajChanger1(parameters &hmmwv_params, ChVehicleIrrApp app,ros::Publisher &
 
     vehicleinfo_pub.publish(data_out);
     //  loop_rate.sleep();
-
-    n.getParam("vehicle/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
-    n.getParam("vehicle/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
-
+    n.getParam("hmmwv_chrono/traj/x_traj",hmmwv_params.x_traj_curr);
+    n.getParam("hmmwv_chrono/traj/y_traj",hmmwv_params.y_traj_curr);
   }
 }
 
@@ -471,11 +466,8 @@ void trajChanger2(parameters &hmmwv_params, ChVehicleIrrApp app,ros::Publisher &
   ChIrrGuiDriver driver_gui(app);
   driver_gui.Initialize();
   //Load xy parameters for the first timestep
-  std::string planner_namespace;
-  n.getParam("system/planner",planner_namespace);
-  n.getParam("vehicle/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
-  n.getParam("vehicle/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
-
+  n.getParam("hmmwv_chrono//traj/x_traj",hmmwv_params.x_traj_curr);
+  n.getParam("hmmwv_chrono/traj/y_traj",hmmwv_params.y_traj_curr);
   hmmwv_params.x_traj_prev=hmmwv_params.x_traj_curr;
   hmmwv_params.y_traj_prev=hmmwv_params.y_traj_curr;
   double num_pts = hmmwv_params.x_traj_curr.size();
@@ -671,18 +663,18 @@ void trajChanger2(parameters &hmmwv_params, ChVehicleIrrApp app,ros::Publisher &
       yaw_val=5*PI/2-yaw_val;
     }
 
-    n.setParam("vehicle/chrono/state/t",time); //time in chrono simulation
-    n.setParam("vehicle/chrono/state/x", global_pos[0]) ;
-    n.setParam("vehicle/chrono/state/yVal",global_pos[1]);
-    n.setParam("vehicle/chrono/state/ux",fabs(global_velCOM[0])); //speed measured at the origin of the chassis reference frame.
-    n.setParam("vehicle/chrono/state/v", global_velCOM[1]);
-    n.setParam("vehicle/chrono/state/ax", global_accCOM[0]);
-    n.setParam("vehicle/chrono/state/psi",yaw_val); //in radians
-    n.setParam("vehicle/chrono/state/r",-rot_dt[2]);//yaw rate
-    n.setParam("vehicle/chrono/state/sa",slip_angle); //slip angle
-    n.setParam("vehicle/chrono/control/thr",hmmwv_params.throttle_input); //throttle input in the range [0,+1]
-    n.setParam("vehicle/chrono/control/brk",hmmwv_params.braking_input); //braking input in the range [0,+1]
-    n.setParam("vehicle/chrono/control/str",hmmwv_params.steering_input); //steeering input in the range [-1,+1]
+    n.setParam("hmmwv_chrono/vehicleinfo/t_chrono",time); //time in chrono simulation
+    n.setParam("hmmwv_chrono/vehicleinfo/x_pos", global_pos[0]) ;
+    n.setParam("hmmwv_chrono/vehicleinfo/y_pos",global_pos[1]);
+    n.setParam("hmmwv_chrono/vehicleinfo/x_v",fabs(global_velCOM[0])); //speed measured at the origin of the chassis reference frame.
+    n.setParam("hmmwv_chrono/vehicleinfo/y_v", global_velCOM[1]);
+    n.setParam("hmmwv_chrono/vehicleinfo/x_a", global_accCOM[0]);
+    n.setParam("hmmwv_chrono/vehicleinfo/yaw_curr",yaw_val); //in radians
+    n.setParam("hmmwv_chrono/vehicleinfo/yaw_rate",-rot_dt[2]);//yaw rate
+    n.setParam("hmmwv_chrono/vehicleinfo/sa",slip_angle); //slip angle
+    n.setParam("hmmwv_chrono/vehicleinfo/thrt_in",hmmwv_params.throttle_input); //throttle input in the range [0,+1]
+    n.setParam("hmmwv_chrono/vehicleinfo/brk_in",hmmwv_params.braking_input); //braking input in the range [0,+1]
+    n.setParam("hmmwv_chrono/vehicleinfo/str_in",hmmwv_params.steering_input); //steeering input in the range [-1,+1]
 
     data_out.t_chrono=time; //time in chrono simulation
     data_out.x_pos= global_pos[0] ;
@@ -699,10 +691,8 @@ void trajChanger2(parameters &hmmwv_params, ChVehicleIrrApp app,ros::Publisher &
 
     vehicleinfo_pub.publish(data_out);
     //  loop_rate.sleep();
-    n.getParam("system/planner",planner_namespace);
-    n.getParam("vehicle/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
-    n.getParam("vehicle/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
-
+    n.getParam("hmmwv_chrono/traj/x_traj",hmmwv_params.x_traj_curr);
+    n.getParam("hmmwv_chrono/traj/y_traj",hmmwv_params.y_traj_curr);
   }
 }
 //----------------------callback
@@ -1019,10 +1009,8 @@ int main(int argc, char* argv[]) {
     std::vector<double> x_traj_curr, y_traj_curr,x_traj_prev,y_traj_prev; //Initialize xy trajectory vectors
     parameters hmmwv_params{terrain,my_hmmwv,realtime_timer,sim_frame,steering_input,throttle_input,braking_input,ballS,ballT,x_traj_curr,y_traj_curr,x_traj_prev,y_traj_prev,target_speed,render_steps,render_frame};
     //Load xy parameters for the first timestep
-    std::string planner_namespace;
-    n.getParam("system/planner",planner_namespace);
-    n.getParam("vehicle/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
-    n.getParam("vehicle/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
+    n.getParam("vehicle/chrono/default/traj/x",hmmwv_params.x_traj_curr);
+    n.getParam("vehicle/chrono/default/traj/yVal",hmmwv_params.y_traj_curr);
     hmmwv_params.x_traj_prev=hmmwv_params.x_traj_curr;
     hmmwv_params.y_traj_prev=hmmwv_params.y_traj_curr;
     double num_pts = hmmwv_params.x_traj_curr.size();
@@ -1098,7 +1086,6 @@ int main(int argc, char* argv[]) {
     const ChMatrix33<> inertia_mtx= my_hmmwv.GetChassisBody()->GetInertia();
     double Izz=inertia_mtx.GetElement(2,2);
     n.setParam("vehicle/chrono/common/Izz",Izz);
-
     enum chrono::vehicle::VehicleSide LEFT;
     enum chrono::vehicle::VehicleSide RIGHT;
     ChVector<> veh_com= my_hmmwv.GetVehicle().GetVehicleCOMPos();
@@ -1113,15 +1100,16 @@ int main(int argc, char* argv[]) {
     lb_length=lb_diff.Length();
     n.setParam("vehicle/chrono/common/la",la_length);
     n.setParam("vehicle/chrono/common/lb",lb_length);
+    std::string planner_namespace;
 
     while (app.GetDevice()->run()) {
       double time = hmmwv_params.my_hmmwv.GetSystem()->GetChTime();
       i=i+1;
       if (i>0){
       // Get trajectory parameters again
-      n.getParam("system/planner",planner_namespace);
-      n.getParam("vehicle/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
-      n.getParam("vehicle/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
+      n.getParam("system/planner/namespace",planner_namespace);
+      n.getParam("hmmwv/chrono/"+planner_namespace+"traj/x",hmmwv_params.x_traj_curr);
+      n.getParam("hmmwv/chrono/"+planner_namespace+"traj/y",hmmwv_params.y_traj_curr);
 
 
       num_pts = hmmwv_params.x_traj_curr.size();
@@ -1333,18 +1321,18 @@ int main(int argc, char* argv[]) {
           yaw_val=5*PI/2-yaw_val;
         }
 
-        n.setParam("vehicle/chrono/state/t",time); //time in chrono simulation
-        n.setParam("vehicle/chrono/state/x", global_pos[0]) ;
-        n.setParam("vehicle/chrono/state/yVal",global_pos[1]);
-        n.setParam("vehicle/chrono/state/ux",fabs(global_velCOM[0])); //speed measured at the origin of the chassis reference frame.
-        n.setParam("vehicle/chrono/state/v", global_velCOM[1]);
-        n.setParam("vehicle/chrono/state/ax", global_accCOM[0]);
-        n.setParam("vehicle/chrono/state/psi",yaw_val); //in radians
-        n.setParam("vehicle/chrono/state/r",-rot_dt[2]);//yaw rate
-        n.setParam("vehicle/chrono/state/sa",slip_angle); //slip angle
-        n.setParam("vehicle/chrono/control/thr",hmmwv_params.throttle_input); //throttle input in the range [0,+1]
-        n.setParam("vehicle/chrono/control/brk",hmmwv_params.braking_input); //braking input in the range [0,+1]
-        n.setParam("vehicle/chrono/control/str",hmmwv_params.steering_input); //steeering input in the range [-1,+1]
+        n.setParam("hmmwv_chrono/vehicleinfo/t_chrono",time); //time in chrono simulation
+        n.setParam("hmmwv_chrono/vehicleinfo/x_pos", global_pos[0]) ;
+        n.setParam("hmmwv_chrono/vehicleinfo/y_pos",global_pos[1]);
+        n.setParam("hmmwv_chrono/vehicleinfo/x_v",fabs(global_velCOM[0])); //speed measured at the origin of the chassis reference frame.
+        n.setParam("hmmwv_chrono/vehicleinfo/y_v", global_velCOM[1]);
+        n.setParam("hmmwv_chrono/vehicleinfo/x_a", global_accCOM[0]);
+        n.setParam("hmmwv_chrono/vehicleinfo/yaw_curr",yaw_val); //in radians
+        n.setParam("hmmwv_chrono/vehicleinfo/yaw_rate",-rot_dt[2]);//yaw rate
+        n.setParam("hmmwv_chrono/vehicleinfo/sa",slip_angle); //slip angle
+        n.setParam("hmmwv_chrono/vehicleinfo/thrt_in",hmmwv_params.throttle_input); //throttle input in the range [0,+1]
+        n.setParam("hmmwv_chrono/vehicleinfo/brk_in",hmmwv_params.braking_input); //braking input in the range [0,+1]
+        n.setParam("hmmwv_chrono/vehicleinfo/str_in",hmmwv_params.steering_input); //steeering input in the range [-1,+1]
 
         data_out.t_chrono=time; //time in chrono simulation
         data_out.x_pos= global_pos[0] ;

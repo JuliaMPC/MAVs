@@ -3,3 +3,4 @@ system:
   namespace: chrono
   flags:
    initilized: false
+   gui: true
