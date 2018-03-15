@@ -31,7 +31,7 @@
 #include <ros/callback_queue.h>
 #include "ros/ros.h"
 #include "std_msgs/String.h"
-#include "ros_chrono_traj_msgs/veh_status.h"
+#include "ros_chrono_msgs/veh_status.h"
 #include "traj_gen_chrono/Control.h"
 #include <sstream>
 #include "chrono_vehicle/ChVehicleModelData.h"
@@ -54,8 +54,8 @@ using namespace chrono::vehicle::hmmwv;
 // Problem parameters
 // Main Data Path
 //std::string data_path("/home/shreyas/.julia/v0.6/MAVs/catkin_ws/data/vehicle/");
-std::string data_path("../../../src/system/chrono/ros_chrono_traj/src/data/vehicle/");
-//std::string data_path("src/system/chrono/ros_chrono_traj/src/data/vehicle/");
+std::string data_path("../../../src/system/chrono/ros_chrono/src/data/vehicle/");
+//std::string data_path("src/system/chrono/ros_chrono/src/data/vehicle/");
 // Contact method type
 ChMaterialSurface::ContactMethod contact_method = ChMaterialSurface::SMC;
 
@@ -219,7 +219,7 @@ struct parameters
 //----------------------callback
 
 void controlCallback(const traj_gen_chrono::Control::ConstPtr &msg, parameters &hmmwv_params,ChVehicleIrrApp &app,ChIrrGuiDriver &driver_gui,
-double &target_speed,double &time,ros_chrono_traj_msgs::veh_status &data_out, ros::Publisher &vehicleinfo_pub){
+double &target_speed,double &time,ros_chrono_msgs::veh_status &data_out, ros::Publisher &vehicleinfo_pub){
 
   app.SetPaused(1);
 
@@ -417,7 +417,7 @@ char cwd[1024];
     ChVector<> initLoc(x0, y0, z0);
     ChQuaternion<> initRot(cos(PI/4), 0, 0, sin(PI/4)); //initial yaw of pi/2
 
-    ros::Publisher vehicleinfo_pub = n.advertise<ros_chrono_traj_msgs::veh_status>("vehicleinfo", 1);
+    ros::Publisher vehicleinfo_pub = n.advertise<ros_chrono_msgs::veh_status>("vehicleinfo", 1);
     //ros::Rate loop_rate(5);
 
     // ------------------------------
@@ -617,7 +617,7 @@ char cwd[1024];
             GetLog() << "\n";
         }*/
         callback_act=0;
-        ros_chrono_traj_msgs::veh_status data_out;
+        ros_chrono_msgs::veh_status data_out;
 
         ros::Subscriber sub = n.subscribe<traj_gen_chrono::Control>("desired_ref", 10, boost::bind(controlCallback, _1, boost::ref(hmmwv_params),boost::ref(app),boost::ref(driver_gui),
         boost::ref(target_speed),boost::ref(time),boost::ref(data_out),boost::ref(vehicleinfo_pub)));

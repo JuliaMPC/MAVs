@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(ros_chrono_traj)
+project(ros_chrono)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -15,7 +15,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
-  ros_chrono_traj_msgs
+  ros_chrono_msgs
   traj_gen_chrono
 )
 
@@ -115,7 +115,7 @@ find_package(
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES ros_chrono_traj
+#  LIBRARIES ros_chrono
    CATKIN_DEPENDS roscpp rospy std_msgs message_runtime
 #   DEPENDS system_lib Chrono
 )
@@ -149,7 +149,7 @@ endif()
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/ros_chrono_traj.cpp
+#   src/${PROJECT_NAME}/ros_chrono.cpp
 # )
 
 ## Add cmake target dependencies of the library
@@ -157,13 +157,13 @@ endif()
 ## either from message generation or dynamic reconfigure
 # add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
-MESSAGE(STATUS "...add hmmwv_model_traj")
+MESSAGE(STATUS "...add hmmwv_model")
 
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-# add_executable(${PROJECT_NAME}_node src/ros_chrono_traj_node.cpp)
-add_executable(hmmwv_model_traj src/hmmwv_model_traj.cpp)
+# add_executable(${PROJECT_NAME}_node src/ros_chrono_node.cpp)
+add_executable(hmmwv_model src/hmmwv_model.cpp)
 
 #--------------------------------------------------------------
 # Set properties for your executable target
@@ -174,7 +174,7 @@ add_executable(hmmwv_model_traj src/hmmwv_model_traj.cpp)
 # install tree (if using an installed version of Chrono).
 #--------------------------------------------------------------
 
-set_target_properties(hmmwv_model_traj PROPERTIES
+set_target_properties(hmmwv_model PROPERTIES
 	    COMPILE_FLAGS "${CHRONO_CXX_FLAGS} ${CH_CXX_FLAGS} ${CH_IRRLICHT_CXX_FLAGS} ${EXTRA_COMPILE_FLAGS}"
       COMPILE_DEFINITIONS "CHRONO_DATA_DIR=\"${CHRONO_DATA_DIR}\""
 	    LINK_FLAGS "${CHRONO_LINKER_FLAGS} ${LINKERFLAG_EXE}")
@@ -192,7 +192,7 @@ set_target_properties(hmmwv_model_traj PROPERTIES
 # target_link_libraries(${PROJECT_NAME}_node
 #   ${catkin_LIBRARIES}
 # )
-target_link_libraries(hmmwv_model_traj
+target_link_libraries(hmmwv_model
   ChronoEngine
   ChronoEngine_irrlicht
   ChronoEngine_vehicle
@@ -239,7 +239,7 @@ target_link_libraries(hmmwv_model_traj
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_ros_chrono_traj.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_ros_chrono.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
