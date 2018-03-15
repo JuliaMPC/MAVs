@@ -24,7 +24,7 @@ case:
    vx: [0,0,0.0]
    vy: [0,0,0]
 
- assumed:
+ assumed:  
   obstacle:
    num: 10
    radius: [1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0]
