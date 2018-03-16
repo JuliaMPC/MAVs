@@ -21,6 +21,7 @@
   <exec_depend>nloptcontrol_planner</exec_depend>
   <exec_depend>vehicle_description</exec_depend>
   <exec_depend>obstacle_detector</exec_depend>
+  <exec_depend>ros_base_planner</exec_depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>

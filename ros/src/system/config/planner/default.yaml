@@ -79,3 +79,66 @@ planner:
    acceptable_compl_inf_tol: 0.01  # "Acceptable" termination requires that the max-norm of the (unscaled) complementarity is less than this threshold
    acceptable_obj_change_tol: 1e20   # If the relative change of the objective function (scaled by Max(1,|f(x)|)) is less than this value, this part of the acceptable tolerance termination is satisfied
    diverging_iterates_tol: 1e20
+ ros_base_planner:
+   #Source: http://wiki.ros.org/navigation/Tutorials/RobotSetup
+   #More info at: http://wiki.ros.org/costmap_2d
+
+   #robot will only update its map with information about obstacles that
+   #are within 5 meters of the base
+  obstacle_range: 5
+
+   #robot will attempt to clear out space in front of it
+   #up to 3.0 meters away given a sensor reading
+  raytrace_range: 3.0
+
+   #footprint: [ [0.5, 0.5], [-0.5, 0.5], [-0.5, -0.5], [0.5, -0.5] ]
+  robot_radius: 2
+
+   #The inflation radius should be set to the maximum distance from
+   #obstacles at which a cost should be incurred. For example, setting
+   #paths that stay 0.55 meters or more away from obstacles as having equal
+   #the inflation radius at 0.55 meters means that the robot will treat all obstacle cost.
+  inflation_radius: 0.55
+  observation_sources: velodyne_pcl_sensor
+
+   #The "marking" and "clearing" parameters determine whether the sensor
+   #will be used to add obstacle information to the costmap, clear obstacle
+   #information from the costmap, or do both.
+  velodyne_pcl_sensor: {sensor_frame: velodyne_top_link, data_type: PointCloud,
+   topic: mavs_pcl, marking: true, clearing: true}
+  global_costmap:
+     #The "global_frame" parameter defines what coordinate frame the costmap should
+     #run in, in this case, we'll choose the /map frame. The "robot_base_frame"
+     #parameter defines the coordinate frame the costmap should reference for the
+     #base of the robot. The "update_frequency" parameter determines the frequency,
+     #in Hz, at which the costmap will run its update loop. The "static_map" parameter
+     #determines whether or not the costmap should initialize itself based on a map
+     #served by the map_server. If you aren't using an existing map or map server,
+     #set the static_map parameter to false.
+   global_frame: /map
+   robot_base_frame: base_link
+   update_frequency: 5.0
+   static_map: false
+   width: 20
+   height: 20
+   rolling_window: true
+   local_costmap:
+    global_frame: /map
+    robot_base_frame: base_link
+    update_frequency: 5.0
+    publish_frequency: 2.0
+    static_map: false
+    rolling_window: true
+    width: 15.0
+    height: 15.0
+    resolution: 0.05
+   TrajectoryPlannerROS:
+    max_vel_x: 0.45
+    min_vel_x: 0.1
+     #max_vel_theta: 1.0
+     #min_in_place_vel_theta: 0.4
+     #acc_lim_theta: 3.2
+    acc_lim_x: 2.5
+    acc_lim_y: 2.5
+    holonomic_robot: false
+    meter_scoring: true
