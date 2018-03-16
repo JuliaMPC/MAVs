@@ -30,9 +30,9 @@
     <arg name="gui" value="$(arg gui)"/>
   </include>
 
-  <!-- include file="$(find obstacle_detector)/launch/obstacle_detector.launch" -->
-    <!-- arg name="frame_id" value="$(arg frame_id)" / -->
-    <!-- arg name="manager" value="$(arg manager)" / -->
-  <!-- /include -->
+  <include file="$(find obstacle_detector)/launch/obstacle_detector.launch">
+    <arg name="frame_id" value="$(arg frame_id)" />
+    <arg name="manager" value="$(arg manager)" />
+  </include>
 
 </launch>

@@ -48,61 +48,61 @@ ObstacleExtractor::ObstacleExtractor(ros::NodeHandle& nh, ros::NodeHandle& nh_lo
 }
 
 ObstacleExtractor::~ObstacleExtractor() {
-  nh_local_.deleteParam("active");
-  nh_local_.deleteParam("use_scan");
-  nh_local_.deleteParam("use_pcl");
+  nh_local_.deleteParam("/obstacle_detector/obstacle_extractor/active");
+  nh_local_.deleteParam("/obstacle_detector/obstacle_extractor/use_scan");
+  nh_local_.deleteParam("/obstacle_detector/obstacle_extractor/use_pcl");
 
-  nh_local_.deleteParam("use_split_and_merge");
-  nh_local_.deleteParam("circles_from_visibles");
-  nh_local_.deleteParam("discard_converted_segments");
-  nh_local_.deleteParam("transform_coordinates");
+  nh_local_.deleteParam("/obstacle_detector/obstacle_extractor/use_split_and_merge");
+  nh_local_.deleteParam("/obstacle_detector/obstacle_extractor/circles_from_visibles");
+  nh_local_.deleteParam("/obstacle_detector/obstacle_extractor/discard_converted_segments");
+  nh_local_.deleteParam("/obstacle_detector/obstacle_extractor/transform_coordinates");
 
-  nh_local_.deleteParam("min_group_points");
+  nh_local_.deleteParam("/obstacle_detector/obstacle_extractor/min_group_points");
 
-  nh_local_.deleteParam("max_group_distance");
-  nh_local_.deleteParam("distance_proportion");
-  nh_local_.deleteParam("max_split_distance");
-  nh_local_.deleteParam("max_merge_separation");
-  nh_local_.deleteParam("max_merge_spread");
-  nh_local_.deleteParam("max_circle_radius");
-  nh_local_.deleteParam("radius_enlargement");
+  nh_local_.deleteParam("/obstacle_detector/obstacle_extractor/max_group_distance");
+  nh_local_.deleteParam("/obstacle_detector/obstacle_extractor/distance_proportion");
+  nh_local_.deleteParam("/obstacle_detector/obstacle_extractor/max_split_distance");
+  nh_local_.deleteParam("/obstacle_detector/obstacle_extractor/max_merge_separation");
+  nh_local_.deleteParam("/obstacle_detector/obstacle_extractor/max_merge_spread");
+  nh_local_.deleteParam("/obstacle_detector/obstacle_extractor/max_circle_radius");
+  nh_local_.deleteParam("/obstacle_detector/obstacle_extractor/radius_enlargement");
 
-  nh_local_.deleteParam("min_x_limit");
-  nh_local_.deleteParam("max_x_limit");
-  nh_local_.deleteParam("min_y_limit");
-  nh_local_.deleteParam("max_y_limit");
+  // nh_local_.deleteParam("min_x_limit");
+  // nh_local_.deleteParam("max_x_limit");
+  // nh_local_.deleteParam("min_y_limit");
+  // nh_local_.deleteParam("max_y_limit");
 
-  nh_local_.deleteParam("frame_id");
+  nh_local_.deleteParam("/obstacle_detector/obstacle_extractor/frame_id");
 }
 
 bool ObstacleExtractor::updateParams(std_srvs::Empty::Request &req, std_srvs::Empty::Response &res) {
   bool prev_active = p_active_;
 
-  nh_local_.param<bool>("active", p_active_, true);
-  nh_local_.param<bool>("use_scan", p_use_scan_, false);
-  nh_local_.param<bool>("use_pcl", p_use_pcl_, true);
+  nh_local_.param<bool>("/obstacle_detector/obstacle_extractor/active", p_active_, true);
+  nh_local_.param<bool>("/obstacle_detector/obstacle_extractor/use_scan", p_use_scan_, false);
+  nh_local_.param<bool>("/obstacle_detector/obstacle_extractor/use_pcl", p_use_pcl_, true);
 
-  nh_local_.param<bool>("use_split_and_merge", p_use_split_and_merge_, true);
-  nh_local_.param<bool>("circles_from_visibles", p_circles_from_visibles_, true);
-  nh_local_.param<bool>("discard_converted_segments", p_discard_converted_segments_, true);
-  nh_local_.param<bool>("transform_coordinates", p_transform_coordinates_, true);
+  nh_local_.param<bool>("/obstacle_detector/obstacle_extractor/use_split_and_merge", p_use_split_and_merge_, true);
+  nh_local_.param<bool>("/obstacle_detector/obstacle_extractor/circles_from_visibles", p_circles_from_visibles_, true);
+  nh_local_.param<bool>("/obstacle_detector/obstacle_extractor/discard_converted_segments", p_discard_converted_segments_, true);
+  nh_local_.param<bool>("/obstacle_detector/obstacle_extractor/transform_coordinates", p_transform_coordinates_, true);
 
-  nh_local_.param<int>("min_group_points", p_min_group_points_, 5);
+  nh_local_.param<int>("/obstacle_detector/obstacle_extractor/min_group_points", p_min_group_points_, 5);
 
-  nh_local_.param<double>("max_group_distance", p_max_group_distance_, 0.1);
-  nh_local_.param<double>("distance_proportion", p_distance_proportion_, 0.00628);
-  nh_local_.param<double>("max_split_distance", p_max_split_distance_, 0.2);
-  nh_local_.param<double>("max_merge_separation", p_max_merge_separation_, 0.2);
-  nh_local_.param<double>("max_merge_spread", p_max_merge_spread_, 0.2);
-  nh_local_.param<double>("max_circle_radius", p_max_circle_radius_, 0.6);
-  nh_local_.param<double>("radius_enlargement", p_radius_enlargement_, 0.25);
+  nh_local_.param<double>("/obstacle_detector/obstacle_extractor/max_group_distance", p_max_group_distance_, 0.1);
+  nh_local_.param<double>("/obstacle_detector/obstacle_extractor/distance_proportion", p_distance_proportion_, 0.00628);
+  nh_local_.param<double>("/obstacle_detector/obstacle_extractor/max_split_distance", p_max_split_distance_, 0.2);
+  nh_local_.param<double>("/obstacle_detector/obstacle_extractor/max_merge_separation", p_max_merge_separation_, 0.2);
+  nh_local_.param<double>("/obstacle_detector/obstacle_extractor/max_merge_spread", p_max_merge_spread_, 0.2);
+  nh_local_.param<double>("/obstacle_detector/obstacle_extractor/max_circle_radius", p_max_circle_radius_, 0.6);
+  nh_local_.param<double>("/obstacle_detector/obstacle_extractor/radius_enlargement", p_radius_enlargement_, 0.25);
 
-  nh_local_.param<double>("min_x_limit", p_min_x_limit_, -10.0);
-  nh_local_.param<double>("max_x_limit", p_max_x_limit_,  10.0);
-  nh_local_.param<double>("min_y_limit", p_min_y_limit_, -10.0);
-  nh_local_.param<double>("max_y_limit", p_max_y_limit_,  10.0);
+  // nh_local_.param<double>("min_x_limit", p_min_x_limit_, -10.0);
+  // nh_local_.param<double>("max_x_limit", p_max_x_limit_,  10.0);
+  // nh_local_.param<double>("min_y_limit", p_min_y_limit_, -10.0);
+  // nh_local_.param<double>("max_y_limit", p_max_y_limit_,  10.0);
 
-  nh_local_.param<string>("frame_id", p_frame_id_, "map");
+  nh_local_.param<string>("/obstacle_detector/obstacle_extractor/frame_id", p_frame_id_, "map");
 
   if (p_active_ != prev_active) {
     if (p_active_) {
