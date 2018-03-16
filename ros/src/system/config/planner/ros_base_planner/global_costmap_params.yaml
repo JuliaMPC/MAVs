@@ -12,6 +12,6 @@ global_costmap:
   robot_base_frame: base_link
   update_frequency: 5.0
   static_map: false
-  width: 20
-  height: 20
+  width: 50
+  height: 50
   rolling_window: true

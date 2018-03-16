@@ -9,8 +9,8 @@ obstacle_range: 5
 #up to 3.0 meters away given a sensor reading
 raytrace_range: 3.0
 
-#footprint: [[x0, y0], [x1, y1], ... [xn, yn]]
-robot_radius: 3
+footprint: [[2, 2], [2, -2], [-2, -2], [-2, 2]]
+#robot_radius: 3
 
 #The inflation radius should be set to the maximum distance from
 #obstacles at which a cost should be incurred. For example, setting
