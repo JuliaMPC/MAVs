@@ -177,7 +177,7 @@ Date Create: 2/28/2018, Last Modified: 2/28/2018 \n
 """
 function setInitStateParams(c)
   RobotOS.set_param("state/x", RobotOS.get_param("case/actual/X0/x"))
-  RobotOS.set_param("state/yVal", RobotOS.get_param("case/actual/X0/yVal"))
+  RobotOS.set_param("state/y", RobotOS.get_param("case/actual/X0/yVal"))
   RobotOS.set_param("state/sa",RobotOS.get_param("case/actual/X0/sa"))
   RobotOS.set_param("state/r", RobotOS.get_param("case/actual/X0/r"))
   RobotOS.set_param("state/psi", RobotOS.get_param("case/actual/X0/psi"))
@@ -200,7 +200,7 @@ function setStateData(n)
 
   # copy current vehicle state in case it changes
   x=deepcopy(RobotOS.get_param("state/x"))
-  y=deepcopy(RobotOS.get_param("state/yVal"))
+  y=deepcopy(RobotOS.get_param("state/y"))
   v=deepcopy(RobotOS.get_param("state/sa"))
   r=deepcopy(RobotOS.get_param("state/r"))
   psi=deepcopy(RobotOS.get_param("state/psi"))
@@ -274,6 +274,8 @@ function loop(pub,n,c)
         init = true
         RobotOS.set_param("system/nloptcontrol_planner/flags/initilized",true)
         println("nloptcontrol_planner has been initialized.")
+        while(RobotOS.get_param("system/paused"))
+        end
       end
       rossleep(loop_rate)  # sleep for leftover time
   end  # while()
@@ -342,7 +344,6 @@ function main()
       if isequal(typeof(c[keyA][key]),String); c[keyA][key] = Symbol(c[keyA][key]); end
     end
   end
-  # fix messed up data types
 
   n=initializeAutonomousControl(c);
 

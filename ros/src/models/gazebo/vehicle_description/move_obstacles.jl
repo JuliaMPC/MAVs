@@ -21,8 +21,11 @@ function loop(pub)
 
     loop_rate = Rate(5.0)
 
-    RobotOS.set_param("system/vehicle_description/bool/init_move_obstacles",true)
+    RobotOS.set_param("system/vehicle_description/flags/obstacles_initialized",true)
     println("obstacle plugin in julia has been initialized.")
+
+    while(RobotOS.get_param("system/paused"))
+    end
 
     while !is_shutdown()
         for i in 1:obs_num
@@ -42,7 +45,7 @@ Date Create: 2/28/2018, Last Modified: 3/12/2018 \n
 --------------------------------------------------------------------------------------\n
 """
 function main()
-    init_node("rosjl_move_obstacles")
+    init_node("move_obstacles_gazebo")
 
     obs_num = length(RobotOS.get_param("/case/actual/obstacle/radius"))
 

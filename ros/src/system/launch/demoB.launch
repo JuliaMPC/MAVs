@@ -25,8 +25,8 @@
   <rosparam command="load" file="$(arg system_params_path)" />
 
   <include file="$(find nloptcontrol_planner)/launch/demo.launch">
-    <arg name="case_params_path" value="$(arg vehicle_params_path)"/>
-    <arg name="planner_params_path" value="$(arg vehicle_params_path)"/>
+    <arg name="case_params_path" value="$(arg case_params_path)"/>
+    <arg name="planner_params_path" value="$(arg planner_params_path)"/>
     <arg name="system_params_path" value="$(arg system_params_path)"/>
   </include>
 
@@ -37,5 +37,8 @@
     <arg name="obstacle_num" value="$(arg obstacle_num)"/>
     <arg name="gui" value="$(arg gui)"/>
   </include>
+
+  <!-- initialize system -->
+  <node name="bootstrap" pkg="system" type="bootstrap.jl" output="screen"/>
 
 </launch>
