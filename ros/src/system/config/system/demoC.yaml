@@ -1,0 +1,22 @@
+system:
+ vehicle_description:
+  flags:
+   postion_update_external: false
+   lidar_initialized: false
+   obstacles_initialized: false
+ nloptcontrol_planner:
+  namespace: nloptcontrol
+  flags:
+   initilized: false
+   known_environment: true
+   3DOF_plant: true
+   goal_attained: false
+ ros_base_planner:
+  nameSpace: ros_base_planner
+  flags:
+   initialized: false
+   known_environment: true
+   3DOF_plant: true
+   goal_attained: false
+ initialized: false
+ planner: ros_base_planner

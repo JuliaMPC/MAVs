@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- demo of obstacle_detector with vehicle_description-->
+  <!-- TODO fix obstacle_detector -->
+
+  <!--  ************* vehicle_description args and parameters ***************  -->
+  <arg name="system_params_path" default="$(find system)/config/system/demoA.yaml"/>
+  <arg name="vehicle_params_path" default="$(find system)/config/vehicle/hmmwv.yaml"/>
+  <arg name="case_params_path" default="$(find system)/config/case/case1.yaml"/>
+  <arg name="obstacle_num" default="3"/>
+  <arg name="gui" default="true"/>
+
+  <param name="system_params_path" value="$(arg system_params_path)"/>
+  <param name="case_params_path" value="$(arg case_params_path)"/>
+
+  <rosparam command="load" file="$(arg case_params_path)" />
+  <rosparam command="load" file="$(arg system_params_path)" />
+  <rosparam command="load" file="$(arg vehicle_params_path)" />
+
+  <!--  ************* obstacle_detector args and parameters ***************  -->
+  <arg name="frame_id" default="velodyne_top_link" />
+  <arg name="manager" default="$(arg frame_id)_nodelet_manager" />
+
+  <include file="$(find vehicle_description)/launch/main.launch">
+    <arg name="system_params_path" value="$(arg system_params_path)"/>
+    <arg name="vehicle_params_path" value="$(arg vehicle_params_path)"/>
+    <arg name="case_params_path" value="$(arg case_params_path)"/>
+    <arg name="obstacle_num" value="$(arg obstacle_num)"/>
+    <arg name="gui" value="$(arg gui)"/>
+  </include>
+
+  <!-- include file="$(find obstacle_detector)/launch/obstacle_detector.launch" -->
+    <!-- arg name="frame_id" value="$(arg frame_id)" / -->
+    <!-- arg name="manager" value="$(arg manager)" / -->
+  <!-- /include -->
+
+</launch>

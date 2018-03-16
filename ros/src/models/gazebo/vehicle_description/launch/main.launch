@@ -6,16 +6,11 @@
   <!-- TODO figure out how to parametrically get obstacle_num -->
   <!-- TODO ask TQ if lidar_data should be launched here -->
 
-  <arg name="system_params_path" default="$(find system)/config/system/global.yaml"/>
-  <arg name="vehicle_params_path" default="$(find system)/config/vehicle/hmmwv.yaml"/>
-  <arg name="case_params_path" default="$(find system)/config/case/case1.yaml"/>
-  <arg name="obstacle_num" default="3"/>
-  <arg name="gui" default="true"/>
-
-  <!--  ************** Global Parameters ***************  -->
-  <rosparam command="load" file="$(arg system_params_path)" />
-  <rosparam command="load" file="$(arg vehicle_params_path)" />
-  <rosparam command="load" file="$(arg case_params_path)" />
+  <arg name="system_params_path"/>
+  <arg name="vehicle_params_path"/>
+  <arg name="case_params_path"/>
+  <arg name="obstacle_num"/>
+  <arg name="gui"/>
 
   <!-- start gazebo and load the world and spawn robot into Gazebo -->
   <include file="$(find vehicle_description)/launch/vehicle.launch">

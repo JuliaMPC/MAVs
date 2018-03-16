@@ -7,7 +7,7 @@ are up an running -->
    <master auto="start"/>
 
     <arg name="case_params_path" default="$(find system)/config/case/case1.yaml"/>
-    <arg name="global_params_path" default="$(find system)/config/system/global.yaml"/>
+    <arg name="global_params_path" default="$(find system)/config/system/demoC.yaml"/>
     <!--param name="global_params_path" value="$(arg global_params_path)"/-->
 
     <!--TODO remove this temp config extrr-->
