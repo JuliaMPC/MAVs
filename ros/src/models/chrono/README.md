@@ -27,16 +27,19 @@ $ roslaunch ros_chrono path_follower.launch
 ```
 ## Change Vehicle Initial Conditions
 
-To change intiial conditions, initial trajectory, or turn off the GUI (work in progress), edit the parameters in the HMMWV YAML config file:
+Change initial conditions to x=200.0 in case.yaml. To change initial trajectory edit the parameters in the hmmwv.yaml config file. To turn off the GUI (work in progress), change the value of system/chrono/flags/gui to false in test_chrono.yaml.
 
 ```
-$ sudo gedit ros/src/system/chrono/ros_chrono/config/hmmwv_params.yaml
+$ sudo gedit ros/src/models/chrono/ros_chrono/config/hmmwv_params.yaml
+$ sudo gedit ros/src/system/config/vehicle/hmmwv.yaml
+$ sudo gedit ros/src/system/config/case1.yaml
+$ sudo gedit ros/src/system/system/test_chrono.yaml
 
 ```
 
 ## Change Values of Updated Path
 
-Change the values of x2, y2 in traj_gen_chrono.cpp and recompile using catkin_make.
+Change the values of x2, y2 in traj_gen_chrono.cpp and recompile using catkin_make. Change the system/planner parameter to default in global.yaml.
 
 ## Monitor Vehicle State
 
@@ -70,37 +73,35 @@ $ rosparam set <param_name> "param_value"
 - lb: 1.7245  
 
 ## Parameter list
-- /hmmwv_chrono/gui_status (Switch to turn gui on or off)
-- /hmmwv_chrono/initial_conditions/ax (Initial x acceleration)
-- /hmmwv_chrono/initial_conditions/pitch (Initial pitch)
--/hmmwv_chrono/initial_conditions/r (Initial r)
-- /hmmwv_chrono/initial_conditions/roll (Initial roll)
-- /hmmwv_chrono/initial_conditions/sa (Initial steering angle)
-- /hmmwv_chrono/initial_conditions/ux (Initial x speed)
-- /hmmwv_chrono/initial_conditions/v (Initial velocity)
-- /hmmwv_chrono/initial_conditions/v_des (Desired velocity)
-- /hmmwv_chrono/initial_conditions/x (Initial x)
-- /hmmwv_chrono/initial_conditions/y (Initial y)
-- /hmmwv_chrono/initial_conditions/yaw (Initial yaw)
-- /hmmwv_chrono/initial_conditions/z (Initial z)
-- /hmmwv_chrono/traj/x_traj (Desired x path)
-- /hmmwv_chrono/traj/y_traj (Desired y path)
-- /hmmwv_chrono/vehicle_parameters/Izz (Moment of Inertia about z axis)
-- /hmmwv_chrono/vehicle_parameters/la (Distance from COM to front axle)
-- /hmmwv_chrono/vehicle_parameters/lb (Distance from COM to rear axle)
-- /hmmwv_chrono/vehicle_parameters/mass (Vehicle mass)
-- /hmmwv_chrono/vehicleinfo/brk_in (Brake input)
-- /hmmwv_chrono/vehicleinfo/sa (Steering angle)
-- /hmmwv_chrono/vehicleinfo/str_in (Steering input)
-- /hmmwv_chrono/vehicleinfo/t_chrono (Time in chrono model)
-- /hmmwv_chrono/vehicleinfo/thrt_in (Throttle input)
-- /hmmwv_chrono/vehicleinfo/x_a (X acceleration)
-- /hmmwv_chrono/vehicleinfo/x_pos (X position)
-- /hmmwv_chrono/vehicleinfo/x_v (X speed)
-- /hmmwv_chrono/vehicleinfo/y_pos (Y position)
-- /hmmwv_chrono/vehicleinfo/y_v (Y speed)
-- /hmmwv_chrono/vehicleinfo/yaw_curr (Yaw)
-- /hmmwv_chrono/vehicleinfo/yaw_rate (Yaw rate)
+- /system/chrono/flags/gui (Switch to true or false)
+- /case/X0/actual/ax (Initial x acceleration)
+- /hmmwv_chrono/X0/theta (Initial pitch)
+- /case/X0/actual/r (Initial r)
+- /hmmwv_chrono/X0/theta (Initial roll)
+- /case/X0/actual/sa (Initial steering angle)
+- /case/X0/actual/ux (Initial x speed)
+- /case/X0/actual/v (Initial velocity)
+- /hmmwv_chrono/X0/v_des (Desired velocity)
+- /case/X0/actual/x (Initial x)
+- /case/X0/actual/yVal (Initial y)
+- /case/X0/actual/psi (Initial yaw)
+- /hmmwv_chrono/X0/z (Initial z)
+- /vehicle/chrono/common/Izz (Moment of Inertia about z axis)
+- /vehicle/chrono/common/la (Distance from COM to front axle)
+- /vehicle/chrono/common/lb (Distance from COM to rear axle)
+- /vehicle/chrono/common/mass (Vehicle mass)
+- /vehicle/chrono/control/brk_in (Brake input)
+- /vehicle/chrono/state/sa (Steering angle)
+- /vehicle/chrono/control/str (Steering input)
+- /vehicle/chrono/state/t (Time in chrono model)
+- /vehicle/chrono/control/thr (Throttle input)
+- /vehicle/chrono/state/ax (X acceleration)
+- /vehicle/chrono/state/x (X position)
+- /vehicle/chrono/state/ux (X speed)
+- /vehicle/chrono/state/yVal (Y position)
+- /vehicle/chrono/state/v (Y speed)
+- /vehicle/chrono/state/psi (Yaw)
+- /vehicle/chrono/state/r (Yaw rate)
 
 ## Topic list
 - /vehicleinfo (Vehicle states, inputs, and time)

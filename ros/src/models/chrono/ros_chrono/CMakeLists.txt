@@ -16,7 +16,6 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
   ros_chrono_msgs
-  traj_gen_chrono
 )
 
 find_package(
@@ -60,8 +59,7 @@ find_package(
 ## Generate messages in the 'msg' folder
 #add_message_files(
 #   FILES
-#   veh_status.msg
-#   command_chrono.msg
+#
 #)
 
 ## Generate services in the 'srv' folder
@@ -115,9 +113,9 @@ find_package(
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES ros_chrono
-   CATKIN_DEPENDS roscpp rospy std_msgs message_runtime
-#   DEPENDS system_lib Chrono
+   LIBRARIES ros_chrono
+   CATKIN_DEPENDS roscpp rospy std_msgs message_runtime ros_chrono_msgs
+   DEPENDS system_lib Chrono
 )
 
 ###########
@@ -133,7 +131,7 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
   ${CHRONO_INCLUDE_DIRS}
   ${CH_IRRLICHTINC}
-#  ${Irrlicht_INCLUDE_DIRS}
+  ${Irrlicht_INCLUDE_DIRS}
 )
 
 #--------------------------------------------------------------
@@ -186,7 +184,7 @@ set_target_properties(hmmwv_model PROPERTIES
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-# add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(hmmwv_model ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
 # target_link_libraries(${PROJECT_NAME}_node

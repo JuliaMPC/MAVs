@@ -56,6 +56,8 @@ vehicle:
    v: 0.0 #Vy
    ax: 0.0
    psi: 0.0 #yaw
+   theta: 0.0
+   phi: 0.0
    r: 0.0 #yaw rate
    sa: 0.0
 
