@@ -11,7 +11,6 @@ the initial desired path. The vehicle's states are published in a ROS msg and al
  - ros_chrono_msgs
 
 ## How to Build
-Change initial condition case/actual/X0/x to x=200.0 in case.yaml. Change system/planner value in global.yaml to default.
 ```
 
 $ cd ~/MAVs/ros
@@ -19,6 +18,7 @@ $ catkin_make
 
 ```
 ## How to Start
+Change initial condition case/actual/X0/x to x=200.0 in case.yaml. Change system/planner value in global.yaml to default.
 
 ```
 $ cd $HOME/MAVs/ros
