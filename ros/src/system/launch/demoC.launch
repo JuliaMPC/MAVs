@@ -13,6 +13,7 @@
   <arg name="laser_scan_topic" default="/laser_scan"/>
   <arg name="case_params_file" default="$(find system)/config/case/case1.yaml"/>
   <arg name="global_params_file" default="$(find system)/config/system/demoC.yaml"/>
+  <arg name="rviz_config_file" default="$(find system)/config/planner/ros_base_planner/default.rviz"/>
 
   <param name="system_params_path" value="$(arg system_params_path)"/>
   <param name="case_params_path" value="$(arg case_params_path)"/>
@@ -35,6 +36,7 @@
     <arg name="case_params_file" value="$(arg system_params_path)"/>
     <arg name="global_params_file" value="$(arg vehicle_params_path)"/>
     <arg name="laser_scan_topic" value="$(arg laser_scan_topic)"/>
+    <arg name="rviz_config_file" value="$(arg rviz_config_file)"/>
   </include>
 
 </launch>
