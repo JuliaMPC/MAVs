@@ -1,15 +1,18 @@
 system:
  vehicle_description:
   flags:
-   postion_update_external: false
+   running: true
    lidar_initialized: false
    obstacles_initialized: false
+   postion_update_external: true
+   obstacles_initialized: false
  nloptcontrol_planner:
-  nameSpace: nloptcontrol
+  namespace: nloptcontrol
   flags:
+   running: true
    initilized: false
    known_environment: true
    3DOF_plant: true
    goal_attained: false
  initialized: false
- planner: nloptcontrol 
+ paused: true

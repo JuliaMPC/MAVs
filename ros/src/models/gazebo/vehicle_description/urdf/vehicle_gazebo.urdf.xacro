@@ -44,7 +44,7 @@
       <!-- <robotNamespace>/hmmwv</robotNamespace> -->
       <bodyName>${base_link}</bodyName>
       <topicName>${ground_truth_topic}</topicName>
-      <frameName>${map}</frameName>
+      <frameName>${frameName}</frameName>
       <updateRate>100.0</updateRate>
     </plugin>
  </gazebo>

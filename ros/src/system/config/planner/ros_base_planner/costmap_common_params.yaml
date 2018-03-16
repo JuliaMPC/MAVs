@@ -1,0 +1,29 @@
+#Source: http://wiki.ros.org/navigation/Tutorials/RobotSetup
+#More info at: http://wiki.ros.org/costmap_2d
+
+#robot will only update its map with information about obstacles that
+#are within 5 meters of the base
+obstacle_range: 5
+
+#robot will attempt to clear out space in front of it
+#up to 3.0 meters away given a sensor reading
+raytrace_range: 3.0
+
+footprint: [[2, 2], [2, -2], [-2, -2], [-2, 2]]
+#robot_radius: 3
+
+#The inflation radius should be set to the maximum distance from
+#obstacles at which a cost should be incurred. For example, setting
+#paths that stay 0.55 meters or more away from obstacles as having equal
+#the inflation radius at 0.55 meters means that the robot will treat all obstacle cost.
+inflation_radius: 0.55
+
+observation_sources: velodyne_pcl_sensor
+
+#The "marking" and "clearing" parameters determine whether the sensor
+#will be used to add obstacle information to the costmap, clear obstacle
+#information from the costmap, or do both.
+velodyne_pcl_sensor: {sensor_frame: velodyne_top_link, data_type: PointCloud,
+  topic: mavs_pcl, marking: true, clearing: true}
+
+#transform_tolerance: 1

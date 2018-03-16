@@ -32,6 +32,10 @@ function loop_straight_line(set_state,get_state)
 
     RobotOS.set_param("system/vehicle_description/flags/lidar_initialized",true)
     println("lidar simulation in Gazebo has been initialized")
+
+    while(RobotOS.get_param("system/paused"))
+    end
+
     while !is_shutdown()
 
         # Get the current position of the Gazebo model
@@ -46,7 +50,7 @@ function loop_straight_line(set_state,get_state)
         # Define position to move robot
         vehPose = gs_r.pose  # use the current position
         vehPose.position.x = gs_r.pose.position.x
-        vehPose.position.y = gs_r.pose.position.y + 0.1
+        vehPose.position.y = gs_r.pose.position.y
 
         # Define the robot state
         ms = ModelState()
@@ -79,7 +83,10 @@ function loop(set_state,get_state)
     RobotOS.set_param("system/vehicle_description/flags/lidar_initialized",true)
     println("lidar simulation in Gazebo has been initialized")
 
-    # While loop for waiting goes here
+    while(RobotOS.get_param("system/paused"))
+    end
+
+    # TODO add a system level parameter for mission complete!
     while !is_shutdown()
 
         # Define the robot state
@@ -113,7 +120,7 @@ Date Create: 2/28/2018, Last Modified: 2/28/2018 \n
 --------------------------------------------------------------------------------------\n
 """
 function main()
-    init_node("rosjl_move_hmmwv")
+    init_node("move_vehicle_gazebo")
 
     # Set up service to get Gazebo model state
     const get_state = ServiceProxy("/gazebo/get_model_state", GetModelState)

@@ -1,0 +1,144 @@
+planner:
+ nloptcontrol_planner:
+  misc:
+   model: ThreeDOFv2      # function name
+   Xlims: [-100.,100.]    # limit for x
+   Ylims: [-1., 140.]     # limit for Y
+   tp: NaN                # prediction horizon (s)
+   tex: 0.5               # execution horizon (s)
+   sm: 4.5                # (m) distance to make sure we don't hit obstacle (for optimization)
+   sm2: 3.                # (m) distance to make sure we don't hit obstacle (for crash checking)
+   Lr: 50.                # LiDAR range (m)
+   L_rd: 5.               # relaxation distance to LiDAR range
+   Nck: NaN               # number of points per interval
+   N: NaN                 # number of points in :tm methods
+   solver: :KNITRO         # either :IPOPT or :KNITRO
+   mpc_max_iter: 60       # an MPC parameter
+   PredictX0: true        # if the state that the vehicle will be at when the optimization is finished is to be predicted
+   FixedTp: true          # fixed final time for predicting X0
+   finalTimeDV: true      # bool to indicate if the final time is a variable
+   integrationScheme: :bkwEuler
+   tfMax: 10 # maximum final time in MPC
+   EP: # small number to avoid singularities TODO move this from VehicleModels.jl
+
+  weights:
+   goal: 100.
+   psi: 0.01
+   time: 0.05
+   haf: 1.0e-5
+   Fz: 0.1
+   ce: 1.
+   sa: 0.1
+   sr: 1.
+   jx: 0.01
+   path: 1.0
+   driver: 1.0
+
+  tolerances:
+   ix: 0.05
+   iy: 0.05
+   iv: 0.05
+   ir: 0.05
+   ipsi: 0.01
+   isa: 0.001
+   iu: 0.05
+   iax: 0.05
+   fx: 1.0
+   fy: 1.0
+   fv: NaN # NOTE YAML file turns these into strings and to avoid complication these are currently set manually
+   fr: NaN
+   fpsi: NaN
+   fsa: NaN
+   fu: NaN
+   fax: NaN
+
+  solver:
+  # settings for both KNITRO and IPOPT
+   outlev: 0 # (c.m.solver==:Ipopt) ? :print_level : :outlev # print level
+   feastol_abs: 7e-2 # (c.m.solver==:Ipopt) ? :constr_viol_tol : :feastol_abs
+   maxit: 500 # (c.m.solver==:Ipopt) ? :max_iter : :maxit
+   maxtime_cpu: 30. # (c.m.solver==:Ipopt) ? :max_cpu_time : :maxtime_cpu
+
+  # settings for KNITRO
+   ftol: 1e-15 # relative change in the objective function is less than ftol for ftol_iters consecutive iterations
+   feastol: 1.0e20   # relative stopping tolerance for the feasibility error
+   ftol_iters: 5   # number of iters to stop after if change in obj fun is less than
+   infeastol: 1e-2 # (relative) tolerance used for declaring infeasibility of a model
+   maxfevals: -1  # maximum number of function evaluations before termination
+   maxtime_real: 30. # in seconds, the maximum allowable real time before termination
+   opttol: 1e20  # final relative stopping tolerance for the KKT (optimality) error
+   opttol_abs: 5e-1 # final absolute stopping tolerance for the KKT (optimality) error
+   xtol: 1e-12  # optimization process will terminate if the relative change in all components of the solution point estimate is less than xtol for xtol_iters
+  # settings for Ipopt
+   warm_start_init_point: "yes"  #
+   dual_inf_tol: 5.   # Absolute tolerance on the dual infeasibility
+   compl_inf_tol: 1e-1  # Absolute tolerance on the complementarity.
+   acceptable_tol: 1e-2   # Determines which (scaled) overall optimality error is considered to be "acceptable.
+   acceptable_constr_viol_tol: 0.01   # Absolute tolerance on the constraint violation. "Acceptable" termination requires that the max-norm of the (unscaled) constraint violation is less than this threshold
+   acceptable_dual_inf_tol: 1e10   # Acceptable" termination requires that the (max-norm of the unscaled) dual infeasibility is less than this threshold
+   acceptable_compl_inf_tol: 0.01  # "Acceptable" termination requires that the max-norm of the (unscaled) complementarity is less than this threshold
+   acceptable_obj_change_tol: 1e20   # If the relative change of the objective function (scaled by Max(1,|f(x)|)) is less than this value, this part of the acceptable tolerance termination is satisfied
+   diverging_iterates_tol: 1e20
+ ros_base_planner:
+   #Source: http://wiki.ros.org/navigation/Tutorials/RobotSetup
+   #More info at: http://wiki.ros.org/costmap_2d
+
+   #robot will only update its map with information about obstacles that
+   #are within 5 meters of the base
+  obstacle_range: 5
+
+   #robot will attempt to clear out space in front of it
+   #up to 3.0 meters away given a sensor reading
+  raytrace_range: 3.0
+
+   #footprint: [ [0.5, 0.5], [-0.5, 0.5], [-0.5, -0.5], [0.5, -0.5] ]
+  robot_radius: 2
+
+   #The inflation radius should be set to the maximum distance from
+   #obstacles at which a cost should be incurred. For example, setting
+   #paths that stay 0.55 meters or more away from obstacles as having equal
+   #the inflation radius at 0.55 meters means that the robot will treat all obstacle cost.
+  inflation_radius: 0.55
+  observation_sources: velodyne_pcl_sensor
+
+   #The "marking" and "clearing" parameters determine whether the sensor
+   #will be used to add obstacle information to the costmap, clear obstacle
+   #information from the costmap, or do both.
+  velodyne_pcl_sensor: {sensor_frame: velodyne_top_link, data_type: PointCloud,
+   topic: mavs_pcl, marking: true, clearing: true}
+  global_costmap:
+     #The "global_frame" parameter defines what coordinate frame the costmap should
+     #run in, in this case, we'll choose the /map frame. The "robot_base_frame"
+     #parameter defines the coordinate frame the costmap should reference for the
+     #base of the robot. The "update_frequency" parameter determines the frequency,
+     #in Hz, at which the costmap will run its update loop. The "static_map" parameter
+     #determines whether or not the costmap should initialize itself based on a map
+     #served by the map_server. If you aren't using an existing map or map server,
+     #set the static_map parameter to false.
+   global_frame: /map
+   robot_base_frame: base_link
+   update_frequency: 5.0
+   static_map: false
+   width: 20
+   height: 20
+   rolling_window: true
+   local_costmap:
+    global_frame: /map
+    robot_base_frame: base_link
+    update_frequency: 5.0
+    publish_frequency: 2.0
+    static_map: false
+    rolling_window: true
+    width: 15.0
+    height: 15.0
+    resolution: 0.05
+   TrajectoryPlannerROS:
+    max_vel_x: 0.45
+    min_vel_x: 0.1
+     #max_vel_theta: 1.0
+     #min_in_place_vel_theta: 0.4
+     #acc_lim_theta: 3.2
+    acc_lim_x: 2.5
+    acc_lim_y: 2.5
+    holonomic_robot: false
+    meter_scoring: true

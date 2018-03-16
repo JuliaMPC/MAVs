@@ -1,4 +1,9 @@
 <launch>
+  <arg name="global_params_file" default="$(find system)/config/system/global.yaml"/>
+  <arg name="vehicle_params_file" default="$(find system)/config/vehicle/hmmwv.yaml"/>
+  <arg name="case_params_file" default="$(find system)/config/case/case1.yaml"/>
+
+
   <rosparam command="load" file="$(find ros_chrono)/config/hmmwv_params.yaml"/>
   <node name="Reference" pkg="traj_gen_chrono" type="traj_gen_chrono"/>
   <node name="Chronode" pkg="ros_chrono" type="hmmwv_model" cwd="node" />

@@ -9,9 +9,9 @@ system:
   flags:
     initialized: false
     gui: true
- ros_global_planner:
-  namespace: ros_global_planner
+ ros_base_planner:
+  namespace: ros_base_planner
   flags:
    initialized: false
  planner:
-  namespace: vehicle/chrono
+  namespace: vehicle/chrono/default

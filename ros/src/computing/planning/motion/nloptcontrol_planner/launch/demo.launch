@@ -1,25 +1,20 @@
 <launch>
 
-  <arg name="case_name" default="RTPP"/>
-  <arg name="obstacle_name" default="s1"/>
-  <arg name="known_environment" default="true"/>
-  <arg name="3DOF_plant" default="true"/>
-  <arg name="global_params_file" default="$(find system)/config/global_params.yaml"/>
+  <arg name="case_params_path" default="$(find system)/config/case/s1.yaml"/>
+  <arg name="planner_params_path" default="$(find system)/config/planner/RTPP.yaml"/>
+  <arg name="system_params_path" default="$(find system)/config/system/test_nloptcontrol_planner.yaml"/>
 
-  <!--  ************** Global Parameters ***************  -->
-  <rosparam command="load" file="$(arg global_params_file)" />
+  <!--  ************** Parameters ***************  -->
+  <!--set the filenames as rosparams, the datatypes of the parameters get messed up if they are put on the ROS server.. -->
+  <!--... and then loaded into julia through RobotOS.jl; but they work better fine by loading using YAML.jl -->
+  <param name="case_params_path" value="$(arg case_params_path)"/>
+  <param name="planner_params_path" value="$(arg planner_params_path)"/>
+  <param name="system_params_path" value="$(arg system_params_path)"/>
 
-  <param name="nloptcontrol_planner/case_name" value="$(arg case_name)"/>
-  <param name="nloptcontrol_planner/obstacle_name" value="$(arg obstacle_name)"/>
-  <!-- indicates if the 3DOF plant model in VehicleModels.jl will be used-->
-  <param name="nloptcontrol_planner/flags/3DOF_plant" value="$(arg 3DOF_plant)"/>
-  <!-- indicates if the obstacle information is assumed to be known -->
-  <param name="nloptcontrol_planner/flags/known_environment" value="$(arg known_environment)"/>
-
-  <!-- Load YAML file to parameter server, currently need X0 -->
-  <!-- rosparam file="$(find nloptcontrol_planner)/config/case/$(arg case_name).yaml" command="load"/-->
+  <rosparam command="load" file="$(arg case_params_path)" />
+  <rosparam command="load" file="$(arg planner_params_path)" />
+  <rosparam command="load" file="$(arg system_params_path)" />
 
   <!-- Obstacle Avoidance-->
   <node name="obstacle_avoidance" pkg="nloptcontrol_planner" type="obstacle_avoidance.jl" output="screen"/>
-
 </launch>

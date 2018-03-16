@@ -1,0 +1,30 @@
+<!-- Note this launch file presumes that all vechile and sensor nodes
+are up an running -->
+
+ <!--source: http://wiki.ros.org/navigation/Tutorials/RobotSetup -->
+
+ <launch>
+   <master auto="start"/>
+
+    <arg name="case_params_file" />
+    <arg name="global_params_file"/>
+    <arg name="laser_scan_topic"/>
+
+    <node pkg="point_cloud_converter" name="point_cloud_converter" type="point_cloud_converter_node" output="screen">
+      <remap from="points2_in" to="$(arg laser_scan_topic)"/>
+      <remap from="points_out" to="/mavs_pcl" />
+    </node>
+
+    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+     <rosparam file="$(find system)/config/planner/ros_base_planner/costmap_common_params.yaml" command="load" ns="global_costmap" />
+     <rosparam file="$(find system)/config/planner/ros_base_planner/costmap_common_params.yaml" command="load" ns="local_costmap" />
+     <rosparam file="$(find system)/config/planner/ros_base_planner/local_costmap_params.yaml" command="load" />
+     <rosparam file="$(find system)/config/planner/ros_base_planner/global_costmap_params.yaml" command="load" />
+     <rosparam file="$(find system)/config/planner/ros_base_planner/base_local_planner_params.yaml" command="load" />
+   </node>
+
+   <node pkg="ros_base_planner" type="navsPathConverter" respawn="false" name="navsPathConverter" output="screen">
+     <rosparam file="$(arg global_params_file)" command="load"/>
+     <rosparam file="$(arg case_params_file)" command="load"/>
+   </node>
+ </launch>

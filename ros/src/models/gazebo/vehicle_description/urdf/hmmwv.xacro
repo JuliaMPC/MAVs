@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot name="hmmwv" xmlns:xacro="http://www.ros.org/wiki/xacro" >
+<robot name="${robotName}" xmlns:xacro="http://www.ros.org/wiki/xacro" >
 
   <!-- Vehicle body-->
   <xacro:include filename="$(find vehicle_description)/urdf/body.xacro"/>

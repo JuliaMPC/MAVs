@@ -1,4 +1,3 @@
-<!-- Reusable launch file for obstacle detection -->
 <launch>
 
   <rosparam command="load" file="$(find system)/config/detection/obstacle_detector.yaml" />
@@ -43,15 +42,19 @@
   <!--node name="obstacle_publisher_worker" pkg="nodelet" type="nodelet" args="load obstacle_detector/ObstaclePublisher $(arg manager)">
     <param name="active"           value="false"/>
     <param name="reset"            value="false"/>
+
     <param name="fusion_example"   value="false"/>
     <param name="fission_example"  value="false"/>
+
     <param name="loop_rate"        value="10.0"/>
     <param name="radius_margin"    value="0.25"/>
+
     <rosparam param="x_vector">[10.0]</rosparam>
     <rosparam param="y_vector">[0.0]</rosparam>
     <rosparam param="r_vector">[1.0]</rosparam>
     <rosparam param="vx_vector">[0.0]</rosparam>
     <rosparam param="vy_vector">[0.0]</rosparam>
+
     <param name="frame_id"         value="world"/>
   </node-->
 
