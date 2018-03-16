@@ -314,8 +314,10 @@ function main()
   # and then loaded into julia through RobotOS.jl; but less is messed up by loading using YAML.jl
   case = YAML.load(open(RobotOS.get_param("case_params_path")))["case"]
   planner = YAML.load(open(RobotOS.get_param("planner_params_path")))["planner"]["nloptcontrol_planner"]
+  vehicle = YAML.load(open(RobotOS.get_param("vehicle_params_path")))["vehicle"]["nloptcontrol_planner"]
 
   c = YAML.load(open(string(Pkg.dir("MAVs"),"/config/empty.yaml")))
+  c["vehicle"] = convert(Dict{Symbol,Any}, vehicle)  # need symbols to work with VehicleModels.jl
   c["weights"] = planner["weights"]
   c["misc"] = planner["misc"]
   c["solver"] = planner["solver"]
@@ -329,11 +331,6 @@ function main()
     c["obstacle"] = case["assumed"]["obstacle"]
   end
   # fix messed up data types
-#  if c["solver"]["warm_start_init_point"]
-#    c["solver"]["warm_start_init_point"] = "yes"
-#  else
-#    c["solver"]["warm_start_init_point"] = "no"
-#  end
   for keyA in ["weights", "misc", "X0", "solver", "tolerances"]
     for (key,value) in c[keyA]
       if isequal(value, "NaN"); c[keyA][key] = NaN; end
@@ -345,7 +342,26 @@ function main()
     end
   end
 
-  n=initializeAutonomousControl(c);
+
+  # NOTE these are not needed
+#  for keyA in ["vehicle"]
+#    for (key,value) in c[keyA]
+#      if isequal(typeof(c[keyA][key]),String); c[keyA][key] = Float64(c[keyA][key]); end
+#    end
+#  end
+#  if c["solver"]["warm_start_init_point"]
+#    c["solver"]["warm_start_init_point"] = "yes"
+#  else
+#    c["solver"]["warm_start_init_point"] = "no"
+#  end
+
+  if c["misc"]["model"]==:ThreeDOFv2
+   n = initializeDBM(c);
+  elseif c["misc"]["model"]==:KinematicBicycle
+    n = initializeKinematicBicycle(c);
+  else
+    error("c["misc"]["model"] needs to be set to either; :ThreeDOFv2 || :KinematicBicycle ")
+  end
 
   setInitStateParams(c)
 
