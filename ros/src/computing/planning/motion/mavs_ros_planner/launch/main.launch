@@ -9,6 +9,7 @@ are up an running -->
     <arg name="case_params_file" />
     <arg name="global_params_file"/>
     <arg name="laser_scan_topic"/>
+    <arg name="rviz_config_file"/>
 
     <node pkg="point_cloud_converter" name="point_cloud_converter" type="point_cloud_converter_node" output="screen">
       <remap from="points2_in" to="$(arg laser_scan_topic)"/>
@@ -27,4 +28,6 @@ are up an running -->
      <rosparam file="$(arg global_params_file)" command="load"/>
      <rosparam file="$(arg case_params_file)" command="load"/>
    </node>
+
+   <node pkg="rviz" type="rviz" name="rviz" args="-d $(arg rviz_config_file)"/>
  </launch>
