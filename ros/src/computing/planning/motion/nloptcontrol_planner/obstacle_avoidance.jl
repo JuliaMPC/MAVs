@@ -154,7 +154,7 @@ function setStateParams(n)
   for st in 1:n.numStates
     X0[st]=n.r.dfs_plant[end][n.state.name[st]][end];
   end
-
+  println(X0)
   RobotOS.set_param("state/x", X0[1])
   RobotOS.set_param("state/y", X0[2])
   RobotOS.set_param("state/sa", X0[3])

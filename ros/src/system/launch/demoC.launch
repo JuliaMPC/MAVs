@@ -4,7 +4,7 @@
   <!-- demo of vehicle_description and ros_base_planner-->
 
   <!--  ************* vehicle_description args and parameters ***************  -->
-  <arg name="system_params_path" default="$(find system)/config/system/demoA.yaml"/>
+  <arg name="system_params_path" default="$(find system)/config/system/demoC.yaml"/>
   <arg name="vehicle_params_path" default="$(find system)/config/vehicle/hmmwv.yaml"/>
   <arg name="case_params_path" default="$(find system)/config/case/case1.yaml"/>
   <arg name="obstacle_num" default="3"/>

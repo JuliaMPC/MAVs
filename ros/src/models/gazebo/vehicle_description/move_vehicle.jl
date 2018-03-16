@@ -88,7 +88,28 @@ function loop(set_state,get_state)
 
     # TODO add a system level parameter for mission complete!
     while !is_shutdown()
+        #  TMP
 
+        # Get the current position of the Gazebo model
+        gs = GetModelStateRequest()
+        gs.model_name = modelName
+        gs_r = get_state(gs)
+
+        if !gs_r.success
+            error(string(" calling /gazebo/get_model_state service: ", gs_r.status_message))
+        end
+
+        # Define position to move robot
+        vehPose = gs_r.pose  # use the current position
+        vehPose.position.x = gs_r.pose.position.x
+        vehPose.position.y = gs_r.pose.position.y
+
+        # Define the robot state
+        ms = ModelState()
+        ms.model_name = modelName
+        #ms.pose = vehPose
+
+        #  TMP
         # Define the robot state
         ms = ModelState()
         ms.model_name = modelName
@@ -99,6 +120,13 @@ function loop(set_state,get_state)
         ms.pose.orientation.y = Q[2]
         ms.pose.orientation.z = Q[3]
         ms.pose.orientation.w = Q[4]
+
+        while(true)
+            println("actual \n",vehPose)
+            println("set \n",ms.pose)
+            println("state \n", RobotOS.get_param("state/x"))
+            sleep(1)
+        end
 
         # Set the state of the Gazebo model
         ss = SetModelStateRequest()
