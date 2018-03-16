@@ -13,8 +13,8 @@ void poseCallback(const nav_msgs::Path path) {
      y_p.push_back(path.poses[i].pose.position.y);
    }
 
-   ros::param::set("/" + planner_ns + "/" + "x", x_p);
-   ros::param::set("/" + planner_ns + "/" + "y", y_p);
+   ros::param::set("vehicle/chrono/" + planner_ns + "/traj/" + "x", x_p);
+   ros::param::set("vehicle/chrono/" + planner_ns + "/traj/" + "y", y_p);
    ros::param::set("system/" + planner_ns + "/flags/initialized", true);
 }
 
