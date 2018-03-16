@@ -6,15 +6,12 @@ are up an running -->
  <launch>
    <master auto="start"/>
 
-    <arg name="case_params_path" />
-    <arg name="global_params_path"/>
-    <!--param name="global_params_path" value="$(arg global_params_path)"/-->
+    <arg name="case_params_file" />
+    <arg name="global_params_file"/>
+    <arg name="laser_scan_topic"/>
 
-    <!--TODO remove this temp config extrr-->
-
-    <!-- Convert PointCloud2 to PointCloud1 -->
     <node pkg="point_cloud_converter" name="point_cloud_converter" type="point_cloud_converter_node" output="screen">
-      <remap from="points2_in" to="/lidar_points"/>
+      <remap from="points2_in" to="$(arg laser_scan_topic)"/>
       <remap from="points_out" to="/mavs_pcl" />
     </node>
 
@@ -27,7 +24,7 @@ are up an running -->
    </node>
 
    <node pkg="ros_base_planner" type="navsPathConverter" respawn="false" name="navsPathConverter" output="screen">
-     <rosparam file="$(arg global_params_path)" command="load" />
-     <rosparam file="$(arg case_params_path)" command="load"/>
+     <rosparam file="$(arg global_params_file)" command="load"/>
+     <rosparam file="$(arg case_params_file)" command="load"/>
    </node>
  </launch>
