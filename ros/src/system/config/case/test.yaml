@@ -16,13 +16,13 @@ case:
    ax: 0.0
 
   obstacle:
-   num: 3
-   radius: [2.0,2.0,3.0]
-   length: [4.0,4.0,4.0]
-   x0: [5.,-5,10]
-   y0: [10.,15,25]
-   vx: [0,0,0.0]
-   vy: [0,0,0]
+   num: 1
+   radius: [2.0]
+   length: [4.0]
+   x0: [5.]
+   y0: [10.]
+   vx: [0]
+   vy: [0]
 
  assumed:
   obstacle:

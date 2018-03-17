@@ -9,7 +9,7 @@ planner:
       N: 20
       Nck: NaN
       PredictX0: true
-      Xlims: [111, 250]
+      Xlims: [-100, 100]
       Ylims: [-1, 140]
       finalTimeDV: true
       integrationScheme: bkwEuler
@@ -17,7 +17,7 @@ planner:
       mpc_max_iter: 60
       sm: 4.5
       sm2: 3.0
-      solver: KNITRO
+      solver: Ipopt
       tex: 0.5
       tfMax: 10
       tp: NaN
@@ -42,7 +42,7 @@ planner:
       opttol: 1e+20
       opttol_abs: 5e-1
       outlev: 0
-      warm_start_init_point: true
+      warm_start_init_point: yes
       xtol: 1e-12
     tolerances:
       fax: NaN
