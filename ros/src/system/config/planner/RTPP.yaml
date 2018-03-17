@@ -17,7 +17,7 @@ planner:
       mpc_max_iter: 60
       sm: 4.5
       sm2: 3.0
-      solver: KNITRO
+      solver: Ipopt
       tex: 0.5
       tfMax: 10
       tp: NaN
