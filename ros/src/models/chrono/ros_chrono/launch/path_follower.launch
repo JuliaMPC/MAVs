@@ -5,6 +5,10 @@
 
 
   <rosparam command="load" file="$(find ros_chrono)/config/hmmwv_params.yaml"/>
+  <rosparam command="load" file="$(find system)/config/case/case1.yaml"/>
+  <rosparam command="load" file="$(find system)/config/system/global.yaml"/>
+  <rosparam command="load" file="$(find system)/config/system/test_chrono.yaml"/>
+  <rosparam command="load" file="$(find system)/config/vehicle/hmmwv.yaml"/>
   <node name="Reference" pkg="traj_gen_chrono" type="traj_gen_chrono"/>
   <node name="Chronode" pkg="ros_chrono" type="hmmwv_model" cwd="node" />
 </launch>
