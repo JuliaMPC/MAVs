@@ -26,8 +26,11 @@ Date Create: 2/28/2018, Last Modified: 2/28/2018 \n
 --------------------------------------------------------------------------------------\n
 """
 function loop_straight_line(set_state,get_state)
-    loop_rate = Rate(5.0)
 
+    # set the initial position of the vehicle
+    initilizePosition(set_state,get_state)
+
+    loop_rate = Rate(5.0)
     modelName = RobotOS.get_param("vehicle/vehicle_description/robotName")
 
     RobotOS.set_param("system/vehicle_description/flags/lidar_initialized",true)
@@ -41,6 +44,7 @@ function loop_straight_line(set_state,get_state)
         # Get the current position of the Gazebo model
         gs = GetModelStateRequest()
         gs.model_name = modelName
+        gs.relative_entity_name = "world"
         gs_r = get_state(gs)
 
         if !gs_r.success
@@ -76,8 +80,11 @@ Date Create: 2/28/2018, Last Modified: 2/28/2018 \n
 --------------------------------------------------------------------------------------\n
 """
 function loop(set_state,get_state)
-    loop_rate = Rate(5.0)
 
+    # set the initial position of the vehicle
+    initilizePosition(set_state,get_state)
+
+    loop_rate = Rate(5.0)
     modelName = RobotOS.get_param("vehicle/vehicle_description/robotName")
 
     RobotOS.set_param("system/vehicle_description/flags/lidar_initialized",true)
@@ -88,31 +95,21 @@ function loop(set_state,get_state)
 
     # TODO add a system level parameter for mission complete!
     while !is_shutdown()
-        #  TMP
 
         # Get the current position of the Gazebo model
         gs = GetModelStateRequest()
         gs.model_name = modelName
+        gs.relative_entity_name = "world"
         gs_r = get_state(gs)
 
         if !gs_r.success
             error(string(" calling /gazebo/get_model_state service: ", gs_r.status_message))
         end
 
-        # Define position to move robot
-        vehPose = gs_r.pose  # use the current position
-        vehPose.position.x = gs_r.pose.position.x
-        vehPose.position.y = gs_r.pose.position.y
-
         # Define the robot state
         ms = ModelState()
         ms.model_name = modelName
-        #ms.pose = vehPose
-
-        #  TMP
-        # Define the robot state
-        ms = ModelState()
-        ms.model_name = modelName
+        ms.pose = gs_r.pose  # don't want to set everything else to 0
         ms.pose.position.x = RobotOS.get_param("state/x")
         ms.pose.position.y = RobotOS.get_param("state/y")
         Q = tf.quaternion_from_euler(0, 0, RobotOS.get_param("state/psi"))
@@ -121,16 +118,14 @@ function loop(set_state,get_state)
         ms.pose.orientation.z = Q[3]
         ms.pose.orientation.w = Q[4]
 
-        while(true)
-            println("actual \n",vehPose)
-            println("set \n",ms.pose)
-            println("state \n", RobotOS.get_param("state/x"))
-            sleep(1)
-        end
+        println("actual \n",vehPose)
+        println("set \n",ms.pose)
+        println("state \n", RobotOS.get_param("state/x"))
 
         # Set the state of the Gazebo model
         ss = SetModelStateRequest()
         ss.model_state = ms
+        ss.model_state.reference_frame ="world"
         ss_r = set_state(ss)
 
         if !ss_r.success
@@ -140,6 +135,46 @@ function loop(set_state,get_state)
     end
 end
 
+"""
+--------------------------------------------------------------------------------------\n
+Author: Huckleberry Febbo, Graduate Student, University of Michigan
+Date Create: 3/17/2018, Last Modified: 3/17/2018 \n
+--------------------------------------------------------------------------------------\n
+"""
+function initilizePosition(set_state,get_state)
+    modelName = RobotOS.get_param("vehicle/vehicle_description/robotName")
+
+    # Get the current position of the Gazebo model
+    gs = GetModelStateRequest()
+    gs.model_name = modelName
+    gs.relative_entity_name = "world"
+    gs_r = get_state(gs)
+
+    if !gs_r.success
+        error(string(" calling /gazebo/get_model_state service: ", gs_r.status_message))
+    end
+
+    ms = ModelState()
+    ms.model_name = modelName
+    ms.pose = gs_r.pose  # don't want to set everything else to 0
+    ms.pose.position.x = RobotOS.get_param("case/actual/X0/x")
+    ms.pose.position.y = RobotOS.get_param("case/actual/X0/yVal")
+    Q = tf.quaternion_from_euler(0, 0, RobotOS.get_param("case/actual/X0/psi"))
+    ms.pose.orientation.x = Q[1]
+    ms.pose.orientation.y = Q[2]
+    ms.pose.orientation.z = Q[3]
+    ms.pose.orientation.w = Q[4]
+
+    # Set the state of the Gazebo model
+    ss = SetModelStateRequest()
+    ss.model_state = ms
+    ss_r = set_state(ss)
+
+    if !ss_r.success
+        error(string(" calling /gazebo/set_model_state service: ", ss_r.status_message))
+    end
+    return nothing
+end
 
 """
 --------------------------------------------------------------------------------------\n

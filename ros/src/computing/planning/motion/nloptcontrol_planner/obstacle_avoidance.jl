@@ -1,4 +1,7 @@
 #!/usr/bin/env julia
+using MAVs, NLOptControl, PyCall, RobotOS
+import YAML
+
 using RobotOS
 @rosimport geometry_msgs.msg: Point, Pose, Pose2D, PoseStamped, Vector3, Twist
 @rosimport nloptcontrol_planner.msg: Control
@@ -7,10 +10,6 @@ using geometry_msgs.msg
 using nloptcontrol_planner.msg
 
 import YAML
-
-using NLOptControl
-using MAVs
-using PyCall
 
 @pyimport tf.transformations as tf
 
