@@ -42,6 +42,7 @@ using namespace obstacle_detector;
 
 ObstacleExtractor::ObstacleExtractor(ros::NodeHandle& nh, ros::NodeHandle& nh_local) : nh_(nh), nh_local_(nh_local) {
   p_active_ = false;
+  nh_local_.setParam("/system/obstacle_detector/flags/running", true);
 
   params_srv_ = nh_local_.advertiseService("params", &ObstacleExtractor::updateParams, this);
   initialize();
