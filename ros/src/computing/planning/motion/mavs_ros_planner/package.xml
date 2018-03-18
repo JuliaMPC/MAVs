@@ -19,11 +19,17 @@
 
 
   <depend>roscpp</depend>
+  <depend>rospy</depend>
   <depend>sensor_msgs</depend>
+
   <depend>tf</depend>
   <depend>gazebo_ros</depend>
 
   <depend>move_base</depend>
+
+  <depend>std_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>message_generation</depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->

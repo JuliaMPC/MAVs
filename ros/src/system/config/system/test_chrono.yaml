@@ -2,5 +2,5 @@ system:
  chrono:
   namespace: chrono
   flags:
-   initilized: false
+   initialized: false
    gui: true

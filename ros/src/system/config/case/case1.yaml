@@ -1,8 +1,8 @@
 case:
  goal:
-  x: 0.
-  yVal: 125.
-  psi: 1.5701
+  x: 6
+  yVal: 6
+  psi: 0.7
 
  actual:
   X0:

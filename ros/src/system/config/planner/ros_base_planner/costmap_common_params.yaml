@@ -3,20 +3,20 @@
 
 #robot will only update its map with information about obstacles that
 #are within 5 meters of the base
-obstacle_range: 5
+obstacle_range: 30
 
 #robot will attempt to clear out space in front of it
 #up to 3.0 meters away given a sensor reading
 raytrace_range: 3.0
 
-#footprint: [[x0, y0], [x1, y1], ... [xn, yn]]
-robot_radius: 3
+footprint: [[2, 2], [2, -2], [-2, -2], [-2, 2]]
+#robot_radius: 3
 
 #The inflation radius should be set to the maximum distance from
 #obstacles at which a cost should be incurred. For example, setting
 #paths that stay 0.55 meters or more away from obstacles as having equal
 #the inflation radius at 0.55 meters means that the robot will treat all obstacle cost.
-inflation_radius: 0.55
+inflation_radius: 2
 
 observation_sources: velodyne_pcl_sensor
 
