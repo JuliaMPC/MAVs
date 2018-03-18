@@ -166,7 +166,6 @@ function setStateParams(n)
   RobotOS.set_param("state/sa", X0[6])
   RobotOS.set_param("state/ux", X0[7])
   RobotOS.set_param("state/ax", X0[8])
-
   return nothing
 end
 
@@ -230,13 +229,24 @@ function loop(pub,pub_path,n,c)
   while !is_shutdown()
       println("Running model for the: ",n.r.eval_num," time")
 
-      # update optimization parameters based off of latest vehicle state and obstacle information
-      setObstacleData(n.params)
-      setStateData(n)
+      # update optimization parameters based off of latest obstacle information
+      if !RobotOS.get_param("system/nloptcontrol_planner/flags/known_environment")
+        setObstacleData(n.params)
+      end
+
+      # update optimization parameters based off of latest vehicle state
+    #  if !RobotOS.get_param("system/nloptcontrol_planner/flags/3DOF_plant") # otherwise an external update on the initial state of the vehicle is needed
+    #    setStateData(n)
+    #  end  NOTE currently this is after the optimization, eventually put it just before
 
       updateAutoParams!(n,c)                        # update model parameters
       status = autonomousControl!(n)                # rerun optimization
-      n.mpc.t0_actual = to_sec(get_rostime())
+      if RobotOS.get_param("system/nloptcontrol_planner/flags/3DOF_plant") # otherwise an external update on the initial state of the vehicle is needed
+        n.mpc.t0_actual = (n.r.eval_num-1)*n.mpc.tex  # NOTE this is for testing
+      else
+        n.mpc.t0_actual = to_sec(get_rostime())
+      end
+
       msg = Control()
       msg.t = n.mpc.t0_actual + n.r.t_st
       msg.x = n.r.X[:,1]
@@ -271,12 +281,14 @@ function loop(pub,pub_path,n,c)
        end
      end
 
-      n.mpc.t0_actual = (n.r.eval_num-1)*n.mpc.tex  # external so that it can be updated easily in PathFollowing
-
       if RobotOS.get_param("system/nloptcontrol_planner/flags/3DOF_plant") # otherwise an external update on the initial state of the vehicle is needed
         simPlant!(n)      # simulating plant in VehicleModels.jl
         setStateParams(n) # update X0 parameters in ROS and in NLOptControl.jl
+        updateX0!(n)      # update X0 in NLOptControl.jl
+      else
+        setStateData(n)    # update X0 in NLOptControl.jl based off of state/ parameters
       end
+
 
       if ((n.r.dfs_plant[end][:x][end]-c["goal"]["x"])^2 + (n.r.dfs_plant[end][:y][end]-c["goal"]["yVal"])^2)^0.5 < 2*n.XF_tol[1]
          println("Goal Attained! \n"); n.mpc.goal_reached=true;
