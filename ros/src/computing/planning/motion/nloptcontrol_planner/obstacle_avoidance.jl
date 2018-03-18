@@ -1,15 +1,19 @@
 #!/usr/bin/env julia
-using MAVs, NLOptControl, PyCall, RobotOS
-import YAML
-
 using RobotOS
 @rosimport geometry_msgs.msg: Point, Pose, Pose2D, PoseStamped, Vector3, Twist
 @rosimport nloptcontrol_planner.msg: Control
+@rosimport nav_msgs.msg: Path
+
 rostypegen()
 using geometry_msgs.msg
 using nloptcontrol_planner.msg
+using nav_msgs.msg
 
 import YAML
+
+using NLOptControl
+using MAVs
+using PyCall
 
 @pyimport tf.transformations as tf
 
@@ -219,7 +223,7 @@ Author: Huckleberry Febbo, Graduate Student, University of Michigan
 Date Create: 4/6/2017, Last Modified: 3/10/2018 \n
 --------------------------------------------------------------------------------------\n
 """
-function loop(pub,n,c)
+function loop(pub,pub_path,n,c)
 
   init = false
   loop_rate = Rate(2.0) # 2 Hz
@@ -242,6 +246,17 @@ function loop(pub,n,c)
       msg.vx = n.r.X[:,7]
 
       publish(pub, msg)
+
+      path = Path()
+      path.header.frame_id = "map"
+      path.poses = Array{PoseStamped}(length(msg.t))
+      for i in 1:length(msg.t)
+        path.poses[i] = PoseStamped()
+        path.poses[i].header.frame_id = "map"
+        path.poses[i].pose.position.x = msg.x[i]
+        path.poses[i].pose.position.y = msg.y[i]
+      end
+      publish(pub_path, path)
 
       # if the vehicle is very close to the goal sometimes the optimization returns with a small final time
       # and it can even be negative (due to tolerances in NLP solver). If this is the case, the goal is slightly
@@ -287,16 +302,15 @@ Date Create: 4/6/2017, Last Modified: 3/10/2018 \n
 --------------------------------------------------------------------------------------\n
 """
 function main()
-  # TODO implement this
-  # indicates if the user would like to pause the planner
-  # RobotOS.set_param("nloptcontrol_planner/flags/pause",true
-
   println("initializing nloptcontrol_planner node ...")
   init_node("nloptcontrol_planner")
 
   # message for solution to optimal control problem
   plannerNamespace = RobotOS.get_param("system/nloptcontrol_planner/namespace")
   pub = Publisher{Control}(string(plannerNamespace,"/control"), queue_size=10)
+  #pub_path = Publisher{Path}(string(plannerNamespace,"/path"), queue_size=10)
+  pub_path = Publisher{Path}("/path", queue_size=10)
+
   sub = Subscriber{Control}(string(plannerNamespace, "/control"), setTrajParams, queue_size = 10)
 
 
@@ -352,7 +366,7 @@ function main()
     setInitObstacleParams(c)
   end
 
-  loop(pub,n,c)
+  loop(pub,pub_path,n,c)
 end
 
 if !isinteractive()

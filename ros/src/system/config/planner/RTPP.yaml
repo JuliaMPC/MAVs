@@ -1,4 +1,3 @@
----
 planner:
   nloptcontrol_planner:
     misc:
@@ -9,8 +8,8 @@ planner:
       N: 40
       Nck: NaN
       PredictX0: true
-      Xlims: [110, 250]
-      Ylims: [-1, 140]
+      Xlims: [111., 250.]
+      Ylims: [-1., 140.]
       finalTimeDV: true
       integrationScheme: trapezoidal
       model: ThreeDOFv2

@@ -15,5 +15,4 @@
   <rosparam command="load" file="$(arg planner_params_path)" />
   <rosparam command="load" file="$(arg system_params_path)" />
 
-  <!-- Obstacle Avoidance-->
 </launch>
