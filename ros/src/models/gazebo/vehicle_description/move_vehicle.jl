@@ -109,7 +109,7 @@ function loop(set_state,get_state)
         # Define the robot state
         ms = ModelState()
         ms.model_name = modelName
-        ms.pose = gs_r.pose  # don't want to set everything else to 0
+        ms.pose = gs_r.pose  # don't want to set everything else == 0
         ms.pose.position.x = RobotOS.get_param("state/x")
         ms.pose.position.y = RobotOS.get_param("state/y")
         Q = tf.quaternion_from_euler(0, 0, RobotOS.get_param("state/psi"))
@@ -118,7 +118,6 @@ function loop(set_state,get_state)
         ms.pose.orientation.z = Q[3]
         ms.pose.orientation.w = Q[4]
 
-        println("actual \n",vehPose)
         println("set \n",ms.pose)
         println("state \n", RobotOS.get_param("state/x"))
 
@@ -156,7 +155,7 @@ function initilizePosition(set_state,get_state)
 
     ms = ModelState()
     ms.model_name = modelName
-    ms.pose = gs_r.pose  # don't want to set everything else to 0
+    ms.pose = gs_r.pose  # don't want to set everything else == 0
     ms.pose.position.x = RobotOS.get_param("case/actual/X0/x")
     ms.pose.position.y = RobotOS.get_param("case/actual/X0/yVal")
     Q = tf.quaternion_from_euler(0, 0, RobotOS.get_param("case/actual/X0/psi"))
