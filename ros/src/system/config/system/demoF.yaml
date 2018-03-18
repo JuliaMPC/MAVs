@@ -16,6 +16,8 @@ system:
    goal_attained: false
  obstacle_detector:
   flags:
-   running: false
+   running: true
+   initialized: false
+
  initialized: false
  paused: true

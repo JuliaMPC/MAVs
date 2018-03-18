@@ -23,6 +23,13 @@ function main()
     end
   end
 
+  if RobotOS.get_param("system/obstacle_detector/flags/running")
+    while(!RobotOS.get_param("system/obstacle_detector/flags/initialized"))
+      println("waiting on obstacle_detector to be initialized ...")
+      sleep(2)
+    end
+  end
+
   if RobotOS.get_param("system/nloptcontrol_planner/flags/running")
     while(!RobotOS.get_param("system/nloptcontrol_planner/flags/initilized"))
       println("waiting on obstacle_avoidance.jl in nloptcontrol_planner ...")

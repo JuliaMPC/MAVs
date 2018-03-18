@@ -11,7 +11,7 @@ int main(int argc, char** argv){
   tf::TransformBroadcaster broadcaster2;
 
   while(n.ok()){
-    //  /case/actual/X0/psi
+    /*
     double yaw = 1.57079632679;
     double pitch = 0;
     double roll = 0;
@@ -27,11 +27,11 @@ int main(int argc, char** argv){
     double q1 = cy * sr * cp - sy * cr * sp;
     double q2 = cy * cr * sp + sy * sr * cp;
     double q3 = sy * cr * cp - cy * sr * sp;
+*/
 
     broadcaster1.sendTransform(
       tf::StampedTransform(
-        // tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.0, 0.0, 0.5)),
-  tf::Transform(tf::Quaternion(q1, q2, q3, q4), tf::Vector3(0.0, 0.0, 0.5)),
+        tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.0, 0.0, 0.5)),
         ros::Time::now(),"base_footprint", "base_link"));
 
     broadcaster2.sendTransform(

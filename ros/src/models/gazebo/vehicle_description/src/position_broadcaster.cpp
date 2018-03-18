@@ -6,8 +6,8 @@ void poseCallback(const geometry_msgs::Pose& msg){
   static tf::TransformBroadcaster br;
   tf::Transform transform;
   transform.setOrigin( tf::Vector3(msg.position.x,msg.position.y,msg.position.z) );
-  tf::Quaternion q;
-  q.setRPY(msg.orientation.x,msg.orientation.y,msg.orientation.z);
+  tf::Quaternion q(msg.orientation.x,msg.orientation.y,msg.orientation.z,msg.orientation.w);
+  //q.setRPY(msg.orientation.x,msg.orientation.y,msg.orientation.z);
   transform.setRotation(q);
   br.sendTransform(tf::StampedTransform(transform, ros::Time::now(),"map", "base_footprint")); //TODO get this parameter
 }

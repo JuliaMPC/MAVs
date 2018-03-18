@@ -118,7 +118,6 @@ function loop(set_state,get_state)
         ms.pose.orientation.z = Q[3]
         ms.pose.orientation.w = Q[4]
 
-        println("actual \n",vehPose)
         println("set \n",ms.pose)
         println("state \n", RobotOS.get_param("state/x"))
 

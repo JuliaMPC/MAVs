@@ -7,5 +7,6 @@ system:
    obstacles_initialized: false
  obstacle_detector:
   flags:
-   running: false
+   running: true
+   initialized: false
  paused: true

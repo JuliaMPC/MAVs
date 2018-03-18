@@ -6,13 +6,13 @@ planner:
       FixedTp: true
       L_rd: 5.0
       Lr: 50.0
-      N: 20
+      N: 40
       Nck: NaN
       PredictX0: true
-      Xlims: [-100, 100]
+      Xlims: [110, 250]
       Ylims: [-1, 140]
       finalTimeDV: true
-      integrationScheme: bkwEuler
+      integrationScheme: trapezoidal
       model: ThreeDOFv2
       mpc_max_iter: 60
       sm: 4.5

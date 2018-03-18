@@ -47,4 +47,7 @@
     <arg name="manager" value="$(arg manager)" />
   </include>
 
+  <!-- initialize system -->
+  <node name="bootstrap" pkg="system" type="bootstrap.jl" output="screen"/>
+
 </launch>
