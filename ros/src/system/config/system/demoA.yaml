@@ -5,4 +5,8 @@ system:
    postion_update_external: false
    lidar_initialized: false
    obstacles_initialized: false
+ obstacle_detector:
+  flags:
+   running: true
+   initialized: false
  paused: true

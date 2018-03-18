@@ -1,7 +1,7 @@
 case:
  goal:
-  x: 6
-  yVal: 6
+  x: 0
+  yVal: 100
   psi: 0.7
 
  actual:
