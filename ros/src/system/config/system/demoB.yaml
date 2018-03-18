@@ -14,5 +14,9 @@ system:
    known_environment: true
    3DOF_plant: true
    goal_attained: false
+ obstacle_detector:
+  flags:
+   running: true
+   initialized: true
  initialized: false
  paused: true
