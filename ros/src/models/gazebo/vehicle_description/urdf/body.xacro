@@ -28,7 +28,7 @@
           <xacro:insert_block name="base_geometry" />
         </xacro:if>
       </visual>
-      <collision>
+      <collision name="box_collision">
         <!--selfCollide>false</selfCollide-->
         <origin xyz="0 0 ${base_height/2}" rpy="0 0 0" />
         <xacro:insert_block name="base_geometry" />

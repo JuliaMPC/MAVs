@@ -31,7 +31,16 @@
     <kp>${kp}</kp>
   </gazebo>
 
-  <!-- ros_control plugin -->
+  <gazebo reference="${base_link}" >
+    <sensor name="my_contact" type="contact">
+    <plugin name="contact_sensor" filename="libcontact_sensor_mavs.so">
+      <contact>
+        <collision>box_collision</collision>
+      </contact>
+   </plugin>
+ </sensor>
+</gazebo>
+
   <gazebo>
     <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
       <robotNamespace>${robotNamespace}</robotNamespace>
