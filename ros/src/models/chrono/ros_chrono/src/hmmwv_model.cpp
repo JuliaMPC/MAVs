@@ -419,7 +419,8 @@ void trajChanger1(parameters &hmmwv_params, ChVehicleIrrApp app,ros::Publisher &
     double q2 = global_orntn[2];
     double q3 = global_orntn[3];
     double yaw_val=atan2(2*(q0*q3+q1*q2),1-2*(q2*q2+q3*q3));
-
+    double theta_val=asin(2*(q0*q2-q3*q1));
+    double phi_val= atan2(2*(q0*q1+q2*q3),1-2*(q1*q1+q2*q2));
     if (yaw_val<0){
       yaw_val=-yaw_val+PI/2;
     }
@@ -437,6 +438,8 @@ void trajChanger1(parameters &hmmwv_params, ChVehicleIrrApp app,ros::Publisher &
     n.setParam("vehicle/chrono/state/v", global_velCOM[1]);
     n.setParam("vehicle/chrono/state/ax", global_accCOM[0]);
     n.setParam("vehicle/chrono/state/psi",yaw_val); //in radians
+    n.setParam("vehicle/chrono/state/theta",theta_val); //in radians
+    n.setParam("vehicle/chrono/state/phi",phi_val); //in radians
     n.setParam("vehicle/chrono/state/r",-rot_dt[2]);//yaw rate
     n.setParam("vehicle/chrono/state/sa",slip_angle); //slip angle
     n.setParam("vehicle/chrono/control/thr",hmmwv_params.throttle_input); //throttle input in the range [0,+1]
@@ -660,7 +663,8 @@ void trajChanger2(parameters &hmmwv_params, ChVehicleIrrApp app,ros::Publisher &
     double q2 = global_orntn[2];
     double q3 = global_orntn[3];
     double yaw_val=atan2(2*(q0*q3+q1*q2),1-2*(q2*q2+q3*q3));
-
+    double theta_val=asin(2*(q0*q2-q3*q1));
+    double phi_val= atan2(2*(q0*q1+q2*q3),1-2*(q1*q1+q2*q2));
     if (yaw_val<0){
       yaw_val=-yaw_val+PI/2;
     }
@@ -678,11 +682,14 @@ void trajChanger2(parameters &hmmwv_params, ChVehicleIrrApp app,ros::Publisher &
     n.setParam("vehicle/chrono/state/v", global_velCOM[1]);
     n.setParam("vehicle/chrono/state/ax", global_accCOM[0]);
     n.setParam("vehicle/chrono/state/psi",yaw_val); //in radians
+    n.setParam("vehicle/chrono/state/theta",theta_val); //in radians
+    n.setParam("vehicle/chrono/state/phi",phi_val); //in radians
     n.setParam("vehicle/chrono/state/r",-rot_dt[2]);//yaw rate
     n.setParam("vehicle/chrono/state/sa",slip_angle); //slip angle
     n.setParam("vehicle/chrono/control/thr",hmmwv_params.throttle_input); //throttle input in the range [0,+1]
     n.setParam("vehicle/chrono/control/brk",hmmwv_params.braking_input); //braking input in the range [0,+1]
     n.setParam("vehicle/chrono/control/str",hmmwv_params.steering_input); //steeering input in the range [-1,+1]
+
 
     data_out.t_chrono=time; //time in chrono simulation
     data_out.x_pos= global_pos[0] ;
@@ -887,6 +894,33 @@ int main(int argc, char* argv[]) {
 
     ros::init(argc, argv, "Chronode");
     ros::NodeHandle n;
+    n.setParam("system/chrono/flags/initialized","true");
+    std::string planner_namespace;
+    n.getParam("system/planner",planner_namespace);
+    /*
+    std::string planner_initialized= "False";
+
+    planner_initialized=n.getParam("system/"+planner_namespace+"/flags/initialized",planner_initialized);
+    ROS_DEBUG_STREAM(planner_initialized);
+    if (!n.hasParam("system/"+planner_namespace+"/flags/initialized"))
+    {
+      ROS_INFO("No param named 'my_param'");
+    }
+
+    double asd=0;
+    if n.hasParam()
+    while (planner_initialized != "True"){
+      planner_initialized=n.getParam("system/"+planner_namespace+"/flags/initialized",planner_initialized);
+      asd=asd+1;
+      if (planner_initialized == "True"){
+         break;
+      }
+      ros::Duration(0.5).sleep();
+
+  //    n.setParam("asdf/asdf",asd);
+  }
+  n.setParam("asdf/asdf",asd);*/
+
     // Desired vehicle speed (m/s)
     double target_speed;
     n.getParam("hmmwv_chrono/X0/v_des",target_speed);
@@ -1019,7 +1053,7 @@ int main(int argc, char* argv[]) {
     std::vector<double> x_traj_curr, y_traj_curr,x_traj_prev,y_traj_prev; //Initialize xy trajectory vectors
     parameters hmmwv_params{terrain,my_hmmwv,realtime_timer,sim_frame,steering_input,throttle_input,braking_input,ballS,ballT,x_traj_curr,y_traj_curr,x_traj_prev,y_traj_prev,target_speed,render_steps,render_frame};
     //Load xy parameters for the first timestep
-    std::string planner_namespace;
+  //  std::string planner_namespace;
   //  n.getParam("system/planner",planner_namespace);
     n.getParam("vehicle/chrono/default/traj/x",hmmwv_params.x_traj_curr);
     n.getParam("vehicle/chrono/default/traj/yVal",hmmwv_params.y_traj_curr);
@@ -1322,7 +1356,8 @@ int main(int argc, char* argv[]) {
         double q2 = global_orntn[2];
         double q3 = global_orntn[3];
         double yaw_val=atan2(2*(q0*q3+q1*q2),1-2*(q2*q2+q3*q3));
-
+        double theta_val=asin(2*(q0*q2-q3*q1));
+        double phi_val= atan2(2*(q0*q1+q2*q3),1-2*(q1*q1+q2*q2));
         if (yaw_val<0){
           yaw_val=-yaw_val+PI/2;
         }
@@ -1340,6 +1375,8 @@ int main(int argc, char* argv[]) {
         n.setParam("vehicle/chrono/state/v", global_velCOM[1]);
         n.setParam("vehicle/chrono/state/ax", global_accCOM[0]);
         n.setParam("vehicle/chrono/state/psi",yaw_val); //in radians
+        n.setParam("vehicle/chrono/state/theta",theta_val); //in radians
+        n.setParam("vehicle/chrono/state/phi",phi_val); //in radians
         n.setParam("vehicle/chrono/state/r",-rot_dt[2]);//yaw rate
         n.setParam("vehicle/chrono/state/sa",slip_angle); //slip angle
         n.setParam("vehicle/chrono/control/thr",hmmwv_params.throttle_input); //throttle input in the range [0,+1]
