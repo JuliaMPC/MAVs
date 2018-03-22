@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>
 
-  <!-- demo of obstacle_detector with vehicle_description-->
+  <!-- demo of obstacle_detector with vehicle_description and nloptcontrol_planner-->
   <!-- TODO fix obstacle_detector -->
   <!--  ************* nloptcontrol_planner args and parameters ***************  -->
   <arg name="planner_params_path" default="$(find system)/config/planner/RTPP.yaml"/>
