@@ -1,3 +1,4 @@
+
 // =============================================================================
 // PROJECT CHRONO - http://projectchrono.org
 //
@@ -32,7 +33,6 @@
 #include "ros/ros.h"
 #include "std_msgs/String.h"
 #include "ros_chrono_msgs/veh_status.h"
-#include "rosgraph_msgs/Clock.h"
 //#include "tf/tf.h"
 #include <sstream>
 #include "chrono_vehicle/ChVehicleModelData.h"
@@ -231,11 +231,15 @@ void trajChanger1(parameters &hmmwv_params, ChVehicleIrrApp app,ros::Publisher &
   driver_gui.Initialize();
   //Load xy parameters for the first timestep
   std::string planner_namespace;
-
+  bool planner_init;
   n.getParam("system/planner",planner_namespace);
-  n.getParam("vehicle/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
-  n.getParam("vehicle/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
+  n.getParam("system/"+planner_namespace+"/flags/initialized",planner_init);
 
+  if (planner_init){
+    n.getParam("system/planner",planner_namespace);
+    n.getParam("vehicle/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
+    n.getParam("vehicle/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
+  }
   hmmwv_params.x_traj_prev=hmmwv_params.x_traj_curr;
   hmmwv_params.y_traj_prev=hmmwv_params.y_traj_curr;
   double num_pts = hmmwv_params.x_traj_curr.size();
@@ -344,7 +348,6 @@ void trajChanger1(parameters &hmmwv_params, ChVehicleIrrApp app,ros::Publisher &
                 sprintf(filename, "%s/data_%03d.dat", pov_dir.c_str(), render_frame + 1);
                 utils::WriteShapesPovray(my_hmmwv.GetSystem(), filename);
             }
-
             if (state_output) {
                 csv << time << steering_input << throttle_input << braking_input;
                 csv << my_hmmwv.GetVehicle().GetVehicleSpeed();
@@ -464,8 +467,13 @@ void trajChanger1(parameters &hmmwv_params, ChVehicleIrrApp app,ros::Publisher &
     vehicleinfo_pub.publish(data_out);
     //  loop_rate.sleep();
 
-    n.getParam("vehicle/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
-    n.getParam("vehicle/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
+    n.getParam("system/"+planner_namespace+"/flags/initialized",planner_init);
+
+    if (planner_init){
+      n.getParam("system/planner",planner_namespace);
+      n.getParam("vehicle/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
+      n.getParam("vehicle/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
+    }
 
   }
 }
@@ -476,10 +484,15 @@ void trajChanger2(parameters &hmmwv_params, ChVehicleIrrApp app,ros::Publisher &
   driver_gui.Initialize();
   //Load xy parameters for the first timestep
   std::string planner_namespace;
+  bool planner_init;
   n.getParam("system/planner",planner_namespace);
-  n.getParam("vehicle/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
-  n.getParam("vehicle/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
+  n.getParam("system/"+planner_namespace+"/flags/initialized",planner_init);
 
+  if (planner_init){
+    n.getParam("system/planner",planner_namespace);
+    n.getParam("vehicle/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
+    n.getParam("vehicle/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
+  }
   hmmwv_params.x_traj_prev=hmmwv_params.x_traj_curr;
   hmmwv_params.y_traj_prev=hmmwv_params.y_traj_curr;
   double num_pts = hmmwv_params.x_traj_curr.size();
@@ -588,7 +601,6 @@ void trajChanger2(parameters &hmmwv_params, ChVehicleIrrApp app,ros::Publisher &
                 sprintf(filename, "%s/data_%03d.dat", pov_dir.c_str(), render_frame + 1);
                 utils::WriteShapesPovray(my_hmmwv.GetSystem(), filename);
             }
-
             if (state_output) {
                 csv << time << steering_input << throttle_input << braking_input;
                 csv << my_hmmwv.GetVehicle().GetVehicleSpeed();
@@ -707,19 +719,21 @@ void trajChanger2(parameters &hmmwv_params, ChVehicleIrrApp app,ros::Publisher &
 
     vehicleinfo_pub.publish(data_out);
     //  loop_rate.sleep();
-    n.getParam("system/planner",planner_namespace);
-    n.getParam("vehicle/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
-    n.getParam("vehicle/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
+    n.getParam("system/"+planner_namespace+"/flags/initialized",planner_init);
 
+    if (planner_init){
+      n.getParam("system/planner",planner_namespace);
+      n.getParam("vehicle/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
+      n.getParam("vehicle/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
+    }
   }
 }
+
 //----------------------callback
 /*
 void controlCallback(const traj_gen_chrono::Control::ConstPtr &msg, parameters &hmmwv_params,ChVehicleIrrApp &app,ChIrrGuiDriver &driver_gui,
 double &target_speed,double &time,ros_chrono_msgs::veh_status &data_out, ros::Publisher &vehicleinfo_pub){
-
   app.SetPaused(1);
-
   std::vector<double> x_vec=msg->x;
   std::vector<double> y_vec=msg->y;
 //  ROS_INFO("I heard: [%f]", x_vec[0]);
@@ -729,47 +743,36 @@ double &target_speed,double &time,ros_chrono_msgs::veh_status &data_out, ros::Pu
   double z_val = 0.5;
   std::ofstream myfile;
   myfile.open(path_file,std::ofstream::out | std::ofstream::trunc);
-
   myfile << ' ' << num_pts << ' '<< num_cols << '\n';
   for (int pt_cnt=0; pt_cnt<num_pts;pt_cnt=pt_cnt+1){
   myfile << ' ' << x_vec[pt_cnt] << ' '<< y_vec[pt_cnt] <<' ' << z_val << '\n';
 }
   myfile.close();
   app.SetPaused(0);
-
   driver_gui.Initialize();
   auto path = ChBezierCurve::read(path_file);
-
   // Initialize driver follower
   //driver_follower.Reset();
   ChPathFollowerDriver driver_follower(hmmwv_params.my_hmmwv.GetVehicle(), steering_controller_file,
                                        speed_controller_file, path, "my_path", target_speed);
   driver_follower.Initialize();
-
   // Create and register a custom Irrlicht event receiver to allow selecting the
   // current driver model.
   ChDriverSelector selector(hmmwv_params.my_hmmwv.GetVehicle(), &driver_follower, &driver_gui);
   app.SetUserEventReceiver(&selector);
-
   // Finalize construction of visualization assets
   app.AssetBindAll();
   app.AssetUpdateAll();
-
-
-
   // -----------------
   // Initialize output
   // -----------------
-
   state_output = state_output || povray_output;
-
   if (state_output) {
       if (ChFileutils::MakeDirectory(out_dir.c_str()) < 0) {
           std::cout << "Error creating directory " << out_dir << std::endl;
           //return 1;
       }
   }
-
   if (povray_output) {
       if (ChFileutils::MakeDirectory(pov_dir.c_str()) < 0) {
           std::cout << "Error creating directory " << pov_dir << std::endl;
@@ -779,11 +782,8 @@ double &target_speed,double &time,ros_chrono_msgs::veh_status &data_out, ros::Pu
   }
   int sim_frame = 0;
   int render_frame = 0;
-
   while (app.GetDevice()->run()) {
-
     if (sim_frame == 0) {
-
         app.BeginScene(true, true, irr::video::SColor(255, 140, 161, 192));
         app.DrawAll();
         app.EndScene();
@@ -793,7 +793,6 @@ double &target_speed,double &time,ros_chrono_msgs::veh_status &data_out, ros::Pu
             sprintf(filename, "%s/data_%03d.dat", pov_dir.c_str(), render_frame + 1);
             utils::WriteShapesPovray(my_hmmwv.GetSystem(), filename);
         }
-
         if (state_output) {
             csv << time << steering_input << throttle_input << braking_input;
             csv << my_hmmwv.GetVehicle().GetVehicleSpeed();
@@ -801,14 +800,12 @@ double &target_speed,double &time,ros_chrono_msgs::veh_status &data_out, ros::Pu
             csv << acc_driver.x() << fwd_acc_driver << acc_driver.y() << lat_acc_driver;
             csv << std::endl;
         }
-
         render_frame++;
     }
     const ChVector<> pS = driver_follower.GetSteeringController().GetSentinelLocation();
     const ChVector<> pT = driver_follower.GetSteeringController().GetTargetLocation();
     hmmwv_params.ballS->setPosition(irr::core::vector3df((irr::f32)pS.x(), (irr::f32)pS.y(), (irr::f32)pS.z()));
     hmmwv_params.ballT->setPosition(irr::core::vector3df((irr::f32)pT.x(), (irr::f32)pT.y(), (irr::f32)pT.z()));
-
     time = hmmwv_params.my_hmmwv.GetSystem()->GetChTime();
     // End simulation
     if (time >= t_end)
@@ -822,7 +819,6 @@ double &target_speed,double &time,ros_chrono_msgs::veh_status &data_out, ros::Pu
     hmmwv_params.my_hmmwv.Synchronize(time, hmmwv_params.steering_input, hmmwv_params.braking_input, hmmwv_params.throttle_input, hmmwv_params.terrain);
     std::string msg1 = selector.UsingGUI() ? "GUI driver" : "Follower driver";
     app.Synchronize(msg1, hmmwv_params.steering_input, hmmwv_params.throttle_input, hmmwv_params.braking_input);
-
      // Advance simulation for one timestep for all modules
     double step = hmmwv_params.realtime_timer.SuggestSimulationStep(step_size);
     driver_follower.Advance(step);
@@ -830,10 +826,8 @@ double &target_speed,double &time,ros_chrono_msgs::veh_status &data_out, ros::Pu
     hmmwv_params.terrain.Advance(step);
     hmmwv_params.my_hmmwv.Advance(step);
     app.Advance(step);
-
     // Increment simulation frame number
     hmmwv_params.sim_frame++;
-
     ChVector<> global_pos = hmmwv_params.my_hmmwv.GetVehicle().GetVehicleCOMPos();//global location of chassis reference frame origin
     ChQuaternion<> global_orntn = hmmwv_params.my_hmmwv.GetVehicle().GetVehicleRot();//global orientation as quaternion
     ChVector<> rot_dt = hmmwv_params.my_hmmwv.GetVehicle().GetChassisBody()->GetWvel_loc();//global orientation as quaternion
@@ -845,7 +839,6 @@ double &target_speed,double &time,ros_chrono_msgs::veh_status &data_out, ros::Pu
     double q2 = global_orntn[2];
     double q3 = global_orntn[3];
     double yaw_val=atan2(2*(q0*q3+q1*q2),1-2*(q2*q2+q3*q3));
-
     if (yaw_val<0){
       yaw_val=-yaw_val+PI/2;
     }
@@ -857,8 +850,6 @@ double &target_speed,double &time,ros_chrono_msgs::veh_status &data_out, ros::Pu
     }
     //ChPacejkaTire<> slip_angle = GetSlipAngle()
     double slip_angle = hmmwv_params.my_hmmwv.GetTire(0)->GetLongitudinalSlip();
-
-
     data_out.t_chrono=time; //time in chrono simulation
     data_out.x_pos= global_pos[0] ;
     data_out.y_pos=global_pos[1];
@@ -871,12 +862,23 @@ double &target_speed,double &time,ros_chrono_msgs::veh_status &data_out, ros::Pu
     data_out.thrt_in=hmmwv_params.throttle_input; //throttle input in the range [0,+1]
     data_out.brk_in=hmmwv_params.braking_input; //braking input in the range [0,+1]
     data_out.str_in=hmmwv_params.steering_input; //steeering input in the range [-1,+1]
-
     vehicleinfo_pub.publish(data_out);
     ros::spinOnce();
     }
 } */
+void waitForLoaded(ros::NodeHandle &n){
+    bool planner_init = false;
+    std::string planner_namespace;
+    n.getParam("system/planner",planner_namespace);
+    n.getParam("system/"+planner_namespace+"/flags/initialized",planner_init);
+    while(!planner_init){
+        usleep(500); // < my question
+        n.getParam("system/"+planner_namespace+"/flags/initialized",planner_init);
 
+    }
+    usleep(500); //sleep another 500ms to ensure everything is loaded.
+    //continue on here
+}
 // =============================================================================
 int main(int argc, char* argv[]) {
 
@@ -895,14 +897,48 @@ int main(int argc, char* argv[]) {
 
     ros::init(argc, argv, "Chronode");
     ros::NodeHandle n;
-    n.setParam("system/chrono/flags/initialized","true");
+    //n.setParam("system/chrono/flags/initialized",true);
+
+    bool planner_init;
+  //  bool planner_init2;
 
     std::string planner_namespace;
     n.getParam("system/planner",planner_namespace);
+    n.getParam("system/"+planner_namespace+"/flags/initialized",planner_init);
+    //planner_init2=planner_init1;
+  //    n.getParam("system/"+planner_namespace+"/flags/initialized",planner_init2);
+
+      if(!planner_init){
+        waitForLoaded(n);
+    }
+  //std::string planner_init;
+
+    n.getParam("system/"+planner_namespace+"/flags/initialized",planner_init);
+
+    /*
+    std::string planner_initialized= "False";
+    planner_initialized=n.getParam("system/"+planner_namespace+"/flags/initialized",planner_initialized);
+    ROS_DEBUG_STREAM(planner_initialized);
+    if (!n.hasParam("system/"+planner_namespace+"/flags/initialized"))
+    {
+      ROS_INFO("No param named 'my_param'");
+    }
+    double asd=0;
+    if n.hasParam()
+    while (planner_initialized != "True"){
+      planner_initialized=n.getParam("system/"+planner_namespace+"/flags/initialized",planner_initialized);
+      asd=asd+1;
+      if (planner_initialized == "True"){
+         break;
+      }
+      ros::Duration(0.5).sleep();
+  //    n.setParam("asdf/asdf",asd);
+  }
+  n.setParam("asdf/asdf",asd);*/
 
     // Desired vehicle speed (m/s)
-    double target_speed = 0.0;
-    // n.getParam("hmmwv_chrono/X0/v_des",target_speed);
+    double target_speed;
+    n.getParam("hmmwv_chrono/X0/v_des",target_speed);
 
     //Initial Position
     double x0, y0, z0, yaw0,pitch0,roll0;
@@ -936,9 +972,6 @@ int main(int argc, char* argv[]) {
     //ChQuaternion<> initRot(cos(PI/4), 0, 0, sin(PI/4)); //initial yaw of pi/2
 
     ros::Publisher vehicleinfo_pub = n.advertise<ros_chrono_msgs::veh_status>("vehicleinfo", 1);
-
-    rosgraph_msgs::Clock sim_time;
-    ros::Publisher time_pub = n.advertise<rosgraph_msgs::Clock>("/clock", 10);
     //ros::Rate loop_rate(5);
 
     // ------------------------------
@@ -1005,7 +1038,6 @@ int main(int argc, char* argv[]) {
 
     // Create both a GUI driver and a path-follower and allow switching between them
     ChIrrGuiDriver driver_gui(app);
-
     driver_gui.Initialize();
 
     /*
@@ -1038,8 +1070,8 @@ int main(int argc, char* argv[]) {
     //Load xy parameters for the first timestep
   //  std::string planner_namespace;
   //  n.getParam("system/planner",planner_namespace);
-    n.getParam("vehicle/chrono/nloptcontrol/traj/x",hmmwv_params.x_traj_curr);
-    n.getParam("vehicle/chrono/nloptcontrol/traj/yVal",hmmwv_params.y_traj_curr);
+    n.getParam("vehicle/chrono/chrono/traj/x",hmmwv_params.x_traj_curr);
+    n.getParam("vehicle/chrono/chrono/traj/yVal",hmmwv_params.y_traj_curr);
     hmmwv_params.x_traj_prev=hmmwv_params.x_traj_curr;
     hmmwv_params.y_traj_prev=hmmwv_params.y_traj_curr;
     double num_pts = hmmwv_params.x_traj_curr.size();
@@ -1110,63 +1142,130 @@ int main(int argc, char* argv[]) {
 
     std::ofstream myfile1;
     myfile1.open(data_path+"paths/position.txt",std::ofstream::out | std::ofstream::trunc);
-    double i=0;
-    n.setParam("vehicle/chrono/common/m",my_hmmwv.GetVehicle().GetVehicleMass());
 
+    n.setParam("vehicle/chrono/common/m",my_hmmwv.GetVehicle().GetVehicleMass());
     const ChMatrix33<> inertia_mtx= my_hmmwv.GetChassisBody()->GetInertia();
     double Izz=inertia_mtx.GetElement(2,2);
     n.setParam("vehicle/chrono/common/Izz",Izz);
 
-    //enum chrono::vehicle::VehicleSide LEFT;
-    //enum chrono::vehicle::VehicleSide RIGHT;
-
+    enum chrono::vehicle::VehicleSide LEFT;
+    enum chrono::vehicle::VehicleSide RIGHT;
     ChVector<> veh_com= my_hmmwv.GetVehicle().GetVehicleCOMPos();
-
-    // !!!!!!!!!!!!!!!! error !!!!!!!!!!!!!!
-    ChVector<> la_pos=my_hmmwv.GetVehicle().GetSuspension(0)->GetSpindlePos(chrono::vehicle::VehicleSide::RIGHT);
-    ChVector<> lb_pos=my_hmmwv.GetVehicle().GetSuspension(0)->GetSpindlePos(chrono::vehicle::VehicleSide::LEFT);
+    ChVector<> la_pos=my_hmmwv.GetVehicle().GetSuspension(0)->GetSpindlePos(RIGHT);
+    ChVector<> lb_pos=my_hmmwv.GetVehicle().GetSuspension(0)->GetSpindlePos(LEFT);
     double la_length, lb_length;
     ChVector<> la_diff;
-
     la_diff.Sub(veh_com,la_pos);
     ChVector<> lb_diff;
     lb_diff.Sub(veh_com,lb_pos);
     la_length=la_diff.Length();
     lb_length=lb_diff.Length();
-
     n.setParam("vehicle/chrono/common/la",la_length);
     n.setParam("vehicle/chrono/common/lb",lb_length);
 
-    // bool planner_initialized = false;
-    // while(!planner_initialized){
-      // n.getParam("system/nloptcontrol_planner/flags/initialized", planner_initialized);
-    // }
 
     while (app.GetDevice()->run()) {
-
-      n.getParam("hmmwv_chrono/X0/v_des",target_speed);
-
       double time = hmmwv_params.my_hmmwv.GetSystem()->GetChTime();
-      sim_time.clock = ros::Time(time);
-      time_pub.publish(sim_time);
 
-      i=i+1;
-      if (i>0){
       // Get trajectory parameters again
-      n.getParam("system/planner",planner_namespace);
-      n.getParam("vehicle/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
-      n.getParam("vehicle/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
+      n.getParam("system/"+planner_namespace+"/flags/initialized",planner_init);
+      if (planner_init){
+        n.getParam("system/planner",planner_namespace);
+        n.getParam("vehicle/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
+        n.getParam("vehicle/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
 
 
-      num_pts = hmmwv_params.x_traj_curr.size();
+        num_pts = hmmwv_params.x_traj_curr.size();
 
-        if (hmmwv_params.x_traj_curr!=hmmwv_params.x_traj_prev || hmmwv_params.y_traj_curr != hmmwv_params.y_traj_prev){
-          trajChanger1(hmmwv_params,app,vehicleinfo_pub,n);
+          if (hmmwv_params.x_traj_curr!=hmmwv_params.x_traj_prev || hmmwv_params.y_traj_curr != hmmwv_params.y_traj_prev){
+            trajChanger1(hmmwv_params,app,vehicleinfo_pub,n);
+          }
         }
-      }
+
+  /*      myfile.open(path_file,std::ofstream::out | std::ofstream::trunc);
+        myfile << ' ' << num_pts << ' '<< num_cols << '\n';
+        for (int pt_cnt=0; pt_cnt<num_pts;pt_cnt=pt_cnt+1){
+          myfile << ' ' << hmmwv_params.x_traj_curr[pt_cnt] << ' '<< hmmwv_params.y_traj_curr[pt_cnt] <<' ' << z_val << '\n';
+        }
+        myfile.close();
+        // ----------------------
+        // Create the Bezier path
+        // ----------------------
+        path = ChBezierCurve::read(path_file);
+      //  driver_follower.Reset();
+      //  app.SetPaused(1);
+        //driver_follower->Reset();
+        //delete[] driver_follower1;
+      //  ChPathFollowerDriver* driver_follower= new ChPathFollowerDriver(my_hmmwv.GetVehicle(), steering_controller_file,
+      //                                      speed_controller_file, path, "my_path", target_speed);
+        ChPathFollowerDriver driver_follower(my_hmmwv.GetVehicle(), steering_controller_file,
+                                             speed_controller_file, path, "my_path", target_speed);
+        //driver_follower=driver_follower1;
+        driver_follower->Initialize();
+      //  app.SetPaused(0);
+        // Create and register a custom Irrlicht event receiver to allow selecting the
+        // current driver model.
+        ChDriverSelector selector(my_hmmwv.GetVehicle(), driver_follower, &driver_gui);
+        app.SetUserEventReceiver(&selector);
+        // -----------------
+        // Initialize output
+        // -----------------
+        state_output = state_output || povray_output;
+        if (state_output) {
+            if (ChFileutils::MakeDirectory(out_dir.c_str()) < 0) {
+                std::cout << "Error creating directory " << out_dir << std::endl;
+                return 1;
+            }
+        }
+        if (povray_output) {
+            if (ChFileutils::MakeDirectory(pov_dir.c_str()) < 0) {
+                std::cout << "Error creating directory " << pov_dir << std::endl;
+                return 1;
+            }
+            driver_follower->ExportPathPovray(out_dir);
+        }
+        // Update sentinel and target location markers for the path-follower controller.
+        // Note that we do this whether or not we are currently using the path-follower driver.
+        time = my_hmmwv.GetSystem()->GetChTime();
+        throttle_input = selector.GetDriver()->GetThrottle();
+        steering_input = selector.GetDriver()->GetSteering();
+        braking_input = selector.GetDriver()->GetBraking();
+        // Update modules (process inputs from other modules)
+        driver_follower->Synchronize(time);
+        driver_gui.Synchronize(time);
+        terrain.Synchronize(time);
+        my_hmmwv.Synchronize(time, steering_input, braking_input, throttle_input, terrain);
+        std::string msg = selector.UsingGUI() ? "GUI driver" : "Follower driver";
+        app.Synchronize(msg, steering_input, throttle_input, braking_input);
+        // Advance simulation for one timestep for all modules
+        double step = realtime_timer.SuggestSimulationStep(step_size);
+        driver_follower->Advance(step);
+        driver_gui.Advance(step);
+        terrain.Advance(step);
+        my_hmmwv.Advance(step);
+        app.Advance(step);
+        // Finalize construction of visualization assets
+        app.AssetBindAll();
+        app.AssetUpdateAll();*/
 
         hmmwv_params.x_traj_prev=hmmwv_params.x_traj_curr;
         hmmwv_params.y_traj_prev=hmmwv_params.y_traj_curr;
+
+        /*
+        // Hack for acceleration-braking maneuver
+        static bool braking = false;
+        if (my_hmmwv.GetVehicle().GetVehicleSpeed() > target_speed)
+            braking = true;
+        if (braking) {
+            throttle_input = 0;
+            braking_input = 1;
+        } else {
+            throttle_input = 1;
+            braking_input = 0;
+        }
+        */
+
+      //     ros::Subscriber sub = n.subscribe<traj_gen_chrono::Control>("desired_ref", 1, &parameters::controlCallback, &hmmwv_params);
 
         // Render scene and output POV-Ray data
       if (hmmwv_params.sim_frame % hmmwv_params.render_steps == 0) {
@@ -1180,7 +1279,6 @@ int main(int argc, char* argv[]) {
                 sprintf(filename, "%s/data_%03d.dat", pov_dir.c_str(), render_frame + 1);
                 utils::WriteShapesPovray(my_hmmwv.GetSystem(), filename);
             }
-
             if (state_output) {
                 csv << time << steering_input << throttle_input << braking_input;
                 csv << my_hmmwv.GetVehicle().GetVehicleSpeed();
@@ -1282,7 +1380,7 @@ int main(int argc, char* argv[]) {
         n.setParam("vehicle/chrono/control/thr",hmmwv_params.throttle_input); //throttle input in the range [0,+1]
         n.setParam("vehicle/chrono/control/brk",hmmwv_params.braking_input); //braking input in the range [0,+1]
         n.setParam("vehicle/chrono/control/str",hmmwv_params.steering_input); //steeering input in the range [-1,+1]
-        std::cout << "states updated." << std::endl;
+
         data_out.t_chrono=time; //time in chrono simulation
         data_out.x_pos= global_pos[0] ;
         data_out.y_pos=global_pos[1];
