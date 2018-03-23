@@ -33,24 +33,25 @@ int main(int argc, char **argv)
   std::vector<double> x1;
   std::vector<double> y1;
   std::vector<double> x2(2,200);
-  std::vector<double> y2(2,50);
+  std::vector<double> y2(2,0);
 //  XmlRpc::XmlRpcValue x1,y1;
-  a.getParam("vehicle/chrono/default/traj/x",x1);
-  a.getParam("vehicle/chrono/default/traj/yVal",y1);
+  a.getParam("vehicle/chrono/nloptcontrol/traj/x",x1);
+  a.getParam("vehicle/chrono/nloptcontrol/traj/yVal",y1);
 
 
   int count = 0;
   while (ros::ok())
   {
 
-    if (count==1000000000){
-    x2[0]= 200;
-    x2[1]=200;
-    y2[0]=0;
-    y2[50]=50;
-    a.setParam("vehicle/chrono/default/traj/x",x2);
-    a.setParam("vehicle/chrono/default/traj/yVal",y2);
+    if (count==10000){
+    x2[0]= 200.0;
+    x2[1]=200.0;
+    y2[0]=0.0;
+    y2[1]=50;
+    // a.setParam("vehicle/chrono/nloptcontrol/traj/x",x1);
+    // a.setParam("vehicle/chrono/nloptcontrol/traj/yVal",y1);
     }
+
 
     ++count;
   }

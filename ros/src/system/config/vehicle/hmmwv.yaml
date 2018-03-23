@@ -50,12 +50,12 @@ vehicle:
 
   state:
    t: 0.0
-   x: 0.0
+   x: 200.0
    yVal: 0.0
    ux: 0.0 #Vx
    v: 0.0 #Vy
    ax: 0.0
-   psi: 0.0 #yaw
+   psi: 1.57079632679 #yaw
    theta: 0.0 #pitch
    phi: 0.0 #roll
    r: 0.0 #yaw rate
@@ -69,6 +69,15 @@ vehicle:
     sa: [0.0 0.0 0.0 0.0 0.0 0.0]
     thr: [2.5 2.5 2.5 2.5 2.5 2.5]
     brk: [0.0 0.0 0.0 0.0 0.0 0.0]
+
+  nloptcontrol:
+   traj:
+    t: [0.0 5.0]
+    x: [200.0, 200.0]
+    yVal: [0.0, 50.0]
+    sa: [0.0 0.0]
+    thr: [0.0 0.0]
+    brk: [0.0 0.0]
 
  common:
   m: 0.0

@@ -41,4 +41,7 @@
   <!-- initialize system -->
   <node name="bootstrap" pkg="system" type="bootstrap.jl" output="screen"/>
 
+  <!-- display the trajectory -->
+  <node name="rviz" pkg="rviz" type="rviz" output="screen" args="-d $(find system)/trajectory.rviz"/>
+
 </launch>

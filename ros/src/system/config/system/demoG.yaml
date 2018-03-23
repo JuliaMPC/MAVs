@@ -7,7 +7,7 @@ system:
    postion_update_external: true
    obstacles_initialized: false
  nloptcontrol_planner:
-  namespace: nloptcontrol
+  namespace: vehicle/chrono/nloptcontrol
   flags:
    running: true
    initialized: false
@@ -18,11 +18,11 @@ system:
   flags:
    running: true
    initialized: true
+ initialized: false
  chrono:
   namespace: chrono
   flags:
    initialized: false
    gui: true
- initialized: false
  planner: nlopcontrol_planner
  paused: true
