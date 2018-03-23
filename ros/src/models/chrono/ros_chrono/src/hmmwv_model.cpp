@@ -230,11 +230,15 @@ void trajChanger1(parameters &hmmwv_params, ChVehicleIrrApp app,ros::Publisher &
   driver_gui.Initialize();
   //Load xy parameters for the first timestep
   std::string planner_namespace;
-
+  bool planner_init;
   n.getParam("system/planner",planner_namespace);
-  n.getParam("vehicle/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
-  n.getParam("vehicle/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
+  n.getParam("system/"+planner_namespace+"/flags/initialized",planner_init);
 
+  if (planner_init){
+    n.getParam("system/planner",planner_namespace);
+    n.getParam("vehicle/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
+    n.getParam("vehicle/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
+  }
   hmmwv_params.x_traj_prev=hmmwv_params.x_traj_curr;
   hmmwv_params.y_traj_prev=hmmwv_params.y_traj_curr;
   double num_pts = hmmwv_params.x_traj_curr.size();
@@ -463,8 +467,13 @@ void trajChanger1(parameters &hmmwv_params, ChVehicleIrrApp app,ros::Publisher &
     vehicleinfo_pub.publish(data_out);
     //  loop_rate.sleep();
 
-    n.getParam("vehicle/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
-    n.getParam("vehicle/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
+    n.getParam("system/"+planner_namespace+"/flags/initialized",planner_init);
+
+    if (planner_init){
+      n.getParam("system/planner",planner_namespace);
+      n.getParam("vehicle/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
+      n.getParam("vehicle/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
+    }
 
   }
 }
@@ -475,10 +484,15 @@ void trajChanger2(parameters &hmmwv_params, ChVehicleIrrApp app,ros::Publisher &
   driver_gui.Initialize();
   //Load xy parameters for the first timestep
   std::string planner_namespace;
+  bool planner_init;
   n.getParam("system/planner",planner_namespace);
-  n.getParam("vehicle/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
-  n.getParam("vehicle/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
+  n.getParam("system/"+planner_namespace+"/flags/initialized",planner_init);
 
+  if (planner_init){
+    n.getParam("system/planner",planner_namespace);
+    n.getParam("vehicle/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
+    n.getParam("vehicle/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
+  }
   hmmwv_params.x_traj_prev=hmmwv_params.x_traj_curr;
   hmmwv_params.y_traj_prev=hmmwv_params.y_traj_curr;
   double num_pts = hmmwv_params.x_traj_curr.size();
@@ -706,12 +720,16 @@ void trajChanger2(parameters &hmmwv_params, ChVehicleIrrApp app,ros::Publisher &
 
     vehicleinfo_pub.publish(data_out);
     //  loop_rate.sleep();
-    n.getParam("system/planner",planner_namespace);
-    n.getParam("vehicle/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
-    n.getParam("vehicle/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
+    n.getParam("system/"+planner_namespace+"/flags/initialized",planner_init);
 
+    if (planner_init){
+      n.getParam("system/planner",planner_namespace);
+      n.getParam("vehicle/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
+      n.getParam("vehicle/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
+    }
   }
 }
+
 //----------------------callback
 /*
 void controlCallback(const traj_gen_chrono::Control::ConstPtr &msg, parameters &hmmwv_params,ChVehicleIrrApp &app,ChIrrGuiDriver &driver_gui,
@@ -875,7 +893,19 @@ double &target_speed,double &time,ros_chrono_msgs::veh_status &data_out, ros::Pu
     ros::spinOnce();
     }
 } */
+void waitForLoaded(ros::NodeHandle &n){
+    bool planner_init = false;
+    std::string planner_namespace;
+    n.getParam("system/planner",planner_namespace);
+    n.getParam("system/"+planner_namespace+"/flags/initialized",planner_init);
+    while(!planner_init){
+        usleep(500); // < my question
+        n.getParam("system/"+planner_namespace+"/flags/initialized",planner_init);
 
+    }
+    usleep(500); //sleep another 500ms to ensure everything is loaded.
+    //continue on here
+}
 // =============================================================================
 int main(int argc, char* argv[]) {
 
@@ -894,9 +924,24 @@ int main(int argc, char* argv[]) {
 
     ros::init(argc, argv, "Chronode");
     ros::NodeHandle n;
-    n.setParam("system/chrono/flags/initialized","true");
+    //n.setParam("system/chrono/flags/initialized",true);
+
+    bool planner_init;
+  //  bool planner_init2;
+
     std::string planner_namespace;
     n.getParam("system/planner",planner_namespace);
+    n.getParam("system/"+planner_namespace+"/flags/initialized",planner_init);
+    //planner_init2=planner_init1;
+  //    n.getParam("system/"+planner_namespace+"/flags/initialized",planner_init2);
+
+      if(!planner_init){
+        waitForLoaded(n);
+    }
+  //std::string planner_init;
+
+    n.getParam("system/"+planner_namespace+"/flags/initialized",planner_init);
+
     /*
     std::string planner_initialized= "False";
 
@@ -1055,8 +1100,8 @@ int main(int argc, char* argv[]) {
     //Load xy parameters for the first timestep
   //  std::string planner_namespace;
   //  n.getParam("system/planner",planner_namespace);
-    n.getParam("vehicle/chrono/default/traj/x",hmmwv_params.x_traj_curr);
-    n.getParam("vehicle/chrono/default/traj/yVal",hmmwv_params.y_traj_curr);
+    n.getParam("vehicle/chrono/chrono/traj/x",hmmwv_params.x_traj_curr);
+    n.getParam("vehicle/chrono/chrono/traj/yVal",hmmwv_params.y_traj_curr);
     hmmwv_params.x_traj_prev=hmmwv_params.x_traj_curr;
     hmmwv_params.y_traj_prev=hmmwv_params.y_traj_curr;
     double num_pts = hmmwv_params.x_traj_curr.size();
@@ -1127,7 +1172,7 @@ int main(int argc, char* argv[]) {
 
     std::ofstream myfile1;
     myfile1.open(data_path+"paths/position.txt",std::ofstream::out | std::ofstream::trunc);
-    double i=0;
+
     n.setParam("vehicle/chrono/common/m",my_hmmwv.GetVehicle().GetVehicleMass());
     const ChMatrix33<> inertia_mtx= my_hmmwv.GetChassisBody()->GetInertia();
     double Izz=inertia_mtx.GetElement(2,2);
@@ -1148,22 +1193,25 @@ int main(int argc, char* argv[]) {
     n.setParam("vehicle/chrono/common/la",la_length);
     n.setParam("vehicle/chrono/common/lb",lb_length);
 
+
     while (app.GetDevice()->run()) {
       double time = hmmwv_params.my_hmmwv.GetSystem()->GetChTime();
-      i=i+1;
-      if (i>0){
+
       // Get trajectory parameters again
-      n.getParam("system/planner",planner_namespace);
-      n.getParam("vehicle/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
-      n.getParam("vehicle/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
+      n.getParam("system/"+planner_namespace+"/flags/initialized",planner_init);
+      if (planner_init){
+        n.getParam("system/planner",planner_namespace);
+        n.getParam("vehicle/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
+        n.getParam("vehicle/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
 
 
-      num_pts = hmmwv_params.x_traj_curr.size();
+        num_pts = hmmwv_params.x_traj_curr.size();
 
-        if (hmmwv_params.x_traj_curr!=hmmwv_params.x_traj_prev || hmmwv_params.y_traj_curr != hmmwv_params.y_traj_prev){
-          trajChanger1(hmmwv_params,app,vehicleinfo_pub,n);
+          if (hmmwv_params.x_traj_curr!=hmmwv_params.x_traj_prev || hmmwv_params.y_traj_curr != hmmwv_params.y_traj_prev){
+            trajChanger1(hmmwv_params,app,vehicleinfo_pub,n);
+          }
         }
-      }
+
   /*      myfile.open(path_file,std::ofstream::out | std::ofstream::trunc);
 
         myfile << ' ' << num_pts << ' '<< num_cols << '\n';
