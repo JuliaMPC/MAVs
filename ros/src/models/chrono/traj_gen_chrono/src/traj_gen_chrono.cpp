@@ -35,8 +35,8 @@ int main(int argc, char **argv)
   std::vector<double> x2(2,200);
   std::vector<double> y2(2,50);
 //  XmlRpc::XmlRpcValue x1,y1;
-  a.getParam("vehicle/chrono/default/traj/x",x1);
-  a.getParam("vehicle/chrono/default/traj/yVal",y1);
+  a.getParam("vehicle/chrono/chrono/traj/x",x1);
+  a.getParam("vehicle/chrono/chrono_models/traj/yVal",y1);
 
 
   int count = 0;
@@ -48,8 +48,8 @@ int main(int argc, char **argv)
     x2[1]=200;
     y2[0]=0;
     y2[50]=50;
-    a.setParam("vehicle/chrono/default/traj/x",x2);
-    a.setParam("vehicle/chrono/default/traj/yVal",y2);
+    a.setParam("vehicle/chrono/chrono/traj/x",x2);
+    a.setParam("vehicle/chrono/chrono/traj/yVal",y2);
     }
 
     ++count;
