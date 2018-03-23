@@ -4,7 +4,6 @@ is initialized with parameters from a config yaml file, including an initial des
 ROS parameter server. This is demonstrated by traj_gen_chrono.cpp updating the ROS parameters for the desired x and y coordinates after the vehicle begins tracking
 the initial desired path. The vehicle's states are published in a ROS msg and also saved as ROS parameters.
 
-Using a reduced HMMWV vehicle assembly with reduced double wishbone suspensions (i.e., suspensions that replace the upper and lower control arms with distance constraints) and a rack-pinion steering mechanism.
 ## Main Packages
 
  - traj_gen_chrono
@@ -91,8 +90,6 @@ $ rosparam set <param_name> "param_value"
 - /vehicle/chrono/common/la (Distance from COM to front axle)
 - /vehicle/chrono/common/lb (Distance from COM to rear axle)
 - /vehicle/chrono/common/mass (Vehicle mass)
-- /vehicle/chrono/common/frict_coeff (Coefficient of friction) 
-- /vehicle/chrono/common/rest_coeff (Coefficient of resitution)
 - /vehicle/chrono/control/brk_in (Brake input)
 - /vehicle/chrono/state/sa (Steering angle)
 - /vehicle/chrono/control/str (Steering input)

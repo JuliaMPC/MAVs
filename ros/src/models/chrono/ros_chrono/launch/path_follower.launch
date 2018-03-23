@@ -26,6 +26,4 @@
     <arg name="chrono_params_path" value="$(arg chrono_params_path)"/>
 
   </include>
-  <node name="Reference" pkg="traj_gen_chrono" type="traj_gen_chrono"/>
-
 </launch>
