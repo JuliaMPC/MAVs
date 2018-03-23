@@ -75,3 +75,5 @@ vehicle:
   Izz: 0.0
   la: 0.0
   lb: 0.0
+  frict_coeff: 0.9
+  rest_coeff: 0.1

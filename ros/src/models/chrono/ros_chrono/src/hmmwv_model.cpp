@@ -1027,9 +1027,16 @@ int main(int argc, char* argv[]) {
     my_hmmwv.SetTireVisualizationType(tire_vis_type);
 
     // Create the terrain
+    float frict_coeff, rest_coeff;
+    n.getParam("vehicle/chrono/common/frict_coeff",frict_coeff);
+    n.getParam("vehicle/chrono/common/rest_coeff",rest_coeff);
+
     RigidTerrain terrain(my_hmmwv.GetSystem());
-    terrain.SetContactFrictionCoefficient(0.9f);
-    terrain.SetContactRestitutionCoefficient(0.01f);
+    my_hmmwv.GetVehicle().GetWheel(0)->SetContactFrictionCoefficient(frict_coeff);
+    my_hmmwv.GetVehicle().GetWheel(0)->SetContactRestitutionCoefficient(rest_coeff);
+
+    //terrain.SetContactFrictionCoefficient(0.9f);
+    //terrain.SetContactRestitutionCoefficient(0.01f);
     terrain.SetContactMaterialProperties(2e7f, 0.3f);
     terrain.SetColor(ChColor(1, 1, 1));
     //terrain.SetTexture(chrono::vehicle::GetDataFile("terrain/textures/tile4.jpg"), 200, 200);
@@ -1172,12 +1179,12 @@ int main(int argc, char* argv[]) {
 
     std::ofstream myfile1;
     myfile1.open(data_path+"paths/position.txt",std::ofstream::out | std::ofstream::trunc);
-
+    //get mass and moment of inertia about z axis
     n.setParam("vehicle/chrono/common/m",my_hmmwv.GetVehicle().GetVehicleMass());
     const ChMatrix33<> inertia_mtx= my_hmmwv.GetChassisBody()->GetInertia();
     double Izz=inertia_mtx.GetElement(2,2);
     n.setParam("vehicle/chrono/common/Izz",Izz);
-
+    // get distance to front and rear axles
     enum chrono::vehicle::VehicleSide LEFT;
     enum chrono::vehicle::VehicleSide RIGHT;
     ChVector<> veh_com= my_hmmwv.GetVehicle().GetVehicleCOMPos();
@@ -1192,6 +1199,15 @@ int main(int argc, char* argv[]) {
     lb_length=lb_diff.Length();
     n.setParam("vehicle/chrono/common/la",la_length);
     n.setParam("vehicle/chrono/common/lb",lb_length);
+
+    // get friction and restitution coefficients
+  //  float frict_coeff, rest_coeff;
+    frict_coeff = my_hmmwv.GetVehicle().GetWheel(0)->GetCoefficientFriction();
+    rest_coeff = my_hmmwv.GetVehicle().GetWheel(0)->GetCoefficientRestitution();
+    n.setParam("vehicle/chrono/common/frict_coeff",frict_coeff);
+    n.setParam("vehicle/chrono/common/rest_coeff",rest_coeff);
+
+
 
 
     while (app.GetDevice()->run()) {
