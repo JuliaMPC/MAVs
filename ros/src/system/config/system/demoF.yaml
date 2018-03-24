@@ -11,13 +11,13 @@ system:
   flags:
    running: true
    initilized: false
-   known_environment: true
+   known_environment: false
    3DOF_plant: true
    goal_attained: false
  obstacle_detector:
   flags:
    running: true
-   initialized: true
+   initialized: false
+
  initialized: false
- planner: nlopcontrol_planner
  paused: true

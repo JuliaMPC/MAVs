@@ -1,15 +1,19 @@
 #!/usr/bin/env julia
-using MAVs, NLOptControl, PyCall, RobotOS
-import YAML
-
 using RobotOS
 @rosimport geometry_msgs.msg: Point, Pose, Pose2D, PoseStamped, Vector3, Twist
 @rosimport nloptcontrol_planner.msg: Control
+@rosimport nav_msgs.msg: Path
+
 rostypegen()
 using geometry_msgs.msg
 using nloptcontrol_planner.msg
+using nav_msgs.msg
 
 import YAML
+
+using NLOptControl
+using MAVs
+using PyCall
 
 @pyimport tf.transformations as tf
 
@@ -162,7 +166,6 @@ function setStateParams(n)
   RobotOS.set_param("state/sa", X0[6])
   RobotOS.set_param("state/ux", X0[7])
   RobotOS.set_param("state/ax", X0[8])
-
   return nothing
 end
 
@@ -219,20 +222,31 @@ Author: Huckleberry Febbo, Graduate Student, University of Michigan
 Date Create: 4/6/2017, Last Modified: 3/10/2018 \n
 --------------------------------------------------------------------------------------\n
 """
-function loop(pub,n,c)
+function loop(pub,pub_path,n,c)
 
   init = false
   loop_rate = Rate(2.0) # 2 Hz
   while !is_shutdown()
       println("Running model for the: ",n.r.eval_num," time")
 
-      # update optimization parameters based off of latest vehicle state and obstacle information
-      setObstacleData(n.params)
-      setStateData(n)
+      # update optimization parameters based off of latest obstacle information
+      if !RobotOS.get_param("system/nloptcontrol_planner/flags/known_environment")
+        setObstacleData(n.params)
+      end
+
+      # update optimization parameters based off of latest vehicle state
+    #  if !RobotOS.get_param("system/nloptcontrol_planner/flags/3DOF_plant") # otherwise an external update on the initial state of the vehicle is needed
+    #    setStateData(n)
+    #  end  NOTE currently this is after the optimization, eventually put it just before
 
       updateAutoParams!(n,c)                        # update model parameters
       status = autonomousControl!(n)                # rerun optimization
-      n.mpc.t0_actual = to_sec(get_rostime())
+      if RobotOS.get_param("system/nloptcontrol_planner/flags/3DOF_plant") # otherwise an external update on the initial state of the vehicle is needed
+        n.mpc.t0_actual = (n.r.eval_num-1)*n.mpc.tex  # NOTE this is for testing
+      else
+        n.mpc.t0_actual = to_sec(get_rostime())
+      end
+
       msg = Control()
       msg.t = n.mpc.t0_actual + n.r.t_st
       msg.x = n.r.X[:,1]
@@ -242,6 +256,17 @@ function loop(pub,n,c)
       msg.vx = n.r.X[:,7]
 
       publish(pub, msg)
+
+      path = Path()
+      path.header.frame_id = "map"
+      path.poses = Array{PoseStamped}(length(msg.t))
+      for i in 1:length(msg.t)
+        path.poses[i] = PoseStamped()
+        path.poses[i].header.frame_id = "map"
+        path.poses[i].pose.position.x = msg.x[i]
+        path.poses[i].pose.position.y = msg.y[i]
+      end
+      publish(pub_path, path)
 
       # if the vehicle is very close to the goal sometimes the optimization returns with a small final time
       # and it can even be negative (due to tolerances in NLP solver). If this is the case, the goal is slightly
@@ -256,12 +281,14 @@ function loop(pub,n,c)
        end
      end
 
-      n.mpc.t0_actual = (n.r.eval_num-1)*n.mpc.tex  # external so that it can be updated easily in PathFollowing
-
       if RobotOS.get_param("system/nloptcontrol_planner/flags/3DOF_plant") # otherwise an external update on the initial state of the vehicle is needed
         simPlant!(n)      # simulating plant in VehicleModels.jl
         setStateParams(n) # update X0 parameters in ROS and in NLOptControl.jl
+        updateX0!(n)      # update X0 in NLOptControl.jl
+      else
+        setStateData(n)    # update X0 in NLOptControl.jl based off of state/ parameters
       end
+
 
       if ((n.r.dfs_plant[end][:x][end]-c["goal"]["x"])^2 + (n.r.dfs_plant[end][:y][end]-c["goal"]["yVal"])^2)^0.5 < 2*n.XF_tol[1]
          println("Goal Attained! \n"); n.mpc.goal_reached=true;
@@ -287,16 +314,15 @@ Date Create: 4/6/2017, Last Modified: 3/10/2018 \n
 --------------------------------------------------------------------------------------\n
 """
 function main()
-  # TODO implement this
-  # indicates if the user would like to pause the planner
-  # RobotOS.set_param("nloptcontrol_planner/flags/pause",true
-
   println("initializing nloptcontrol_planner node ...")
   init_node("nloptcontrol_planner")
 
   # message for solution to optimal control problem
   plannerNamespace = RobotOS.get_param("system/nloptcontrol_planner/namespace")
   pub = Publisher{Control}(string(plannerNamespace,"/control"), queue_size=10)
+  #pub_path = Publisher{Path}(string(plannerNamespace,"/path"), queue_size=10)
+  pub_path = Publisher{Path}("/path", queue_size=10)
+
   sub = Subscriber{Control}(string(plannerNamespace, "/control"), setTrajParams, queue_size = 10)
 
 
@@ -352,7 +378,7 @@ function main()
     setInitObstacleParams(c)
   end
 
-  loop(pub,n,c)
+  loop(pub,pub_path,n,c)
 end
 
 if !isinteractive()

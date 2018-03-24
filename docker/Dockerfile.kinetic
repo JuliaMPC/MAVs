@@ -42,7 +42,7 @@ RUN apt-get install -y \
         && apt-get clean
 
         RUN apt-get update && apt-get install -y \
-                ros-kinetic-nmea-msgs ros-kinetic-roslint\
+                ros-kinetic-nmea-msgs ros-kinetic-roslint ros-kinetic-velodyne-description\
                 ros-kinetic-nmea-navsat-driver ros-kinetic-sound-play \
                 ros-kinetic-jsk-visualization ros-kinetic-grid-map \
                 ros-kinetic-gps-common ros-kinetic-controller-manager \
@@ -86,6 +86,9 @@ RUN sudo rosdep init \
         && rosdep update \
         && echo "source /opt/ros/kinetic/setup.bash" >> ~/.bashrc
 
+# Install dev tools
+RUN sudo apt-get -y install vim tmux zip
+
 # Install Chrono
 # copy irrlicht engine to the docker and build it
 #RUN sudo mkdir -p /home/autoware/irrlicht-1.8.4
@@ -101,19 +104,6 @@ sudo git clone -b master https://github.com/projectchrono/chrono.git
 COPY chrono_build /opt/chrono/chrono_build
 RUN cd /opt/chrono/chrono_build ; sudo make
 
-# Install MAVs
-RUN echo 3
-RUN git clone https://github.com/tqshao/MAVs.git /home/$USERNAME/MAVs
-RUN /bin/bash -c 'source /opt/ros/kinetic/setup.bash; cd /home/$USERNAME/MAVs/ros/src; catkin_init_workspace; cd ..;catkin_make --pkg ros_chrono_msgs; catkin_make'
-RUN echo "source /home/$USERNAME/MAVs/ros/devel/setup.bash" >> /home/$USERNAME/.bashrc
-
-# Setting
-ENV LANG="en_US.UTF-8"
-RUN echo "export LANG=\"en_US.UTF-8\"" >> /home/$USERNAME/.bashrc
-
-# Install dev tools
-RUN sudo apt-get -y install vim tmux
-
 # Install Julia and setup environment
 RUN sudo wget https://julialang-s3.julialang.org/bin/linux/x64/0.6/julia-0.6.2-linux-x86_64.tar.gz && \
 sudo tar -xvf julia-0.6.2-linux-x86_64.tar.gz -C /opt && \
@@ -128,6 +118,22 @@ RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.checkout("VehicleModels")'
 RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.add("RobotOS")'
 RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.add("PyCall")'
 RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.clone("https://github.com/huckl3b3rry87/MAVs.jl")'
+
+# Install MAVs
+RUN echo 3
+RUN git clone https://github.com/tqshao/MAVs.git /home/$USERNAME/MAVs
+
+# MOVE LATER ....
+RUN sudo apt-get update && sudo apt-get -y install  ros-kinetic-voxel-grid ros-kinetic-move-base
+
+RUN /bin/bash -c 'source /opt/ros/kinetic/setup.bash; cd /home/$USERNAME/MAVs/ros/src; catkin_init_workspace; cd ..;catkin_make --pkg ros_chrono_msgs; catkin_make'
+RUN echo "source /home/$USERNAME/MAVs/ros/devel/setup.bash" >> /home/$USERNAME/.bashrc
+
+# Setting
+ENV LANG="en_US.UTF-8"
+RUN echo "export LANG=\"en_US.UTF-8\"" >> /home/$USERNAME/.bashrc
+
+
 
 # Change Terminal Color
 RUN gconftool-2 --set "/apps/gnome-terminal/profiles/Default/use_theme_background" --type bool false

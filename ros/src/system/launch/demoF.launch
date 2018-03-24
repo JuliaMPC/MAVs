@@ -1,14 +1,20 @@
 <?xml version="1.0"?>
 <launch>
 
-  <!-- demo of obstacle_detector with vehicle_description-->
+  <!-- demo of obstacle_detector with vehicle_description and nloptcontrol_planner-->
   <!-- TODO fix obstacle_detector -->
+  <!--  ************* nloptcontrol_planner args and parameters ***************  -->
+  <arg name="planner_params_path" default="$(find system)/config/planner/RTPP.yaml"/>
+
+  <param name="planner_params_path" value="$(arg planner_params_path)"/>
+  <rosparam command="load" file="$(arg planner_params_path)" />
 
   <!--  ************* vehicle_description args and parameters ***************  -->
-  <arg name="system_params_path" default="$(find system)/config/system/demoA.yaml"/>
+  <arg name="system_params_path" default="$(find system)/config/system/demoF.yaml"/>
   <arg name="vehicle_params_path" default="$(find system)/config/vehicle/hmmwv.yaml"/>
-  <arg name="case_params_path" default="$(find system)/config/case/case1.yaml"/>
-  <arg name="obstacle_num" default="3"/>
+  <arg name="case_params_path" default="$(find system)/config/case/s1.yaml"/>
+  <arg name="obstacle_num" default= "1" />
+  <!--arg name="obstacle_num" default="$(eval rospy.get_param("/case/obstacle/num"))"/-->
   <arg name="gui" default="true"/>
 
   <param name="system_params_path" value="$(arg system_params_path)"/>
@@ -26,6 +32,12 @@
     <arg name="gui" value="$(arg gui)"/>
   </include>
 
+  <include file="$(find nloptcontrol_planner)/launch/demo.launch">
+    <arg name="case_params_path" value="$(arg case_params_path)"/>
+    <arg name="planner_params_path" value="$(arg planner_params_path)"/>
+    <arg name="system_params_path" value="$(arg system_params_path)"/>
+  </include>
+
   <!--  ************* obstacle_detector args and parameters ***************  -->
   <arg name="frame_id" default="velodyne_top_link" />
   <arg name="manager" default="$(arg frame_id)_nodelet_manager" />
@@ -34,5 +46,8 @@
     <arg name="frame_id" value="$(arg frame_id)" />
     <arg name="manager" value="$(arg manager)" />
   </include>
+
+  <!-- initialize system -->
+  <node name="bootstrap" pkg="system" type="bootstrap.jl" output="screen"/>
 
 </launch>

@@ -1,0 +1,18 @@
+<launch>
+
+  <arg name="case_params_path" default="$(find system)/config/case/s1.yaml"/>
+  <arg name="planner_params_path" default="$(find system)/config/planner/RTPP.yaml"/>
+  <arg name="system_params_path" default="$(find system)/config/system/test_nloptcontrol_planner.yaml"/>
+
+  <!--  ************** Parameters ***************  -->
+  <!--set the filenames as rosparams, the datatypes of the parameters get messed up if they are put on the ROS server.. -->
+  <!--... and then loaded into julia through RobotOS.jl; but they work better fine by loading using YAML.jl -->
+  <param name="case_params_path" value="$(arg case_params_path)"/>
+  <param name="planner_params_path" value="$(arg planner_params_path)"/>
+  <param name="system_params_path" value="$(arg system_params_path)"/>
+
+  <rosparam command="load" file="$(arg case_params_path)" />
+  <rosparam command="load" file="$(arg planner_params_path)" />
+  <rosparam command="load" file="$(arg system_params_path)" />
+
+</launch>
