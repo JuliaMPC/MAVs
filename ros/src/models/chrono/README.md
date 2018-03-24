@@ -27,7 +27,7 @@ $ roslaunch ros_chrono path_follower.launch
 ```
 ## Change Vehicle Initial Conditions
 
-Change initial conditions to x=200.0 in case.yaml. To change initial trajectory edit the parameters in the hmmwv.yaml config file. To turn off the GUI (work in progress), change the value of system/chrono/flags/gui to false in test_chrono.yaml.
+Change initial conditions to x=200.0 in case.yaml. To change initial trajectory edit the parameters in the hmmwv.yaml config file. To turn off the GUI, change the value of system/chrono/flags/gui to false in test_chrono.yaml.
 
 ```
 $ sudo gedit ros/src/models/chrono/ros_chrono/config/hmmwv_params.yaml

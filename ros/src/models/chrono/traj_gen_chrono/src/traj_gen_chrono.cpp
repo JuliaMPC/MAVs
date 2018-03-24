@@ -35,8 +35,8 @@ int main(int argc, char **argv)
   std::vector<double> x2(2,200);
   std::vector<double> y2(2,0);
 //  XmlRpc::XmlRpcValue x1,y1;
-  a.getParam("vehicle/chrono/nloptcontrol/traj/x",x1);
-  a.getParam("vehicle/chrono/nloptcontrol/traj/yVal",y1);
+  // a.getParam("vehicle/chrono/nloptcontrol_planner/traj/x",x1);
+  // a.getParam("vehicle/chrono/nloptcontrol_planner/traj/yVal",y1);
 
 
   int count = 0;

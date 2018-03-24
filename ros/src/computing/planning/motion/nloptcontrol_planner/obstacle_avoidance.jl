@@ -37,6 +37,7 @@ function setTrajParams(msg::Control)
       sa = (sa..., msg.sa[i])
       psi = (psi..., msg.psi[i])
     end
+    println("Trajectory time: ", t)
 
     # update trajectory parameters
     plannerNamespace = RobotOS.get_param("system/nloptcontrol_planner/namespace")
@@ -47,7 +48,7 @@ function setTrajParams(msg::Control)
     RobotOS.set_param(string(plannerNamespace,"/traj/vx"),vx)
     RobotOS.set_param(string(plannerNamespace,"/traj/sa"),sa)
     RobotOS.set_param(string(plannerNamespace,"/traj/psi"),psi)
-    println(y)
+    # println(y)
 
   else
     error("L !> 0")
@@ -159,7 +160,7 @@ function setStateParams(n)
     X0[st]=n.r.dfs_plant[end][n.state.name[st]][end];
   end
 
-  println(X0)
+  # println(X0)
 
   RobotOS.set_param("state/x", X0[1])
   RobotOS.set_param("state/y", X0[2])
@@ -235,9 +236,9 @@ function setStateData(n)
     """
 
   X0 = [x,y,v,r,psi,sa,ux,ax]
-  println(X0)
+  # println(X0)
   updateX0!(n,X0;(:userUpdate=>true))
-  printl("X0 updated!")
+  # println("X0 updated!")
   return nothing
 end
 
@@ -317,12 +318,17 @@ function loop(pub,pub_path,n,c)
         setStateData(n)    # update X0 in NLOptControl.jl based off of state/ parameters
       end
 
-
-      if ((n.r.dfs_plant[end][:x][end]-c["goal"]["x"])^2 + (n.r.dfs_plant[end][:y][end]-c["goal"]["yVal"])^2)^0.5 < 2*n.XF_tol[1]
-         println("Goal Attained! \n"); n.mpc.goal_reached=true;
-         RobotOS.set_param("system/nloptcontrol_planner/flags/goal_attained",true)
-         break;
+      if RobotOS.get_param("system/nloptcontrol_planner/flags/3DOF_plant")
+        if ((n.r.dfs_plant[end][:x][end]-c["goal"]["x"])^2 + (n.r.dfs_plant[end][:y][end]-c["goal"]["yVal"])^2)^0.5 < 2*n.XF_tol[1]
+           println("Goal Attained! \n"); n.mpc.goal_reached=true;
+           RobotOS.set_param("system/nloptcontrol_planner/flags/goal_attained",true)
+           break;
+        end
+      else
+        # get chrono states, see if it is near goal
       end
+
+
 
       if !init  # calling this node initialized after the first solve so that /traj/ parameters are set
         init = true

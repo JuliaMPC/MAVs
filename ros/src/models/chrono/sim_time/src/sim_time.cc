@@ -3,7 +3,7 @@
 
 //This cpp file publishes simulation time subscribed from Chrono.
 
-rosgraph_msgs::Clock time(0);
+rosgraph_msgs::Clock sim_time;
 
 int main(int argc, char **argv)
 {
@@ -19,6 +19,7 @@ int main(int argc, char **argv)
   ros::Rate loop_rate(1000);
 
   while (ros::ok()){
+    sim_time.clock = time_in_second;
     time_pub.publish(time);
     ros::spinOnce();
     loop_rate.sleep();
