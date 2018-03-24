@@ -56,18 +56,3 @@ By default(when rosparam name is not specified), this plugin defaults to
     </model>
   </world>
 </sdf>
-
-
-<gazebo reference="base_link" >
-
-</gazebo>
-
-
-The setup uses navfn/NavfnROS as base_global_planner and base_local_planner/TrajectoryPlannerROS as base_local_planner
-
- Steps
-
-- Start Gazebo: roslaunch mavs_gazebo demo.launch
-- Run RViz and load the config file from MAVs/ros/src/system/config/planner/ros_base_planner/default.rviz
-- Select a 2D Pose Estimate and 2D Nav Goal in RViz. Make sure that Goal is within Global Cost map
-- Base planner would create a trajectory which would be visible in RViz
