@@ -31,6 +31,8 @@ namespace gazebo
     /// \brief Connection that maintains a link between the contact sensor's
     /// updated signal and the OnUpdate callback.
     private: event::ConnectionPtr updateConnection;
+
+    private: std::string rosParamName;
   };
 }
 #endif

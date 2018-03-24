@@ -17,10 +17,11 @@ catkin_package(
 ## Build ##
 ###########
 
-link_directories(${GAZEBO_LIBRARY_DIRS})
+
 include_directories(${catkin_INCLUDE_DIRS}
                     ${Boost_INCLUDE_DIR}
                     ${GAZEBO_INCLUDE_DIRS})
+link_directories(${GAZEBO_LIBRARY_DIRS})
 list(APPEND CMAKE_CXX_FLAGS "${GAZEBO_CXX_FLAGS}")
 
 ## Declare a C++ library

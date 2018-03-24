@@ -14,10 +14,8 @@ ContactPlugin::~ContactPlugin()
 {
 }
 
-const std::string GROUND_PLANE_LINK = "ground_plane::link::collision";
-
 /////////////////////////////////////////////////
-void ContactPlugin::Load(sensors::SensorPtr _sensor, sdf::ElementPtr /*_sdf*/)
+void ContactPlugin::Load(sensors::SensorPtr _sensor, sdf::ElementPtr _sdf)
 {
     // Make sure the ROS node for Gazebo has already been initialized
     if (!ros::isInitialized())
@@ -38,6 +36,15 @@ void ContactPlugin::Load(sensors::SensorPtr _sensor, sdf::ElementPtr /*_sdf*/)
     return;
   }
 
+  // Read the ros param name to update
+  //Defaults to vehicle_collided
+  this->rosParamName = "/vehicle_collided";
+  if (_sdf->HasElement("rosParamName"))
+    this->rosParamName = _sdf->Get<std::string>("rosParamName");
+
+  ros::param::set(this->rosParamName, false);
+
+
   // Connect to the sensor update event.
   this->updateConnection = this->parentSensor->ConnectUpdated(
       std::bind(&ContactPlugin::OnUpdate, this));
@@ -51,20 +58,12 @@ void ContactPlugin::OnUpdate()
 {
   // Get all the contacts.
   msgs::Contacts contacts;
-  bool coll = false;
-  contacts = this->parentSensor->Contacts();
-  for (unsigned int i = 0; i < contacts.contact_size(); ++i)
-  {
-    if (GROUND_PLANE_LINK.compare(contacts.contact(i).collision1()) != 0 &&
-        GROUND_PLANE_LINK.compare(contacts.contact(i).collision2()) != 0)
-        {
-          coll = true;
-          //TODO Remove this after implementation is done
-          std::cout << "Collision between[" << contacts.contact(i).collision1()
-                    << "] and [" << contacts.contact(i).collision2() << "]\n";
+  bool coll;
+  ros::param::get(this->rosParamName, coll);
 
-          break;
-        }
-  }
- ros::param::set("vehicle_collsion", coll);
+  contacts = this->parentSensor->Contacts();
+
+  coll = coll || contacts.contact_size() > 0;
+
+  ros::param::set(this->rosParamName, coll);
 }
