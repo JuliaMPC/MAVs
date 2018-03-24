@@ -7,23 +7,23 @@ system:
    postion_update_external: true
    obstacles_initialized: false
  nloptcontrol_planner:
-  namespace: nloptcontrol
+  namespace: vehicle/chrono/nloptcontrol_planner
   flags:
    running: true
    initialized: false
-   known_environment: false
-   3DOF_plant: true
+   known_environment: true
+   3DOF_plant: false
    goal_attained: false
  obstacle_detector:
   flags:
-   running: true
-   initialized: true
+   running: false
+   initialized: false
+ initialized: false
  chrono:
   namespace: chrono
   flags:
    initialized: false
    gui: true
- planner: nloptcontrol
-
- initialized: false
+   path_follower: true
+ planner: nloptcontrol_planner
  paused: true

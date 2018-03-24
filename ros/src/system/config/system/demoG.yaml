@@ -11,18 +11,19 @@ system:
   flags:
    running: true
    initialized: false
-   known_environment: true
+   known_environment: false
    3DOF_plant: false
    goal_attained: false
  obstacle_detector:
   flags:
    running: true
-   initialized: true
- initialized: false
+   initialized: false
  chrono:
   namespace: chrono
   flags:
    initialized: false
    gui: true
+   path_follower: true
  planner: nloptcontrol_planner
  paused: true
+ initialized: false

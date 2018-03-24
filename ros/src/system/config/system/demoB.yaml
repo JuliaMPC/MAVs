@@ -16,8 +16,8 @@ system:
    goal_attained: false
  obstacle_detector:
   flags:
-   running: true
-   initialized: true
+   running: false
+   initialized: false
  chrono:
   namespace: chrono
   flags:

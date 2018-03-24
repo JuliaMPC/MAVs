@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-  <!-- demo of nloptcontrol_planner with vehicle_description-->
+  <!-- demo of nloptcontrol_planner with chrono, vehicle_description and obstacle detector-->
 
   <!-- use sime time -->
   <param name="use_sim_time" value="true"/>
@@ -45,6 +45,15 @@
     <arg name="case_params_path" value="$(arg case_params_path)"/>
     <arg name="obstacle_num" value="$(arg obstacle_num)"/>
     <arg name="gui" value="$(arg gui)"/>
+  </include>
+
+  <!--  ************* obstacle_detector args and parameters ***************  -->
+  <arg name="frame_id" default="velodyne_top_link" />
+  <arg name="manager" default="$(arg frame_id)_nodelet_manager" />
+
+  <include file="$(find obstacle_detector)/launch/obstacle_detector.launch">
+    <arg name="frame_id" value="$(arg frame_id)" />
+    <arg name="manager" value="$(arg manager)" />
   </include>
 
 

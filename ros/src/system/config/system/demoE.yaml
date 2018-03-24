@@ -4,5 +4,25 @@ system:
    running: true
    lidar_initialized: false
    obstacles_initialized: false
-   postion_update_external: false
- paused: false
+   postion_update_external: true
+   obstacles_initialized: false
+ nloptcontrol_planner:
+  namespace: vehicle/chrono/nloptcontrol_planner
+  flags:
+   running: true
+   initialized: false
+   known_environment: false
+   3DOF_plant: true
+   goal_attained: false
+ obstacle_detector:
+  flags:
+   running: true
+   initialized: false
+ initialized: false
+ chrono:
+  namespace: chrono
+  flags:
+   initialized: false
+   gui: true
+ planner: nloptcontrol_planner
+ paused: true
