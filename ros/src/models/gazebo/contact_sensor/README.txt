@@ -1,6 +1,8 @@
 This package provides a library names libcontact_sensor_mavs.so which can be
 used in .sdf files to detect collision for the associated link.
 
+For developers that work on top of Gazebo, do # sudo apt-get install libgazebo8-dev
+
 The plugin declaration accepts an argument called "rosParamName". User can
 define the desired ros parameter to update using this.
 
