@@ -19,4 +19,5 @@ system:
    running: true
    initialized: true
  initialized: false
+ planner: nlopcontrol_planner
  paused: true
