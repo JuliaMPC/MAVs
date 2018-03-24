@@ -25,22 +25,14 @@ By default(when rosparam name is not specified), this plugin defaults to
 
     <model name="box">
       <link name="link">
-        <pose>0 0 0.5 0 0 0</pose>
+        <pose>...</pose>
 
         <collision name="box_collision">
-          <geometry>
-            <box>
-              <size>1 1 1</size>
-            </box>
-          </geometry>
+          ...
         </collision>
 
         <visual name="visual">
-          <geometry>
-            <box>
-              <size>1 1 1</size>
-            </box>
-          </geometry>
+          ...
         </visual>
 
         <sensor name="my_contact" type="contact">
