@@ -21,9 +21,11 @@ system:
  chrono:
   namespace: chrono
   flags:
+   running: true
    initialized: false
    gui: true
    path_follower: true
  planner: nloptcontrol_planner
  paused: true
  initialized: false
+ step_simulation: 1.0

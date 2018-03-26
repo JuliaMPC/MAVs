@@ -5,3 +5,6 @@ system:
    initialized: false
    gui: true
  planner: default
+ default:
+  flags:
+   initialized: true

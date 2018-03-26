@@ -125,12 +125,12 @@ function loop(set_state,get_state)
         ms.pose.orientation.z = Q[3]
         ms.pose.orientation.w = Q[4]
 
-        println("set ",ms.pose)
+        #println("set ",ms.pose)
 
         if RobotOS.get_param("system/nloptcontrol_planner/flags/3DOF_plant")
           println("state ", RobotOS.get_param("state/x"))
         else
-          println("state ", RobotOS.get_param("vehicle/chrono/state/x"))
+          #println("state ", RobotOS.get_param("vehicle/chrono/state/x"))
         end
 
         # Set the state of the Gazebo model

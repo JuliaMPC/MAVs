@@ -32,7 +32,6 @@
 #include "ros/ros.h"
 #include "std_msgs/String.h"
 #include "ros_chrono_msgs/veh_status.h"
-#include "rosgraph_msgs/Clock.h"
 
 //#include "tf/tf.h"
 #include <sstream>
@@ -845,7 +844,7 @@ void trajChanger1_nogui(parameters_nogui &hmmwv_params,ros::Publisher &vehiclein
     double yaw_val=atan2(2*(q0*q3+q1*q2),1-2*(q2*q2+q3*q3));
     double theta_val=asin(2*(q0*q2-q3*q1));
     double phi_val= atan2(2*(q0*q1+q2*q3),1-2*(q1*q1+q2*q2));
-/*
+    /*
     if (yaw_val<0){
       yaw_val=-yaw_val+PI/2;
     }
@@ -855,7 +854,8 @@ void trajChanger1_nogui(parameters_nogui &hmmwv_params,ros::Publisher &vehiclein
     else if (yaw_val>PI/2 && yaw_val<=PI){
       yaw_val=5*PI/2-yaw_val;
     }
-*/
+    */
+
     n.setParam("vehicle/chrono/state/t",time); //time in chrono simulation
     n.setParam("vehicle/chrono/state/x", global_pos[0]) ;
     n.setParam("vehicle/chrono/state/yVal",global_pos[1]);
@@ -993,7 +993,7 @@ void trajChanger2_nogui(parameters_nogui &hmmwv_params,ros::Publisher &vehiclein
     double yaw_val=atan2(2*(q0*q3+q1*q2),1-2*(q2*q2+q3*q3));
     double theta_val=asin(2*(q0*q2-q3*q1));
     double phi_val= atan2(2*(q0*q1+q2*q3),1-2*(q1*q1+q2*q2));
-/*
+    /*
     if (yaw_val<0){
       yaw_val=-yaw_val+PI/2;
     }
@@ -1003,7 +1003,8 @@ void trajChanger2_nogui(parameters_nogui &hmmwv_params,ros::Publisher &vehiclein
     else if (yaw_val>PI/2 && yaw_val<=PI){
       yaw_val=5*PI/2-yaw_val;
     }
-*/
+    */
+
     n.setParam("vehicle/chrono/state/t",time); //time in chrono simulation
     n.setParam("vehicle/chrono/state/x", global_pos[0]) ;
     n.setParam("vehicle/chrono/state/yVal",global_pos[1]);
@@ -1121,7 +1122,7 @@ int main(int argc, char* argv[]) {
     n.getParam("hmmwv_chrono/X0/v_des",target_speed);
 
     //Initial Position
-    double x0, y0, z0, yaw0,pitch0,roll0;
+    double x0, y0, z0, yaw0, pitch0, roll0;
     bool gui_switch;
     n.getParam("case/actual/X0/x",x0);
     n.getParam("case/actual/X0/yVal",y0);
@@ -1133,6 +1134,12 @@ int main(int argc, char* argv[]) {
     n.getParam("system/chrono/flags/gui",gui_switch);
   //  tf::Quaternion q = tf::createQuaternionFromRPY(roll0, pitch0, yaw0);
     // Initial vehicle location and orientation
+
+    // convert yaw angle to chrono frame    (-pi,pi] or [-pi,pi)
+    // if(yaw0 >= 3*PI/2) yaw0 = -yaw0 + 5*PI/2;
+    // else yaw0 = -yaw0 + PI/2;
+    // yaw0 = -yaw0 + PI;
+
     ChVector<> initLoc(x0, y0, z0);
 //    ChQuaternion<> initRot(q[0],q[1],q[2],q[3]);
 
@@ -1152,9 +1159,6 @@ int main(int argc, char* argv[]) {
     //ChQuaternion<> initRot(cos(PI/4), 0, 0, sin(PI/4)); //initial yaw of pi/2
 
     ros::Publisher vehicleinfo_pub = n.advertise<ros_chrono_msgs::veh_status>("vehicleinfo", 1);
-
-    rosgraph_msgs::Clock sim_time;
-    ros::Publisher time_pub = n.advertise<rosgraph_msgs::Clock>("/clock", 1000);
 
     //ros::Rate loop_rate(5);
 
@@ -1361,12 +1365,13 @@ int main(int argc, char* argv[]) {
     n.setParam("vehicle/chrono/common/frict_coeff",frict_coeff);
     n.setParam("vehicle/chrono/common/rest_coeff",rest_coeff);
 
-    double time_start = ros::Time::now().toSec();
+    double wallTime_pre = ros::WallTime::now().toSec();
     while (app.GetDevice()->run()) {
       double time = hmmwv_params.my_hmmwv.GetSystem()->GetChTime();
-
-      sim_time.clock = ros::Time(time + time_start);
-      // time_pub.publish(sim_time);
+      double wallTime = ros::WallTime::now().toSec();
+       std::cout << "step_simulation: " << (wallTime-wallTime_pre) << std::endl;
+      n.setParam("system/step_simulation", (wallTime - wallTime_pre)/step_size );
+      wallTime_pre = wallTime;
       // Get trajectory parameters again
       n.getParam("system/"+planner_namespace+"/flags/initialized",planner_init);
       if (planner_init){
@@ -1557,6 +1562,9 @@ int main(int argc, char* argv[]) {
         double yaw_val=atan2(2*(q0*q3+q1*q2),1-2*(q2*q2+q3*q3));
         double theta_val=asin(2*(q0*q2-q3*q1));
         double phi_val= atan2(2*(q0*q1+q2*q3),1-2*(q1*q1+q2*q2));
+
+        std::cout << "Yaw angle in chrono: " << yaw_val << std::endl;
+
         /*
         if (yaw_val<0){
           yaw_val=-yaw_val+PI/2;
@@ -1568,7 +1576,6 @@ int main(int argc, char* argv[]) {
           yaw_val=5*PI/2-yaw_val;
         }
         */
-        std::cout << yaw_val << " " << theta_val << " " << phi_val << " " << std::endl;
 
 
         n.setParam("vehicle/chrono/state/t",time); //time in chrono simulation
@@ -1587,7 +1594,7 @@ int main(int argc, char* argv[]) {
         n.setParam("vehicle/chrono/control/str",hmmwv_params.steering_input); //steeering input in the range [-1,+1]
 
         data_out.t_chrono=time; //time in chrono simulation
-        data_out.x_pos= global_pos[0] ;
+        data_out.x_pos= global_pos[0];
         data_out.y_pos=global_pos[1];
         data_out.x_v= fabs(global_velCOM[0]); //speed measured at the origin of the chassis reference frame.
         data_out.y_v= global_velCOM[1];
@@ -1702,12 +1709,14 @@ else{
   double time = hmmwv_params.my_hmmwv.GetSystem()->GetChTime();
 
 
-  double time_start = ros::Time::now().toSec();
+  double wallTime_pre = ros::WallTime::now().toSec();
 
   while (time<t_end) {
     double time = hmmwv_params.my_hmmwv.GetSystem()->GetChTime();
-    sim_time.clock = ros::Time(time + time_start);
-    // time_pub.publish(sim_time);
+    double wallTime = ros::WallTime::now().toSec();
+     std::cout << "time: " << wallTime << "   step_simulation: " << (wallTime-wallTime_pre) << std::endl;
+    n.setParam("system/step_simulation", (wallTime - wallTime_pre)/step_size );
+    wallTime_pre = wallTime;
 
     // Get trajectory parameters again
     n.getParam("system/"+planner_namespace+"/flags/initialized",planner_init);
@@ -1881,7 +1890,8 @@ else{
       else if (yaw_val>PI/2 && yaw_val<=PI){
         yaw_val=5*PI/2-yaw_val;
       }
-*/
+      */
+
       n.setParam("vehicle/chrono/state/t",time); //time in chrono simulation
       n.setParam("vehicle/chrono/state/x", global_pos[0]) ;
       n.setParam("vehicle/chrono/state/yVal",global_pos[1]);
