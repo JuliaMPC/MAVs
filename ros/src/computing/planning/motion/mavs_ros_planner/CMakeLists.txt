@@ -20,5 +20,10 @@ catkin_package(
 )
 
 add_executable(navsPathConverter src/NavsPathConverter.cpp)
+add_executable(move_base_goal_client src/move_base_goal_client.cpp)
+
 target_link_libraries(navsPathConverter ${catkin_LIBRARIES})
+target_link_libraries(move_base_goal_client ${catkin_LIBRARIES})
+
 add_dependencies(navsPathConverter ${catkin_EXPORTED_TARGETS})
+add_dependencies(move_base_goal_client ${catkin_EXPORTED_TARGETS})
