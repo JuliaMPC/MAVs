@@ -1078,7 +1078,7 @@ int main(int argc, char* argv[]) {
 
     ros::init(argc, argv, "Chronode");
     ros::NodeHandle n;
-    //n.setParam("system/chrono/flags/initialized",true);
+    n.setParam("system/chrono/flags/initialized",true);
 
     bool planner_init;
   //  bool planner_init2;

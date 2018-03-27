@@ -1,7 +1,7 @@
 hmmwv_chrono:
  # initial position
  X0:
-  x: 200.0
+  x: 0.0
   yVal: 0.0
   z: 1.0
   v: 0.0

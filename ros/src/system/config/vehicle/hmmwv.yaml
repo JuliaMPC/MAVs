@@ -50,7 +50,7 @@ vehicle:
 
   state:
    t: 0.0
-   x: 200.0
+   x: 0.0
    yVal: 0.0
    ux: 0.0 #Vx
    v: 0.0 #Vy

@@ -29,6 +29,7 @@ int main(int argc, char** argv)
   ros::Time last_ros_time_;
   bool wait = true;
   int step_simulation_initial;
+  int step_simulation;
   rosnode->getParam("system/step_simulation", step_simulation_initial);
   while (wait)
   {

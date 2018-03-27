@@ -43,13 +43,13 @@ int main(int argc, char **argv)
   while (ros::ok())
   {
 
-    if (count==10000){
-    x2[0]= 200.0;
-    x2[1]=200.0;
+    if (count==1000){
+    x2[0]= 0.0;
+    x2[1]= 0.0;
     y2[0]=0.0;
     y2[1]=50;
-    // a.setParam("vehicle/chrono/nloptcontrol/traj/x",x1);
-    // a.setParam("vehicle/chrono/nloptcontrol/traj/yVal",y1);
+    a.setParam("vehicle/chrono/nloptcontrol/traj/x",x1);
+    a.setParam("vehicle/chrono/nloptcontrol/traj/yVal",y1);
     }
 
 

@@ -111,27 +111,21 @@ function loop(set_state,get_state)
         ms.model_name = modelName
         ms.pose = gs_r.pose  # don't want to set everything else == 0
 
-        if RobotOS.get_param("system/nloptcontrol_planner/flags/3DOF_plant")
-          ms.pose.position.x = RobotOS.get_param("state/x")
-          ms.pose.position.y = RobotOS.get_param("state/y")
-          Q = tf.quaternion_from_euler(0, 0, RobotOS.get_param("state/psi"))
+        if (RobotOS.get_param("system/nloptcontrol_planner/flags/3DOF_plant") &&
+            RobotOS.get_param("system/nloptcontrol_planner/flags/running"))
+         ms.pose.position.x = RobotOS.get_param("state/x")
+         ms.pose.position.y = RobotOS.get_param("state/y")
+         Q = tf.quaternion_from_euler(0, 0, RobotOS.get_param("state/psi"))
         else
-          ms.pose.position.x = RobotOS.get_param("vehicle/chrono/state/x")
-          ms.pose.position.y = RobotOS.get_param("vehicle/chrono/state/yVal")
-          Q = tf.quaternion_from_euler(0, 0, RobotOS.get_param("vehicle/chrono/state/psi"))
+         ms.pose.position.x = RobotOS.get_param("vehicle/chrono/state/x")
+         ms.pose.position.y = RobotOS.get_param("vehicle/chrono/state/yVal")
+         Q = tf.quaternion_from_euler(0, 0, RobotOS.get_param("vehicle/chrono/state/psi"))
         end
         ms.pose.orientation.x = Q[1]
         ms.pose.orientation.y = Q[2]
         ms.pose.orientation.z = Q[3]
         ms.pose.orientation.w = Q[4]
 
-        #println("set ",ms.pose)
-
-        if RobotOS.get_param("system/nloptcontrol_planner/flags/3DOF_plant")
-          println("state ", RobotOS.get_param("state/x"))
-        else
-          #println("state ", RobotOS.get_param("vehicle/chrono/state/x"))
-        end
 
         # Set the state of the Gazebo model
         ss = SetModelStateRequest()
