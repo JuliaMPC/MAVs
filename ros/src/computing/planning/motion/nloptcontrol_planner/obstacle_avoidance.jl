@@ -37,7 +37,6 @@ function setTrajParams(msg::Control)
       sa = (sa..., msg.sa[i])
       psi = (psi..., msg.psi[i])
     end
-    println("Trajectory time: ", t)
 
     # update trajectory parameters
     plannerNamespace = RobotOS.get_param("system/nloptcontrol_planner/namespace")

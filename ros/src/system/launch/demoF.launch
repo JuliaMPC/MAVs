@@ -37,7 +37,7 @@
   <!-- launch chrono -->
   <arg name="path_follower" value="true" />
   <!--node name="Reference" pkg="traj_gen_chrono" type="traj_gen_chrono"/-->
-  <node if="$(arg path_follower)" name="Chronode" pkg="ros_chrono" type="hmmwv_model" cwd="node"/>
+  <node if="$(arg path_follower)" name="Chronode" pkg="ros_chrono" type="hmmwv_model" cwd="node" />
 
   <include file="$(find nloptcontrol_planner)/launch/demo.launch">
     <arg name="case_params_path" value="$(arg case_params_path)"/>

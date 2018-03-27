@@ -28,29 +28,32 @@ int main(int argc, char** argv)
   // Waits for simulation time update.
   ros::Time last_ros_time_;
   bool wait = true;
-  int step_simulation_initial;
-  int step_simulation;
-  rosnode->getParam("system/step_simulation", step_simulation_initial);
+  double simulation_time_pre;
+  rosnode->getParam("system/simulation_time", simulation_time_pre);
+  double simulation_time = simulation_time_pre;
+  double delta_time = 0;
   while (wait)
   {
-    last_ros_time_ = ros::Time::now();
+    // last_ros_time_ = ros::Time::now();
     // std::cout << "\t\t\t Attempted getting sim time: " << last_ros_time_ << std::endl;
 
     // if (last_ros_time_.toSec() > 0)
       //wait = false;
-      // std::cout << "Current Simulation Time: " << last_ros_time_ << std::endl;
 
     // Publish the step message for the simulation.
     gazebo::msgs::WorldControl msg;
-    msg.set_step(1);
-    pub->Publish(msg);
+    msg.set_step(true);
 
     // get simulation step
-    rosnode->getParam("system/step_simulation", step_simulation);
+    rosnode->getParam("system/simulation_time", simulation_time);
+
+    delta_time = simulation_time - simulation_time_pre;
+    if(delta_time)  pub->Publish(msg);
     // Wait for 1 second and allow ROS to complete as well.
-    gazebo::common::Time::NSleep(step_simulation*1000000);
-    // std :: cout << "Step time in nano seconds: " << step_simulation << std::endl;
-    ros::spinOnce();
+    gazebo::common::Time::MSleep(delta_time*100.0);
+    simulation_time_pre = simulation_time;
+    // std :: cout << "Time in seconds: " << simulation_time << " Delta_time: " << delta_time << std::endl;
+    // ros::spinOnce();
   }
 
   gazebo::shutdown();

@@ -28,4 +28,4 @@ system:
  planner: nloptcontrol_planner
  paused: true
  initialized: false
- step_simulation: 1.0
+ simulation_time: 0.0
