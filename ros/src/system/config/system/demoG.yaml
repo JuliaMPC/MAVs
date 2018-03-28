@@ -29,3 +29,4 @@ system:
  paused: true
  initialized: false
  simulation_time: 0.0
+ step_size: 0.01

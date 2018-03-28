@@ -1080,6 +1080,8 @@ int main(int argc, char* argv[]) {
     ros::init(argc, argv, "Chronode");
     ros::NodeHandle n;
     n.setParam("system/chrono/flags/initialized",true);
+    n.getParam("system/step_size",step_size);
+
 
     bool planner_init;
   //  bool planner_init2;

@@ -26,3 +26,4 @@ system:
    gui: true
  planner: nloptcontrol_planner
  paused: true
+ step_size: 0.001

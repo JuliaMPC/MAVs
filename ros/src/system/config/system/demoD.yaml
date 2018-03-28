@@ -29,3 +29,4 @@ system:
  initialized: false
  planner: ros_base_planner
  paused: false
+ step_size: 0.001

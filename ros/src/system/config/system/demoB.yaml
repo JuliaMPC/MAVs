@@ -26,3 +26,4 @@ system:
  initialized: false
  planner: nlopcontrol_planner
  paused: true
+ step_size: 0.001
