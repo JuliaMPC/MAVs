@@ -440,7 +440,7 @@ void trajChanger1(parameters &hmmwv_params, ChVehicleIrrApp app,ros::Publisher &
     double yaw_val=atan2(2*(q0*q3+q1*q2),1-2*(q2*q2+q3*q3));
     double theta_val=asin(2*(q0*q2-q3*q1));
     double phi_val= atan2(2*(q0*q1+q2*q3),1-2*(q1*q1+q2*q2));
-    if (yaw_val<0){
+    /*if (yaw_val<0){
       yaw_val=-yaw_val+PI/2;
     }
     else if (yaw_val>=0 && yaw_val<=PI/2){
@@ -448,7 +448,7 @@ void trajChanger1(parameters &hmmwv_params, ChVehicleIrrApp app,ros::Publisher &
     }
     else if (yaw_val>PI/2 && yaw_val<=PI){
       yaw_val=5*PI/2-yaw_val;
-    }
+    }*/
 
     n.setParam("vehicle/chrono/state/t",time); //time in chrono simulation
     n.setParam("vehicle/chrono/state/x", global_pos[0]) ;
@@ -694,7 +694,7 @@ void trajChanger2(parameters &hmmwv_params, ChVehicleIrrApp app,ros::Publisher &
     double yaw_val=atan2(2*(q0*q3+q1*q2),1-2*(q2*q2+q3*q3));
     double theta_val=asin(2*(q0*q2-q3*q1));
     double phi_val= atan2(2*(q0*q1+q2*q3),1-2*(q1*q1+q2*q2));
-    if (yaw_val<0){
+    /*if (yaw_val<0){
       yaw_val=-yaw_val+PI/2;
     }
     else if (yaw_val>=0 && yaw_val<=PI/2){
@@ -702,7 +702,7 @@ void trajChanger2(parameters &hmmwv_params, ChVehicleIrrApp app,ros::Publisher &
     }
     else if (yaw_val>PI/2 && yaw_val<=PI){
       yaw_val=5*PI/2-yaw_val;
-    }
+    }*/
 
     n.setParam("vehicle/chrono/state/t",time); //time in chrono simulation
     n.setParam("vehicle/chrono/state/x", global_pos[0]) ;
@@ -1891,6 +1891,7 @@ else{
       double yaw_val=atan2(2*(q0*q3+q1*q2),1-2*(q2*q2+q3*q3));
       double theta_val=asin(2*(q0*q2-q3*q1));
       double phi_val= atan2(2*(q0*q1+q2*q3),1-2*(q1*q1+q2*q2));
+      /*
       if (yaw_val<0){
         yaw_val=-yaw_val+PI/2;
       }
@@ -1899,7 +1900,7 @@ else{
       }
       else if (yaw_val>PI/2 && yaw_val<=PI){
         yaw_val=5*PI/2-yaw_val;
-      }
+      } */
 
       n.setParam("vehicle/chrono/state/t",time); //time in chrono simulation
       n.setParam("vehicle/chrono/state/x", global_pos[0]) ;
