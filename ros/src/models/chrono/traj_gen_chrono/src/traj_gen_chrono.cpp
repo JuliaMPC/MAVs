@@ -39,22 +39,20 @@ int main(int argc, char **argv)
   // a.getParam("vehicle/chrono/nloptcontrol_planner/traj/yVal",y1);
 
 
-  int count = 0;
-  while (ros::ok())
-  {
+    ros::Rate loop_rate(0.1);
 
-    if (count==1000){
-    x2[0]= 0.0;
-    x2[1]= 0.0;
-    y2[0]=0.0;
-    y2[1]=50;
-    a.setParam("vehicle/chrono/nloptcontrol/traj/x",x1);
-    a.setParam("vehicle/chrono/nloptcontrol/traj/yVal",y1);
+    double count = 0;
+    while (ros::ok())
+    {
+      x2[0]= 2.0;
+      x2[1]= 50;
+      y2[0] += count/2.0;
+      y2[1] += count;
+      a.setParam("vehicle/chrono/default/traj/x",x2);
+      a.setParam("vehicle/chrono/default/traj/yVal",y2);
+      count += 2;
+      loop_rate.sleep();
     }
-
-
-    ++count;
-  }
 
 
   return 0;

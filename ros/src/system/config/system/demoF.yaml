@@ -10,9 +10,9 @@ system:
   namespace: vehicle/chrono/nloptcontrol_planner
   flags:
    running: true
-   initialized: true
+   initialized: false
    known_environment: true
-   3DOF_plant: true
+   3DOF_plant: false
    goal_attained: false
  obstacle_detector:
   flags:
