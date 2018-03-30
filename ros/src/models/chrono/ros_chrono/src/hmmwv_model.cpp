@@ -63,8 +63,9 @@ ChMaterialSurface::ContactMethod contact_method = ChMaterialSurface::SMC;
 TireModelType tire_model = TireModelType::RIGID;
 
 // Input file name for PACEJKA tires if they are selected
-std::string pacejka_tire_file(data_path+"hmmwv/tire/HMMWV_pacejka.tir");
-//std::string pacejka_tire_file("hmmwv/tire/HMMWV_pacejka.tir");
+//std::string pacejka_tire_file(data_path+"hmmwv/tire/HMMWV_pacejka.tir");
+//std::string pacejka_tire_file("../../../src/models/chrono/ros_chrono/src/data/vehicle/MAN_5t/MAN_5t_pacejka.tir");
+std::string pacejka_tire_file("hmmwv/tire/HMMWV_pacejka.tir");
 // Type of powertrain model (SHAFTS or SIMPLE)
 PowertrainModelType powertrain_model = PowertrainModelType::SHAFTS;
 
@@ -841,6 +842,7 @@ void trajChanger1_nogui(parameters_nogui &hmmwv_params,ros::Publisher &vehiclein
     double yaw_val=atan2(2*(q0*q3+q1*q2),1-2*(q2*q2+q3*q3));
     double theta_val=asin(2*(q0*q2-q3*q1));
     double phi_val= atan2(2*(q0*q1+q2*q3),1-2*(q1*q1+q2*q2));
+    /*
     if (yaw_val<0){
       yaw_val=-yaw_val+PI/2;
     }
@@ -849,7 +851,7 @@ void trajChanger1_nogui(parameters_nogui &hmmwv_params,ros::Publisher &vehiclein
     }
     else if (yaw_val>PI/2 && yaw_val<=PI){
       yaw_val=5*PI/2-yaw_val;
-    }
+    }*/
 
     n.setParam("vehicle/chrono/state/t",time); //time in chrono simulation
     n.setParam("vehicle/chrono/state/x", global_pos[0]) ;
@@ -988,6 +990,7 @@ void trajChanger2_nogui(parameters_nogui &hmmwv_params,ros::Publisher &vehiclein
     double yaw_val=atan2(2*(q0*q3+q1*q2),1-2*(q2*q2+q3*q3));
     double theta_val=asin(2*(q0*q2-q3*q1));
     double phi_val= atan2(2*(q0*q1+q2*q3),1-2*(q1*q1+q2*q2));
+    /*
     if (yaw_val<0){
       yaw_val=-yaw_val+PI/2;
     }
@@ -996,7 +999,7 @@ void trajChanger2_nogui(parameters_nogui &hmmwv_params,ros::Publisher &vehiclein
     }
     else if (yaw_val>PI/2 && yaw_val<=PI){
       yaw_val=5*PI/2-yaw_val;
-    }
+    }*/
 
     n.setParam("vehicle/chrono/state/t",time); //time in chrono simulation
     n.setParam("vehicle/chrono/state/x", global_pos[0]) ;
@@ -1053,6 +1056,90 @@ void waitForLoaded(ros::NodeHandle &n){
     usleep(500); //sleep another 500ms to ensure everything is loaded.
     //continue on here
 }
+
+void setChassisParams(ros::NodeHandle &n){
+  std::ofstream myfile2;
+
+  myfile2.open(data_path+"hmmwv/chassis/HMMWV_Chassis.json",std::ofstream::out | std::ofstream::trunc);
+  std::string s1 = "{ ";
+  std::string s2 = "  \"Name\":     \"HMMWV chassis\",";;
+  std::string s3 = "  \"Type\":     \"Chassis\",";
+  std::string s4 = "  \"Template\": \"RigidChassis\",";
+  std::string s5 = "  \"Components\":";
+  std::string s6 = "  [";
+  std::string s7 = "   {";
+  std::string s8 = "     \"Centroidal Frame\":    {";
+  std::string s9 = "                              \"Location\":    ";
+  std::string s10;
+  n.getParam("/vehicle/common/centroidLoc",s10);
+  std::string s11 = "                              \"Orientation\": ";
+  std::string s12;
+  n.getParam("/vehicle/common/centroidOrientation",s12);
+  std::string s13 = "                            },";
+  std::string s14 = "     \"Mass\":                ";
+  std::string s15;
+  n.getParam("/vehicle/common/chassisMass",s15);
+  std::string s16 = "     \"Moments of Inertia\":  ";
+  std::string s17;
+  n.getParam("/vehicle/common/chassisInertia",s17);
+  std::string s18 = "     \"Products of Inertia\": [0, 0, 0],";
+  std::string s19 = "     \"Void\":                false";
+  std::string s20 = "   }";
+  std::string s21 = "  ],";
+  std::string s22 = "  \"Driver Position\":";
+  std::string s23 = "  {";
+  std::string s24 = "    \"Location\":     ";
+  std::string s25;
+  n.getParam("/vehicle/common/driverLoc",s25);
+  std::string s26 = "    \"Orientation\":  ";
+  std::string s27;
+  n.getParam("/vehicle/common/driverOrientiation",s27);
+  std::string s28 = "  },";
+  std::string s29 = "  \"Visualization\":";
+  std::string s30 = "  {";
+  std::string s31 = "    \"Mesh\":";
+  std::string s32 = "    {";
+  std::string s33 = "       \"Filename\":  \"hmmwv/hmmwv_chassis.obj\",";
+  std::string s34 = "       \"Name\":      \"hmmwv_chassis_POV_geom\"";
+  std::string s35 = "    }";
+  std::string s36 = "  }";
+  std::string s37 = "}";
+  myfile2 << s1 << '\n';
+  myfile2 << s2 << '\n';
+  myfile2 << s3 << '\n';
+  myfile2 << s4 << '\n';
+  myfile2 << '\n';
+  myfile2 << s5  << '\n';
+  myfile2 << s6  << '\n';
+  myfile2 << s7  << '\n';
+  myfile2 << s8  << '\n';
+  myfile2 << s9 << s10  << '\n';
+  myfile2 << s11 << s12  << '\n';
+  myfile2 << s13  << '\n';
+  myfile2 << s14 << s15  << '\n';
+  myfile2 << s16 << s17  << '\n';
+  myfile2 << s18 << '\n';
+  myfile2 << s19 << '\n';
+  myfile2 << s20 << '\n';
+  myfile2 << s21 << '\n';
+  myfile2 << s22 << '\n';
+  myfile2 << s23 << '\n';
+  myfile2 << s24 << s25  << '\n';
+  myfile2 << s26 << s27  << '\n';
+  myfile2 << s28 << '\n';
+  myfile2 << '\n';
+  myfile2 << s29 << '\n';
+  myfile2 << s30 << '\n';
+  myfile2 << s31 << '\n';
+  myfile2 << s32 << '\n';
+  myfile2 << s33 << '\n';
+  myfile2 << s34 << '\n';
+  myfile2 << s35 << '\n';
+  myfile2 << s36 << '\n';
+  myfile2 << s37 << '\n';
+  myfile2.close();
+
+}
 // =============================================================================
 int main(int argc, char* argv[]) {
 
@@ -1072,7 +1159,10 @@ int main(int argc, char* argv[]) {
     ros::init(argc, argv, "Chronode");
     ros::NodeHandle n;
     //n.setParam("system/chrono/flags/initialized",true);
-
+  //  std::string s10;
+    //n.getParam("/vehicle/common/centroidLoc",s10);
+  //  n.setParam("/vehicle/common/asdf",s10);
+    setChassisParams(n);
     bool planner_init;
   //  bool planner_init2;
 
@@ -1569,6 +1659,7 @@ int main(int argc, char* argv[]) {
         double yaw_val=atan2(2*(q0*q3+q1*q2),1-2*(q2*q2+q3*q3));
         double theta_val=asin(2*(q0*q2-q3*q1));
         double phi_val= atan2(2*(q0*q1+q2*q3),1-2*(q1*q1+q2*q2));
+        /*
         if (yaw_val<0){
           yaw_val=-yaw_val+PI/2;
         }
@@ -1577,7 +1668,7 @@ int main(int argc, char* argv[]) {
         }
         else if (yaw_val>PI/2 && yaw_val<=PI){
           yaw_val=5*PI/2-yaw_val;
-        }
+        }*/
 
         n.setParam("vehicle/chrono/state/t",time); //time in chrono simulation
         n.setParam("vehicle/chrono/state/x", global_pos[0]) ;

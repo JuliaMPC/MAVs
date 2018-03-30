@@ -77,3 +77,9 @@ vehicle:
   lb: 0.0
   frict_coeff: 0.9
   rest_coeff: 0.1
+  centroidLoc: "[0.056, 0.0, 0.523],"
+  centroidOrientation: "[1, 0, 0, 0]"
+  chassisMass: "2086.52,"
+  chassisInertia: "[1078.52, 2955.66, 3570.20],"
+  driverLoc: "[0, 0.5, 1.2],"
+  driverOrientation: "[1, 0, 0, 0]"
