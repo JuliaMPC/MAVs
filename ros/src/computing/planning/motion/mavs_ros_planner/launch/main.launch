@@ -6,8 +6,8 @@ are up an running -->
  <launch>
    <master auto="start"/>
 
-    <arg name="case_params_file" />
-    <arg name="global_params_file"/>
+    <arg name="system_params_path" />
+    <arg name="case_params_path"/>
     <arg name="laser_scan_topic"/>
     <arg name="rviz_config_file"/>
 
@@ -25,8 +25,12 @@ are up an running -->
    </node>
 
    <node pkg="ros_base_planner" type="navsPathConverter" respawn="false" name="navsPathConverter" output="screen">
-     <rosparam file="$(arg global_params_file)" command="load"/>
-     <rosparam file="$(arg case_params_file)" command="load"/>
+     <rosparam file="$(arg system_params_path)" command="load"/>
+   </node>
+
+   <node pkg="ros_base_planner" type="move_base_goal_client" respawn="false" name="move_base_goal_client" output="screen">
+     <rosparam file="$(arg case_params_path)" command="load"/>
+     <rosparam file="$(arg system_params_path)" command="load"/>
    </node>
 
    <node pkg="rviz" type="rviz" name="rviz" args="-d $(arg rviz_config_file)"/>
