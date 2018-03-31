@@ -1140,6 +1140,71 @@ void setChassisParams(ros::NodeHandle &n){
   myfile2.close();
 
 }
+
+void setDrivelineParams(ros::NodeHandle &n){
+  std::ofstream myfile2;
+
+  myfile2.open(data_path+"hmmwv/driveline/HMMWV_Driveline2WD.json",std::ofstream::out | std::ofstream::trunc);
+  std::string s1 = "{ ";
+  std::string s2 = "  \"Name\":                       \"HMMWV RWD Driveline\",";
+  std::string s3 = "  \"Type\":                       \"Driveline\",";
+  std::string s4 = "  \"Template\":                   \"ShaftsDriveline2WD\",";
+  std::string s5 = "  \"Shaft Direction\":";
+  std::string s6 = "  {";
+  std::string s7 = "    \"Motor Block\":              ";
+  std::string s8;
+  n.getParam("/vehicle/common/motorBlockDirection",s8);
+  std::string s9 = "    \"Axle\":                     ";
+  std::string s10;
+  n.getParam("/vehicle/common/axleDirection",s10);
+  std::string s11 = "  },";
+  std::string s12 = "  \"Shaft Inertia\":";
+  std::string s13 = "  {";
+  std::string s14 = "    \"Driveshaft\":               ";
+  std::string s15;
+  n.getParam("/vehicle/common/driveshaftInertia", s15);
+  std::string s16 = "    \"Differential Box\":         ";
+  std::string s17;
+  n.getParam("/vehicle/common/differentialBoxInertia",s17);
+  std::string s18 = "  },";
+  std::string s19 = "  \"Gear Ratio\":";
+  std::string s20 = "  {";
+  std::string s21 = "    \"Conical Gear\":             ";
+  std::string s22;
+  n.getParam("/vehicle/common/conicalGearRatio",s22);
+  std::string s23 = "    \"Differential\":             ";
+  std::string s24;
+  n.getParam("/vehicle/common/differentialRatio",s24);
+  std::string s25 = "  }";
+  std::string s26 = "}";
+
+  myfile2 << s1 << '\n';
+  myfile2 << s2 << '\n';
+  myfile2 << s3 << '\n';
+  myfile2 << s4 << '\n';
+  myfile2 << '\n';
+  myfile2 << s5  << '\n';
+  myfile2 << s6  << '\n';
+  myfile2 << s7  << s8 << '\n';
+  myfile2 << s9 << s10 << '\n';
+  myfile2 << s11 << '\n';
+  myfile2 << '\n';
+  myfile2 << s12 << '\n';
+  myfile2 << s13  << '\n';
+  myfile2 << s14 << s15  << '\n';
+  myfile2 << s16 << s17  << '\n';
+  myfile2 << s18 << '\n';
+  myfile2 << '\n';
+  myfile2 << s19 << '\n';
+  myfile2 << s20 << '\n';
+  myfile2 << s21 << s22 << '\n';
+  myfile2 << s23 << s24 << '\n';
+  myfile2 << s25 << '\n';
+  myfile2 << s26 ;
+
+  myfile2.close();
+
+}
 // =============================================================================
 int main(int argc, char* argv[]) {
 
@@ -1163,6 +1228,7 @@ int main(int argc, char* argv[]) {
     //n.getParam("/vehicle/common/centroidLoc",s10);
   //  n.setParam("/vehicle/common/asdf",s10);
     setChassisParams(n);
+    setDrivelineParams(n);
     bool planner_init;
   //  bool planner_init2;
 
