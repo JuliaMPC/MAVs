@@ -1237,6 +1237,88 @@ void setPowertrainParams(ros::NodeHandle &n){
   myfile2 << s13  << '\n';
   myfile2.close();
 }
+/*
+{
+  "Name":                       "HMMWV Rack-Pinion Steering",
+  "Type":                       "Steering",
+  "Template":                   "RackPinion",
+
+  "Steering Link":
+  {
+    "Mass":                     9.072,
+    "COM":                      0,
+    "Inertia":                  [1, 1, 1],
+    "Radius":                   0.03,
+    "Length":                   0.896
+  },
+
+  "Pinion":
+  {
+    "Radius":                   0.1,
+    "Maximum Angle":            0.87
+  }
+}
+*/
+void setSteeringParams(ros::NodeHandle &n){
+  std::ofstream myfile2;
+
+  myfile2.open(data_path+"hmmwv/steering/HMMWV_RackPinion.json",std::ofstream::out | std::ofstream::trunc);
+  std::string s1 = "{";
+  std::string s2 = "  \"Name\":                       \"HMMWV Rack-Pinion Steering\",";
+  std::string s3 = "  \"Type\":                       \"Steering\",";
+  std::string s4 = "  \"Template\":                   \"RackPinion\",";
+  std::string s5 = "  \"Steering Link\":";
+  std::string s6 = "  {";
+  std::string s7 = "    \"Mass\":                     ";
+  std::string s8 ;
+  n.getParam("/vehicle/common/steeringLinkMass", s8);
+  std::string s9 = "    \"COM\":                      0,";
+  std::string s10 = "    \"Inertia\":                  ";
+  std::string s11;
+  n.getParam("/vehicle/common/steeringLinkInertia",s11);
+  std::string s12 = "    \"Radius\":                   ";
+  std::string s13;
+  n.getParam("/vehicle/common/steeringLinkRadius",s13);
+  std::string s14 = "    \"Length\":                   ";
+  std::string s15;
+  n.getParam("/vehicle/common/steeringLinkLength",s15);
+  std::string s16 = "  },";
+  std::string s17 = "  \"Pinion\":";
+  std::string s18 = "    \"Radius\":                   ";
+  std::string s19;
+  n.getParam("/vehicle/common/pinionRadius",s19);
+  std::string s20 = "    \"Maximum Angle\":            ";
+  std::string s21;
+  n.getParam("/vehicle/common/pinionMaxAngle",s21);
+  std::string s22 = "  }";
+  std::string s23 = "}";
+
+
+
+  myfile2 << s1 << '\n';
+  myfile2 << s2 << '\n';
+  myfile2 << s3 << '\n';
+  myfile2 << s4 << '\n';
+  myfile2 << '\n';
+  myfile2 << s5  << '\n';
+  myfile2 << s6  << '\n';
+  myfile2 << s7  << s8 << '\n';
+  myfile2 << s9  << '\n';
+  myfile2 << s10 << s11  << '\n';
+  myfile2 << s12 << s13  << '\n';
+  myfile2 << s14 << s15 << '\n';
+  myfile2 << s16 << '\n';
+  myfile2 << '\n';
+  myfile2 << s17 << '\n';
+  myfile2 << s18 << s19 << '\n';
+  myfile2 << s20 << '\n';
+  myfile2 << s21 << s21 << '\n';
+  myfile2 << s22 << '\n';
+  myfile2 << s23 << '\n';
+
+  myfile2.close();
+}
+
 // =============================================================================
 int main(int argc, char* argv[]) {
 
@@ -1262,6 +1344,7 @@ int main(int argc, char* argv[]) {
     setChassisParams(n);
     setDrivelineParams(n);
     setPowertrainParams(n);
+    setSteeringParams(n);
     bool planner_init;
   //  bool planner_init2;
 
