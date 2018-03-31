@@ -99,3 +99,4 @@ vehicle:
   steeringLinkLength: "0.896"
   pinionRadius: "0.1,"
   pinionMaxAngle: "0.87"
+  maxBrakeTorque: "4000"

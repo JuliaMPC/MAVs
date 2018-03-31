@@ -1237,28 +1237,7 @@ void setPowertrainParams(ros::NodeHandle &n){
   myfile2 << s13  << '\n';
   myfile2.close();
 }
-/*
-{
-  "Name":                       "HMMWV Rack-Pinion Steering",
-  "Type":                       "Steering",
-  "Template":                   "RackPinion",
 
-  "Steering Link":
-  {
-    "Mass":                     9.072,
-    "COM":                      0,
-    "Inertia":                  [1, 1, 1],
-    "Radius":                   0.03,
-    "Length":                   0.896
-  },
-
-  "Pinion":
-  {
-    "Radius":                   0.1,
-    "Maximum Angle":            0.87
-  }
-}
-*/
 void setSteeringParams(ros::NodeHandle &n){
   std::ofstream myfile2;
 
@@ -1318,7 +1297,56 @@ void setSteeringParams(ros::NodeHandle &n){
 
   myfile2.close();
 }
+/*
+{
+  "Name":                       "HMMWV Brake Front",
+  "Type":                       "Brake",
+  "Template":                   "BrakeSimple",
 
+  "Maximum Torque":             4000
+}
+
+{
+  "Name":                       "HMMWV Brake Rear",
+  "Type":                       "Brake",
+  "Template":                   "BrakeSimple",
+
+  "Maximum Torque":             4000
+} */
+void setBrakingParams(ros::NodeHandle &n){
+  std::ofstream myfile2;
+  std::ofstream myfile3;
+
+  std::string s1 = "{ ";
+  std::string s2 = "  \"Name\":                       \"HMMWV Brake Front\",";
+  std::string s3 = "  \"Type\":                       \"Brake\",";
+  std::string s4 = "  \"Template\":                   \"BrakeSimple\",";
+  std::string s5 = "  \"Maximum Torque\":             ";
+  std::string s6;
+  n.getParam("vehicle/common/maxBrakeTorque",s6);
+  std::string s7 = "}";
+  std::string s8 = "  \"Name\":                       \"HMMWV Brake Rear\",";
+
+  myfile2.open(data_path+"hmmwv/braking/HMMWV_BrakeSimple_Front.json",std::ofstream::out | std::ofstream::trunc);
+  myfile2 << s1 << '\n';
+  myfile2 << s2 << '\n';
+  myfile2 << s3 << '\n';
+  myfile2 << s4 << '\n';
+  myfile2 << '\n';
+  myfile2 << s5  << s6 << '\n';
+  myfile2 << s7  << '\n';
+  myfile2.close();
+
+  myfile3.open(data_path+"hmmwv/braking/HMMWV_BrakeSimple_Rear.json",std::ofstream::out | std::ofstream::trunc);
+  myfile3 << s8 << '\n';
+  myfile3 << s2 << '\n';
+  myfile3 << s3 << '\n';
+  myfile3 << s4 << '\n';
+  myfile3 << '\n';
+  myfile3 << s5  << s6 << '\n';
+  myfile3 << s7  << '\n';
+  myfile3.close();
+}
 // =============================================================================
 int main(int argc, char* argv[]) {
 
@@ -1345,6 +1373,7 @@ int main(int argc, char* argv[]) {
     setDrivelineParams(n);
     setPowertrainParams(n);
     setSteeringParams(n);
+    setBrakingParams(n);
     bool planner_init;
   //  bool planner_init2;
 
