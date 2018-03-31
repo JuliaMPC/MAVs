@@ -1062,7 +1062,7 @@ void setChassisParams(ros::NodeHandle &n){
 
   myfile2.open(data_path+"hmmwv/chassis/HMMWV_Chassis.json",std::ofstream::out | std::ofstream::trunc);
   std::string s1 = "{ ";
-  std::string s2 = "  \"Name\":     \"HMMWV chassis\",";;
+  std::string s2 = "  \"Name\":     \"HMMWV chassis\",";
   std::string s3 = "  \"Type\":     \"Chassis\",";
   std::string s4 = "  \"Template\": \"RigidChassis\",";
   std::string s5 = "  \"Components\":";
@@ -1138,7 +1138,6 @@ void setChassisParams(ros::NodeHandle &n){
   myfile2 << s36 << '\n';
   myfile2 << s37 << '\n';
   myfile2.close();
-
 }
 
 void setDrivelineParams(ros::NodeHandle &n){
@@ -1201,9 +1200,42 @@ void setDrivelineParams(ros::NodeHandle &n){
   myfile2 << s23 << s24 << '\n';
   myfile2 << s25 << '\n';
   myfile2 << s26 ;
-
   myfile2.close();
+}
 
+void setPowertrainParams(ros::NodeHandle &n){
+  std::ofstream myfile2;
+
+  myfile2.open(data_path+"hmmwv/powertrain/HMMWV_SimplePowertrain.json",std::ofstream::out | std::ofstream::trunc);
+  std::string s1 = "{";
+  std::string s2 = "  \"Name\":                    \"HMMWV Simplified Powertrain\",";
+  std::string s3 = "  \"Type\":                    \"Powertrain\",";
+  std::string s4 = "  \"Template\":                \"SimplePowertrain\",";
+  std::string s5 = "  \"Forward Gear Ratio\":      ";
+  std::string s6;
+  n.getParam("/vehicle/common/forwardGearRatio",s6);
+  std::string s7 = "  \"Reverse Gear Ratio\":      ";
+  std::string s8;
+  n.getParam("/vehicle/common/reverseGearRatio",s8);
+  std::string s9 = "  \"Maximum Engine Torque\":   ";
+  std::string s10;
+  n.getParam("/vehicle/common/maxEngineTorque",s10);
+  std::string s11 = "  \"Maximum Engine Speed\":    ";
+  std::string s12;
+  n.getParam("/vehicle/common/maxEngineSpeed",s12);
+  std::string s13 = "}";
+
+  myfile2 << s1 << '\n';
+  myfile2 << s2 << '\n';
+  myfile2 << s3 << '\n';
+  myfile2 << s4 << '\n';
+  myfile2 << '\n';
+  myfile2 << s5  << s6 << '\n';
+  myfile2 << s7  << s8 << '\n';
+  myfile2 << s9  << s10 << '\n';
+  myfile2 << s11  << s12 << '\n';
+  myfile2 << s13  << '\n';
+  myfile2.close();
 }
 // =============================================================================
 int main(int argc, char* argv[]) {
@@ -1229,6 +1261,7 @@ int main(int argc, char* argv[]) {
   //  n.setParam("/vehicle/common/asdf",s10);
     setChassisParams(n);
     setDrivelineParams(n);
+    setPowertrainParams(n);
     bool planner_init;
   //  bool planner_init2;
 
