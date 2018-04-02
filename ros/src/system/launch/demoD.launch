@@ -6,9 +6,11 @@
   <!--  ************* vehicle_description args and parameters ***************  -->
   <arg name="system_params_path" default="$(find system)/config/system/demoD.yaml"/>
   <arg name="vehicle_params_path" default="$(find system)/config/vehicle/hmmwv.yaml"/>
-  <arg name="case_params_path" default="$(find system)/config/case/case1.yaml"/>
-  <arg name="obstacle_num" default="3"/>
+  <arg name="case_params_path" default="$(find system)/config/case/s1.yaml"/>
+  <arg name="obstacle_num" default="1"/>
   <arg name="gui" default="true"/>
+  <!-- Use Chrono time-->
+  <arg name="paused" default="true"/>
 
   <arg name="laser_scan_topic" default="/lidar_points"/>
   <arg name="rviz_config_file" default="$(find system)/config/planner/ros_base_planner/default.rviz"/>
@@ -30,6 +32,7 @@
     <arg name="case_params_path" value="$(arg case_params_path)"/>
     <arg name="obstacle_num" value="$(arg obstacle_num)"/>
     <arg name="gui" value="$(arg gui)"/>
+    <arg name="paused" value="$(arg paused)"/>
   </include>
 
   <include file="$(find ros_base_planner)/launch/main.launch">
