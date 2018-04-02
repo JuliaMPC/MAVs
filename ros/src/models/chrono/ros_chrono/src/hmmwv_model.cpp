@@ -408,8 +408,8 @@ int main(int argc, char* argv[]) {
 
     // Create and register a custom Irrlicht event receiver to allow selecting the
     // current driver model.
-    ChDriverSelector* selector_p = new ChDriverSelector(my_hmmwv.GetVehicle(), driver_follower_p, &driver_gui);
-    app.SetUserEventReceiver(selector_p);
+    ChDriverSelector selector(my_hmmwv.GetVehicle(), driver_follower_p, &driver_gui);
+    app.SetUserEventReceiver(&selector);
 
     // Finalize construction of visualization assets
     app.AssetBindAll();
@@ -495,13 +495,11 @@ int main(int argc, char* argv[]) {
             ChPathFollowerDriver* driver_follower_p = new ChPathFollowerDriver(my_hmmwv.GetVehicle(), steering_controller_file,
                                                  speed_controller_file, path, "my_path_", target_speed);
             driver_follower_p->Initialize();
-            delete selector_p;
-            ChDriverSelector* selector_p = new ChDriverSelector(my_hmmwv.GetVehicle(), driver_follower_p, &driver_gui);
-            // selector.update_driver(driver_follower_p);
-            if(gui_switch) app.SetUserEventReceiver(selector_p);
+            selector.update_driver(driver_follower_p);
+            if(gui_switch) app.SetUserEventReceiver(&selector);
             app.AssetBindAll();
             app.AssetUpdateAll();
-            app.GetDevice()->run();
+            // app.GetDevice()->run();
 
             hmmwv_params.x_traj_prev=hmmwv_params.x_traj_curr;
             hmmwv_params.y_traj_prev=hmmwv_params.y_traj_curr;
@@ -562,15 +560,15 @@ int main(int argc, char* argv[]) {
         hmmwv_params.ballT->setPosition(irr::core::vector3df((irr::f32)pT.x(), (irr::f32)pT.y(), (irr::f32)pT.z()));
 
         time = hmmwv_params.my_hmmwv.GetSystem()->GetChTime();
-        hmmwv_params.throttle_input = selector_p->GetDriver()->GetThrottle();
-        hmmwv_params.steering_input = selector_p->GetDriver()->GetSteering();
-        hmmwv_params.braking_input = selector_p->GetDriver()->GetBraking();
+        hmmwv_params.throttle_input = selector.GetDriver()->GetThrottle();
+        hmmwv_params.steering_input = selector.GetDriver()->GetSteering();
+        hmmwv_params.braking_input = selector.GetDriver()->GetBraking();
         // Update modules (process inputs from other modules)
         driver_follower_p->Synchronize(time);
         driver_gui.Synchronize(time);
         hmmwv_params.terrain.Synchronize(time);
         hmmwv_params.my_hmmwv.Synchronize(time, hmmwv_params.steering_input, hmmwv_params.braking_input, hmmwv_params.throttle_input, hmmwv_params.terrain);
-        std::string msg = selector_p->UsingGUI() ? "GUI driver" : "Follower driver";
+        std::string msg = selector.UsingGUI() ? "GUI driver" : "Follower driver";
         if(gui_switch) app.Synchronize(msg, hmmwv_params.steering_input, hmmwv_params.throttle_input, hmmwv_params.braking_input);
 
         // Advance simulation for one timestep for all modules

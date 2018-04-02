@@ -48,6 +48,7 @@ RUN apt-get install -y \
                 ros-kinetic-gps-common ros-kinetic-controller-manager \
                 ros-kinetic-ros-control ros-kinetic-ros-controllers \
                 ros-kinetic-pcl-conversions ros-kinetic-pcl-msgs \
+                ros-kinetic-voxel-grid ros-kinetic-move-base \
                 ros-kinetic-gazebo8-ros-control ros-kinetic-joystick-drivers \
                 libnlopt-dev freeglut3-dev qtbase5-dev libqt5opengl5-dev libssh2-1-dev \
                 libarmadillo-dev libpcap-dev gksu libgl1-mesa-dev libglew-dev python-wxgtk3.0
@@ -121,12 +122,9 @@ RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.clone("https://github.com/huckl3b3rr
 
 # Install MAVs
 RUN echo 3
-RUN git clone https://github.com/tqshao/MAVs.git /home/$USERNAME/MAVs
+RUN git clone -b dev https://github.com/tqshao/MAVs.git /home/$USERNAME/MAVs
 
-# MOVE LATER ....
-RUN sudo apt-get update && sudo apt-get -y install  ros-kinetic-voxel-grid ros-kinetic-move-base
-
-RUN /bin/bash -c 'source /opt/ros/kinetic/setup.bash; cd /home/$USERNAME/MAVs/ros/src; catkin_init_workspace; cd ..;catkin_make --pkg ros_chrono_msgs; catkin_make'
+RUN /bin/bash -c 'source /opt/ros/kinetic/setup.bash; cd /home/$USERNAME/MAVs/ros/src; catkin_init_workspace; cd ..; catkin_make'
 RUN echo "source /home/$USERNAME/MAVs/ros/devel/setup.bash" >> /home/$USERNAME/.bashrc
 
 # Setting
