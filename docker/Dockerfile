@@ -1,0 +1,144 @@
+FROM  nvidia/opengl:1.0-glvnd-devel-ubuntu16.04
+MAINTAINER Tianqu Shao <tqshao@umich.edu>
+
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+
+# Develop
+RUN apt-get update && apt-get install -y \
+        software-properties-common \
+        wget curl git cmake cmake-curses-gui \
+        libboost-all-dev \
+        libeigen3-dev \
+	language-pack-en \
+        && update-locale LANG=en_US.UTF-8 LC_MESSAGES=POSIX
+
+# Intall some basic GUI tools
+RUN apt-get install -y \
+        cmake-qt-gui \
+        gnome-terminal
+
+        # Intall ROS and remove Gazebo7 and related dependencies
+
+        RUN echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list \
+        && apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key \ 421C365BD9FF1F717815A3895523BAEEB01FA116 \
+        && echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list \
+        && wget http://packages.osrfoundation.org/gazebo.key -O - | apt-key add - \
+        && apt-get update \
+        && apt-get install -y ros-kinetic-desktop-full
+
+        RUN apt-get remove -y '*gazebo*'
+        #&& apt-get remove ros-kinetic-gazebo* \
+        #&& apt-get purge ros-kinetic-gazebo* \
+        #&& apt autoremove
+
+        RUN apt-get update \
+        && apt-get install -y python-rosinstall python-rosinstall-generator python-wstool \
+        && apt-get install -y gazebo8 \
+        && apt-get install -y ros-kinetic-gazebo8-ros-pkgs \
+        && apt-get install -y ros-kinetic-fake-localization \
+        && apt-get install -y ros-kinetic-joy \
+        && apt-get install -y ros-kinetic-robot-state-publisher \
+        && apt-get install -y ros-kinetic-rviz \
+        && apt-get clean
+
+        RUN apt-get update && apt-get install -y \
+                ros-kinetic-nmea-msgs ros-kinetic-roslint ros-kinetic-velodyne-description\
+                ros-kinetic-nmea-navsat-driver ros-kinetic-sound-play \
+                ros-kinetic-jsk-visualization ros-kinetic-grid-map \
+                ros-kinetic-gps-common ros-kinetic-controller-manager \
+                ros-kinetic-ros-control ros-kinetic-ros-controllers \
+                ros-kinetic-pcl-conversions ros-kinetic-pcl-msgs \
+                ros-kinetic-gazebo8-ros-control ros-kinetic-joystick-drivers \
+                libnlopt-dev freeglut3-dev qtbase5-dev libqt5opengl5-dev libssh2-1-dev \
+                libarmadillo-dev libpcap-dev gksu libgl1-mesa-dev libglew-dev python-wxgtk3.0
+
+        # Install some missing dependencies
+        RUN sudo apt-get update && sudo apt-get install -y openni2-doc openni2-utils openni-doc openni-utils
+        RUN sudo apt-get install -y libopenni0 libopenni-sensor-pointclouds0 libopenni2-0 libopenni-sensor-pointclouds-dev
+        RUN sudo apt-get install -y libopenni2-dev libopenni-dev libopencv-dev libmosquitto-dev ros-kinetic-cmake-modules
+
+# Add basic user
+ENV USERNAME mavs
+ENV PULSE_SERVER /run/pulse/native
+RUN useradd -m $USERNAME && \
+        echo "$USERNAME:$USERNAME" | chpasswd && \
+        usermod --shell /bin/bash $USERNAME && \
+        usermod -aG sudo $USERNAME && \
+        echo "$USERNAME ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/$USERNAME && \
+        chmod 0440 /etc/sudoers.d/$USERNAME && \
+        # Replace 1000 with your user/group id
+        usermod  --uid 1000 $USERNAME && \
+        groupmod --gid 1000 $USERNAME
+
+# Setup .bashrc for ROS
+RUN echo "source /opt/ros/kinetic/setup.bash" >> /home/$USERNAME/.bashrc && \
+        #Fix for qt and X server errors
+        echo "export QT_X11_NO_MITSHM=1" >> /home/$USERNAME/.bashrc && \
+        # cd to home on login
+        echo "cd" >> /home/$USERNAME/.bashrc
+
+# Change user
+USER mavs
+
+# Install Chrono
+
+RUN sudo rosdep init \
+        && rosdep update \
+        && echo "source /opt/ros/kinetic/setup.bash" >> ~/.bashrc
+
+# Install dev tools
+RUN sudo apt-get -y install vim tmux zip
+
+# Install Chrono
+# copy irrlicht engine to the docker and build it
+#RUN sudo mkdir -p /home/autoware/irrlicht-1.8.4
+#COPY irrlicht-1.8.4 /home/autoware/irrlicht-1.8.4/
+RUN sudo wget http://downloads.sourceforge.net/irrlicht/irrlicht-1.8.4.zip && \
+sudo unzip irrlicht-1.8.4.zip -d /home/mavs && \
+cd /home/mavs/irrlicht-1.8.4/source/Irrlicht && \
+sudo make sharedlib && sudo make install
+
+# copy chrono to the docker and build it
+RUN cd /opt ; sudo mkdir -p chrono/chrono_source chrono/chrono_build ; cd chrono/chrono_source && \
+sudo git clone -b master https://github.com/projectchrono/chrono.git
+COPY chrono_build /opt/chrono/chrono_build
+RUN cd /opt/chrono/chrono_build ; sudo make
+
+# Install Julia and setup environment
+RUN sudo wget https://julialang-s3.julialang.org/bin/linux/x64/0.6/julia-0.6.2-linux-x86_64.tar.gz && \
+sudo tar -xvf julia-0.6.2-linux-x86_64.tar.gz -C /opt && \
+echo 'alias julia='/opt/julia-d386e40c17/bin/julia'' >> ~/.bashrc && \
+echo 'export PATH="$PATH:/opt/julia-d386e40c17/bin"' >>  ~/.bashrc
+
+# Install Julia packages
+RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.add("NLOptControl")'
+RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.add("VehicleModels")'
+RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.checkout("NLOptControl")'
+RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.checkout("VehicleModels")'
+RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.add("RobotOS")'
+RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.add("PyCall")'
+RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.clone("https://github.com/huckl3b3rry87/MAVs.jl")'
+
+# Install MAVs
+RUN echo 3
+RUN git clone https://github.com/tqshao/MAVs.git /home/$USERNAME/MAVs
+
+# MOVE LATER ....
+RUN sudo apt-get update && sudo apt-get -y install  ros-kinetic-voxel-grid ros-kinetic-move-base
+
+RUN /bin/bash -c 'source /opt/ros/kinetic/setup.bash; cd /home/$USERNAME/MAVs/ros/src; catkin_init_workspace; cd ..;catkin_make --pkg ros_chrono_msgs; catkin_make'
+RUN echo "source /home/$USERNAME/MAVs/ros/devel/setup.bash" >> /home/$USERNAME/.bashrc
+
+# Setting
+ENV LANG="en_US.UTF-8"
+RUN echo "export LANG=\"en_US.UTF-8\"" >> /home/$USERNAME/.bashrc
+
+
+
+# Change Terminal Color
+RUN gconftool-2 --set "/apps/gnome-terminal/profiles/Default/use_theme_background" --type bool false
+RUN gconftool-2 --set "/apps/gnome-terminal/profiles/Default/use_theme_colors" --type bool false
+RUN gconftool-2 --set "/apps/gnome-terminal/profiles/Default/background_color" --type string "#000000"
+
+# Default CMD
+CMD ["/bin/bash"]
