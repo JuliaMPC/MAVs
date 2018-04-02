@@ -23,7 +23,7 @@ Change initial condition case/actual/X0/x to x=200.0 in case.yaml. Change system
 ```
 $ cd $HOME/MAVs/ros
 $ roslaunch ros_chrono path_follower.launch
-$ rosparam set system/chrono/flags/initialized true
+$ rosparam set system/default/flags/initialized true
 ```
 ## Turn off Chrono GUI
 To turn off the GUI, change the value of system/chrono/flags/gui to false in test_chrono.yaml.

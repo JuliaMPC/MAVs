@@ -3,8 +3,8 @@
   "Type":                    "Powertrain",
   "Template":                "SimplePowertrain",
 
-  "Forward Gear Ratio":       0.3,
+  "Forward Gear Ratio":       0.0,
   "Reverse Gear Ratio":      -0.3,
   "Maximum Engine Torque":   1000.0,
-  "Maximum Engine Speed":    3000
+  "Maximum Engine Speed":    2000
 }

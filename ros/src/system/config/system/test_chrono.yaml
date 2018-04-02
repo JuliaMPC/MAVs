@@ -7,4 +7,4 @@ system:
  planner: default
  default:
   flags:
-   initialized: true
+   initialized: false
