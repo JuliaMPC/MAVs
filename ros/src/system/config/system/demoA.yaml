@@ -10,3 +10,4 @@ system:
    running: true
    initialized: false
  paused: true
+step_simulation: 1.0

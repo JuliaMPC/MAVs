@@ -81,8 +81,8 @@ CAMMIN                   = -0.26181             $Minimum valid camber angle
 CAMMAX                   = 0.26181              $Maximum valid camber angle         
 $-------------------------------------------------vertical_force_range
 [VERTICAL_FORCE_RANGE]
-FZMIN                    = 1000                  $Minimum allowed wheel load         
-FZMAX                    = 35000                $Maximum allowed wheel load changed from 10125         
+FZMIN                    = 225                  $Minimum allowed wheel load         
+FZMAX                    = 10125                $Maximum allowed wheel load         
 $--------------------------------------------------------------scaling
 [SCALING_COEFFICIENTS]
 LFZO                     = 1                    $Scale factor of nominal (rated) load         
@@ -146,22 +146,22 @@ QSX2                     = 0                    $Camber induced overturning coup
 QSX3                     = 0                    $Fy induced overturning couple         
 $--------------------------------------------------------------lateral
 [LATERAL_COEFFICIENTS]
-PCY1                     = 1.5874               $Shape factor Cfy for lateral forces CHANGED FROM 1.3507       
-PDY1                     = 0.73957              $Lateral friction Muy CHANGED FROM 1.0489
-PDY2                     = -0.075004            $Variation of friction Muy with load CHANGED FROM -0.18033         
+PCY1                     = 1.3507               $Shape factor Cfy for lateral forces         
+PDY1                     = 1.0489               $Lateral friction Muy         
+PDY2                     = -0.18033             $Variation of friction Muy with load         
 PDY3                     = -2.8821              $Variation of friction Muy with squared camber         
-PEY1                     = 0.37562              $Lateral curvature Efy at Fznom CHANGED FROM -0.0074722    
-PEY2                     = -0.069325            $Variation of curvature Efy with load CHANGED FROM -0.0063208       
-PEY3                     = 0.29168              $Zero order camber dependency of curvature Efy CHANGED FROM -9.9935      
+PEY1                     = -0.0074722           $Lateral curvature Efy at Fznom         
+PEY2                     = -0.0063208           $Variation of curvature Efy with load         
+PEY3                     = -9.9935              $Zero order camber dependency of curvature Efy         
 PEY4                     = -760.14              $Variation of curvature Efy with camber         
-PKY1                     = -10.289              $Maximum value of stiffness Kfy/Fznom CHANGED FROM -21.92        
-PKY2                     = 3.3343               $Load at which Kfy reaches maximum value CHANGED FROM 2.0012        
+PKY1                     = -21.92               $Maximum value of stiffness Kfy/Fznom         
+PKY2                     = 2.0012               $Load at which Kfy reaches maximum value         
 PKY3                     = -0.024778            $Variation of Kfy/Fznom with camber         
-PHY1                     = 0.0056509            $Horizontal shift Shy at Fznom CHANGED FROM 0.0026747      
-PHY2                     = -0.0020257           $Variation of shift Shy with load CHANGED FROM 8.9094e-005     
+PHY1                     = 0.0026747            $Horizontal shift Shy at Fznom         
+PHY2                     = 8.9094e-005          $Variation of shift Shy with load         
 PHY3                     = 0.031415             $Variation of shift Shy with camber         
-PVY1                     = 0.015216             $Vertical shift in Svy/Fz at Fznom CHANGED FROM 0.037318         
-PVY2                     = -0.010365            $Variation of shift Svy/Fz with load CHANGED         
+PVY1                     = 0.037318             $Vertical shift in Svy/Fz at Fznom         
+PVY2                     = -0.010049            $Variation of shift Svy/Fz with load         
 PVY3                     = -0.32931             $Variation of shift Svy/Fz with camber         
 PVY4                     = -0.69553             $Variation of shift Svy/Fz with camber and load         
 RBY1                     = 7.1433               $Slope factor for combined Fy reduction         
