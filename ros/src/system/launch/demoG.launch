@@ -33,17 +33,7 @@
   <rosparam command="load" file="$(arg system_params_path)" />
   <rosparam command="load" file="$(arg chrono_params_path)"/>
 
-  <!-- launch chrono -->
-  <arg name="path_follower" value="true" />
-  <!--node name="Reference" pkg="traj_gen_chrono" type="traj_gen_chrono"/-->
-  <node if="$(arg path_follower)" name="Chronode" pkg="ros_chrono" type="hmmwv_model" cwd="node"/>
-
-  <include file="$(find nloptcontrol_planner)/launch/demo.launch">
-    <arg name="case_params_path" value="$(arg case_params_path)"/>
-    <arg name="planner_params_path" value="$(arg planner_params_path)"/>
-    <arg name="system_params_path" value="$(arg system_params_path)"/>
-  </include>
-
+<!-- vehicle description -->
   <include file="$(find vehicle_description)/launch/main.launch">
     <arg name="system_params_path" value="$(arg system_params_path)"/>
     <arg name="vehicle_params_path" value="$(arg vehicle_params_path)"/>
@@ -51,6 +41,20 @@
     <arg name="obstacle_num" value="$(arg obstacle_num)"/>
     <arg name="gui" value="$(arg gui)"/>
     <arg name="paused" value="$(arg paused)"/>
+  </include>
+
+  <!-- launch chrono -->
+  <arg name="path_follower" value="true" />
+  <!--node name="Reference" pkg="traj_gen_chrono" type="traj_gen_chrono"/-->
+  <node if="$(arg path_follower)" name="Chronode" pkg="ros_chrono" type="hmmwv_model" cwd="node"/>
+  <node unless="$(arg path_follower)" name="Chronode" pkg="ros_chrono" type="trajectory_follower"
+    cwd="node" output="screen" />
+
+
+  <include file="$(find nloptcontrol_planner)/launch/demo.launch">
+    <arg name="case_params_path" value="$(arg case_params_path)"/>
+    <arg name="planner_params_path" value="$(arg planner_params_path)"/>
+    <arg name="system_params_path" value="$(arg system_params_path)"/>
   </include>
 
   <!--  ************* obstacle_detector args and parameters ***************  -->

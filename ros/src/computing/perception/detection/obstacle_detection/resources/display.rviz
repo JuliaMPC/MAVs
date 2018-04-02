@@ -28,7 +28,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: ""
+    SyncSource: PointCloud
 Visualization Manager:
   Class: ""
   Displays:
@@ -120,25 +120,25 @@ Visualization Manager:
       Channel Name: intensity
       Class: rviz/PointCloud
       Color: 255; 255; 255
-      Color Transformer: ""
+      Color Transformer: Intensity
       Decay Time: 0
       Enabled: true
       Invert Rainbow: false
-      Max Color: 255; 255; 255
-      Max Intensity: 4096
-      Min Color: 0; 0; 0
+      Max Color: 85; 170; 255
+      Max Intensity: 0
+      Min Color: 85; 170; 255
       Min Intensity: 0
       Name: PointCloud
-      Position Transformer: ""
+      Position Transformer: XYZ
       Queue Size: 10
       Selectable: true
       Size (Pixels): 3
-      Size (m): 0.00999999978
-      Style: Flat Squares
+      Size (m): 0.100000001
+      Style: Points
       Topic: /pcl
       Unreliable: false
       Use Fixed Frame: true
-      Use rainbow: true
+      Use rainbow: false
       Value: true
   Enabled: true
   Global Options:
@@ -165,16 +165,16 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 429.459717
+      Distance: 21.6745224
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -197.440903
-        Y: -102.672699
-        Z: 11.8527517
+        X: -0.356915534
+        Y: 11.6116667
+        Z: 17.7786388
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.0500000007
       Invert Z Axis: false
@@ -221,5 +221,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1352
-  X: 133
-  Y: 101
+  X: 264
+  Y: 126
