@@ -1060,7 +1060,7 @@ void waitForLoaded(ros::NodeHandle &n){
 void setChassisParams(ros::NodeHandle &n){
   std::ofstream myfile2;
 
-  myfile2.open(data_path+"hmmwv/chassis/HMMWV_Chassis.json",std::ofstream::out | std::ofstream::trunc);
+  myfile2.open("../../../../../../../opt/chrono/chrono/src/data/vehicle/hmmwv/chassis/HMMWV_Chassis.json",std::ofstream::out | std::ofstream::trunc);
   std::string s1 = "{ ";
   std::string s2 = "  \"Name\":     \"HMMWV chassis\",";
   std::string s3 = "  \"Type\":     \"Chassis\",";
@@ -1143,7 +1143,7 @@ void setChassisParams(ros::NodeHandle &n){
 void setDrivelineParams(ros::NodeHandle &n){
   std::ofstream myfile2;
 
-  myfile2.open(data_path+"hmmwv/driveline/HMMWV_Driveline2WD.json",std::ofstream::out | std::ofstream::trunc);
+  myfile2.open("../../../../../../../opt/chrono/chrono/src/data/vehicle/hmmwv/driveline/HMMWV_Driveline2WD.json",std::ofstream::out | std::ofstream::trunc);
   std::string s1 = "{ ";
   std::string s2 = "  \"Name\":                       \"HMMWV RWD Driveline\",";
   std::string s3 = "  \"Type\":                       \"Driveline\",";
@@ -1206,7 +1206,8 @@ void setDrivelineParams(ros::NodeHandle &n){
 void setPowertrainParams(ros::NodeHandle &n){
   std::ofstream myfile2;
 
-  myfile2.open(data_path+"hmmwv/powertrain/HMMWV_SimplePowertrain.json",std::ofstream::out | std::ofstream::trunc);
+//  myfile2.open(data_path+"hmmwv/powertrain/HMMWV_SimplePowertrain.json",std::ofstream::out | std::ofstream::trunc);
+  myfile2.open("../../../../../../../opt/chrono/chrono/data/vehicle/hmmwv/powertrain/HMMWV_SimplePowertrain.json",std::ofstream::out | std::ofstream::trunc);
   std::string s1 = "{";
   std::string s2 = "  \"Name\":                    \"HMMWV Simplified Powertrain\",";
   std::string s3 = "  \"Type\":                    \"Powertrain\",";
@@ -1241,7 +1242,7 @@ void setPowertrainParams(ros::NodeHandle &n){
 void setSteeringParams(ros::NodeHandle &n){
   std::ofstream myfile2;
 
-  myfile2.open(data_path+"hmmwv/steering/HMMWV_RackPinion.json",std::ofstream::out | std::ofstream::trunc);
+  myfile2.open("../../../../../../../opt/chrono/chrono/src/data/vehicle/hmmwv/steering/HMMWV_RackPinion.json",std::ofstream::out | std::ofstream::trunc);
   std::string s1 = "{";
   std::string s2 = "  \"Name\":                       \"HMMWV Rack-Pinion Steering\",";
   std::string s3 = "  \"Type\":                       \"Steering\",";
@@ -1297,22 +1298,7 @@ void setSteeringParams(ros::NodeHandle &n){
 
   myfile2.close();
 }
-/*
-{
-  "Name":                       "HMMWV Brake Front",
-  "Type":                       "Brake",
-  "Template":                   "BrakeSimple",
 
-  "Maximum Torque":             4000
-}
-
-{
-  "Name":                       "HMMWV Brake Rear",
-  "Type":                       "Brake",
-  "Template":                   "BrakeSimple",
-
-  "Maximum Torque":             4000
-} */
 void setBrakingParams(ros::NodeHandle &n){
   std::ofstream myfile2;
   std::ofstream myfile3;
@@ -1327,7 +1313,7 @@ void setBrakingParams(ros::NodeHandle &n){
   std::string s7 = "}";
   std::string s8 = "  \"Name\":                       \"HMMWV Brake Rear\",";
 
-  myfile2.open(data_path+"hmmwv/braking/HMMWV_BrakeSimple_Front.json",std::ofstream::out | std::ofstream::trunc);
+  myfile2.open("../../../../../../../opt/chrono/chrono/src/data/vehicle/hmmwv/brake/HMMWV_BrakeSimple_Front.json",std::ofstream::out | std::ofstream::trunc);
   myfile2 << s1 << '\n';
   myfile2 << s2 << '\n';
   myfile2 << s3 << '\n';
@@ -1337,7 +1323,7 @@ void setBrakingParams(ros::NodeHandle &n){
   myfile2 << s7  << '\n';
   myfile2.close();
 
-  myfile3.open(data_path+"hmmwv/braking/HMMWV_BrakeSimple_Rear.json",std::ofstream::out | std::ofstream::trunc);
+  myfile2.open("../../../../../../../opt/chrono/chrono/src/data/vehicle/hmmwv/brake/HMMWV_BrakeSimple_Rear.json",std::ofstream::out | std::ofstream::trunc);
   myfile3 << s8 << '\n';
   myfile3 << s2 << '\n';
   myfile3 << s3 << '\n';
@@ -1347,6 +1333,8 @@ void setBrakingParams(ros::NodeHandle &n){
   myfile3 << s7  << '\n';
   myfile3.close();
 }
+//=======
+//>>>>>>> upstream/master
 // =============================================================================
 int main(int argc, char* argv[]) {
 
@@ -1365,6 +1353,7 @@ int main(int argc, char* argv[]) {
 
     ros::init(argc, argv, "Chronode");
     ros::NodeHandle n;
+//<<<<<<< HEAD
     //n.setParam("system/chrono/flags/initialized",true);
   //  std::string s10;
     //n.getParam("/vehicle/common/centroidLoc",s10);
