@@ -41,7 +41,6 @@
 #include "chrono_vehicle/wheeled_vehicle/utils/ChWheeledVehicleIrrApp.h"
 #include <math.h>
 #include "chrono_models/vehicle/hmmwv/HMMWV.h"
-
 #define PI 3.1415926535
 //using veh_status.msg
 using namespace chrono;
@@ -1060,7 +1059,7 @@ void waitForLoaded(ros::NodeHandle &n){
 void setChassisParams(ros::NodeHandle &n){
   std::ofstream myfile2;
 
-  myfile2.open(data_path+"hmmwv/chassis/HMMWV_Chassis.json",std::ofstream::out | std::ofstream::trunc);
+  myfile2.open("../../../../../../../opt/chrono/chrono/src/data/vehicle/hmmwv/chassis/HMMWV_Chassis.json",std::ofstream::out | std::ofstream::trunc);
   std::string s1 = "{ ";
   std::string s2 = "  \"Name\":     \"HMMWV chassis\",";
   std::string s3 = "  \"Type\":     \"Chassis\",";
@@ -1143,7 +1142,7 @@ void setChassisParams(ros::NodeHandle &n){
 void setDrivelineParams(ros::NodeHandle &n){
   std::ofstream myfile2;
 
-  myfile2.open(data_path+"hmmwv/driveline/HMMWV_Driveline2WD.json",std::ofstream::out | std::ofstream::trunc);
+  myfile2.open("../../../../../../../opt/chrono/chrono/src/data/vehicle/hmmwv/driveline/HMMWV_Driveline2WD.json",std::ofstream::out | std::ofstream::trunc);
   std::string s1 = "{ ";
   std::string s2 = "  \"Name\":                       \"HMMWV RWD Driveline\",";
   std::string s3 = "  \"Type\":                       \"Driveline\",";
@@ -1206,7 +1205,8 @@ void setDrivelineParams(ros::NodeHandle &n){
 void setPowertrainParams(ros::NodeHandle &n){
   std::ofstream myfile2;
 
-  myfile2.open(data_path+"hmmwv/powertrain/HMMWV_SimplePowertrain.json",std::ofstream::out | std::ofstream::trunc);
+//  myfile2.open(data_path+"hmmwv/powertrain/HMMWV_SimplePowertrain.json",std::ofstream::out | std::ofstream::trunc);
+  myfile2.open("../../../../../../../opt/chrono/chrono/data/vehicle/hmmwv/powertrain/HMMWV_SimplePowertrain.json",std::ofstream::out | std::ofstream::trunc);
   std::string s1 = "{";
   std::string s2 = "  \"Name\":                    \"HMMWV Simplified Powertrain\",";
   std::string s3 = "  \"Type\":                    \"Powertrain\",";
@@ -1241,7 +1241,7 @@ void setPowertrainParams(ros::NodeHandle &n){
 void setSteeringParams(ros::NodeHandle &n){
   std::ofstream myfile2;
 
-  myfile2.open(data_path+"hmmwv/steering/HMMWV_RackPinion.json",std::ofstream::out | std::ofstream::trunc);
+  myfile2.open("../../../../../../../opt/chrono/chrono/src/data/vehicle/hmmwv/steering/HMMWV_RackPinion.json",std::ofstream::out | std::ofstream::trunc);
   std::string s1 = "{";
   std::string s2 = "  \"Name\":                       \"HMMWV Rack-Pinion Steering\",";
   std::string s3 = "  \"Type\":                       \"Steering\",";
@@ -1297,22 +1297,7 @@ void setSteeringParams(ros::NodeHandle &n){
 
   myfile2.close();
 }
-/*
-{
-  "Name":                       "HMMWV Brake Front",
-  "Type":                       "Brake",
-  "Template":                   "BrakeSimple",
 
-  "Maximum Torque":             4000
-}
-
-{
-  "Name":                       "HMMWV Brake Rear",
-  "Type":                       "Brake",
-  "Template":                   "BrakeSimple",
-
-  "Maximum Torque":             4000
-} */
 void setBrakingParams(ros::NodeHandle &n){
   std::ofstream myfile2;
   std::ofstream myfile3;
@@ -1327,7 +1312,7 @@ void setBrakingParams(ros::NodeHandle &n){
   std::string s7 = "}";
   std::string s8 = "  \"Name\":                       \"HMMWV Brake Rear\",";
 
-  myfile2.open(data_path+"hmmwv/braking/HMMWV_BrakeSimple_Front.json",std::ofstream::out | std::ofstream::trunc);
+  myfile2.open("../../../../../../../opt/chrono/chrono/src/data/vehicle/hmmwv/brake/HMMWV_BrakeSimple_Front.json",std::ofstream::out | std::ofstream::trunc);
   myfile2 << s1 << '\n';
   myfile2 << s2 << '\n';
   myfile2 << s3 << '\n';
@@ -1337,7 +1322,7 @@ void setBrakingParams(ros::NodeHandle &n){
   myfile2 << s7  << '\n';
   myfile2.close();
 
-  myfile3.open(data_path+"hmmwv/braking/HMMWV_BrakeSimple_Rear.json",std::ofstream::out | std::ofstream::trunc);
+  myfile2.open("../../../../../../../opt/chrono/chrono/src/data/vehicle/hmmwv/brake/HMMWV_BrakeSimple_Rear.json",std::ofstream::out | std::ofstream::trunc);
   myfile3 << s8 << '\n';
   myfile3 << s2 << '\n';
   myfile3 << s3 << '\n';
@@ -1374,6 +1359,7 @@ int main(int argc, char* argv[]) {
     setPowertrainParams(n);
     setSteeringParams(n);
     setBrakingParams(n);
+    //setSuspensionParams(n);
     bool planner_init;
   //  bool planner_init2;
 
@@ -1455,9 +1441,12 @@ int main(int argc, char* argv[]) {
     // ------------------------------
     // Create the vehicle and terrain
     // ------------------------------
-
+    //std::string asd123="my_hmmwv";
     // Create the HMMWV vehicle, set parameters, and initialize
-    HMMWV_Reduced my_hmmwv;
+
+    HMMWV_Reduced my_hmmwv;//
+    //ChWheeledVehicle my_hmmwv;
+    //my_hmmwv=ChWheeledVehicle(asd123,contact_method);
     my_hmmwv.SetContactMethod(contact_method);
     my_hmmwv.SetChassisFixed(false);
     my_hmmwv.SetInitPosition(ChCoordsys<>(initLoc, initRot));

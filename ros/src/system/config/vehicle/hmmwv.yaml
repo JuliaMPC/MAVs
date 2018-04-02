@@ -89,7 +89,7 @@ vehicle:
   differentialBoxInertia: "0.6"
   conicalGearRatio: "-0.2,"
   differentialRatio: "-1.0"
-  forwardGearRatio: " 0.3,"
+  forwardGearRatio: " 0.0,"
   reverseGearRatio: "-0.3,"
   maxEngineTorque: "1000.0,"
   maxEngineSpeed: "2000"
