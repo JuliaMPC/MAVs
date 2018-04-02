@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   roscpp
   std_msgs
+  nloptcontrol_planner
 )
 
 ## System dependencies are found with CMake's conventions
@@ -135,6 +136,8 @@ include_directories(
 ## The recommended prefix ensures that target names across packages don't collide
 # add_executable(${PROJECT_NAME}_node src/ros_chrono_msgs_node.cpp)
 add_executable(traj_gen_chrono src/traj_gen_chrono.cpp)
+add_dependencies(traj_gen_chrono ${catkin_EXPORTED_TARGETS})
+
 
 
 ## Rename C++ executable without prefix

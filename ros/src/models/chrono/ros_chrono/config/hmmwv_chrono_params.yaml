@@ -12,7 +12,7 @@ hmmwv_chrono:
   sa: 0.0
   ux: 0.0
   ax: 0.0
-  v_des: 12
+  v_des: 17
 
 #Trajectory Points
  traj:

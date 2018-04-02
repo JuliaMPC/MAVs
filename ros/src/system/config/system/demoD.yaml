@@ -1,14 +1,14 @@
 system:
  vehicle_description:
   flags:
-   postion_update_external: false
+   postion_update_external: true
    lidar_initialized: false
    obstacles_initialized: false
  nloptcontrol_planner:
   namespace: nloptcontrol
   flags:
    running: false
-   initilized: false
+   initialized: false
    known_environment: true
    3DOF_plant: false
    goal_attained: false
@@ -18,7 +18,15 @@ system:
    initialized: false
    known_environment: true
    goal_attained: false
-   goal_known: true
+   goal_known: false
+ chrono:
+  namespace: chrono
+  flags:
+   running: true
+   initialized: false
+   gui: true
+   path_follower: true
  initialized: false
  planner: ros_base_planner
- paused: true
+ paused: false
+ step_size: 0.001

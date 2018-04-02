@@ -4,4 +4,7 @@ system:
   flags:
    initialized: false
    gui: true
- planner: chrono
+ planner: default
+ default:
+  flags:
+   initialized: true

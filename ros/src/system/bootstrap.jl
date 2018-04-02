@@ -31,7 +31,7 @@ function main()
   end
 
   if RobotOS.get_param("system/nloptcontrol_planner/flags/running")
-    while(!RobotOS.get_param("system/nloptcontrol_planner/flags/initilized"))
+    while(!RobotOS.get_param("system/nloptcontrol_planner/flags/initialized"))
       println("waiting on obstacle_avoidance.jl in nloptcontrol_planner ...")
       sleep(5)
     end

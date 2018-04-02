@@ -27,7 +27,7 @@ int main(int argc, char** argv) {
 
   ros::param::get("system/planner", planner_ns);
 
-  ros::Subscriber sub = n.subscribe<nav_msgs::Path>("/move_base/TrajectoryPlannerROS/global_plan", 1000, poseCallback);
+  ros::Subscriber sub = n.subscribe<nav_msgs::Path>("/move_base/NavfnROS/plan", 1000, poseCallback);
 
   ros::spin();
 }
