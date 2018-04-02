@@ -1,0 +1,6 @@
+<launch>
+
+  <node name="Reference" pkg="traj_gen_chrono" type="traj_gen_chrono"/>
+  <node name="Traj" pkg="ros_chrono" type="trajectory_follower" cwd="node" />
+
+</launch>

@@ -13,7 +13,7 @@
   <rosparam command="load" file="$(find system)/config/system/demoD.yaml"/>
   <rosparam command="load" file="$(find system)/config/system/test_chrono.yaml"/>
   <rosparam command="load" file="$(find system)/config/vehicle/hmmwv.yaml"/-->
-  <!--node name="Reference" pkg="traj_gen_chrono" type="traj_gen_chrono"/-->
+  <node name="Reference" pkg="traj_gen_chrono" type="traj_gen_chrono"/>
   <node name="Chronode" pkg="ros_chrono" type="hmmwv_model" cwd="node" />
   <node name="tf_position_broadcaster" pkg="chrono_position_broadcaster" type="chrono_position_broadcaster" cwd="node" />
 </launch>
