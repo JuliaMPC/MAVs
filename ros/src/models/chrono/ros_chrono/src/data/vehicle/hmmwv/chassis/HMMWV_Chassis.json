@@ -1,4 +1,4 @@
-{ 
+{
   "Name":     "HMMWV chassis",
   "Type":     "Chassis",
   "Template": "RigidChassis",
@@ -7,7 +7,7 @@
   [
    {
      "Centroidal Frame":    {
-                              "Location":    [0.056, 0.0, 0.523],
+                              "Location":    [0.056, 0, 0.523],
                               "Orientation": [1, 0, 0, 0]
                             },
      "Mass":                2086.52,
@@ -16,10 +16,11 @@
      "Void":                false
    }
   ],
+
   "Driver Position":
   {
     "Location":     [0, 0.5, 1.2],
-    "Orientation":  
+    "Orientation":  [1, 0, 0, 0]
   },
 
   "Visualization":

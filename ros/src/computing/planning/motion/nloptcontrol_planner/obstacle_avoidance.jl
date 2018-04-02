@@ -43,10 +43,11 @@ function setTrajParams(msg::Control)
 
     RobotOS.set_param(string(plannerNamespace,"/traj/t"),t)
     RobotOS.set_param(string(plannerNamespace,"/traj/x"),x)
-    RobotOS.set_param(string(plannerNamespace,"/traj/y"),y)
+    RobotOS.set_param(string(plannerNamespace,"/traj/yVal"),y)
     RobotOS.set_param(string(plannerNamespace,"/traj/vx"),vx)
     RobotOS.set_param(string(plannerNamespace,"/traj/sa"),sa)
     RobotOS.set_param(string(plannerNamespace,"/traj/psi"),psi)
+    # println(y)
 
   else
     error("L !> 0")
@@ -157,7 +158,9 @@ function setStateParams(n)
   for st in 1:n.numStates
     X0[st]=n.r.dfs_plant[end][n.state.name[st]][end];
   end
-  println(X0)
+
+  # println(X0)
+
   RobotOS.set_param("state/x", X0[1])
   RobotOS.set_param("state/y", X0[2])
   RobotOS.set_param("state/sa", X0[3])
@@ -166,6 +169,7 @@ function setStateParams(n)
   RobotOS.set_param("state/sa", X0[6])
   RobotOS.set_param("state/ux", X0[7])
   RobotOS.set_param("state/ax", X0[8])
+
   return nothing
 end
 
@@ -178,15 +182,25 @@ Date Create: 2/28/2018, Last Modified: 2/28/2018 \n
 --------------------------------------------------------------------------------------\n
 """
 function setInitStateParams(c)
-  RobotOS.set_param("state/x", RobotOS.get_param("case/actual/X0/x"))
-  RobotOS.set_param("state/y", RobotOS.get_param("case/actual/X0/yVal"))
-  RobotOS.set_param("state/sa",RobotOS.get_param("case/actual/X0/sa"))
-  RobotOS.set_param("state/r", RobotOS.get_param("case/actual/X0/r"))
-  RobotOS.set_param("state/psi", RobotOS.get_param("case/actual/X0/psi"))
-  RobotOS.set_param("state/sa", RobotOS.get_param("case/actual/X0/sa"))
-  RobotOS.set_param("state/ux", RobotOS.get_param("case/actual/X0/ux"))
-  RobotOS.set_param("state/ax", RobotOS.get_param("case/actual/X0/ax"))
-
+  if RobotOS.get_param("system/nloptcontrol_planner/flags/3DOF_plant")
+    RobotOS.set_param("state/x", RobotOS.get_param("case/actual/X0/x"))
+    RobotOS.set_param("state/y", RobotOS.get_param("case/actual/X0/yVal"))
+    RobotOS.set_param("state/sa",RobotOS.get_param("case/actual/X0/sa"))
+    RobotOS.set_param("state/r", RobotOS.get_param("case/actual/X0/r"))
+    RobotOS.set_param("state/psi", RobotOS.get_param("case/actual/X0/psi"))
+    RobotOS.set_param("state/sa", RobotOS.get_param("case/actual/X0/sa"))
+    RobotOS.set_param("state/ux", RobotOS.get_param("case/actual/X0/ux"))
+    RobotOS.set_param("state/ax", RobotOS.get_param("case/actual/X0/ax"))
+  else
+    RobotOS.set_param("vehicle/chrono/state/x", RobotOS.get_param("case/actual/X0/x"))
+    RobotOS.set_param("vehicle/chrono/state/y", RobotOS.get_param("case/actual/X0/yVal"))
+    RobotOS.set_param("vehicle/chrono/state/sa",RobotOS.get_param("case/actual/X0/sa"))
+    RobotOS.set_param("vehicle/chrono/state/r", RobotOS.get_param("case/actual/X0/r"))
+    RobotOS.set_param("vehicle/chrono/state/psi", RobotOS.get_param("case/actual/X0/psi"))
+    RobotOS.set_param("vehicle/chrono/state/sa", RobotOS.get_param("case/actual/X0/sa"))
+    RobotOS.set_param("vehicle/chrono/state/ux", RobotOS.get_param("case/actual/X0/ux"))
+    RobotOS.set_param("vehicle/chrono/state/ax", RobotOS.get_param("case/actual/X0/ax"))
+  end
   return nothing
 end
 
@@ -201,17 +215,29 @@ Date Create: 2/28/2018, Last Modified: 2/28/2018 \n
 function setStateData(n)
 
   # copy current vehicle state in case it changes
-  x=deepcopy(RobotOS.get_param("state/x"))
-  y=deepcopy(RobotOS.get_param("state/y"))
-  v=deepcopy(RobotOS.get_param("state/sa"))
-  r=deepcopy(RobotOS.get_param("state/r"))
-  psi=deepcopy(RobotOS.get_param("state/psi"))
-  sa=deepcopy(RobotOS.get_param("state/sa"))
-  ux=deepcopy(RobotOS.get_param("state/ux"))
-  ax=deepcopy(RobotOS.get_param("state/ax"))
-  X0 = [x,y,v,r,psi,sa,ux,ax]
+  x=deepcopy(RobotOS.get_param("vehicle/chrono/state/x"))
+  y=deepcopy(RobotOS.get_param("vehicle/chrono/state/yVal"))
+  v=deepcopy(RobotOS.get_param("vehicle/chrono/state/sa"))
+  r=deepcopy(RobotOS.get_param("vehicle/chrono/state/r"))
+  psi=deepcopy(RobotOS.get_param("vehicle/chrono/state/psi"))
+  sa=deepcopy(RobotOS.get_param("vehicle/chrono/state/sa"))
+  ux=deepcopy(RobotOS.get_param("vehicle/chrono/state/ux"))
+  ax=deepcopy(RobotOS.get_param("vehicle/chrono/state/ax"))
+  """
+    x=deepcopy(RobotOS.get_param("state/x"))
+    y=deepcopy(RobotOS.get_param("state/y"))
+    v=deepcopy(RobotOS.get_param("state/sa"))
+    r=deepcopy(RobotOS.get_param("state/r"))
+    psi=deepcopy(RobotOS.get_param("state/psi"))
+    sa=deepcopy(RobotOS.get_param("state/sa"))
+    ux=deepcopy(RobotOS.get_param("state/ux"))
+    ax=deepcopy(RobotOS.get_param("state/ax"))
+    """
 
+  X0 = [x,y,v,r,psi,sa,ux,ax]
+  # println(X0)
   updateX0!(n,X0;(:userUpdate=>true))
+  # println("X0 updated!")
   return nothing
 end
 
@@ -258,11 +284,13 @@ function loop(pub,pub_path,n,c)
       publish(pub, msg)
 
       path = Path()
+      path.header.stamp = get_rostime()
       path.header.frame_id = "map"
       path.poses = Array{PoseStamped}(length(msg.t))
       for i in 1:length(msg.t)
-        path.poses[i] = PoseStamped()
+        path.poses[i]= PoseStamped()
         path.poses[i].header.frame_id = "map"
+        path.poses[i].header.stamp = get_rostime()
         path.poses[i].pose.position.x = msg.x[i]
         path.poses[i].pose.position.y = msg.y[i]
       end
@@ -289,16 +317,21 @@ function loop(pub,pub_path,n,c)
         setStateData(n)    # update X0 in NLOptControl.jl based off of state/ parameters
       end
 
-
-      if ((n.r.dfs_plant[end][:x][end]-c["goal"]["x"])^2 + (n.r.dfs_plant[end][:y][end]-c["goal"]["yVal"])^2)^0.5 < 2*n.XF_tol[1]
-         println("Goal Attained! \n"); n.mpc.goal_reached=true;
-         RobotOS.set_param("system/nloptcontrol_planner/flags/goal_attained",true)
-         break;
+      if RobotOS.get_param("system/nloptcontrol_planner/flags/3DOF_plant")
+        if ((n.r.dfs_plant[end][:x][end]-c["goal"]["x"])^2 + (n.r.dfs_plant[end][:y][end]-c["goal"]["yVal"])^2)^0.5 < 2*n.XF_tol[1]
+           println("Goal Attained! \n"); n.mpc.goal_reached=true;
+           RobotOS.set_param("system/nloptcontrol_planner/flags/goal_attained",true)
+           break;
+        end
+      else
+        # get chrono states, see if it is near goal
       end
+
+
 
       if !init  # calling this node initialized after the first solve so that /traj/ parameters are set
         init = true
-        RobotOS.set_param("system/nloptcontrol_planner/flags/initilized",true)
+        RobotOS.set_param("system/nloptcontrol_planner/flags/initialized",true)
         println("nloptcontrol_planner has been initialized.")
         while(RobotOS.get_param("system/paused"))
         end

@@ -1,4 +1,3 @@
-<?xml version="1.0" ?>
 <launch>
   <arg name="paused" default="false"/>
   <arg name="use_sim_time" default="true"/>
@@ -6,7 +5,12 @@
   <arg name="headless" default="false"/>
   <arg name="debug" default="false"/>
   <arg name="verbose" default="false"/>
-  <arg name="world_name" default="worlds/empty_world.world"/> <!-- Note: the world_name is with respect to GAZEBO_RESOURCE_PATH environmental variable -->
+  <arg name="world_name" default="$(find vehicle_description)/worlds/empty.world"/> <!-- Note: the world_name is with respect to GAZEBO_RESOURCE_PATH environmental variable -->
+
+  <!-- set use_sim_time flag -->
+  <group if="$(arg use_sim_time)">
+    <param name="/use_sim_time" value="true" />
+  </group>
 
   <!-- Start gazebo and load the world -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch" >
@@ -18,4 +22,5 @@
     <arg name="verbose" value="$(arg verbose)"/>
     <arg name="world_name" value="$(arg world_name)"/>
   </include>
+
 </launch>

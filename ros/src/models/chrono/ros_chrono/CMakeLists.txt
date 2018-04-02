@@ -16,6 +16,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
   ros_chrono_msgs
+  nloptcontrol_planner
 )
 
 find_package(
@@ -162,6 +163,7 @@ MESSAGE(STATUS "...add hmmwv_model")
 ## The recommended prefix ensures that target names across packages don't collide
 # add_executable(${PROJECT_NAME}_node src/ros_chrono_node.cpp)
 add_executable(hmmwv_model src/hmmwv_model.cpp)
+add_executable(trajectory_follower src/trajectory_follower.cpp)
 
 #--------------------------------------------------------------
 # Set properties for your executable target
@@ -172,10 +174,11 @@ add_executable(hmmwv_model src/hmmwv_model.cpp)
 # install tree (if using an installed version of Chrono).
 #--------------------------------------------------------------
 
-set_target_properties(hmmwv_model PROPERTIES
+set_target_properties(hmmwv_model trajectory_follower PROPERTIES
 	    COMPILE_FLAGS "${CHRONO_CXX_FLAGS} ${CH_CXX_FLAGS} ${CH_IRRLICHT_CXX_FLAGS} ${EXTRA_COMPILE_FLAGS}"
       COMPILE_DEFINITIONS "CHRONO_DATA_DIR=\"${CHRONO_DATA_DIR}\""
 	    LINK_FLAGS "${CHRONO_LINKER_FLAGS} ${LINKERFLAG_EXE}")
+
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
 ## target back to the shorter version for ease of user use
@@ -184,13 +187,22 @@ set_target_properties(hmmwv_model PROPERTIES
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-add_dependencies(hmmwv_model ${catkin_EXPORTED_TARGETS})
+add_dependencies(hmmwv_model trajectory_follower ${catkin_EXPORTED_TARGETS})
+# add_dependencies(trajectory_follower ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
 # target_link_libraries(${PROJECT_NAME}_node
 #   ${catkin_LIBRARIES}
 # )
 target_link_libraries(hmmwv_model
+  ChronoEngine
+  ChronoEngine_irrlicht
+  ChronoEngine_vehicle
+  ChronoModels_vehicle
+  ${catkin_LIBRARIES}
+  ${CHRONO_LIBRARIES})
+
+target_link_libraries(trajectory_follower
   ChronoEngine
   ChronoEngine_irrlicht
   ChronoEngine_vehicle
