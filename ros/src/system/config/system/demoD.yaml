@@ -18,7 +18,7 @@ system:
    initialized: false
    known_environment: true
    goal_attained: false
-   goal_known: false
+   goal_known: true
  chrono:
   namespace: chrono
   flags:
