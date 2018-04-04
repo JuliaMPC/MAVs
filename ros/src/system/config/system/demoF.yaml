@@ -26,7 +26,7 @@ system:
    gui: true
    path_follower: true
  planner: nloptcontrol_planner
- goal_reached: false
+ goal_attained: false
  paused: true
  initialized: false
  step_size: 0.01

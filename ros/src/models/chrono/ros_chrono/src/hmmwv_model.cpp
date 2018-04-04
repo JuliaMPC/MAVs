@@ -134,11 +134,13 @@ class ChDriverSelector : public irr::IEventReceiver {
           m_using_gui(false) {}
 
     ChDriver* GetDriver() { return m_driver; }
+    ChPathFollowerDriver* GetPathFollower() { return m_driver_follower; }
+
     bool UsingGUI() const { return m_using_gui; }
 
     void update_driver(ChPathFollowerDriver* driver_follower){
       m_driver_follower = driver_follower;
-      m_driver = driver_follower;
+      m_driver = m_driver_follower;
     }
 
     virtual bool OnEvent(const irr::SEvent& event) {
@@ -245,17 +247,22 @@ int main(int argc, char* argv[]) {
     double target_speed;
     n.getParam("hmmwv_chrono/X0/v_des",target_speed);
 
-    //Initial Position
-    double x0, y0, z0, yaw0, pitch0, roll0;
+    //Initial Position and Goal
+    double x0, y0, z0, yaw0, pitch0, roll0, goal_x, goal_y;
     bool gui_switch;
+
     n.getParam("case/actual/X0/x",x0);
     n.getParam("case/actual/X0/yVal",y0);
     n.getParam("hmmwv_chrono/X0/z",z0);
     n.getParam("case/actual/X0/psi",yaw0);
     n.getParam("hmmwv_chrono/X0/theta",pitch0);
     n.getParam("hmmwv_chrono/X0/phi",roll0);
+    n.getParam("case/goal/x",goal_x);
+    n.getParam("case/goal/yVal",goal_y);
 
     n.getParam("system/chrono/flags/gui",gui_switch);
+    bool goal_attained = false;
+    bool running = true;
   //  tf::Quaternion q = tf::createQuaternionFromRPY(roll0, pitch0, yaw0);
     // Initial vehicle location and orientation
 
@@ -475,171 +482,186 @@ int main(int argc, char* argv[]) {
     rest_coeff = my_hmmwv.GetVehicle().GetWheel(0)->GetCoefficientRestitution();
     n.setParam("vehicle/chrono/common/frict_coeff",frict_coeff);
     n.setParam("vehicle/chrono/common/rest_coeff",rest_coeff);
+    while(n.ok()){
+      while (running) {
+        if(gui_switch)  app.GetDevice()->run();
+        double time = hmmwv_params.my_hmmwv.GetSystem()->GetChTime();
+        // Get trajectory parameters again
+        n.getParam("system/"+planner_namespace+"/flags/initialized",planner_init);
+        if (planner_init){
+          n.getParam("system/planner",planner_namespace);
+          n.getParam("vehicle/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
+          n.getParam("vehicle/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
 
-    while (true) {
-      if(gui_switch)  app.GetDevice()->run();
-      double time = hmmwv_params.my_hmmwv.GetSystem()->GetChTime();
-      // Get trajectory parameters again
-      n.getParam("system/"+planner_namespace+"/flags/initialized",planner_init);
-      if (planner_init){
-        n.getParam("system/planner",planner_namespace);
-        n.getParam("vehicle/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
-        n.getParam("vehicle/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
+          double num_pts = hmmwv_params.x_traj_curr.size();
 
-        double num_pts = hmmwv_params.x_traj_curr.size();
+            if (hmmwv_params.x_traj_curr!=hmmwv_params.x_traj_prev || hmmwv_params.y_traj_curr != hmmwv_params.y_traj_prev){
+              write_path(hmmwv_params, path_file);
+              auto path = ChBezierCurve::read(path_file);
+              delete driver_follower_p;
+              driver_follower_p = new ChPathFollowerDriver(my_hmmwv.GetVehicle(), steering_controller_file,
+                                                   speed_controller_file, path, "my_path_", target_speed);
+              driver_follower_p->Initialize();
+              selector.update_driver(driver_follower_p);
+              if(gui_switch) app.SetUserEventReceiver(&selector);
+              app.AssetBindAll();
+              app.AssetUpdateAll();
+              app.GetDevice()->run();
 
-          if (hmmwv_params.x_traj_curr!=hmmwv_params.x_traj_prev || hmmwv_params.y_traj_curr != hmmwv_params.y_traj_prev){
-            write_path(hmmwv_params, path_file);
-            auto path = ChBezierCurve::read(path_file);
-            delete driver_follower_p;
-            ChPathFollowerDriver* driver_follower_p = new ChPathFollowerDriver(my_hmmwv.GetVehicle(), steering_controller_file,
-                                                 speed_controller_file, path, "my_path_", target_speed);
-            driver_follower_p->Initialize();
-            selector.update_driver(driver_follower_p);
-            if(gui_switch) app.SetUserEventReceiver(&selector);
-            app.AssetBindAll();
-            app.AssetUpdateAll();
-            // app.GetDevice()->run();
-
-            hmmwv_params.x_traj_prev=hmmwv_params.x_traj_curr;
-            hmmwv_params.y_traj_prev=hmmwv_params.y_traj_curr;
+              hmmwv_params.x_traj_prev=hmmwv_params.x_traj_curr;
+              hmmwv_params.y_traj_prev=hmmwv_params.y_traj_curr;
+            }
           }
-        }
 
-        /*
-        // Hack for acceleration-braking maneuver
-        static bool braking = false;
-        if (my_hmmwv.GetVehicle().GetVehicleSpeed() > target_speed)
-            braking = true;
-        if (braking) {
-            throttle_input = 0;
-            braking_input = 1;
-        } else {
-            throttle_input = 1;
-            braking_input = 0;
-        }
-        */
+          /*
+          // Hack for acceleration-braking maneuver
+          static bool braking = false;
+          if (my_hmmwv.GetVehicle().GetVehicleSpeed() > target_speed)
+              braking = true;
+          if (braking) {
+              throttle_input = 0;
+              braking_input = 1;
+          } else {
+              throttle_input = 1;
+              braking_input = 0;
+          }
+          */
 
-      //     ros::Subscriber sub = n.subscribe<traj_gen_chrono::Control>("desired_ref", 1, &parameters::controlCallback, &hmmwv_params);
+        //     ros::Subscriber sub = n.subscribe<traj_gen_chrono::Control>("desired_ref", 1, &parameters::controlCallback, &hmmwv_params);
 
-        // Render scene and output POV-Ray data
-      if (hmmwv_params.sim_frame % hmmwv_params.render_steps == 0 && gui_switch) {
+          // Render scene and output POV-Ray data
+        if (hmmwv_params.sim_frame % hmmwv_params.render_steps == 0 && gui_switch) {
 
-          app.BeginScene(true, true, irr::video::SColor(255, 140, 161, 192));
-          app.DrawAll();
-          app.EndScene();
-
-
-          hmmwv_params.render_frame++;
-        }
-/*
-        // Debug logging
-        if (debug_output && sim_frame % debug_steps == 0) {
-            GetLog() << "driver acceleration:  " << acc_driver.x() << "  " << acc_driver.y() << "  " << acc_driver.z()
-                     << "\n";
-            GetLog() << "CG acceleration:      " << acc_CG.x() << "  " << acc_CG.y() << "  " << acc_CG.z() << "\n";
-            GetLog() << "\n";
-        }*/
-
-        ros_chrono_msgs::veh_status data_out;
-/*
-        ChVector<> acc_CG = my_hmmwv.GetVehicle().GetChassisBody()->GetPos_dtdt();
-        ChVector<> acc_driver = my_hmmwv.GetVehicle().GetVehicleAcceleration(driver_pos);
-        double fwd_acc_CG = fwd_acc_GC_filter.Add(acc_CG.x());
-        double lat_acc_CG = lat_acc_GC_filter.Add(acc_CG.y());
-        double fwd_acc_driver = fwd_acc_driver_filter.Add(acc_driver.x());
-        double lat_acc_driver = lat_acc_driver_filter.Add(acc_driver.y());*/
-
-        // End simulation
-        if (time >= t_end)
-            break;
-
-        const ChVector<> pS = driver_follower_p->GetSteeringController().GetSentinelLocation();
-        const ChVector<> pT = driver_follower_p->GetSteeringController().GetTargetLocation();
-        hmmwv_params.ballS->setPosition(irr::core::vector3df((irr::f32)pS.x(), (irr::f32)pS.y(), (irr::f32)pS.z()));
-        hmmwv_params.ballT->setPosition(irr::core::vector3df((irr::f32)pT.x(), (irr::f32)pT.y(), (irr::f32)pT.z()));
-
-        time = hmmwv_params.my_hmmwv.GetSystem()->GetChTime();
-        hmmwv_params.throttle_input = selector.GetDriver()->GetThrottle();
-        hmmwv_params.steering_input = selector.GetDriver()->GetSteering();
-        hmmwv_params.braking_input = selector.GetDriver()->GetBraking();
-        // Update modules (process inputs from other modules)
-        driver_follower_p->Synchronize(time);
-        driver_gui.Synchronize(time);
-        hmmwv_params.terrain.Synchronize(time);
-        hmmwv_params.my_hmmwv.Synchronize(time, hmmwv_params.steering_input, hmmwv_params.braking_input, hmmwv_params.throttle_input, hmmwv_params.terrain);
-        std::string msg = selector.UsingGUI() ? "GUI driver" : "Follower driver";
-        if(gui_switch) app.Synchronize(msg, hmmwv_params.steering_input, hmmwv_params.throttle_input, hmmwv_params.braking_input);
-
-        // Advance simulation for one timestep for all modules
-        double step = hmmwv_params.realtime_timer.SuggestSimulationStep(step_size);
-        driver_follower_p->Advance(step);
-        driver_gui.Advance(step);
-        hmmwv_params.terrain.Advance(step);
-        hmmwv_params.my_hmmwv.Advance(step);
-        if(gui_switch) app.Advance(step);
-
-        // Increment simulation frame number
-        hmmwv_params.sim_frame++;
-
-        ChVector<> global_pos = hmmwv_params.my_hmmwv.GetVehicle().GetVehicleCOMPos();//global location of chassis reference frame origin
-        ChQuaternion<> global_orntn = hmmwv_params.my_hmmwv.GetVehicle().GetVehicleRot();//global orientation as quaternion
-        ChVector<> rot_dt = hmmwv_params.my_hmmwv.GetVehicle().GetChassisBody()->GetWvel_loc();//global orientation as quaternion
-        ChVector<> global_velCOM = hmmwv_params.my_hmmwv.GetVehicle().GetChassisBody()->GetPos_dt();
-        ChVector<> global_accCOM = hmmwv_params.my_hmmwv.GetVehicle().GetChassisBody()->GetPos_dtdt();
-        //ChVector<> euler_ang = global_orntn.Q_to_Rotv(); //convert to euler angles
-        //ChPacejkaTire<> slip_angle = GetSlipAngle()
-        double slip_angle = hmmwv_params.my_hmmwv.GetTire(0)->GetLongitudinalSlip();
-
-        double q0 = global_orntn[0];
-        double q1 = global_orntn[1];
-        double q2 = global_orntn[2];
-        double q3 = global_orntn[3];
-
-        double yaw_val=atan2(2*(q0*q3+q1*q2),1-2*(q2*q2+q3*q3));
-        double theta_val=asin(2*(q0*q2-q3*q1));
-        double phi_val= atan2(2*(q0*q1+q2*q3),1-2*(q1*q1+q2*q2));
-
-        n.setParam("vehicle/chrono/state/t",time); //time in chrono simulation
-        n.setParam("vehicle/chrono/state/x", global_pos[0]) ;
-        n.setParam("vehicle/chrono/state/yVal",global_pos[1]);
-        n.setParam("vehicle/chrono/state/ux",fabs(global_velCOM[0])); //speed measured at the origin of the chassis reference frame.
-        n.setParam("vehicle/chrono/state/v", global_velCOM[1]);
-        n.setParam("vehicle/chrono/state/ax", global_accCOM[0]);
-        n.setParam("vehicle/chrono/state/psi",yaw_val); //in radians
-        n.setParam("vehicle/chrono/state/theta",theta_val); //in radians
-        n.setParam("vehicle/chrono/state/phi",phi_val); //in radians
-        n.setParam("vehicle/chrono/state/r",-rot_dt[2]);//yaw rate
-        n.setParam("vehicle/chrono/state/sa",slip_angle); //slip angle
-        n.setParam("vehicle/chrono/control/thr",hmmwv_params.throttle_input); //throttle input in the range [0,+1]
-        n.setParam("vehicle/chrono/control/brk",hmmwv_params.braking_input); //braking input in the range [0,+1]
-        n.setParam("vehicle/chrono/control/str",hmmwv_params.steering_input); //steeering input in the range [-1,+1]
-        n.setParam("system/simulation_time", time);
+            app.BeginScene(true, true, irr::video::SColor(255, 140, 161, 192));
+            app.DrawAll();
+            app.EndScene();
 
 
-        data_out.t_chrono=time; //time in chrono simulation
-        data_out.x_pos= global_pos[0];
-        data_out.y_pos=global_pos[1];
-        data_out.x_v= fabs(global_velCOM[0]); //speed measured at the origin of the chassis reference frame.
-        data_out.y_v= global_velCOM[1];
-        data_out.x_a= global_accCOM[0];
-        data_out.yaw_curr=yaw_val; //in radians
-        data_out.yaw_rate=-rot_dt[2];//yaw rate
-        data_out.sa=slip_angle; //slip angle
-        data_out.thrt_in=hmmwv_params.throttle_input; //throttle input in the range [0,+1]
-        data_out.brk_in=hmmwv_params.braking_input; //braking input in the range [0,+1]
-        data_out.str_in=hmmwv_params.steering_input; //steeering input in the range [-1,+1]
+            hmmwv_params.render_frame++;
+          }
+  /*
+          // Debug logging
+          if (debug_output && sim_frame % debug_steps == 0) {
+              GetLog() << "driver acceleration:  " << acc_driver.x() << "  " << acc_driver.y() << "  " << acc_driver.z()
+                       << "\n";
+              GetLog() << "CG acceleration:      " << acc_CG.x() << "  " << acc_CG.y() << "  " << acc_CG.z() << "\n";
+              GetLog() << "\n";
+          }*/
 
-        vehicleinfo_pub.publish(data_out);
-      //  loop_rate.sleep();
+          ros_chrono_msgs::veh_status data_out;
+  /*
+          ChVector<> acc_CG = my_hmmwv.GetVehicle().GetChassisBody()->GetPos_dtdt();
+          ChVector<> acc_driver = my_hmmwv.GetVehicle().GetVehicleAcceleration(driver_pos);
+          double fwd_acc_CG = fwd_acc_GC_filter.Add(acc_CG.x());
+          double lat_acc_CG = lat_acc_GC_filter.Add(acc_CG.y());
+          double fwd_acc_driver = fwd_acc_driver_filter.Add(acc_driver.x());
+          double lat_acc_driver = lat_acc_driver_filter.Add(acc_driver.y());*/
 
-       myfile1 << ' ' << global_pos[0] << ' '<< global_pos[1]  <<' ' << global_pos[2]  << '\n';
-    }
+          // End simulation
+          if (time >= t_end)
+              break;
+
+          const ChVector<> pS = selector.GetPathFollower()->GetSteeringController().GetSentinelLocation();
+          const ChVector<> pT = selector.GetPathFollower()->GetSteeringController().GetTargetLocation();
+          hmmwv_params.ballS->setPosition(irr::core::vector3df((irr::f32)pS.x(), (irr::f32)pS.y(), (irr::f32)pS.z()));
+          hmmwv_params.ballT->setPosition(irr::core::vector3df((irr::f32)pT.x(), (irr::f32)pT.y(), (irr::f32)pT.z()));
+
+          time = hmmwv_params.my_hmmwv.GetSystem()->GetChTime();
+          hmmwv_params.throttle_input = selector.GetDriver()->GetThrottle();
+          hmmwv_params.steering_input = selector.GetDriver()->GetSteering();
+          hmmwv_params.braking_input = selector.GetDriver()->GetBraking();
+          // Update modules (process inputs from other modules)
+          double x, y;
+          n.getParam("vehicle/chrono/state/x",x);
+          n.getParam("vehicle/chrono/state/yVal",y);
+          double distance  = (goal_x-x)*(goal_x-x) + (goal_y-y)*(goal_y-y);
+          std::cout << "Square of distance to goal is: " << distance << std::endl;
+          if(distance < 2.0){
+            goal_attained = true;
+            n.setParam("system/goal_attained","true");
+            // n.setParam("system/chrono/flags/running","false");
+            running = false;
+            hmmwv_params.braking_input = 1.0;
+            hmmwv_params.throttle_input = 0.0;
+            std::cout << "Goal attained!" << std::endl;
+          }
+          selector.GetPathFollower()->Synchronize(time);
+          driver_gui.Synchronize(time);
+          hmmwv_params.terrain.Synchronize(time);
+          hmmwv_params.my_hmmwv.Synchronize(time, hmmwv_params.steering_input, hmmwv_params.braking_input, hmmwv_params.throttle_input, hmmwv_params.terrain);
+          std::string msg = selector.UsingGUI() ? "GUI driver" : "Follower driver";
+          if(gui_switch) app.Synchronize(msg, hmmwv_params.steering_input, hmmwv_params.throttle_input, hmmwv_params.braking_input);
+          // Advance simulation for one timestep for all modules
+          double step = hmmwv_params.realtime_timer.SuggestSimulationStep(step_size);
+          selector.GetPathFollower()->Advance(step);
+          driver_gui.Advance(step);
+          hmmwv_params.terrain.Advance(step);
+          hmmwv_params.my_hmmwv.Advance(step);
+          if(gui_switch) app.Advance(step);
+
+          // Increment simulation frame number
+          hmmwv_params.sim_frame++;
+
+          ChVector<> global_pos = hmmwv_params.my_hmmwv.GetVehicle().GetVehicleCOMPos();//global location of chassis reference frame origin
+          ChQuaternion<> global_orntn = hmmwv_params.my_hmmwv.GetVehicle().GetVehicleRot();//global orientation as quaternion
+          ChVector<> rot_dt = hmmwv_params.my_hmmwv.GetVehicle().GetChassisBody()->GetWvel_loc();//global orientation as quaternion
+          ChVector<> global_velCOM = hmmwv_params.my_hmmwv.GetVehicle().GetChassisBody()->GetPos_dt();
+          ChVector<> global_accCOM = hmmwv_params.my_hmmwv.GetVehicle().GetChassisBody()->GetPos_dtdt();
+          //ChVector<> euler_ang = global_orntn.Q_to_Rotv(); //convert to euler angles
+          //ChPacejkaTire<> slip_angle = GetSlipAngle()
+          double slip_angle = hmmwv_params.my_hmmwv.GetTire(0)->GetLongitudinalSlip();
+
+          double q0 = global_orntn[0];
+          double q1 = global_orntn[1];
+          double q2 = global_orntn[2];
+          double q3 = global_orntn[3];
+
+          double yaw_val=atan2(2*(q0*q3+q1*q2),1-2*(q2*q2+q3*q3));
+          double theta_val=asin(2*(q0*q2-q3*q1));
+          double phi_val= atan2(2*(q0*q1+q2*q3),1-2*(q1*q1+q2*q2));
+
+          n.setParam("vehicle/chrono/state/t",time); //time in chrono simulation
+          n.setParam("vehicle/chrono/state/x", global_pos[0]) ;
+          n.setParam("vehicle/chrono/state/yVal",global_pos[1]);
+          n.setParam("vehicle/chrono/state/ux",fabs(global_velCOM[0])); //speed measured at the origin of the chassis reference frame.
+          n.setParam("vehicle/chrono/state/v", global_velCOM[1]);
+          n.setParam("vehicle/chrono/state/ax", global_accCOM[0]);
+          n.setParam("vehicle/chrono/state/psi",yaw_val); //in radians
+          n.setParam("vehicle/chrono/state/theta",theta_val); //in radians
+          n.setParam("vehicle/chrono/state/phi",phi_val); //in radians
+          n.setParam("vehicle/chrono/state/r",-rot_dt[2]);//yaw rate
+          n.setParam("vehicle/chrono/state/sa",slip_angle); //slip angle
+          n.setParam("vehicle/chrono/control/thr",hmmwv_params.throttle_input); //throttle input in the range [0,+1]
+          n.setParam("vehicle/chrono/control/brk",hmmwv_params.braking_input); //braking input in the range [0,+1]
+          n.setParam("vehicle/chrono/control/str",hmmwv_params.steering_input); //steeering input in the range [-1,+1]
+          n.setParam("system/simulation_time", time);
+
+
+          data_out.t_chrono=time; //time in chrono simulation
+          data_out.x_pos= global_pos[0];
+          data_out.y_pos=global_pos[1];
+          data_out.x_v= fabs(global_velCOM[0]); //speed measured at the origin of the chassis reference frame.
+          data_out.y_v= global_velCOM[1];
+          data_out.x_a= global_accCOM[0];
+          data_out.yaw_curr=yaw_val; //in radians
+          data_out.yaw_rate=-rot_dt[2];//yaw rate
+          data_out.sa=slip_angle; //slip angle
+          data_out.thrt_in=hmmwv_params.throttle_input; //throttle input in the range [0,+1]
+          data_out.brk_in=hmmwv_params.braking_input; //braking input in the range [0,+1]
+          data_out.str_in=hmmwv_params.steering_input; //steeering input in the range [-1,+1]
+
+          vehicleinfo_pub.publish(data_out);
+        //  loop_rate.sleep();
+
+         myfile1 << ' ' << global_pos[0] << ' '<< global_pos[1]  <<' ' << global_pos[2]  << '\n';
+
+      }
 /*
     if (state_output){
         csv.write_to_file(out_dir + "/state.out");
     }*/
-myfile1.close();
-
-    return 0;
+    myfile1.close();
+    //ros::shutdown();
+  }
+  return 0;
 }
