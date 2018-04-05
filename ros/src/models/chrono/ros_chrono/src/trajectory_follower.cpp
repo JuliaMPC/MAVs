@@ -313,8 +313,11 @@ int main(int argc, char* argv[]) {
     n.getParam("case/actual/X0/psi",yaw0);
     n.getParam("hmmwv_chrono/X0/theta",pitch0);
     n.getParam("hmmwv_chrono/X0/phi",roll0);
-
     n.getParam("system/chrono/flags/gui",gui_switch);
+
+    bool goal_attained;
+    bool running;
+
   //  tf::Quaternion q = tf::createQuaternionFromRPY(roll0, pitch0, yaw0);
     // Initial vehicle location and orientation
 
@@ -524,7 +527,7 @@ int main(int argc, char* argv[]) {
 
     std::cout<< "Go into the loop..." << std::endl;
 
-    while (true) {
+    while (running) {
       if(gui_switch)  app.GetDevice()->run();
       double time = hmmwv_params.my_hmmwv.GetSystem()->GetChTime();
       hmmwv_params.target_speed = target_speed_control;
@@ -690,6 +693,13 @@ int main(int argc, char* argv[]) {
        myfile1 << ' ' << global_pos[0] << ' '<< global_pos[1]  <<' ' << global_pos[2]  << '\n';
 
        ros::spinOnce();
+
+       n.getParam("system/" + planner_namespace + "/flags/goal_attained",goal_attained);
+       if(goal_attained){
+         n.setParam("system/goal_attained","true");
+         n.setParam("system/chrono/flags/running","false");
+         running = false;
+       }
     }
 /*
     if (state_output){

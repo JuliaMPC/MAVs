@@ -26,6 +26,7 @@ system:
    gui: true
    path_follower: true
  planner: nloptcontrol_planner
+ goal_attained: false
  paused: true
  initialized: false
  simulation_time: 0.0
