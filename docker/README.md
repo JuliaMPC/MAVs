@@ -10,12 +10,7 @@ installed.
 ## How to build
 ```
 $ cd MAVs/docker
-
-# Ubuntu 14.04 (Indigo)
-$ sh build.sh indigo
-
-# Ubuntu 16.04 (Kinetic)
-$ sh build.sh kinetic
+$ sh build.sh
 ```
 
 ## How to run
