@@ -56,6 +56,9 @@
     <arg name="paused" value="$(arg paused)"/>
   </include>
 
+  <!-- display the trajectory -->
+  <node name="rviz" pkg="rviz" type="rviz" output="screen" args="-d $(find obstacle_detector)/resources/display.rviz"/>
+
   <!-- initialize system -->
   <node name="bootstrap" pkg="system" type="bootstrap.jl" output="screen"/>
 

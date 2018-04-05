@@ -67,9 +67,10 @@
   </include>
 
   <param name="obstacle_detector/obstacle_tracker/tracking_duration" type="double" value="0.5" />
-
+  <param name="obstacle_detector/obstacle_tracker/loop_rate" type="double" value="1000" />
 
   <!-- initialize system -->
   <node name="bootstrap" pkg="system" type="bootstrap.jl" output="screen"/>
+
 
 </launch>
