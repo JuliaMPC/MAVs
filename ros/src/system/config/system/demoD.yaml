@@ -1,4 +1,6 @@
 system:
+ goal_tol: 4
+ system_shutdown: false
  vehicle_description:
   flags:
    postion_update_external: true
