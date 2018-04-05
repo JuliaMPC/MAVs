@@ -2,16 +2,13 @@
 <launch>
 
   <!-- TODO fix gazebo and RViz views on hmmwv -->
-  <!-- TODO add in an option to pause the simulation before it starts -->
-  <!-- TODO figure out how to parametrically get obstacle_num -->
-  <!-- TODO ask TQ if lidar_data should be launched here -->
 
   <arg name="system_params_path"/>
   <arg name="vehicle_params_path"/>
   <arg name="case_params_path"/>
   <arg name="obstacle_num" default="0"/>
   <arg name="gui"/>
-  <arg name="paused" default = "false"/>
+  <arg name="paused" default="false"/>
 
   <!-- start gazebo and load the world and spawn robot into Gazebo -->
   <include file="$(find vehicle_description)/launch/vehicle.launch">

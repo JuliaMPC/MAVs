@@ -15,7 +15,6 @@
   <rosparam command="load" file="$(arg planner_params_path)" />
   <!--  ************* vehicle_description args and parameters ***************  -->
   <arg name="vehicle_params_path" default="$(find system)/config/vehicle/hmmwv.yaml"/>
-  <arg name="obstacle_num" default="1"/>
   <arg name="gui" default="true"/>
   <!-- Use Chrono time-->
   <arg name="paused" default="true"/>
@@ -51,7 +50,6 @@
     <arg name="system_params_path" value="$(arg system_params_path)"/>
     <arg name="vehicle_params_path" value="$(arg vehicle_params_path)"/>
     <arg name="case_params_path" value="$(arg case_params_path)"/>
-    <arg name="obstacle_num" value="$(arg obstacle_num)"/>
     <arg name="gui" value="$(arg gui)"/>
     <arg name="paused" value="$(arg paused)"/>
   </include>
