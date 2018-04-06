@@ -90,7 +90,7 @@ function loop(set_state,get_state)
     RobotOS.set_param("system/vehicle_description/flags/lidar_initialized",true)
     println("lidar simulation in Gazebo has been initialized")
 
-    while(RobotOS.get_param("system/paused"))
+    while(RobotOS.get_param("system/flags/paused"))
     end
 
     # TODO add a system level parameter for mission complete!
