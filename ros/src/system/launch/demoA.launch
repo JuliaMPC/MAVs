@@ -5,7 +5,6 @@
 
   <!-- sim time setting -->
   <node name="ros_get_world_time_" pkg="get_world_time_test" type="ros_get_world_time" output="screen" />
-  <!-- use sime time -->
   <param name="use_sim_time" value="true"/>
 
   <!--  ************* vehicle_description args and parameters ***************  -->
@@ -13,8 +12,7 @@
   <arg name="vehicle_params_path" default="$(find system)/config/vehicle/hmmwv.yaml"/>
   <arg name="case_params_path" default="$(find system)/config/case/case1.yaml"/>
   <arg name="gui" default="true"/>
-  <!-- Use Chrono time-->
-  <arg name="paused" default="false"/>
+  <arg name="paused" default="true"/>
 
   <param name="system_params_path" value="$(arg system_params_path)"/>
   <param name="case_params_path" value="$(arg case_params_path)"/>

@@ -2,13 +2,9 @@
 
 using RobotOS
 @rosimport geometry_msgs.msg: Twist
-
 rostypegen()
 using geometry_msgs.msg
 import geometry_msgs.msg: Twist
-
-# TODO
-# 1) check to see if model is paused
 
 """
 --------------------------------------------------------------------------------------\n

@@ -8,7 +8,6 @@
   <arg name="vehicle_params_path" default="$(find system)/config/vehicle/hmmwv.yaml"/>
   <arg name="case_params_path" default="$(find system)/config/case/s1.yaml"/>
   <arg name="gui" default="true"/>
-  <!-- Use Chrono time-->
   <arg name="paused" default="true"/>
 
   <arg name="laser_scan_topic" default="/lidar_points"/>

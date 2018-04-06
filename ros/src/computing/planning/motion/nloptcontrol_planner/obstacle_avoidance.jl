@@ -323,7 +323,7 @@ function loop(pub,pub_path,n,c)
         init = true
         RobotOS.set_param("system/nloptcontrol_planner/flags/initialized",true)
         println("nloptcontrol_planner has been initialized.")
-        while(RobotOS.get_param("system/paused"))
+        while(RobotOS.get_param("system/flags/paused"))
         end
       end
       rossleep(loop_rate)  # sleep for leftover time
@@ -347,7 +347,6 @@ function main()
   pub_path = Publisher{Path}("/path", queue_size=10)
 
   sub = Subscriber{Control}(string(plannerNamespace, "/control"), setTrajParams, queue_size = 10)
-
 
   # get the parameters
   #if !RobotOS.has_param("planner/nloptcontrol_planner/misc")
