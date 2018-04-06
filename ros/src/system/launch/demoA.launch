@@ -12,7 +12,6 @@
   <arg name="system_params_path" default="$(find system)/config/system/demoA.yaml"/>
   <arg name="vehicle_params_path" default="$(find system)/config/vehicle/hmmwv.yaml"/>
   <arg name="case_params_path" default="$(find system)/config/case/case1.yaml"/>
-  <arg name="obstacle_num" default="3"/>
   <arg name="gui" default="true"/>
   <!-- Use Chrono time-->
   <arg name="paused" default="false"/>
@@ -28,7 +27,6 @@
     <arg name="system_params_path" value="$(arg system_params_path)"/>
     <arg name="vehicle_params_path" value="$(arg vehicle_params_path)"/>
     <arg name="case_params_path" value="$(arg case_params_path)"/>
-    <arg name="obstacle_num" value="$(arg obstacle_num)"/>
     <arg name="gui" value="$(arg gui)"/>
     <arg name="paused" value="$(arg paused)"/>
   </include>

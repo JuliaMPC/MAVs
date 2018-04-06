@@ -9,5 +9,5 @@ system:
   flags:
    running: true
    initialized: false
- paused: true
+ paused: false
 step_simulation: 1.0
