@@ -1,28 +1,34 @@
 #!/usr/bin/env julia
 
-# NOTE THIS IS NOT FINISHED!!
 using RobotOS
-@rosimport gazebo_msgs.msg: GetPhysicsProperties
-@rosimport gazebo_msgs.srv: GetPhysicsProperties, SetPhysicsProperties
-
+@rosimport std_srvs.srv: Empty, SetBool
 rostypegen()
-using geometry_msgs.msg
-using gazebo_msgs.srv
+using std_srvs.srv
 
 function main()
     init_node("unpause_gazebo")
+    ###############################
+    # set up services and messages
 
-    # Set up service to get Gazebo
-    const get_physics = ServiceProxy("/gazebo/get_physics_properties", GetPhysicsProperties)
+    # pause simulation
+    #const pause_physics = ServiceProxy("/gazebo/pause_physics",Empty)
+    #println("Waiting for '/gazebo/pause_physics' service...")
+    #wait_for_service("/gazebo/pause_physics")
 
-    println("Waiting for 'gazebo/get_model_state' service...")
-    wait_for_service("gazebo/get_model_state")
-    # TODO use getparam to get robot name
-    pub = Publisher{Pose}("/robot/pose", queue_size=10)
+    # unpause simulation
+    const unpause_physics = ServiceProxy("/gazebo/unpause_physics",Empty)
+    println("Waiting for '/gazebo/unpause_physics' service...")
+    wait_for_service("/gazebo/unpause_physics")
 
-    gp = GetPhysicsProperties()
+    # set up services and messages
+    ###############################
 
-    loop(get_state, pub)
+    while(RobotOS.get_param("system/flags/paused"))
+    end
+    # unpause physics
+    up = EmptyRequest()
+    unpause_physics(up)
+
 end
 
 if ! isinteractive()
