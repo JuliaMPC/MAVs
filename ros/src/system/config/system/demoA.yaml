@@ -8,9 +8,9 @@ system:
  vehicle_description:
   flags:
    running: true
-   postion_update_external: false
    lidar_initialized: false
    obstacles_initialized: false
+   postion_update_external: false
 
  obstacle_detector:
   flags:

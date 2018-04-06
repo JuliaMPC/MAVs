@@ -15,7 +15,6 @@ system:
    lidar_initialized: false
    obstacles_initialized: false
    postion_update_external: true
-   obstacles_initialized: false
 
  nloptcontrol_planner:
   namespace: nloptcontrol_planner

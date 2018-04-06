@@ -1,5 +1,6 @@
 system:
  planner: nlopcontrol_planner
+ plant: 3DOF
  params:
   goal_tol: 4
   step_size: 0.001
@@ -15,7 +16,6 @@ system:
    lidar_initialized: false
    obstacles_initialized: false
    postion_update_external: true
-   obstacles_initialized: false
 
  nloptcontrol_planner:
   namespace: nloptcontrol_planner
@@ -23,16 +23,8 @@ system:
    running: true
    initialized: false
    known_environment: false
-   3DOF_plant: true
 
  obstacle_detector:
   flags:
    running: true
    initialized: false
- initialized: false
-
- chrono:
-  namespace: chrono
-  flags:
-   initialized: false
-   gui: true

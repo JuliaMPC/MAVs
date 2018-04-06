@@ -1,25 +1,30 @@
 system:
  planner: ros_base_planner
+ plant: chrono
  params:
   goal_tol: 4
   step_size: 0.001
  flags:
   goal_attained: false
   initialized: false
-  paused: false
+  paused: true
   system_shutdown: false
-  
+
  vehicle_description:
   flags:
-   postion_update_external: true
+   running: true
    lidar_initialized: false
    obstacles_initialized: false
+   postion_update_external: true
+
  ros_base_planner:
   nameSpace: ros_base_planner
   flags:
+   running: true
    initialized: false
    known_environment: true
    goal_known: true
+
  chrono:
   namespace: chrono
   flags:

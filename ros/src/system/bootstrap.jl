@@ -34,6 +34,24 @@ function main()
     end
   end
 
+  if RobotOS.has_param("system/ros_base_planner/flags/running")
+    if RobotOS.get_param("system/ros_base_planner/flags/running")
+      while(!RobotOS.get_param("system/ros_base_planner/flags/initialized"))
+        println("waiting on ros_base_planner ...")
+        sleep(2)
+      end
+    end
+  end
+
+  if RobotOS.has_param("system/chrono/flags/running")
+    if RobotOS.get_param("system/chrono/flags/running")
+      while(!RobotOS.get_param("system/chrono/flags/initialized"))
+        println("waiting on chrono ...")
+        sleep(2)
+      end
+    end
+  end
+
   if RobotOS.has_param("system/nloptcontrol_planner/flags/running")
     if RobotOS.get_param("system/nloptcontrol_planner/flags/running")
       while(!RobotOS.get_param("system/nloptcontrol_planner/flags/initialized"))

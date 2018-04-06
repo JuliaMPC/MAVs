@@ -15,10 +15,11 @@ system:
    lidar_initialized: false
    obstacles_initialized: false
    postion_update_external: false
+
  ros_base_planner:
   nameSpace: ros_base_planner
   flags:
+   running: true
    initialized: false
    known_environment: true
-   3DOF_plant: true
    goal_known: true

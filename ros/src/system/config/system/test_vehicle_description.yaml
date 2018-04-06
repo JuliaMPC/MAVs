@@ -1,12 +1,9 @@
 system:
  flags:
-  goal_attained: false
-  initialized: false
-  paused: true
   system_shutdown: false
-  
+
  vehicle_description:
   flags:
-   postion_update_external: false
    lidar_initialized: false
    obstacles_initialized: false
+   postion_update_external: false

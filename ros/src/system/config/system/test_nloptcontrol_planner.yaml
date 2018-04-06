@@ -1,9 +1,15 @@
 system:
+ plant: 3DOF
+ params:
+  goal_tol: 4
+ flags:
+  goal_attained: false
+  initialized: false
+  system_shutdown: false
+
  nloptcontrol_planner:
-  namespace: nloptcontrol
+  namespace: nlopcontrol_planner
   flags:
+   running: true
    initialized: false
    known_environment: true
-   3DOF_plant: true
-   goal_attained: false
- paused: false
