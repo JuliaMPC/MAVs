@@ -3,7 +3,7 @@
 
   <!-- TODO fix gazebo and RViz views on hmmwv -->
 
-  <arg name="system_params_path" default="$(find system)/config/system/test_vehicle_description.yaml"/>
+  <arg name="system_params_path" default="$(find system)/config/system/pkgs/vehicle_description.yaml"/>
   <arg name="vehicle_params_path" default="$(find system)/config/vehicle/hmmwv.yaml"/>
   <arg name="case_params_path" default="$(find system)/config/case/case1.yaml"/>
   <arg name="gui" default="true"/>

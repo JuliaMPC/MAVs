@@ -6,6 +6,7 @@ system:
   goal_attained: false
   initialized: false
   system_shutdown: false
+  paused: false
 
  nloptcontrol_planner:
   namespace: nlopcontrol_planner

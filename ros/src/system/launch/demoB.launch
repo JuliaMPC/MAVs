@@ -15,7 +15,7 @@
   <rosparam command="load" file="$(arg vehicle_params_path)" />
 
   <!--  ************** common args and parameters ***************  -->
-  <arg name="system_params_path" default="$(find system)/config/system/demoB.yaml"/>
+  <arg name="system_params_path" default="$(find system)/config/system/demos/demoB.yaml"/>
   <arg name="case_params_path" default="$(find system)/config/case/s1.yaml"/>
 
   <param name="system_params_path" value="$(arg system_params_path)"/>

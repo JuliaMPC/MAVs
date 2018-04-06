@@ -21,7 +21,7 @@
   <rosparam command="load" file="$(arg vehicle_params_path)" />
 
   <!--  ************** common args and parameters ***************  -->
-  <arg name="system_params_path" default="$(find system)/config/system/demoG.yaml"/>
+  <arg name="system_params_path" default="$(find system)/config/system/demos/demoG.yaml"/>
   <arg name="case_params_path" default="$(find system)/config/case/s1.yaml"/>
   <arg name="chrono_params_path" default="$(find ros_chrono)/config/hmmwv_chrono_params.yaml"/>
 

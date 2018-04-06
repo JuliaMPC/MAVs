@@ -1,6 +1,7 @@
 system:
  flags:
   system_shutdown: false
+  paused: false
 
  vehicle_description:
   flags:
