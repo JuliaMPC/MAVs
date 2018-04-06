@@ -223,16 +223,6 @@ function setStateData(n)
   sa=deepcopy(RobotOS.get_param("vehicle/chrono/state/sa"))
   ux=deepcopy(RobotOS.get_param("vehicle/chrono/state/ux"))
   ax=deepcopy(RobotOS.get_param("vehicle/chrono/state/ax"))
-  """
-    x=deepcopy(RobotOS.get_param("state/x"))
-    y=deepcopy(RobotOS.get_param("state/y"))
-    v=deepcopy(RobotOS.get_param("state/sa"))
-    r=deepcopy(RobotOS.get_param("state/r"))
-    psi=deepcopy(RobotOS.get_param("state/psi"))
-    sa=deepcopy(RobotOS.get_param("state/sa"))
-    ux=deepcopy(RobotOS.get_param("state/ux"))
-    ax=deepcopy(RobotOS.get_param("state/ax"))
-    """
 
   X0 = [x,y,v,r,psi,sa,ux,ax]
   # println(X0)

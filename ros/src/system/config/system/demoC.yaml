@@ -1,6 +1,14 @@
 system:
- goal_tol: 4
- system_shutdown: false
+ planner: ros_base_planner
+ params:
+  goal_tol: 4
+  step_size: 0.001
+ flags:
+  goal_attained: false
+  initialized: false
+  paused: true
+  system_shutdown: false
+
  vehicle_description:
   flags:
    running: true
@@ -13,9 +21,4 @@ system:
    initialized: false
    known_environment: true
    3DOF_plant: true
-   goal_attained: false
    goal_known: true
- initialized: false
- planner: ros_base_planner
- paused: false
- step_size: 0.001

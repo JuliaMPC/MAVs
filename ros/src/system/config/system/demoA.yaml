@@ -1,13 +1,18 @@
 system:
+ params:
+  step_size: 0.001
+  simulation_time: 1.0
+ flags:
+  paused: false
+
  vehicle_description:
   flags:
    running: true
    postion_update_external: false
    lidar_initialized: false
    obstacles_initialized: false
+   
  obstacle_detector:
   flags:
    running: true
    initialized: false
- paused: false
-step_simulation: 1.0

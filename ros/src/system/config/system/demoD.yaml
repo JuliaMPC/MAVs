@@ -1,25 +1,24 @@
 system:
- goal_tol: 4
- system_shutdown: false
+ planner: ros_base_planner
+ params:
+  goal_tol: 4
+  step_size: 0.001
+ flags:
+  goal_attained: false
+  initialized: false
+  paused: false
+  system_shutdown: false
+  
  vehicle_description:
   flags:
    postion_update_external: true
    lidar_initialized: false
    obstacles_initialized: false
- nloptcontrol_planner:
-  namespace: nloptcontrol
-  flags:
-   running: false
-   initialized: false
-   known_environment: true
-   3DOF_plant: false
-   goal_attained: false
  ros_base_planner:
   nameSpace: ros_base_planner
   flags:
    initialized: false
    known_environment: true
-   goal_attained: false
    goal_known: true
  chrono:
   namespace: chrono
@@ -28,7 +27,3 @@ system:
    initialized: false
    gui: true
    path_follower: true
- initialized: false
- planner: ros_base_planner
- paused: false
- step_size: 0.001
