@@ -1,5 +1,6 @@
 system:
  planner: nlopcontrol_planner
+ plant: 3DOF
  params:
   goal_tol: 4
   step_size: 0.001
@@ -23,11 +24,6 @@ system:
    initialized: false
    known_environment: true
    3DOF_plant: false
-
- obstacle_detector:
-  flags:
-   running: false
-   initialized: false
 
  chrono:
   namespace: chrono

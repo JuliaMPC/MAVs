@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-  <!-- demo of nooptcontrol planner with vehicle description and obstacle detector-->
+  <!-- demo of nloptcontrol planner with vehicle description and obstacle detector-->
   <arg name="frame_id" default="velodyne_top_link" />
   <arg name="manager" default="$(arg frame_id)_nodelet_manager" />
 

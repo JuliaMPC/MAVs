@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-  <!-- demo of nooptcontrol planner with chrono and vehicle description-->
+  <!-- demo of nloptcontrol planner with chrono and vehicle description-->
 
   <!-- sim time setting -->
   <node name="ros_get_world_time_" pkg="get_world_time_test" type="ros_get_world_time" output="screen" />
