@@ -8,7 +8,7 @@
   <arg name="vehicle_params_path" default="$(find system)/config/vehicle/hmmwv.yaml"/>
   <arg name="case_params_path" default="$(find system)/config/case/s1.yaml"/>
   <arg name="gui" default="true"/>
-  <arg name="paused" default="true"/>
+  <arg name="paused" default="true"/> <!-- NOTE this pause overrides system/flags/pause -->
 
   <arg name="laser_scan_topic" default="/lidar_points"/>
   <arg name="rviz_config_file" default="$(find system)/config/planner/ros_base_planner/default.rviz"/>

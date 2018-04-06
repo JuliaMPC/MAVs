@@ -12,7 +12,7 @@
   <arg name="vehicle_params_path" default="$(find system)/config/vehicle/hmmwv.yaml"/>
   <arg name="case_params_path" default="$(find system)/config/case/case1.yaml"/>
   <arg name="gui" default="true"/>
-  <arg name="paused" default="true"/>
+  <arg name="paused" default="false"/> <!-- NOTE this pause overrides system/flags/pause -->
 
   <param name="system_params_path" value="$(arg system_params_path)"/>
   <param name="case_params_path" value="$(arg case_params_path)"/>
@@ -37,5 +37,8 @@
     <arg name="frame_id" value="$(arg frame_id)" />
     <arg name="manager" value="$(arg manager)" />
   </include>
+
+  <!-- initialize system -->
+  <node name="bootstrap" pkg="system" type="bootstrap.jl" output="screen"/>
 
 </launch>

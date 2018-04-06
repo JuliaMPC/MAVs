@@ -10,7 +10,7 @@
   <!--  ************* vehicle_description args and parameters ***************  -->
   <arg name="vehicle_params_path" default="$(find system)/config/vehicle/hmmwv.yaml"/>
   <arg name="gui" default="true"/>
-  <arg name="paused" default="true"/>
+  <arg name="paused" default="false"/> <!-- NOTE this pause overrides system/flags/pause -->
 
   <rosparam command="load" file="$(arg vehicle_params_path)" />
 

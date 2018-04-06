@@ -6,7 +6,7 @@ system:
  flags:
   goal_attained: false
   initialized: false
-  paused: true
+  paused: false
   system_shutdown: false
 
  vehicle_description:
