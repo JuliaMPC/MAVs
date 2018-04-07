@@ -1,0 +1,40 @@
+system:
+ planner: nlopcontrol_planner
+ plant: 3DOF
+ params:
+  goal_tol: 4
+  step_size: 0.01
+ flags:
+  goal_attained: false
+  initialized: false
+  paused: true
+  system_shutdown: false
+
+ vehicle_description:
+  flags:
+   running: true
+   lidar_initialized: false
+   obstacles_initialized: false
+   postion_update_external: true
+
+ nloptcontrol_planner:
+  namespace: nloptcontrol_planner
+  flags:
+   running: true
+   initialized: false
+   known_environment: false
+   3DOF_plant: false
+   goal_attained: false
+
+ chrono:
+  namespace: chrono
+  flags:
+   running: true
+   initialized: false
+   gui: true
+   path_follower: true
+
+ obstacle_detector:
+  flags:
+   running: true
+   initialized: false

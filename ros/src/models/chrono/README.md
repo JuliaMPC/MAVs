@@ -23,23 +23,28 @@ Change initial condition case/actual/X0/x to x=200.0 in case.yaml. Change system
 ```
 $ cd $HOME/MAVs/ros
 $ roslaunch ros_chrono path_follower.launch
-
+$ rosparam set system/chrono/flags/initialized true
+```
+## Turn off Chrono GUI
+To turn off the GUI, change the value of system/chrono/flags/gui to false in test_chrono.yaml.
+```
+$ sudo gedit ros/src/system/system/test_chrono.yaml
 ```
 ## Change Vehicle Initial Conditions
 
-To change initial trajectory edit the parameters in the hmmwv.yaml config file. To turn off the GUI (work in progress), change the value of system/chrono/flags/gui to false in test_chrono.yaml.
+Change initial conditions to x=200.0 in case1.yaml. To change initial trajectory edit the parameters in the hmmwv.yaml config file.
 
 ```
 $ sudo gedit ros/src/models/chrono/ros_chrono/config/hmmwv_params.yaml
 $ sudo gedit ros/src/system/config/vehicle/hmmwv.yaml
 $ sudo gedit ros/src/system/config/case1.yaml
-$ sudo gedit ros/src/system/system/test_chrono.yaml
+
 
 ```
 
 ## Change Values of Updated Path
 
-Change the values of x2, y2 in traj_gen_chrono.cpp and recompile using catkin_make. Change the system/planner parameter to default in global.yaml.
+For the path_follower demo, update the parameters of x2, y2 in traj_gen_chrono.cpp and recompile using catkin_make. Change the system/planner parameter to chrono in test_chrono.yaml. In general, set system/planner to desired planner and update vehicle/chrono/ <planner_name> /traj/x, vehicle/chrono/ <planner_name> /traj/yVal.
 
 ## Monitor Vehicle State
 
@@ -51,10 +56,10 @@ $ rostopic echo vehicleinfo
 ```
 This displays all states and inputs specified in the veh_status.msg file.
 
-## Change ROS Parameter from command line
+## View ROS Parameter value from command line
 
 ```
-$ rosparam set <param_name> "param_value"
+$ rosparam get <param_name>
 
 ```
 
@@ -72,7 +77,7 @@ $ rosparam set <param_name> "param_value"
 - la: 1.5775
 - lb: 1.7245  
 
-## Parameter list
+## ROS Parameter list
 - /system/chrono/flags/gui (Switch to true or false)
 - /case/X0/actual/ax (Initial x acceleration)
 - /hmmwv_chrono/X0/theta (Initial pitch)
@@ -103,5 +108,5 @@ $ rosparam set <param_name> "param_value"
 - /vehicle/chrono/state/psi (Yaw)
 - /vehicle/chrono/state/r (Yaw rate)
 
-## Topic list
+## ROS Topic list
 - /vehicleinfo (Vehicle states, inputs, and time)

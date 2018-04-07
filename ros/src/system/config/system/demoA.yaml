@@ -1,8 +1,0 @@
-system:
- vehicle_description:
-  flags:
-   running: true
-   postion_update_external: false
-   lidar_initialized: false
-   obstacles_initialized: false
- paused: true

@@ -2,9 +2,12 @@
 using RobotOS
 @rosimport geometry_msgs.msg: Point, Pose, Pose2D, PoseStamped, Vector3, Twist
 @rosimport nloptcontrol_planner.msg: Control
+@rosimport nav_msgs.msg: Path
+
 rostypegen()
 using geometry_msgs.msg
 using nloptcontrol_planner.msg
+using nav_msgs.msg
 
 import YAML
 
@@ -40,10 +43,11 @@ function setTrajParams(msg::Control)
 
     RobotOS.set_param(string(plannerNamespace,"/traj/t"),t)
     RobotOS.set_param(string(plannerNamespace,"/traj/x"),x)
-    RobotOS.set_param(string(plannerNamespace,"/traj/y"),y)
+    RobotOS.set_param(string(plannerNamespace,"/traj/yVal"),y)
     RobotOS.set_param(string(plannerNamespace,"/traj/vx"),vx)
     RobotOS.set_param(string(plannerNamespace,"/traj/sa"),sa)
     RobotOS.set_param(string(plannerNamespace,"/traj/psi"),psi)
+    # println(y)
 
   else
     error("L !> 0")
@@ -141,7 +145,7 @@ end
 
 """
 # publishs the current state of the vehicle to ROS params
-# RobotOS.get_param("nloptcontrol_planner_3DOF_plant") == true
+#  isequal(RobotOS.get_param("system/plant"),"3DOF")
 --------------------------------------------------------------------------------------\n
 Author: Huckleberry Febbo, Graduate Student, University of Michigan
 Date Create: 2/28/2018, Last Modified: 2/28/2018 \n
@@ -154,7 +158,9 @@ function setStateParams(n)
   for st in 1:n.numStates
     X0[st]=n.r.dfs_plant[end][n.state.name[st]][end];
   end
-  println(X0)
+
+  # println(X0)
+
   RobotOS.set_param("state/x", X0[1])
   RobotOS.set_param("state/y", X0[2])
   RobotOS.set_param("state/sa", X0[3])
@@ -176,15 +182,25 @@ Date Create: 2/28/2018, Last Modified: 2/28/2018 \n
 --------------------------------------------------------------------------------------\n
 """
 function setInitStateParams(c)
-  RobotOS.set_param("state/x", RobotOS.get_param("case/actual/X0/x"))
-  RobotOS.set_param("state/y", RobotOS.get_param("case/actual/X0/yVal"))
-  RobotOS.set_param("state/sa",RobotOS.get_param("case/actual/X0/sa"))
-  RobotOS.set_param("state/r", RobotOS.get_param("case/actual/X0/r"))
-  RobotOS.set_param("state/psi", RobotOS.get_param("case/actual/X0/psi"))
-  RobotOS.set_param("state/sa", RobotOS.get_param("case/actual/X0/sa"))
-  RobotOS.set_param("state/ux", RobotOS.get_param("case/actual/X0/ux"))
-  RobotOS.set_param("state/ax", RobotOS.get_param("case/actual/X0/ax"))
-
+  if isequal(RobotOS.get_param("system/plant"),"3DOF")
+    RobotOS.set_param("state/x", RobotOS.get_param("case/actual/X0/x"))
+    RobotOS.set_param("state/y", RobotOS.get_param("case/actual/X0/yVal"))
+    RobotOS.set_param("state/sa",RobotOS.get_param("case/actual/X0/sa"))
+    RobotOS.set_param("state/r", RobotOS.get_param("case/actual/X0/r"))
+    RobotOS.set_param("state/psi", RobotOS.get_param("case/actual/X0/psi"))
+    RobotOS.set_param("state/sa", RobotOS.get_param("case/actual/X0/sa"))
+    RobotOS.set_param("state/ux", RobotOS.get_param("case/actual/X0/ux"))
+    RobotOS.set_param("state/ax", RobotOS.get_param("case/actual/X0/ax"))
+  else
+    RobotOS.set_param("vehicle/chrono/state/x", RobotOS.get_param("case/actual/X0/x"))
+    RobotOS.set_param("vehicle/chrono/state/y", RobotOS.get_param("case/actual/X0/yVal"))
+    RobotOS.set_param("vehicle/chrono/state/sa",RobotOS.get_param("case/actual/X0/sa"))
+    RobotOS.set_param("vehicle/chrono/state/r", RobotOS.get_param("case/actual/X0/r"))
+    RobotOS.set_param("vehicle/chrono/state/psi", RobotOS.get_param("case/actual/X0/psi"))
+    RobotOS.set_param("vehicle/chrono/state/sa", RobotOS.get_param("case/actual/X0/sa"))
+    RobotOS.set_param("vehicle/chrono/state/ux", RobotOS.get_param("case/actual/X0/ux"))
+    RobotOS.set_param("vehicle/chrono/state/ax", RobotOS.get_param("case/actual/X0/ax"))
+  end
   return nothing
 end
 
@@ -199,17 +215,19 @@ Date Create: 2/28/2018, Last Modified: 2/28/2018 \n
 function setStateData(n)
 
   # copy current vehicle state in case it changes
-  x=deepcopy(RobotOS.get_param("state/x"))
-  y=deepcopy(RobotOS.get_param("state/y"))
-  v=deepcopy(RobotOS.get_param("state/sa"))
-  r=deepcopy(RobotOS.get_param("state/r"))
-  psi=deepcopy(RobotOS.get_param("state/psi"))
-  sa=deepcopy(RobotOS.get_param("state/sa"))
-  ux=deepcopy(RobotOS.get_param("state/ux"))
-  ax=deepcopy(RobotOS.get_param("state/ax"))
-  X0 = [x,y,v,r,psi,sa,ux,ax]
+  x=deepcopy(RobotOS.get_param("vehicle/chrono/state/x"))
+  y=deepcopy(RobotOS.get_param("vehicle/chrono/state/yVal"))
+  v=deepcopy(RobotOS.get_param("vehicle/chrono/state/sa"))
+  r=deepcopy(RobotOS.get_param("vehicle/chrono/state/r"))
+  psi=deepcopy(RobotOS.get_param("vehicle/chrono/state/psi"))
+  sa=deepcopy(RobotOS.get_param("vehicle/chrono/state/sa"))
+  ux=deepcopy(RobotOS.get_param("vehicle/chrono/state/ux"))
+  ax=deepcopy(RobotOS.get_param("vehicle/chrono/state/ax"))
 
+  X0 = [x,y,v,r,psi,sa,ux,ax]
+  # println(X0)
   updateX0!(n,X0;(:userUpdate=>true))
+  # println("X0 updated!")
   return nothing
 end
 
@@ -220,20 +238,31 @@ Author: Huckleberry Febbo, Graduate Student, University of Michigan
 Date Create: 4/6/2017, Last Modified: 3/10/2018 \n
 --------------------------------------------------------------------------------------\n
 """
-function loop(pub,n,c)
+function loop(pub,pub_path,n,c)
 
   init = false
   loop_rate = Rate(2.0) # 2 Hz
   while !is_shutdown()
       println("Running model for the: ",n.r.eval_num," time")
 
-      # update optimization parameters based off of latest vehicle state and obstacle information
-      setObstacleData(n.params)
-      setStateData(n)
+      # update optimization parameters based off of latest obstacle information
+      if !RobotOS.get_param("system/nloptcontrol_planner/flags/known_environment")
+        setObstacleData(n.params)
+      end
+
+      # update optimization parameters based off of latest vehicle state
+    #  if ! isequal(RobotOS.get_param("system/plant"),"3DOF") # otherwise an external update on the initial state of the vehicle is needed
+    #    setStateData(n)
+    #  end  NOTE currently this is after the optimization, eventually put it just before
 
       updateAutoParams!(n,c)                        # update model parameters
       status = autonomousControl!(n)                # rerun optimization
-      n.mpc.t0_actual = to_sec(get_rostime())
+      if isequal(RobotOS.get_param("system/plant"),"3DOF") # otherwise an external update on the initial state of the vehicle is needed
+        n.mpc.t0_actual = (n.r.eval_num-1)*n.mpc.tex  # NOTE this is for testing
+      else
+        n.mpc.t0_actual = to_sec(get_rostime())
+      end
+
       msg = Control()
       msg.t = n.mpc.t0_actual + n.r.t_st
       msg.x = n.r.X[:,1]
@@ -243,6 +272,19 @@ function loop(pub,n,c)
       msg.vx = n.r.X[:,7]
 
       publish(pub, msg)
+
+      path = Path()
+      path.header.stamp = get_rostime()
+      path.header.frame_id = "map"
+      path.poses = Array{PoseStamped}(length(msg.t))
+      for i in 1:length(msg.t)
+        path.poses[i]= PoseStamped()
+        path.poses[i].header.frame_id = "map"
+        path.poses[i].header.stamp = get_rostime()
+        path.poses[i].pose.position.x = msg.x[i]
+        path.poses[i].pose.position.y = msg.y[i]
+      end
+      publish(pub_path, path)
 
       # if the vehicle is very close to the goal sometimes the optimization returns with a small final time
       # and it can even be negative (due to tolerances in NLP solver). If this is the case, the goal is slightly
@@ -257,24 +299,31 @@ function loop(pub,n,c)
        end
      end
 
-      n.mpc.t0_actual = (n.r.eval_num-1)*n.mpc.tex  # external so that it can be updated easily in PathFollowing
-
-      if RobotOS.get_param("system/nloptcontrol_planner/flags/3DOF_plant") # otherwise an external update on the initial state of the vehicle is needed
+      if isequal(RobotOS.get_param("system/plant"),"3DOF") # otherwise an external update on the initial state of the vehicle is needed
         simPlant!(n)      # simulating plant in VehicleModels.jl
         setStateParams(n) # update X0 parameters in ROS and in NLOptControl.jl
+        updateX0!(n)      # update X0 in NLOptControl.jl
+      else
+        setStateData(n)    # update X0 in NLOptControl.jl based off of state/ parameters
       end
 
-      if ((n.r.dfs_plant[end][:x][end]-c["goal"]["x"])^2 + (n.r.dfs_plant[end][:y][end]-c["goal"]["yVal"])^2)^0.5 < 2*n.XF_tol[1]
-         println("Goal Attained! \n"); n.mpc.goal_reached=true;
-         RobotOS.set_param("system/nloptcontrol_planner/flags/goal_attained",true)
-         break;
+      if isequal(RobotOS.get_param("system/plant"),"3DOF")
+        if ((n.r.dfs_plant[end][:x][end]-c["goal"]["x"])^2 + (n.r.dfs_plant[end][:y][end]-c["goal"]["yVal"])^2)^0.5 < 2*n.XF_tol[1]
+           println("Goal Attained! \n"); n.mpc.goal_reached=true;
+           RobotOS.set_param("system/nloptcontrol_planner/flags/goal_attained",true)
+           break;
+        end
+      else
+        # get chrono states, see if it is near goal
       end
+
+
 
       if !init  # calling this node initialized after the first solve so that /traj/ parameters are set
         init = true
-        RobotOS.set_param("system/nloptcontrol_planner/flags/initilized",true)
+        RobotOS.set_param("system/nloptcontrol_planner/flags/initialized",true)
         println("nloptcontrol_planner has been initialized.")
-        while(RobotOS.get_param("system/paused"))
+        while(RobotOS.get_param("system/flags/paused"))
         end
       end
       rossleep(loop_rate)  # sleep for leftover time
@@ -288,18 +337,16 @@ Date Create: 4/6/2017, Last Modified: 3/10/2018 \n
 --------------------------------------------------------------------------------------\n
 """
 function main()
-  # TODO implement this
-  # indicates if the user would like to pause the planner
-  # RobotOS.set_param("nloptcontrol_planner/flags/pause",true
-
   println("initializing nloptcontrol_planner node ...")
   init_node("nloptcontrol_planner")
 
   # message for solution to optimal control problem
   plannerNamespace = RobotOS.get_param("system/nloptcontrol_planner/namespace")
   pub = Publisher{Control}(string(plannerNamespace,"/control"), queue_size=10)
-  sub = Subscriber{Control}(string(plannerNamespace, "/control"), setTrajParams, queue_size = 10)
+  #pub_path = Publisher{Path}(string(plannerNamespace,"/path"), queue_size=10)
+  pub_path = Publisher{Path}("/path", queue_size=10)
 
+  sub = Subscriber{Control}(string(plannerNamespace, "/control"), setTrajParams, queue_size = 10)
 
   # get the parameters
   #if !RobotOS.has_param("planner/nloptcontrol_planner/misc")
@@ -369,7 +416,7 @@ function main()
     setInitObstacleParams(c)
   end
 
-  loop(pub,n,c)
+  loop(pub,pub_path,n,c)
 end
 
 if !isinteractive()

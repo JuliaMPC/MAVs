@@ -20,6 +20,8 @@ inflation_radius: 2
 
 observation_sources: velodyne_pcl_sensor
 
+planner_frequency: 20
+
 #The "marking" and "clearing" parameters determine whether the sensor
 #will be used to add obstacle information to the costmap, clear obstacle
 #information from the costmap, or do both.

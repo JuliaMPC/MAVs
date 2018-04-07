@@ -1,15 +1,21 @@
 <?xml version="1.0"?>
 <launch>
-  <!--TODO add main.launch and args for vehicle_description and config files-->
+  <!-- demo of nloptcontrol planner with vehicle description and obstacle detector-->
   <arg name="frame_id" default="velodyne_top_link" />
   <arg name="manager" default="$(arg frame_id)_nodelet_manager" />
 
+  <!--  ************* nloptcontrol_planner args and parameters ***************  -->
+  <arg name="planner_params_path" default="$(find system)/config/planner/RTPP.yaml"/>
+
+  <param name="planner_params_path" value="$(arg planner_params_path)"/>
+  <rosparam command="load" file="$(arg planner_params_path)" />
+
   <!--  ************* vehicle_description args and parameters ***************  -->
-  <arg name="system_params_path" default="$(find system)/config/system/demoE.yaml"/>
+  <arg name="system_params_path" default="$(find system)/config/system/demos/demoE.yaml"/>
   <arg name="vehicle_params_path" default="$(find system)/config/vehicle/hmmwv.yaml"/>
-  <arg name="case_params_path" default="$(find system)/config/case/case1.yaml"/>
-  <arg name="obstacle_num" default="3"/>
+  <arg name="case_params_path" default="$(find system)/config/case/s1.yaml"/>
   <arg name="gui" default="true"/>
+  <arg name="paused" default="true"/> <!-- NOTE this pause overrides system/flags/pause -->
 
   <arg name="laser_scan_topic" default="/laser_scan"/>
   <arg name="case_params_file" default="$(find system)/config/case/case1.yaml"/>
@@ -22,17 +28,25 @@
   <rosparam command="load" file="$(arg system_params_path)" />
   <rosparam command="load" file="$(arg vehicle_params_path)" />
 
+  <include file="$(find nloptcontrol_planner)/launch/demo.launch">
+    <arg name="case_params_path" value="$(arg case_params_path)"/>
+    <arg name="planner_params_path" value="$(arg planner_params_path)"/>
+    <arg name="system_params_path" value="$(arg system_params_path)"/>
+  </include>
+
   <include file="$(find vehicle_description)/launch/main.launch">
     <arg name="system_params_path" value="$(arg system_params_path)"/>
     <arg name="vehicle_params_path" value="$(arg vehicle_params_path)"/>
     <arg name="case_params_path" value="$(arg case_params_path)"/>
-    <arg name="obstacle_num" value="$(arg obstacle_num)"/>
     <arg name="gui" value="$(arg gui)"/>
+    <arg name="paused" value="$(arg paused)"/>
   </include>
 
   <include file="$(find obstacle_detector)/launch/obstacle_detector.launch">
     <arg name="frame_id" value="$(arg frame_id)" />
     <arg name="manager" value="$(arg manager)" />
   </include>
+  <!-- initialize system -->
+  <node name="bootstrap" pkg="system" type="bootstrap.jl" output="screen"/>
 
 </launch>

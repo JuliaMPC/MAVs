@@ -17,11 +17,6 @@
   <xacro:property name="frameName" value="${vehicle['vehicle']['vehicle_description']['frameName']}" />
   <xacro:property name="ground_truth_topic" value="${vehicle['vehicle']['vehicle_description']['ground_truth_topic']}" />
 
-  <!-- initial vehicle states -->
-  <xacro:property name="x0" value="${case['case']['actual']['X0']['x']}" />
-  <xacro:property name="y0" value="${case['case']['actual']['X0']['yVal']}" />
-  <xacro:property name="psi0" value="${case['case']['actual']['X0']['psi']}" />
-
   <xacro:property name="scale_factor" value="${vehicle['vehicle']['vehicle_description']['scale_factor']}" />
   <xacro:property name="mesh_mode" value="${vehicle['vehicle']['vehicle_description']['mesh_mode']}"/>
 
