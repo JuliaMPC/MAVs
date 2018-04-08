@@ -19,7 +19,7 @@ planner:
    finalTimeDV: true      # bool to indicate if the final time is a variable
    integrationScheme: :bkwEuler
    tfMax: 10 # maximum final time in MPC
-   EP: # small number to avoid singularities TODO move this from VehicleModels.jl
+   EP: 0.1 # small factor to avoid singularities when speed is zero TODO move this from VehicleModels.jl
 
   weights:
    goal: 100.

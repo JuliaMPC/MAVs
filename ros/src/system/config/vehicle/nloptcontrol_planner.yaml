@@ -55,4 +55,4 @@ vehicle:
     # solver parameters
     Fz_min: 1000.
     Fz_off: 100.
-    EP: 0.1 # small factor to avoid singularities when speed is zero
+    # NOTE: a_t and b_t are calcuated in src/Three_DOF/parameters.jl in VehicleModels.jl

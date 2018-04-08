@@ -19,6 +19,8 @@ planner:
       finalTimeDV: true               # bool to indicate if the final time is a variable
       integrationScheme: trapezoidal
       tfMax: 10                       # maximum final time in MPC
+      EP: 0.1 # small factor to avoid singularities when speed is zero TODO move this from VehicleModels.jl
+
     solver:
       # settings for both KNITRO and IPOPT
       outlev: 0 # (c.m.solver==:Ipopt) ? :print_level : :outlev # print level

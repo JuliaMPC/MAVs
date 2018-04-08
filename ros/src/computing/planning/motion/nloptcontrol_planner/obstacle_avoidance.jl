@@ -11,6 +11,7 @@ using nav_msgs.msg
 
 import YAML
 
+using VehicleModels
 using NLOptControl
 using MAVs
 using PyCall
