@@ -3,6 +3,8 @@ case:
   x: 200.
   yVal: 125.
   psi: 1.5701
+  goal_tol: 4
+  
  actual:
   X0:
    x: 200.0

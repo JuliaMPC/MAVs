@@ -2,7 +2,6 @@ system:
  planner: nlopcontrol_planner
  plant: 3DOF
  params:
-  goal_tol: 4
   step_size: 0.01
  flags:
   goal_attained: false

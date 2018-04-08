@@ -1,7 +1,6 @@
 system:
  planner: ros_base_planner
  params:
-  goal_tol: 4
   step_size: 0.001
  flags:
   goal_attained: false

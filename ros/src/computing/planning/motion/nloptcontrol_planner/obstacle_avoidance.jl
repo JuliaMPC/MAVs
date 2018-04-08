@@ -404,11 +404,11 @@ function main()
 #  end
 
   if c["misc"]["model"]==:ThreeDOFv2
-   n = initializeDBM(c);
+   n = initializeThreeDOFv2(c);
   elseif c["misc"]["model"]==:KinematicBicycle
     n = initializeKinematicBicycle(c);
   else
-    error("c["misc"]["model"] needs to be set to either; :ThreeDOFv2 || :KinematicBicycle ")
+    error("c["misc"]["model"] =" ,c["misc"]["model"]," needs to be set to either; :ThreeDOFv2 || :KinematicBicycle ")
   end
 
   setInitStateParams(c)
