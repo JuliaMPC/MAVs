@@ -46,6 +46,7 @@
 #include "chrono_vehicle/ChSubsysDefs.h"
 //#include "chrono_vehicle/wheeled_vehicle/utils/ChWheeledVehicleAssembly.h"
 #include "chrono_vehicle/wheeled_vehicle/vehicle/WheeledVehicle.h"
+#include "chrono_vehicle/powertrain/ChShaftsPowertrain.h"
 
 #include <vector>
 
@@ -91,7 +92,8 @@ ChPacejkaTire tire_rear_left("RL",pacejka_tire_file);
 ChPacejkaTire tire_rear_right("RR",pacejka_tire_file);
 // Type of powertrain model (SHAFTS or SIMPLE)
 PowertrainModelType powertrain_model = PowertrainModelType::SHAFTS;
-HMMWV_SimplePowertrain powertrain();
+
+//ChPowertrain
 // Drive type (FWD, RWD, or AWD)
 DrivelineType drive_type = DrivelineType::RWD;
 
@@ -109,7 +111,7 @@ std::string speed_controller_file(data_path+"generic/driver/SpeedController.json
 //std::string speed_controller_file("generic/driver/SpeedController.json");
 // std::string path_file("paths/straight.txt");
 std::string path_file(data_path+"paths/my_path.txt");
-
+std::string simplepowertrain_file(data_path+"hmmwv/powertrain/HMMWV_ShaftsPowertrain.json");
 // std::string path_file("paths/curve.txt");
 // std::string path_file("paths/NATO_double_lane_change.txt");
 //std::string path_file(data_path+"paths/ISO_double_lane_change.txt");
@@ -1381,16 +1383,16 @@ int main(int argc, char* argv[]) {
 
     ros::init(argc, argv, "Chronode");
     ros::NodeHandle n;
-//<<<<<<< HEAD
-    //n.setParam("system/chrono/flags/initialized",true);
+    n.setParam("system/chrono/flags/initialized",true);
   //  std::string s10;
     //n.getParam("/vehicle/common/centroidLoc",s10);
   //  n.setParam("/vehicle/common/asdf",s10);
-    setChassisParams(n);
-    setDrivelineParams(n);
-    setPowertrainParams(n);
-    setSteeringParams(n);
-    setBrakingParams(n);
+
+  //  setChassisParams(n);
+  //  setDrivelineParams(n);
+  //  setPowertrainParams(n);
+  //  setSteeringParams(n);
+  //  setBrakingParams(n);
     bool planner_init;
   //  bool planner_init2;
 
@@ -1477,7 +1479,12 @@ int main(int argc, char* argv[]) {
     //HMMWV_Reduced my_hmmwv;
     //ChWheeledVehicle my_hmmwv;
     //ChSystem sys();
-    WheeledVehicle my_hmmwv(data_path+"hmmwv/vehicle/HMMWV_Vehicle_simple.json",contact_method);
+    //auto path = ChBezierCurve::read("../../../src/models/chrono/ros_chrono/src/data/vehicle/hmmwv/vehicle/HMMWV_Vehicle_simple.json");
+    n.setParam("asdf",true);
+    WheeledVehicle my_hmmwv(vehicle::GetDataFile(data_path+"hmmwv/vehicle/HMMWV_Vehicle.json"),contact_method);
+  //  WheeledVehicle my_hmmwv(data_path+"hmmwv/my_HMMWV.json",contact_method);
+    n.setParam("asdf",false);
+
     //my_hmmwv.SetContactMethod(contact_method);
     //my_hmmwv.SetChassisFixed(false);
     //my_hmmwv.SetInitPosition(ChCoordsys<>(initLoc, initRot));
@@ -1539,6 +1546,9 @@ int main(int argc, char* argv[]) {
     // ---------------------------------------
     // Create the vehicle Irrlicht application
     // ---------------------------------------
+    //HMMWV_Powertrain powertrain("powertrain",ChVector<>(1,0,0));
+    //ChShaftsPowertrain powertrain("n",my_hmmwv.GetChassisBody(),my_hmmwv.GetDriveshaft());
+    HMMWV_Powertrain powertrain;
 
     ChVehicleIrrApp app(&my_hmmwv, &powertrain, L"Steering Controller Demo",
                         irr::core::dimension2d<irr::u32>(800, 640));
