@@ -14,15 +14,14 @@
   <rosparam command="load" file="$(arg planner_params_path)" />
   <!--  ************* vehicle_description args and parameters ***************  -->
   <arg name="vehicle_params_path" default="$(find system)/config/vehicle/hmmwv.yaml"/>
-  <arg name="obstacle_num" default="1"/>
   <arg name="gui" default="true"/>
   <!-- Use Chrono time-->
-  <arg name="paused" default="true"/>
+  <arg name="paused" default="true"/> <!-- NOTE this pause overrides system/flags/pause -->
 
   <rosparam command="load" file="$(arg vehicle_params_path)" />
 
   <!--  ************** common args and parameters ***************  -->
-  <arg name="system_params_path" default="$(find system)/config/system/demoG.yaml"/>
+  <arg name="system_params_path" default="$(find system)/config/system/demos/demoG.yaml"/>
   <arg name="case_params_path" default="$(find system)/config/case/s1.yaml"/>
   <arg name="chrono_params_path" default="$(find ros_chrono)/config/hmmwv_chrono_params.yaml"/>
 
@@ -38,7 +37,6 @@
     <arg name="system_params_path" value="$(arg system_params_path)"/>
     <arg name="vehicle_params_path" value="$(arg vehicle_params_path)"/>
     <arg name="case_params_path" value="$(arg case_params_path)"/>
-    <arg name="obstacle_num" value="$(arg obstacle_num)"/>
     <arg name="gui" value="$(arg gui)"/>
     <arg name="paused" value="$(arg paused)"/>
   </include>

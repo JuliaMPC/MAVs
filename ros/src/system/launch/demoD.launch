@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <launch>
 
-  <!-- demo of vehicle_description and ros_base_planner-->
+  <!-- demo of vehicle_description and ros_base_planner and Chrono-->
 
   <!--  ************* vehicle_description args and parameters ***************  -->
-  <arg name="system_params_path" default="$(find system)/config/system/demoD.yaml"/>
+  <arg name="system_params_path" default="$(find system)/config/system/demos/demoD.yaml"/>
   <arg name="vehicle_params_path" default="$(find system)/config/vehicle/hmmwv.yaml"/>
   <arg name="case_params_path" default="$(find system)/config/case/s1.yaml"/>
   <arg name="gui" default="true"/>

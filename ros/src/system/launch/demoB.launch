@@ -9,13 +9,13 @@
   <rosparam command="load" file="$(arg planner_params_path)" />
   <!--  ************* vehicle_description args and parameters ***************  -->
   <arg name="vehicle_params_path" default="$(find system)/config/vehicle/hmmwv.yaml"/>
-  <arg name="obstacle_num" default="1"/>
   <arg name="gui" default="true"/>
+  <arg name="paused" default="true"/> <!-- NOTE this pause overrides system/flags/pause -->
 
   <rosparam command="load" file="$(arg vehicle_params_path)" />
 
   <!--  ************** common args and parameters ***************  -->
-  <arg name="system_params_path" default="$(find system)/config/system/demoB.yaml"/>
+  <arg name="system_params_path" default="$(find system)/config/system/demos/demoB.yaml"/>
   <arg name="case_params_path" default="$(find system)/config/case/s1.yaml"/>
 
   <param name="system_params_path" value="$(arg system_params_path)"/>
@@ -34,12 +34,15 @@
     <arg name="system_params_path" value="$(arg system_params_path)"/>
     <arg name="vehicle_params_path" value="$(arg vehicle_params_path)"/>
     <arg name="case_params_path" value="$(arg case_params_path)"/>
-    <arg name="obstacle_num" value="$(arg obstacle_num)"/>
     <arg name="gui" value="$(arg gui)"/>
+    <arg name="paused" value="$(arg paused)"/>
   </include>
 
   <!-- initialize system -->
   <node name="bootstrap" pkg="system" type="bootstrap.jl" output="screen"/>
+
+  <!-- unpause Gazebo -->
+  <node name="unpause_gazebo" pkg="vehicle_description" type="unpause.jl" output="screen"/>
 
   <!-- display the trajectory -->
   <node name="rviz" pkg="rviz" type="rviz" output="screen" args="-d $(find obstacle_detector)/resources/display.rviz"/>

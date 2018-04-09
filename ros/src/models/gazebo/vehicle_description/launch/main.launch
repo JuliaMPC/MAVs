@@ -2,20 +2,18 @@
 <launch>
 
   <!-- TODO fix gazebo and RViz views on hmmwv -->
-
   <arg name="system_params_path"/>
   <arg name="vehicle_params_path"/>
   <arg name="case_params_path"/>
-  <arg name="obstacle_num" default="0"/>
   <arg name="gui"/>
-  <arg name="paused" default="false"/>
+  <arg name="paused"/>
 
   <!-- start gazebo and load the world and spawn robot into Gazebo -->
   <include file="$(find vehicle_description)/launch/vehicle.launch">
-      <arg name="gui" value="$(arg gui)"/>
-      <arg name="paused" value="$(arg paused)"/>
       <arg name="vehicle_params_file" value="$(arg vehicle_params_path)"/>
       <arg name="case_params_file" value="$(arg case_params_path)"/>
+      <arg name="gui" value="$(arg gui)"/>
+      <arg name="paused" value="$(arg paused)"/>
   </include>
 
   <rosparam command="load" file="$(arg case_params_path)" />

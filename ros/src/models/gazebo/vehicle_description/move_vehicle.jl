@@ -36,7 +36,7 @@ function loop_straight_line(set_state,get_state)
     RobotOS.set_param("system/vehicle_description/flags/lidar_initialized",true)
     println("lidar simulation in Gazebo has been initialized")
 
-    while(RobotOS.get_param("system/paused"))
+    while(RobotOS.get_param("system/flags/paused"))
     end
 
     while !is_shutdown()
@@ -54,7 +54,7 @@ function loop_straight_line(set_state,get_state)
         # Define position to move robot
         vehPose = gs_r.pose  # use the current position
         vehPose.position.x = gs_r.pose.position.x
-        vehPose.position.y = gs_r.pose.position.y + 0.01
+        vehPose.position.y = gs_r.pose.position.y + 0.5
 
         # Define the robot state
         ms = ModelState()
@@ -90,7 +90,7 @@ function loop(set_state,get_state)
     RobotOS.set_param("system/vehicle_description/flags/lidar_initialized",true)
     println("lidar simulation in Gazebo has been initialized")
 
-    while(RobotOS.get_param("system/paused"))
+    while(RobotOS.get_param("system/flags/paused"))
     end
 
     # TODO add a system level parameter for mission complete!
@@ -111,8 +111,9 @@ function loop(set_state,get_state)
         ms.model_name = modelName
         ms.pose = gs_r.pose  # don't want to set everything else == 0
 
-        if (RobotOS.get_param("system/nloptcontrol_planner/flags/3DOF_plant") &&
-            RobotOS.get_param("system/nloptcontrol_planner/flags/running"))
+        # TODO check system/plant here
+        if isequal(RobotOS.get_param("system/plant"),"3DOF") &&
+            RobotOS.get_param("system/nloptcontrol_planner/flags/running")
          ms.pose.position.x = RobotOS.get_param("state/x")
          ms.pose.position.y = RobotOS.get_param("state/y")
          Q = tf.quaternion_from_euler(0, 0, RobotOS.get_param("state/psi"))

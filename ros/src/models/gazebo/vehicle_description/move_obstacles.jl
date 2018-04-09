@@ -2,13 +2,9 @@
 
 using RobotOS
 @rosimport geometry_msgs.msg: Twist
-
 rostypegen()
 using geometry_msgs.msg
 import geometry_msgs.msg: Twist
-
-# TODO
-# 1) check to see if model is paused
 
 """
 --------------------------------------------------------------------------------------\n
@@ -24,7 +20,7 @@ function loop(pub)
     RobotOS.set_param("system/vehicle_description/flags/obstacles_initialized",true)
     println("obstacle plugin in julia has been initialized.")
 
-    while(RobotOS.get_param("system/paused"))
+    while(RobotOS.get_param("system/flags/paused"))
     end
 
     while !is_shutdown()

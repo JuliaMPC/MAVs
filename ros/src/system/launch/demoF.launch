@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-  <!-- demo of nooptcontrol planner with chrono and vehicle description-->
+  <!-- demo of nloptcontrol planner with chrono and vehicle description-->
 
   <!-- sim time setting -->
   <node name="ros_get_world_time_" pkg="get_world_time_test" type="ros_get_world_time" output="screen" />
@@ -17,12 +17,12 @@
   <arg name="vehicle_params_path" default="$(find system)/config/vehicle/hmmwv.yaml"/>
   <arg name="gui" default="true"/>
   <!-- Use Chrono time-->
-  <arg name="paused" default="true"/>
+  <arg name="paused" default="true"/> <!-- NOTE this pause overrides system/flags/pause -->
 
   <rosparam command="load" file="$(arg vehicle_params_path)" />
 
   <!--  ************** common args and parameters ***************  -->
-  <arg name="system_params_path" default="$(find system)/config/system/demoF.yaml"/>
+  <arg name="system_params_path" default="$(find system)/config/system/demos/demoF.yaml"/>
   <arg name="case_params_path" default="$(find system)/config/case/s1.yaml"/>
   <arg name="chrono_params_path" default="$(find ros_chrono)/config/hmmwv_chrono_params.yaml"/>
 

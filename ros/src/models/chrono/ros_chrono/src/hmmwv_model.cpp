@@ -22,7 +22,7 @@
 // =============================================================================
 
 #include <fstream>
-#include<iostream>
+#include <iostream>
 #include "boost/bind.hpp"
 #include "chrono/core/ChFileutils.h"
 #include "chrono/core/ChRealtimeStep.h"
@@ -32,6 +32,7 @@
 #include "ros/ros.h"
 #include "std_msgs/String.h"
 #include "ros_chrono_msgs/veh_status.h"
+#include <math.h>
 
 //#include "tf/tf.h"
 #include <sstream>
@@ -223,7 +224,7 @@ int main(int argc, char* argv[]) {
     ros::init(argc, argv, "Chronode");
     ros::NodeHandle n;
     n.setParam("system/chrono/flags/initialized",true);
-    n.getParam("system/step_size",step_size);
+    n.getParam("system/params/step_size",step_size);
 
 
     bool planner_init;
@@ -395,8 +396,8 @@ int main(int argc, char* argv[]) {
     //Load xy parameters for the first timestep
   //  std::string planner_namespace;
   //  n.getParam("system/planner",planner_namespace);
-    n.getParam("vehicle/chrono/"+ planner_namespace +"/traj/x",hmmwv_params.x_traj_curr);
-    n.getParam("vehicle/chrono/" + planner_namespace + "/traj/yVal",hmmwv_params.y_traj_curr);
+    n.getParam(planner_namespace +"/traj/x",hmmwv_params.x_traj_curr);
+    n.getParam(planner_namespace + "/traj/yVal",hmmwv_params.y_traj_curr);
     hmmwv_params.x_traj_prev=hmmwv_params.x_traj_curr;
     hmmwv_params.y_traj_prev=hmmwv_params.y_traj_curr;
 
@@ -482,6 +483,7 @@ int main(int argc, char* argv[]) {
     rest_coeff = my_hmmwv.GetVehicle().GetWheel(0)->GetCoefficientRestitution();
     n.setParam("vehicle/chrono/common/frict_coeff",frict_coeff);
     n.setParam("vehicle/chrono/common/rest_coeff",rest_coeff);
+
     while(n.ok()){
       while (running) {
         if(gui_switch)  app.GetDevice()->run();
@@ -490,8 +492,8 @@ int main(int argc, char* argv[]) {
         n.getParam("system/"+planner_namespace+"/flags/initialized",planner_init);
         if (planner_init){
           n.getParam("system/planner",planner_namespace);
-          n.getParam("vehicle/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
-          n.getParam("vehicle/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
+          n.getParam(planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
+          n.getParam(planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
 
           double num_pts = hmmwv_params.x_traj_curr.size();
 
@@ -571,20 +573,22 @@ int main(int argc, char* argv[]) {
           hmmwv_params.steering_input = selector.GetDriver()->GetSteering();
           hmmwv_params.braking_input = selector.GetDriver()->GetBraking();
           // Update modules (process inputs from other modules)
-          double x, y;
+          double x, y, goal_tol;
           n.getParam("vehicle/chrono/state/x",x);
           n.getParam("vehicle/chrono/state/yVal",y);
-          double distance  = (goal_x-x)*(goal_x-x) + (goal_y-y)*(goal_y-y);
+          n.getParam("system/params/goal_tol",goal_tol);
+          double distance  = sqrt( (goal_x-x)*(goal_x-x) + (goal_y-y)*(goal_y-y) );
           std::cout << "Square of distance to goal is: " << distance << std::endl;
-          if(distance < 4.0){
+          if(distance < goal_tol){
             goal_attained = true;
-            n.setParam("system/goal_attained","true");
+            n.setParam("system/flags/goal_attained","true");
             // n.setParam("system/chrono/flags/running","false");
             running = false;
             hmmwv_params.braking_input = 1.0;
             hmmwv_params.throttle_input = 0.0;
             std::cout << "Goal attained!" << std::endl;
           }
+          std::cout << "Sync time..." << std::endl;
           selector.GetPathFollower()->Synchronize(time);
           driver_gui.Synchronize(time);
           hmmwv_params.terrain.Synchronize(time);
@@ -634,7 +638,6 @@ int main(int argc, char* argv[]) {
           n.setParam("vehicle/chrono/control/thr",hmmwv_params.throttle_input); //throttle input in the range [0,+1]
           n.setParam("vehicle/chrono/control/brk",hmmwv_params.braking_input); //braking input in the range [0,+1]
           n.setParam("vehicle/chrono/control/str",hmmwv_params.steering_input); //steeering input in the range [-1,+1]
-          n.setParam("system/simulation_time", time);
 
 
           data_out.t_chrono=time; //time in chrono simulation
