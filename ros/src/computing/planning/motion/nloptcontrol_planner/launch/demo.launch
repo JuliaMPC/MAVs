@@ -3,6 +3,7 @@
   <arg name="case_params_path" default="$(find system)/config/case/s1.yaml"/>
   <arg name="planner_params_path" default="$(find system)/config/planner/RTPP.yaml"/>
   <arg name="system_params_path" default="$(find system)/config/system/pkgs/nloptcontrol_planner.yaml"/>
+  <arg name="vehicle_params_path" default="$(find system)/config/vehicle/hmmwv.yaml"/>
 
   <!--  ************** Parameters ***************  -->
   <!--set the filenames as rosparams, the datatypes of the parameters get messed up if they are put on the ROS server.. -->
@@ -10,10 +11,12 @@
   <param name="case_params_path" value="$(arg case_params_path)"/>
   <param name="planner_params_path" value="$(arg planner_params_path)"/>
   <param name="system_params_path" value="$(arg system_params_path)"/>
+  <param name="vehicle_params_path" value="$(arg vehicle_params_path)"/>
 
   <rosparam command="load" file="$(arg case_params_path)" />
   <rosparam command="load" file="$(arg planner_params_path)" />
   <rosparam command="load" file="$(arg system_params_path)" />
+  <rosparam command="load" file="$(arg vehicle_params_path)" />
 
   <!-- Obstacle Avoidance-->
   <node name="obstacle_avoidance" pkg="nloptcontrol_planner" type="obstacle_avoidance.jl" output="screen"/>
