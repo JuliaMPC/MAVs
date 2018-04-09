@@ -2,7 +2,7 @@
   <arg name="system_params_path" default="$(find system)/config/system/test_chrono.yaml"/>
   <arg name="vehicle_params_path" default="$(find system)/config/vehicle/hmmwv.yaml"/>
   <arg name="case_params_path" default="$(find system)/config/case/s1.yaml"/>
-  <arg name="chrono_params_path" default="$(find ros_chrono)/config/hmmwv_chrono_params.yaml"/>
+  <arg name="chrono_params_path" default="$(find ros_chrono)/config/hmmwv_params.yaml"/>
 
 
 

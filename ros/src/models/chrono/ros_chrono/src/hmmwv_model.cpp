@@ -282,8 +282,8 @@ void trajChanger1(parameters &hmmwv_params, ChPacejkaTire &tire_front_left, ChPa
 
   if (planner_init){
     n.getParam("system/planner",planner_namespace);
-    n.getParam("vehicle/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
-    n.getParam("vehicle/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
+    n.getParam("state/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
+    n.getParam("state/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
   }
   hmmwv_params.x_traj_prev=hmmwv_params.x_traj_curr;
   hmmwv_params.y_traj_prev=hmmwv_params.y_traj_curr;
@@ -481,20 +481,20 @@ void trajChanger1(parameters &hmmwv_params, ChPacejkaTire &tire_front_left, ChPa
       yaw_val=5*PI/2-yaw_val;
     }*/
 
-    n.setParam("vehicle/chrono/state/t",time); //time in chrono simulation
-    n.setParam("vehicle/chrono/state/x", global_pos[0]) ;
-    n.setParam("vehicle/chrono/state/yVal",global_pos[1]);
-    n.setParam("vehicle/chrono/state/ux",fabs(global_velCOM[0])); //speed measured at the origin of the chassis reference frame.
-    n.setParam("vehicle/chrono/state/v", global_velCOM[1]);
-    n.setParam("vehicle/chrono/state/ax", global_accCOM[0]);
-    n.setParam("vehicle/chrono/state/psi",yaw_val); //in radians
-    n.setParam("vehicle/chrono/state/theta",theta_val); //in radians
-    n.setParam("vehicle/chrono/state/phi",phi_val); //in radians
-    n.setParam("vehicle/chrono/state/r",-rot_dt[2]);//yaw rate
-    n.setParam("vehicle/chrono/state/sa",slip_angle); //slip angle
-    n.setParam("vehicle/chrono/control/thr",hmmwv_params.throttle_input); //throttle input in the range [0,+1]
-    n.setParam("vehicle/chrono/control/brk",hmmwv_params.braking_input); //braking input in the range [0,+1]
-    n.setParam("vehicle/chrono/control/str",hmmwv_params.steering_input); //steeering input in the range [-1,+1]
+    n.setParam("state/chrono/t",time); //time in chrono simulation
+    n.setParam("state/chrono/x", global_pos[0]) ;
+    n.setParam("state/chrono/yVal",global_pos[1]);
+    n.setParam("state/chrono/ux",fabs(global_velCOM[0])); //speed measured at the origin of the chassis reference frame.
+    n.setParam("state/chrono/v", global_velCOM[1]);
+    n.setParam("state/chrono/ax", global_accCOM[0]);
+    n.setParam("state/chrono/psi",yaw_val); //in radians
+    n.setParam("state/chrono/theta",theta_val); //in radians
+    n.setParam("state/chrono/phi",phi_val); //in radians
+    n.setParam("state/chrono/r",-rot_dt[2]);//yaw rate
+    n.setParam("state/chrono/sa",slip_angle); //slip angle
+    n.setParam("state/chrono/control/thr",hmmwv_params.throttle_input); //throttle input in the range [0,+1]
+    n.setParam("state/chrono/control/brk",hmmwv_params.braking_input); //braking input in the range [0,+1]
+    n.setParam("state/chrono/control/str",hmmwv_params.steering_input); //steeering input in the range [-1,+1]
 
 
     data_out.t_chrono=time; //time in chrono simulation
@@ -517,8 +517,8 @@ void trajChanger1(parameters &hmmwv_params, ChPacejkaTire &tire_front_left, ChPa
 
     if (planner_init){
       n.getParam("system/planner",planner_namespace);
-      n.getParam("vehicle/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
-      n.getParam("vehicle/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
+      n.getParam("state/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
+      n.getParam("state/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
     }
 
   }
@@ -536,8 +536,8 @@ void trajChanger2(parameters &hmmwv_params, ChPacejkaTire &tire_front_left, ChPa
 
   if (planner_init){
     n.getParam("system/planner",planner_namespace);
-    n.getParam("vehicle/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
-    n.getParam("vehicle/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
+    n.getParam("state/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
+    n.getParam("state/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
   }
   hmmwv_params.x_traj_prev=hmmwv_params.x_traj_curr;
   hmmwv_params.y_traj_prev=hmmwv_params.y_traj_curr;
@@ -735,20 +735,20 @@ void trajChanger2(parameters &hmmwv_params, ChPacejkaTire &tire_front_left, ChPa
       yaw_val=5*PI/2-yaw_val;
     }*/
 
-    n.setParam("vehicle/chrono/state/t",time); //time in chrono simulation
-    n.setParam("vehicle/chrono/state/x", global_pos[0]) ;
-    n.setParam("vehicle/chrono/state/yVal",global_pos[1]);
-    n.setParam("vehicle/chrono/state/ux",fabs(global_velCOM[0])); //speed measured at the origin of the chassis reference frame.
-    n.setParam("vehicle/chrono/state/v", global_velCOM[1]);
-    n.setParam("vehicle/chrono/state/ax", global_accCOM[0]);
-    n.setParam("vehicle/chrono/state/psi",yaw_val); //in radians
-    n.setParam("vehicle/chrono/state/theta",theta_val); //in radians
-    n.setParam("vehicle/chrono/state/phi",phi_val); //in radians
-    n.setParam("vehicle/chrono/state/r",-rot_dt[2]);//yaw rate
-    n.setParam("vehicle/chrono/state/sa",slip_angle); //slip angle
-    n.setParam("vehicle/chrono/control/thr",hmmwv_params.throttle_input); //throttle input in the range [0,+1]
-    n.setParam("vehicle/chrono/control/brk",hmmwv_params.braking_input); //braking input in the range [0,+1]
-    n.setParam("vehicle/chrono/control/str",hmmwv_params.steering_input); //steeering input in the range [-1,+1]
+    n.setParam("state/chrono/t",time); //time in chrono simulation
+    n.setParam("state/chrono/x", global_pos[0]) ;
+    n.setParam("state/chrono/yVal",global_pos[1]);
+    n.setParam("state/chrono/ux",fabs(global_velCOM[0])); //speed measured at the origin of the chassis reference frame.
+    n.setParam("state/chrono/v", global_velCOM[1]);
+    n.setParam("state/chrono/ax", global_accCOM[0]);
+    n.setParam("state/chrono/psi",yaw_val); //in radians
+    n.setParam("state/chrono/theta",theta_val); //in radians
+    n.setParam("state/chrono/phi",phi_val); //in radians
+    n.setParam("state/chrono/r",-rot_dt[2]);//yaw rate
+    n.setParam("state/chrono/sa",slip_angle); //slip angle
+    n.setParam("state/chrono/control/thr",hmmwv_params.throttle_input); //throttle input in the range [0,+1]
+    n.setParam("state/chrono/control/brk",hmmwv_params.braking_input); //braking input in the range [0,+1]
+    n.setParam("state/chrono/control/str",hmmwv_params.steering_input); //steeering input in the range [-1,+1]
 
 
     data_out.t_chrono=time; //time in chrono simulation
@@ -770,8 +770,8 @@ void trajChanger2(parameters &hmmwv_params, ChPacejkaTire &tire_front_left, ChPa
 
     if (planner_init){
       n.getParam("system/planner",planner_namespace);
-      n.getParam("vehicle/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
-      n.getParam("vehicle/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
+      n.getParam("state/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
+      n.getParam("state/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
     }
   }
 }
@@ -787,8 +787,8 @@ void trajChanger1_nogui(parameters_nogui &hmmwv_params, ChPacejkaTire &tire_fron
 
   if (planner_init){
     n.getParam("system/planner",planner_namespace);
-    n.getParam("vehicle/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
-    n.getParam("vehicle/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
+    n.getParam("state/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
+    n.getParam("state/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
   }
   hmmwv_params.x_traj_prev=hmmwv_params.x_traj_curr;
   hmmwv_params.y_traj_prev=hmmwv_params.y_traj_curr;
@@ -883,20 +883,20 @@ void trajChanger1_nogui(parameters_nogui &hmmwv_params, ChPacejkaTire &tire_fron
       yaw_val=5*PI/2-yaw_val;
     }*/
 
-    n.setParam("vehicle/chrono/state/t",time); //time in chrono simulation
-    n.setParam("vehicle/chrono/state/x", global_pos[0]) ;
-    n.setParam("vehicle/chrono/state/yVal",global_pos[1]);
-    n.setParam("vehicle/chrono/state/ux",fabs(global_velCOM[0])); //speed measured at the origin of the chassis reference frame.
-    n.setParam("vehicle/chrono/state/v", global_velCOM[1]);
-    n.setParam("vehicle/chrono/state/ax", global_accCOM[0]);
-    n.setParam("vehicle/chrono/state/psi",yaw_val); //in radians
-    n.setParam("vehicle/chrono/state/theta",theta_val); //in radians
-    n.setParam("vehicle/chrono/state/phi",phi_val); //in radians
-    n.setParam("vehicle/chrono/state/r",-rot_dt[2]);//yaw rate
-    n.setParam("vehicle/chrono/state/sa",slip_angle); //slip angle
-    n.setParam("vehicle/chrono/control/thr",hmmwv_params.throttle_input); //throttle input in the range [0,+1]
-    n.setParam("vehicle/chrono/control/brk",hmmwv_params.braking_input); //braking input in the range [0,+1]
-    n.setParam("vehicle/chrono/control/str",hmmwv_params.steering_input); //steeering input in the range [-1,+1]
+    n.setParam("state/chrono/t",time); //time in chrono simulation
+    n.setParam("state/chrono/x", global_pos[0]) ;
+    n.setParam("state/chrono/yVal",global_pos[1]);
+    n.setParam("state/chrono/ux",fabs(global_velCOM[0])); //speed measured at the origin of the chassis reference frame.
+    n.setParam("state/chrono/v", global_velCOM[1]);
+    n.setParam("state/chrono/ax", global_accCOM[0]);
+    n.setParam("state/chrono/psi",yaw_val); //in radians
+    n.setParam("state/chrono/theta",theta_val); //in radians
+    n.setParam("state/chrono/phi",phi_val); //in radians
+    n.setParam("state/chrono/r",-rot_dt[2]);//yaw rate
+    n.setParam("state/chrono/sa",slip_angle); //slip angle
+    n.setParam("state/chrono/control/thr",hmmwv_params.throttle_input); //throttle input in the range [0,+1]
+    n.setParam("state/chrono/control/brk",hmmwv_params.braking_input); //braking input in the range [0,+1]
+    n.setParam("state/chrono/control/str",hmmwv_params.steering_input); //steeering input in the range [-1,+1]
 
 
     data_out.t_chrono=time; //time in chrono simulation
@@ -919,8 +919,8 @@ void trajChanger1_nogui(parameters_nogui &hmmwv_params, ChPacejkaTire &tire_fron
 
     if (planner_init){
       n.getParam("system/planner",planner_namespace);
-      n.getParam("vehicle/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
-      n.getParam("vehicle/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
+      n.getParam("state/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
+      n.getParam("state/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
     }
 
   }
@@ -935,8 +935,8 @@ void trajChanger2_nogui(parameters_nogui &hmmwv_params, ChPacejkaTire &tire_fron
 
   if (planner_init){
     n.getParam("system/planner",planner_namespace);
-    n.getParam("vehicle/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
-    n.getParam("vehicle/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
+    n.getParam("state/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
+    n.getParam("state/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
   }
   hmmwv_params.x_traj_prev=hmmwv_params.x_traj_curr;
   hmmwv_params.y_traj_prev=hmmwv_params.y_traj_curr;
@@ -1031,20 +1031,20 @@ void trajChanger2_nogui(parameters_nogui &hmmwv_params, ChPacejkaTire &tire_fron
       yaw_val=5*PI/2-yaw_val;
     }*/
 
-    n.setParam("vehicle/chrono/state/t",time); //time in chrono simulation
-    n.setParam("vehicle/chrono/state/x", global_pos[0]) ;
-    n.setParam("vehicle/chrono/state/yVal",global_pos[1]);
-    n.setParam("vehicle/chrono/state/ux",fabs(global_velCOM[0])); //speed measured at the origin of the chassis reference frame.
-    n.setParam("vehicle/chrono/state/v", global_velCOM[1]);
-    n.setParam("vehicle/chrono/state/ax", global_accCOM[0]);
-    n.setParam("vehicle/chrono/state/psi",yaw_val); //in radians
-    n.setParam("vehicle/chrono/state/theta",theta_val); //in radians
-    n.setParam("vehicle/chrono/state/phi",phi_val); //in radians
-    n.setParam("vehicle/chrono/state/r",-rot_dt[2]);//yaw rate
-    n.setParam("vehicle/chrono/state/sa",slip_angle); //slip angle
-    n.setParam("vehicle/chrono/control/thr",hmmwv_params.throttle_input); //throttle input in the range [0,+1]
-    n.setParam("vehicle/chrono/control/brk",hmmwv_params.braking_input); //braking input in the range [0,+1]
-    n.setParam("vehicle/chrono/control/str",hmmwv_params.steering_input); //steeering input in the range [-1,+1]
+    n.setParam("state/chrono/t",time); //time in chrono simulation
+    n.setParam("state/chrono/x", global_pos[0]) ;
+    n.setParam("state/chrono/yVal",global_pos[1]);
+    n.setParam("state/chrono/ux",fabs(global_velCOM[0])); //speed measured at the origin of the chassis reference frame.
+    n.setParam("state/chrono/v", global_velCOM[1]);
+    n.setParam("state/chrono/ax", global_accCOM[0]);
+    n.setParam("state/chrono/psi",yaw_val); //in radians
+    n.setParam("state/chrono/theta",theta_val); //in radians
+    n.setParam("state/chrono/phi",phi_val); //in radians
+    n.setParam("state/chrono/r",-rot_dt[2]);//yaw rate
+    n.setParam("state/chrono/sa",slip_angle); //slip angle
+    n.setParam("state/chrono/control/thr",hmmwv_params.throttle_input); //throttle input in the range [0,+1]
+    n.setParam("state/chrono/control/brk",hmmwv_params.braking_input); //braking input in the range [0,+1]
+    n.setParam("state/chrono/control/str",hmmwv_params.steering_input); //steeering input in the range [-1,+1]
 
 
     data_out.t_chrono=time; //time in chrono simulation
@@ -1067,8 +1067,8 @@ void trajChanger2_nogui(parameters_nogui &hmmwv_params, ChPacejkaTire &tire_fron
 
     if (planner_init){
       n.getParam("system/planner",planner_namespace);
-      n.getParam("vehicle/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
-      n.getParam("vehicle/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
+      n.getParam("state/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
+      n.getParam("state/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
     }
 
   }
@@ -1101,17 +1101,17 @@ void setChassisParams(ros::NodeHandle &n){
   std::string s8 = "     \"Centroidal Frame\":    {";
   std::string s9 = "                              \"Location\":    ";
   std::string s10;
-  n.getParam("/vehicle/common/centroidLoc",s10);
+  n.getParam("/vehicle/chrono/vehicle_params/centroidLoc",s10);
   std::string s11 = "                              \"Orientation\": ";
   std::string s12;
-  n.getParam("/vehicle/common/centroidOrientation",s12);
+  n.getParam("/vehicle/chrono/vehicle_params/centroidOrientation",s12);
   std::string s13 = "                            },";
   std::string s14 = "     \"Mass\":                ";
   std::string s15;
-  n.getParam("/vehicle/common/chassisMass",s15);
+  n.getParam("/vehicle/chrono/vehicle_params/chassisMass",s15);
   std::string s16 = "     \"Moments of Inertia\":  ";
   std::string s17;
-  n.getParam("/vehicle/common/chassisInertia",s17);
+  n.getParam("/vehicle/chrono/vehicle_params/chassisInertia",s17);
   std::string s18 = "     \"Products of Inertia\": [0, 0, 0],";
   std::string s19 = "     \"Void\":                false";
   std::string s20 = "   }";
@@ -1120,10 +1120,10 @@ void setChassisParams(ros::NodeHandle &n){
   std::string s23 = "  {";
   std::string s24 = "    \"Location\":     ";
   std::string s25;
-  n.getParam("/vehicle/common/driverLoc",s25);
+  n.getParam("/vehicle/chrono/vehicle_params/driverLoc",s25);
   std::string s26 = "    \"Orientation\":  ";
   std::string s27;
-  n.getParam("/vehicle/common/driverOrientiation",s27);
+  n.getParam("/vehicle/chrono/vehicle_params/driverOrientiation",s27);
   std::string s28 = "  },";
   std::string s29 = "  \"Visualization\":";
   std::string s30 = "  {";
@@ -1182,28 +1182,28 @@ void setDrivelineParams(ros::NodeHandle &n){
   std::string s6 = "  {";
   std::string s7 = "    \"Motor Block\":              ";
   std::string s8;
-  n.getParam("/vehicle/common/motorBlockDirection",s8);
+  n.getParam("/vehicle/chrono/vehicle_params/motorBlockDirection",s8);
   std::string s9 = "    \"Axle\":                     ";
   std::string s10;
-  n.getParam("/vehicle/common/axleDirection",s10);
+  n.getParam("/vehicle/chrono/vehicle_params/axleDirection",s10);
   std::string s11 = "  },";
   std::string s12 = "  \"Shaft Inertia\":";
   std::string s13 = "  {";
   std::string s14 = "    \"Driveshaft\":               ";
   std::string s15;
-  n.getParam("/vehicle/common/driveshaftInertia", s15);
+  n.getParam("/vehicle/chrono/vehicle_params/driveshaftInertia", s15);
   std::string s16 = "    \"Differential Box\":         ";
   std::string s17;
-  n.getParam("/vehicle/common/differentialBoxInertia",s17);
+  n.getParam("/vehicle/chrono/vehicle_params/differentialBoxInertia",s17);
   std::string s18 = "  },";
   std::string s19 = "  \"Gear Ratio\":";
   std::string s20 = "  {";
   std::string s21 = "    \"Conical Gear\":             ";
   std::string s22;
-  n.getParam("/vehicle/common/conicalGearRatio",s22);
+  n.getParam("/vehicle/chrono/vehicle_params/conicalGearRatio",s22);
   std::string s23 = "    \"Differential\":             ";
   std::string s24;
-  n.getParam("/vehicle/common/differentialRatio",s24);
+  n.getParam("/vehicle/chrono/vehicle_params/differentialRatio",s24);
   std::string s25 = "  }";
   std::string s26 = "}";
 
@@ -1244,16 +1244,16 @@ void setPowertrainParams(ros::NodeHandle &n){
   std::string s4 = "  \"Template\":                \"SimplePowertrain\",";
   std::string s5 = "  \"Forward Gear Ratio\":      ";
   std::string s6;
-  n.getParam("/vehicle/common/forwardGearRatio",s6);
+  n.getParam("/vehicle/chrono/vehicle_params/forwardGearRatio",s6);
   std::string s7 = "  \"Reverse Gear Ratio\":      ";
   std::string s8;
-  n.getParam("/vehicle/common/reverseGearRatio",s8);
+  n.getParam("/vehicle/chrono/vehicle_params/reverseGearRatio",s8);
   std::string s9 = "  \"Maximum Engine Torque\":   ";
   std::string s10;
-  n.getParam("/vehicle/common/maxEngineTorque",s10);
+  n.getParam("/vehicle/chrono/vehicle_params/maxEngineTorque",s10);
   std::string s11 = "  \"Maximum Engine Speed\":    ";
   std::string s12;
-  n.getParam("/vehicle/common/maxEngineSpeed",s12);
+  n.getParam("/vehicle/chrono/vehicle_params/maxEngineSpeed",s12);
   std::string s13 = "}";
 
   myfile2 << s1 << '\n';
@@ -1281,25 +1281,25 @@ void setSteeringParams(ros::NodeHandle &n){
   std::string s6 = "  {";
   std::string s7 = "    \"Mass\":                     ";
   std::string s8 ;
-  n.getParam("/vehicle/common/steeringLinkMass", s8);
+  n.getParam("/vehicle/chrono/vehicle_params/steeringLinkMass", s8);
   std::string s9 = "    \"COM\":                      0,";
   std::string s10 = "    \"Inertia\":                  ";
   std::string s11;
-  n.getParam("/vehicle/common/steeringLinkInertia",s11);
+  n.getParam("/vehicle/chrono/vehicle_params/steeringLinkInertia",s11);
   std::string s12 = "    \"Radius\":                   ";
   std::string s13;
-  n.getParam("/vehicle/common/steeringLinkRadius",s13);
+  n.getParam("/vehicle/chrono/vehicle_params/steeringLinkRadius",s13);
   std::string s14 = "    \"Length\":                   ";
   std::string s15;
-  n.getParam("/vehicle/common/steeringLinkLength",s15);
+  n.getParam("/vehicle/chrono/vehicle_params/steeringLinkLength",s15);
   std::string s16 = "  },";
   std::string s17 = "  \"Pinion\":";
   std::string s18 = "    \"Radius\":                   ";
   std::string s19;
-  n.getParam("/vehicle/common/pinionRadius",s19);
+  n.getParam("/vehicle/chrono/vehicle_params/pinionRadius",s19);
   std::string s20 = "    \"Maximum Angle\":            ";
   std::string s21;
-  n.getParam("/vehicle/common/pinionMaxAngle",s21);
+  n.getParam("/vehicle/chrono/vehicle_params/pinionMaxAngle",s21);
   std::string s22 = "  }";
   std::string s23 = "}";
 
@@ -1339,7 +1339,7 @@ void setBrakingParams(ros::NodeHandle &n){
   std::string s4 = "  \"Template\":                   \"BrakeSimple\",";
   std::string s5 = "  \"Maximum Torque\":             ";
   std::string s6;
-  n.getParam("vehicle/common/maxBrakeTorque",s6);
+  n.getParam("vehicle/chrono/vehicle_params/maxBrakeTorque",s6);
   std::string s7 = "}";
   std::string s8 = "  \"Name\":                       \"HMMWV Brake Rear\",";
 
@@ -1377,7 +1377,8 @@ int main(int argc, char* argv[]) {
     GetLog() << "Copyright (c) 2017 projectchrono.org\nChrono version: " << CHRONO_VERSION << "\n\n";
 
     SetChronoDataPath(CHRONO_DATA_DIR);
-    vehicle::SetDataPath("opt/chrono/chrono/data/vehicle");
+    //vehicle::SetDataPath("opt/chrono/chrono/data/vehicle");
+    //vehicle::SetDataPath(data_path);
     // std::cout << GetChronoDataPath() << "\n"; check path of chrono data folder
     // Initialize ROS Chrono node and set node handle to n
 
@@ -1528,8 +1529,8 @@ int main(int argc, char* argv[]) {
 
     // Create the terrain
     float frict_coeff, rest_coeff;
-    n.getParam("vehicle/chrono/common/frict_coeff",frict_coeff);
-    n.getParam("vehicle/chrono/common/rest_coeff",rest_coeff);
+    n.getParam("state/chrono/vehicle_params/frict_coeff",frict_coeff);
+    n.getParam("state/chrono/vehicle_params/common/rest_coeff",rest_coeff);
 
     RigidTerrain terrain(my_hmmwv.GetSystem());
     my_hmmwv.GetWheel(0)->SetContactFrictionCoefficient(frict_coeff);
@@ -1612,8 +1613,8 @@ int main(int argc, char* argv[]) {
     //Load xy parameters for the first timestep
   //  std::string planner_namespace;
   //  n.getParam("system/planner",planner_namespace);
-    n.getParam("vehicle/chrono/default/traj/x",hmmwv_params.x_traj_curr);
-    n.getParam("vehicle/chrono/default/traj/yVal",hmmwv_params.y_traj_curr);
+    n.getParam("state/chrono/default/traj/x",hmmwv_params.x_traj_curr);
+    n.getParam("state/chrono/default/traj/yVal",hmmwv_params.y_traj_curr);
     hmmwv_params.x_traj_prev=hmmwv_params.x_traj_curr;
     hmmwv_params.y_traj_prev=hmmwv_params.y_traj_curr;
     double num_pts = hmmwv_params.x_traj_curr.size();
@@ -1685,10 +1686,10 @@ int main(int argc, char* argv[]) {
     std::ofstream myfile1;
     myfile1.open(data_path+"paths/position.txt",std::ofstream::out | std::ofstream::trunc);
     //get mass and moment of inertia about z axis
-    n.setParam("vehicle/chrono/common/m",my_hmmwv.GetVehicleMass());
+    n.setParam("vehicle/common/m",my_hmmwv.GetVehicleMass());
     const ChMatrix33<> inertia_mtx= my_hmmwv.GetChassisBody()->GetInertia();
     double Izz=inertia_mtx.GetElement(2,2);
-    n.setParam("vehicle/chrono/common/Izz",Izz);
+    n.setParam("vehicle/common/Izz",Izz);
     // get distance to front and rear axles
     enum chrono::vehicle::VehicleSide LEFT;
     enum chrono::vehicle::VehicleSide RIGHT;
@@ -1702,15 +1703,15 @@ int main(int argc, char* argv[]) {
     lb_diff.Sub(veh_com,lb_pos);
     la_length=la_diff.Length();
     lb_length=lb_diff.Length();
-    n.setParam("vehicle/chrono/common/la",la_length);
-    n.setParam("vehicle/chrono/common/lb",lb_length);
+    n.setParam("vehicle/common/la",la_length);
+    n.setParam("vehicle/common/lb",lb_length);
 
     // get friction and restitution coefficients
   //  float frict_coeff, rest_coeff;
     frict_coeff = my_hmmwv.GetWheel(0)->GetCoefficientFriction();
     rest_coeff = my_hmmwv.GetWheel(0)->GetCoefficientRestitution();
-    n.setParam("vehicle/chrono/common/frict_coeff",frict_coeff);
-    n.setParam("vehicle/chrono/common/rest_coeff",rest_coeff);
+    n.setParam("vehicle/common/frict_coeff",frict_coeff);
+    n.setParam("vehicle/common/rest_coeff",rest_coeff);
 
 
 
@@ -1722,8 +1723,8 @@ int main(int argc, char* argv[]) {
       n.getParam("system/"+planner_namespace+"/flags/initialized",planner_init);
       if (planner_init){
         n.getParam("system/planner",planner_namespace);
-        n.getParam("vehicle/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
-        n.getParam("vehicle/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
+        n.getParam("state/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
+        n.getParam("state/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
 
 
         num_pts = hmmwv_params.x_traj_curr.size();
@@ -1957,20 +1958,20 @@ int main(int argc, char* argv[]) {
           yaw_val=5*PI/2-yaw_val;
         }*/
 
-        n.setParam("vehicle/chrono/state/t",time); //time in chrono simulation
-        n.setParam("vehicle/chrono/state/x", global_pos[0]) ;
-        n.setParam("vehicle/chrono/state/yVal",global_pos[1]);
-        n.setParam("vehicle/chrono/state/ux",fabs(global_velCOM[0])); //speed measured at the origin of the chassis reference frame.
-        n.setParam("vehicle/chrono/state/v", global_velCOM[1]);
-        n.setParam("vehicle/chrono/state/ax", global_accCOM[0]);
-        n.setParam("vehicle/chrono/state/psi",yaw_val); //in radians
-        n.setParam("vehicle/chrono/state/theta",theta_val); //in radians
-        n.setParam("vehicle/chrono/state/phi",phi_val); //in radians
-        n.setParam("vehicle/chrono/state/r",-rot_dt[2]);//yaw rate
-        n.setParam("vehicle/chrono/state/sa",slip_angle); //slip angle
-        n.setParam("vehicle/chrono/control/thr",hmmwv_params.throttle_input); //throttle input in the range [0,+1]
-        n.setParam("vehicle/chrono/control/brk",hmmwv_params.braking_input); //braking input in the range [0,+1]
-        n.setParam("vehicle/chrono/control/str",hmmwv_params.steering_input); //steeering input in the range [-1,+1]
+        n.setParam("state/chrono/t",time); //time in chrono simulation
+        n.setParam("state/chrono/x", global_pos[0]) ;
+        n.setParam("state/chrono/yVal",global_pos[1]);
+        n.setParam("state/chrono/ux",fabs(global_velCOM[0])); //speed measured at the origin of the chassis reference frame.
+        n.setParam("state/chrono/v", global_velCOM[1]);
+        n.setParam("state/chrono/ax", global_accCOM[0]);
+        n.setParam("state/chrono/psi",yaw_val); //in radians
+        n.setParam("state/chrono/theta",theta_val); //in radians
+        n.setParam("state/chrono/phi",phi_val); //in radians
+        n.setParam("state/chrono/r",-rot_dt[2]);//yaw rate
+        n.setParam("state/chrono/sa",slip_angle); //slip angle
+        n.setParam("state/chrono/control/thr",hmmwv_params.throttle_input); //throttle input in the range [0,+1]
+        n.setParam("state/chrono/control/brk",hmmwv_params.braking_input); //braking input in the range [0,+1]
+        n.setParam("state/chrono/control/str",hmmwv_params.steering_input); //steeering input in the range [-1,+1]
 
         data_out.t_chrono=time; //time in chrono simulation
         data_out.x_pos= global_pos[0] ;
@@ -2021,8 +2022,8 @@ else{
   //Load xy parameters for the first timestep
 //  std::string planner_namespace;
 //  n.getParam("system/planner",planner_namespace);
-  n.getParam("vehicle/chrono/chrono/traj/x",hmmwv_params.x_traj_curr);
-  n.getParam("vehicle/chrono/chrono/traj/yVal",hmmwv_params.y_traj_curr);
+  n.getParam("state/chrono/default/traj/x",hmmwv_params.x_traj_curr);
+  n.getParam("state/chrono/default/traj/yVal",hmmwv_params.y_traj_curr);
   hmmwv_params.x_traj_prev=hmmwv_params.x_traj_curr;
   hmmwv_params.y_traj_prev=hmmwv_params.y_traj_curr;
   double num_pts = hmmwv_params.x_traj_curr.size();
@@ -2054,10 +2055,10 @@ else{
   std::ofstream myfile1;
   myfile1.open(data_path+"paths/position.txt",std::ofstream::out | std::ofstream::trunc);
   //get mass and moment of inertia about z axis
-  n.setParam("vehicle/chrono/common/m",my_hmmwv.GetVehicleMass());
+  n.setParam("vehicle/common/m",my_hmmwv.GetVehicleMass());
   const ChMatrix33<> inertia_mtx= my_hmmwv.GetChassisBody()->GetInertia();
   double Izz=inertia_mtx.GetElement(2,2);
-  n.setParam("vehicle/chrono/common/Izz",Izz);
+  n.setParam("vehicle/common/Izz",Izz);
   // get distance to front and rear axles
   enum chrono::vehicle::VehicleSide LEFT;
   enum chrono::vehicle::VehicleSide RIGHT;
@@ -2071,15 +2072,15 @@ else{
   lb_diff.Sub(veh_com,lb_pos);
   la_length=la_diff.Length();
   lb_length=lb_diff.Length();
-  n.setParam("vehicle/chrono/common/la",la_length);
-  n.setParam("vehicle/chrono/common/lb",lb_length);
+  n.setParam("vehicle/common/la",la_length);
+  n.setParam("vehicle/common/lb",lb_length);
 
   // get friction and restitution coefficients
 //  float frict_coeff, rest_coeff;
   frict_coeff = my_hmmwv.GetWheel(0)->GetCoefficientFriction();
   rest_coeff = my_hmmwv.GetWheel(0)->GetCoefficientRestitution();
-  n.setParam("vehicle/chrono/common/frict_coeff",frict_coeff);
-  n.setParam("vehicle/chrono/common/rest_coeff",rest_coeff);
+  n.setParam("vehicle/common/frict_coeff",frict_coeff);
+  n.setParam("vehicle/common/rest_coeff",rest_coeff);
 
   double time = hmmwv_params.my_hmmwv.GetSystem()->GetChTime();
 
@@ -2092,8 +2093,8 @@ else{
     n.getParam("system/"+planner_namespace+"/flags/initialized",planner_init);
     if (planner_init){
       n.getParam("system/planner",planner_namespace);
-      n.getParam("vehicle/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
-      n.getParam("vehicle/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
+      n.getParam("state/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
+      n.getParam("state/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
 
 
       num_pts = hmmwv_params.x_traj_curr.size();
@@ -2182,20 +2183,20 @@ else{
         yaw_val=5*PI/2-yaw_val;
       } */
 
-      n.setParam("vehicle/chrono/state/t",time); //time in chrono simulation
-      n.setParam("vehicle/chrono/state/x", global_pos[0]) ;
-      n.setParam("vehicle/chrono/state/yVal",global_pos[1]);
-      n.setParam("vehicle/chrono/state/ux",fabs(global_velCOM[0])); //speed measured at the origin of the chassis reference frame.
-      n.setParam("vehicle/chrono/state/v", global_velCOM[1]);
-      n.setParam("vehicle/chrono/state/ax", global_accCOM[0]);
-      n.setParam("vehicle/chrono/state/psi",yaw_val); //in radians
-      n.setParam("vehicle/chrono/state/theta",theta_val); //in radians
-      n.setParam("vehicle/chrono/state/phi",phi_val); //in radians
-      n.setParam("vehicle/chrono/state/r",-rot_dt[2]);//yaw rate
-      n.setParam("vehicle/chrono/state/sa",slip_angle); //slip angle
-      n.setParam("vehicle/chrono/control/thr",hmmwv_params.throttle_input); //throttle input in the range [0,+1]
-      n.setParam("vehicle/chrono/control/brk",hmmwv_params.braking_input); //braking input in the range [0,+1]
-      n.setParam("vehicle/chrono/control/str",hmmwv_params.steering_input); //steeering input in the range [-1,+1]
+      n.setParam("state/chrono/t",time); //time in chrono simulation
+      n.setParam("state/chrono/x", global_pos[0]) ;
+      n.setParam("state/chrono/yVal",global_pos[1]);
+      n.setParam("state/chrono/ux",fabs(global_velCOM[0])); //speed measured at the origin of the chassis reference frame.
+      n.setParam("state/chrono/v", global_velCOM[1]);
+      n.setParam("state/chrono/ax", global_accCOM[0]);
+      n.setParam("state/chrono/psi",yaw_val); //in radians
+      n.setParam("state/chrono/theta",theta_val); //in radians
+      n.setParam("state/chrono/phi",phi_val); //in radians
+      n.setParam("state/chrono/r",-rot_dt[2]);//yaw rate
+      n.setParam("state/chrono/sa",slip_angle); //slip angle
+      n.setParam("state/chrono/control/thr",hmmwv_params.throttle_input); //throttle input in the range [0,+1]
+      n.setParam("state/chrono/control/brk",hmmwv_params.braking_input); //braking input in the range [0,+1]
+      n.setParam("state/chrono/control/str",hmmwv_params.steering_input); //steeering input in the range [-1,+1]
 
       data_out.t_chrono=time; //time in chrono simulation
       data_out.x_pos= global_pos[0] ;

@@ -34,78 +34,36 @@ vehicle:
   topic: lidar_points
 
  chrono:
-  control:
-   thr: 0.0
-   brk: 0.0
-   str: 0.0
-
-  state:
-   t: 0.0
-   x: 0.0
-   yVal: 0.0
-   ux: 0.0 #Vx
-   v: 0.0 #Vy
-   ax: 0.0
-   psi: 1.57079632679 #yaw
-   theta: 0.0 #pitch
-   phi: 0.0 #roll
-   r: 0.0 #yaw rate
-   sa: 0.0
-
-  ros_base_planner:
-   traj:
-    t: [0.0 0.0 0.0 0.0 0.0 0.0]
-    x: [0.0 0.0 0.0 0.0 0.0 0.0]
-    yVal: [0.0 0.0 0.0 0.0 0.0 0.0]
-    sa: [0.0 0.0 0.0 0.0 0.0 0.0]
-    thr: [0.0 0.0 0.0 0.0 0.0 0.0]
-    brk: [0.0 0.0 0.0 0.0 0.0 0.0]
-
-  nloptcontrol_planner:
-   traj:
-    t: [0.0 5.0]
-    x: [200.0, 200.0]
-    yVal: [0.0, 50.0]
-    sa: [0.0 0.0]
-    thr: [0.0 0.0]
-    brk: [0.0 0.0]
-
-  default:
-   traj:
-    t: [0.0 2.0 3.0 4.0 5.0]
-    x: [199.989, 199.989, 199.989, 199.985, 199.959, 199.882, 199.715, 199.463, 199.19, 198.992,198.943, 198.724, 198.15, 197.127, 195.701, 194.168, 192.939, 192.241, 192.085, 191.439, 190.569, 190.919, 193.045, 195.393, 196.104]
-    yVal: [0.0381458, 0.0433473, 0.0791504, 0.263096, 0.797216, 1.82058, 3.2641, 4.85751, 6.24848, 7.12986, 7.34851, 8.22214, 10.2693, 13.3859, 17.2667, 21.3574, 24.9169, 27.1953, 27.7639, 30.3015, 35.8857, 43.2004, 49.8849, 53.9329, 54.8829]
-    sa: [0.0 0.0 0.0 0.0 0.0 0.0]
-    thr: [2.5 2.5 2.5 2.5 2.5 2.5]
-    brk: [0.0 0.0 0.0 0.0 0.0 0.0]
+  vehicle_params:
+   frict_coeff: 0.9
+   rest_coeff: 0.1
+   centroidLoc: "[0.056, 0.0, 0.523],"
+   centroidOrientation: "[1, 0, 0, 0]"
+   chassisMass: "2086.52,"
+   chassisInertia: "[1078.52, 2955.66, 3570.20],"
+   driverLoc: "[0, 0.5, 1.2],"
+   driverOrientation: "[1, 0, 0, 0]"
+   motorBlockDirection: "[1, 0, 0],"
+   axleDirection: "[0, 1, 0]"
+   driveshaftInertia: "0.5,"
+   differentialBoxInertia: "0.6"
+   conicalGearRatio: "-0.2,"
+   differentialRatio: "-1.0"
+   forwardGearRatio: " 0.0,"
+   reverseGearRatio: "-0.3,"
+   maxEngineTorque: "1000.0,"
+   maxEngineSpeed: "2000"
+   steeringLinkMass: "9.072,"
+   steeringLinkInertia: "[1, 1, 1],"
+   steeringLinkRadius: "0.03,"
+   steeringLinkLength: "0.896"
+   pinionRadius: "0.1,"
+   pinionMaxAngle: "0.87"
+   maxBrakeTorque: "4000"
 
  common:
   m: 0.0
   Izz: 0.0
   la: 0.0
   lb: 0.0
-  frict_coeff: 0.9
-  rest_coeff: 0.1
-  centroidLoc: "[0.056, 0.0, 0.523],"
-  centroidOrientation: "[1, 0, 0, 0]"
-  chassisMass: "2086.52,"
-  chassisInertia: "[1078.52, 2955.66, 3570.20],"
-  driverLoc: "[0, 0.5, 1.2],"
-  driverOrientation: "[1, 0, 0, 0]"
-  motorBlockDirection: "[1, 0, 0],"
-  axleDirection: "[0, 1, 0]"
-  driveshaftInertia: "0.5,"
-  differentialBoxInertia: "0.6"
-  conicalGearRatio: "-0.2,"
-  differentialRatio: "-1.0"
-  forwardGearRatio: " 0.0,"
-  reverseGearRatio: "-0.3,"
-  maxEngineTorque: "1000.0,"
-  maxEngineSpeed: "2000"
-  steeringLinkMass: "9.072,"
-  steeringLinkInertia: "[1, 1, 1],"
-  steeringLinkRadius: "0.03,"
-  steeringLinkLength: "0.896"
-  pinionRadius: "0.1,"
-  pinionMaxAngle: "0.87"
-  maxBrakeTorque: "4000"
+  wheel_radius: 0.268
