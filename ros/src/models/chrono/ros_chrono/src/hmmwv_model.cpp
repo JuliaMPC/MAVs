@@ -23,8 +23,11 @@
 
 #include <fstream>
 #include<iostream>
+#include "boost/thread/mutex.hpp"
+#include "boost/filesystem.hpp"
 #include "boost/bind.hpp"
 #include "chrono/core/ChFileutils.h"
+#include "chrono/core/ChStream.h"
 #include "chrono/core/ChRealtimeStep.h"
 #include "chrono/utils/ChFilters.h"
 #include <ros/console.h>
@@ -32,6 +35,7 @@
 #include "ros/ros.h"
 #include "std_msgs/String.h"
 #include "ros_chrono_msgs/veh_status.h"
+#include "chrono_vehicle/ChVehicleModelData.h"
 //#include "tf/tf.h"
 #include <sstream>
 #include "chrono_vehicle/ChVehicleModelData.h"
@@ -84,7 +88,7 @@ TireModelType tire_model = TireModelType::RIGID;
 // Input file name for PACEJKA tires if they are selected
 //std::string pacejka_tire_file(data_path+"hmmwv/tire/HMMWV_pacejka.tir");
 //std::string pacejka_tire_file("../../../src/models/chrono/ros_chrono/src/data/vehicle/MAN_5t/MAN_5t_pacejka.tir");
-std::string pacejka_tire_file("hmmwv/tire/HMMWV_pacejka.tir");
+std::string pacejka_tire_file(data_path+"hmmwv/tire/HMMWV_pacejka.tir");
 //Create Tire Model
 ChPacejkaTire tire_front_left("FL",pacejka_tire_file);
 ChPacejkaTire tire_front_right("FR",pacejka_tire_file);
@@ -111,7 +115,7 @@ std::string speed_controller_file(data_path+"generic/driver/SpeedController.json
 //std::string speed_controller_file("generic/driver/SpeedController.json");
 // std::string path_file("paths/straight.txt");
 std::string path_file(data_path+"paths/my_path.txt");
-std::string simplepowertrain_file(data_path+"hmmwv/powertrain/HMMWV_ShaftsPowertrain.json");
+//std::string simplepowertrain_file(data_path+"hmmwv/powertrain/HMMWV_ShaftsPowertrain.json");
 // std::string path_file("paths/curve.txt");
 // std::string path_file("paths/NATO_double_lane_change.txt");
 //std::string path_file(data_path+"paths/ISO_double_lane_change.txt");
@@ -1377,8 +1381,8 @@ int main(int argc, char* argv[]) {
     GetLog() << "Copyright (c) 2017 projectchrono.org\nChrono version: " << CHRONO_VERSION << "\n\n";
 
     SetChronoDataPath(CHRONO_DATA_DIR);
-    //vehicle::SetDataPath("opt/chrono/chrono/data/vehicle");
-    //vehicle::SetDataPath(data_path);
+    vehicle::SetDataPath(data_path);
+    //vehicle::SetDataPath("home/shreyas/MAVs/ros/src/models/chrono/ros_chrono/src/data/vehicle/");
     // std::cout << GetChronoDataPath() << "\n"; check path of chrono data folder
     // Initialize ROS Chrono node and set node handle to n
 
@@ -1389,11 +1393,11 @@ int main(int argc, char* argv[]) {
     //n.getParam("/vehicle/common/centroidLoc",s10);
   //  n.setParam("/vehicle/common/asdf",s10);
 
-  //  setChassisParams(n);
-  //  setDrivelineParams(n);
-  //  setPowertrainParams(n);
-  //  setSteeringParams(n);
-  //  setBrakingParams(n);
+    setChassisParams(n);
+    setDrivelineParams(n);
+    setPowertrainParams(n);
+    setSteeringParams(n);
+    setBrakingParams(n);
     bool planner_init;
   //  bool planner_init2;
 
@@ -1404,7 +1408,7 @@ int main(int argc, char* argv[]) {
   //    n.getParam("system/"+planner_namespace+"/flags/initialized",planner_init2);
 
       if(!planner_init){
-        waitForLoaded(n);
+      //  waitForLoaded(n);
     }
   //std::string planner_init;
 
@@ -1436,17 +1440,17 @@ int main(int argc, char* argv[]) {
 
     // Desired vehicle speed (m/s)
     double target_speed;
-    n.getParam("hmmwv_chrono/X0/v_des",target_speed);
+    n.getParam("state/chrono/X0/v_des",target_speed);
 
     //Initial Position
     double x0, y0, z0, yaw0,pitch0,roll0;
     bool gui_switch;
     n.getParam("case/actual/X0/x",x0);
     n.getParam("case/actual/X0/yVal",y0);
-    n.getParam("hmmwv_chrono/X0/z",z0);
+    n.getParam("state/chrono/X0/z",z0);
     n.getParam("case/actual/X0/psi",yaw0);
-    n.getParam("hmmwv_chrono/X0/theta",pitch0);
-    n.getParam("hmmwv_chrono/X0/phi",roll0);
+    n.getParam("state/chrono/X0/theta",pitch0);
+    n.getParam("state/chrono/X0/phi",roll0);
 
     n.getParam("system/chrono/flags/gui",gui_switch);
   //  tf::Quaternion q = tf::createQuaternionFromRPY(roll0, pitch0, yaw0);
@@ -1482,9 +1486,14 @@ int main(int argc, char* argv[]) {
     //ChSystem sys();
     //auto path = ChBezierCurve::read("../../../src/models/chrono/ros_chrono/src/data/vehicle/hmmwv/vehicle/HMMWV_Vehicle_simple.json");
     n.setParam("asdf",true);
-    WheeledVehicle my_hmmwv(vehicle::GetDataFile(data_path+"hmmwv/vehicle/HMMWV_Vehicle.json"),contact_method);
+    std::string vehicle_file="hmmwv/vehicle/HMMWV_Vehicle_4WD.json";
+     boost::filesystem::path full_path( boost::filesystem::current_path() );
+ std::cout<<"Current path is: "<<full_path<<std::endl;
+ std::cout<<"Looking for data at: "<<vehicle::GetDataFile(vehicle_file)<<std::endl;
+    WheeledVehicle my_hmmwv(vehicle::GetDataFile(vehicle_file),contact_method);
   //  WheeledVehicle my_hmmwv(data_path+"hmmwv/my_HMMWV.json",contact_method);
     n.setParam("asdf",false);
+    my_hmmwv.Initialize(ChCoordsys<>(initLoc, initRot),0.0);
 
     //my_hmmwv.SetContactMethod(contact_method);
     //my_hmmwv.SetChassisFixed(false);
@@ -1500,7 +1509,6 @@ int main(int argc, char* argv[]) {
     my_hmmwv.SetSteeringVisualizationType(steering_vis_type);
     my_hmmwv.SetWheelVisualizationType(wheel_vis_type);
     //my_hmmwv.SetTireVisualizationType(tire_vis_type);
-    my_hmmwv.Initialize(ChCoordsys<>(initLoc, initRot),0.0);
 
 
     TireForces tire_forces(4);
@@ -1543,17 +1551,29 @@ int main(int argc, char* argv[]) {
     //terrain.SetTexture(chrono::vehicle::GetDataFile("terrain/textures/tile4.jpg"), 200, 200);
     terrain.SetTexture(data_path+"terrain/textures/tile4.jpg", 200, 200);
     terrain.Initialize(terrainHeight, terrainLength, terrainWidth);
+    //n.setParam("fdsa",true);
+
+    HMMWV_Powertrain powertrain;
+
+    std::vector<double> gearRatios = {0.1,0.2,0.4,0.8};
+    powertrain.SetGearRatios(gearRatios);
+
+    powertrain.Initialize(my_hmmwv.GetChassisBody(),my_hmmwv.GetDriveshaft());
+
     if (gui_switch){
     // ---------------------------------------
     // Create the vehicle Irrlicht application
     // ---------------------------------------
     //HMMWV_Powertrain powertrain("powertrain",ChVector<>(1,0,0));
     //ChShaftsPowertrain powertrain("n",my_hmmwv.GetChassisBody(),my_hmmwv.GetDriveshaft());
-    HMMWV_Powertrain powertrain;
+
+
+    //HMMWV_Powertrain powertrain(vehicle::GetDataFile(simplepowertrain_file));
+
 
     ChVehicleIrrApp app(&my_hmmwv, &powertrain, L"Steering Controller Demo",
                         irr::core::dimension2d<irr::u32>(800, 640));
-
+    n.setParam("fdsa",false);
     app.SetHUDLocation(500, 20);
     app.SetSkyBox();
     app.AddTypicalLogo();
@@ -1908,11 +1928,14 @@ int main(int argc, char* argv[]) {
         tire_rear_left.Synchronize(time, wheel_states[REAR_LEFT.id()], hmmwv_params.terrain);
         tire_rear_right.Synchronize(time, wheel_states[REAR_RIGHT.id()], hmmwv_params.terrain);
 
+        double driveshaft_speed=my_hmmwv.GetDriveshaftSpeed();
+        double powertrain_torque=powertrain.GetOutputTorque();
+        powertrain.Synchronize(time,hmmwv_params.throttle_input,driveshaft_speed);
         hmmwv_params.tire_forces[FRONT_LEFT.id()] = tire_front_left.GetTireForce();
         hmmwv_params.tire_forces[FRONT_RIGHT.id()] = tire_front_right.GetTireForce();
         hmmwv_params.tire_forces[REAR_LEFT.id()] = tire_rear_left.GetTireForce();
         hmmwv_params.tire_forces[REAR_RIGHT.id()] = tire_rear_right.GetTireForce();
-        hmmwv_params.my_hmmwv.Synchronize(time, hmmwv_params.steering_input, hmmwv_params.braking_input, hmmwv_params.throttle_input, hmmwv_params.tire_forces);
+        hmmwv_params.my_hmmwv.Synchronize(time, hmmwv_params.steering_input, hmmwv_params.braking_input, powertrain_torque, hmmwv_params.tire_forces);
         std::string msg = selector.UsingGUI() ? "GUI driver" : "Follower driver";
         app.Synchronize(msg, hmmwv_params.steering_input, hmmwv_params.throttle_input, hmmwv_params.braking_input);
 
@@ -1926,6 +1949,7 @@ int main(int argc, char* argv[]) {
         tire_rear_right.Advance(step_size);
         tire_rear_left.Advance(step_size);
         hmmwv_params.my_hmmwv.Advance(step);
+        powertrain.Advance(step);
         app.Advance(step);
 
         // Increment simulation frame number
@@ -2134,12 +2158,17 @@ else{
       tire_front_right.Synchronize(time, wheel_states[FRONT_RIGHT.id()], hmmwv_params.terrain);
       tire_rear_left.Synchronize(time, wheel_states[REAR_LEFT.id()], hmmwv_params.terrain);
       tire_rear_right.Synchronize(time, wheel_states[REAR_RIGHT.id()], hmmwv_params.terrain);
+      double driveshaft_speed=my_hmmwv.GetDriveshaftSpeed();
+      double powertrain_torque=powertrain.GetOutputTorque();
+      powertrain.Synchronize(time,hmmwv_params.throttle_input,driveshaft_speed);
+
+
 
       hmmwv_params.tire_forces[FRONT_LEFT.id()] = tire_front_left.GetTireForce();
       hmmwv_params.tire_forces[FRONT_RIGHT.id()] = tire_front_right.GetTireForce();
       hmmwv_params.tire_forces[REAR_LEFT.id()] = tire_rear_left.GetTireForce();
       hmmwv_params.tire_forces[REAR_RIGHT.id()] = tire_rear_right.GetTireForce();
-      hmmwv_params.my_hmmwv.Synchronize(time, hmmwv_params.steering_input, hmmwv_params.braking_input, hmmwv_params.throttle_input, hmmwv_params.tire_forces);
+      hmmwv_params.my_hmmwv.Synchronize(time, hmmwv_params.steering_input, hmmwv_params.braking_input, powertrain_torque, hmmwv_params.tire_forces);
 
 
 
@@ -2152,6 +2181,7 @@ else{
       tire_front_left.Advance(step_size);
       tire_rear_right.Advance(step_size);
       tire_rear_left.Advance(step_size);
+      powertrain.Advance(step);
       hmmwv_params.my_hmmwv.Advance(step);
 
 
