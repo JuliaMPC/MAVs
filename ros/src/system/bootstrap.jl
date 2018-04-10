@@ -63,6 +63,7 @@ function main()
 
   println("system has been initialized!")
   RobotOS.set_param("system/flags/paused",false)
+  RobotOS.set_param("system/flags/initialized",true)
 end
 
 if !isinteractive()

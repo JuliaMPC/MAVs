@@ -41,8 +41,13 @@
 
   <node name="Chronode" pkg="ros_chrono" type="hmmwv_model" cwd="node"/>
 
-  <!-- initialize system -->
-  <node name="bootstrap" pkg="system" type="bootstrap.jl" output="screen"/>
+  <!--include file="$(find ros_chrono)/launch/main.launch">
+    <arg name="system_params_path" value="$(arg system_params_path)"/>
+    <arg name="case_params_path" value="$(arg case_params_path)"/>
+    <arg name="vehicle_params_path" value="$(arg vehicle_params_path)"/>
+    <arg name="chrono_params_path" value="$(arg chrono_params_path)"/>
+  </include-->
 
+  <node name="bootstrap" pkg="system" type="bootstrap.jl" output="screen"/>
 
 </launch>
