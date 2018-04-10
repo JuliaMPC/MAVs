@@ -13,6 +13,6 @@ global_costmap:
   update_frequency: 10
   publish_frequency: 5
   static_map: false
-  width: 210
-  height: 210
+  width: 500
+  height: 500
   rolling_window: true
