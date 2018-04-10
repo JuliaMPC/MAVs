@@ -174,7 +174,12 @@ add_executable(trajectory_follower src/trajectory_follower.cpp)
 # install tree (if using an installed version of Chrono).
 #--------------------------------------------------------------
 
-set_target_properties(hmmwv_model trajectory_follower PROPERTIES
+set_target_properties(hmmwv_model PROPERTIES
+	    COMPILE_FLAGS "${CHRONO_CXX_FLAGS} ${CH_CXX_FLAGS} ${CH_IRRLICHT_CXX_FLAGS} ${EXTRA_COMPILE_FLAGS}"
+      COMPILE_DEFINITIONS "CHRONO_DATA_DIR=\"${CHRONO_DATA_DIR}\""
+	    LINK_FLAGS "${CHRONO_LINKER_FLAGS} ${LINKERFLAG_EXE}")
+
+set_target_properties(trajectory_follower PROPERTIES
 	    COMPILE_FLAGS "${CHRONO_CXX_FLAGS} ${CH_CXX_FLAGS} ${CH_IRRLICHT_CXX_FLAGS} ${EXTRA_COMPILE_FLAGS}"
       COMPILE_DEFINITIONS "CHRONO_DATA_DIR=\"${CHRONO_DATA_DIR}\""
 	    LINK_FLAGS "${CHRONO_LINKER_FLAGS} ${LINKERFLAG_EXE}")
@@ -187,8 +192,8 @@ set_target_properties(hmmwv_model trajectory_follower PROPERTIES
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-add_dependencies(hmmwv_model trajectory_follower ${catkin_EXPORTED_TARGETS})
-# add_dependencies(trajectory_follower ${catkin_EXPORTED_TARGETS})
+add_dependencies(hmmwv_model ${catkin_EXPORTED_TARGETS})
+add_dependencies(trajectory_follower ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
 # target_link_libraries(${PROJECT_NAME}_node

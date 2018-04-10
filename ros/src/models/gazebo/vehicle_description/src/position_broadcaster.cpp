@@ -17,7 +17,7 @@ int main(int argc, char** argv){
   ros::init(argc, argv, "tf_position_broadcaster");
 
   ros::NodeHandle node;
-  ros::Subscriber sub = node.subscribe("/hmmwv/base_footprint_link_pose", 10, &poseCallback);
+  ros::Subscriber sub = node.subscribe("/hmmwv/base_footprint_link_pose", 100, &poseCallback);
 
   ros::spin();
   return 0;

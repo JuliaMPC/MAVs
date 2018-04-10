@@ -15,7 +15,7 @@ using gazebo_msgs.srv
 using gazebo_msgs.msg
 
 function loop(get_link_state, pub)
-    loop_rate = Rate(5.0)
+    loop_rate = Rate(50.0)
     while ! is_shutdown()
         linkName = "hmmwv::base_footprint"  # TODO make this a parameter
 

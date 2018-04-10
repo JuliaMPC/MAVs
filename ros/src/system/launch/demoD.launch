@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <launch>
 
-  <!-- demo of vehicle_description and ros_base_planner-->
+  <!-- demo of vehicle_description and ros_base_planner and Chrono-->
 
   <!--  ************* vehicle_description args and parameters ***************  -->
-  <arg name="system_params_path" default="$(find system)/config/system/demoD.yaml"/>
+  <arg name="system_params_path" default="$(find system)/config/system/demos/demoD.yaml"/>
   <arg name="vehicle_params_path" default="$(find system)/config/vehicle/hmmwv.yaml"/>
-  <arg name="case_params_path" default="$(find system)/config/case/case1.yaml"/>
-  <arg name="obstacle_num" default="3"/>
+  <arg name="case_params_path" default="$(find system)/config/case/s1.yaml"/>
   <arg name="gui" default="true"/>
+  <arg name="paused" default="true"/> <!-- NOTE this pause overrides system/flags/pause -->
 
   <arg name="laser_scan_topic" default="/lidar_points"/>
   <arg name="rviz_config_file" default="$(find system)/config/planner/ros_base_planner/default.rviz"/>
@@ -28,8 +28,8 @@
     <arg name="system_params_path" value="$(arg system_params_path)"/>
     <arg name="vehicle_params_path" value="$(arg vehicle_params_path)"/>
     <arg name="case_params_path" value="$(arg case_params_path)"/>
-    <arg name="obstacle_num" value="$(arg obstacle_num)"/>
     <arg name="gui" value="$(arg gui)"/>
+    <arg name="paused" value="$(arg paused)"/>
   </include>
 
   <include file="$(find ros_base_planner)/launch/main.launch">

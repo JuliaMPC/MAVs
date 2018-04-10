@@ -26,6 +26,8 @@ catkin_package(
   CATKIN_DEPENDS geometry_msgs roscpp rospy tf tf2 nav_msgs sensor_msgs gazebo_ros
 )
 
+include_directories(include ${catkin_INCLUDE_DIRS})
+
 add_library(gazebo_ros_velodyne_laser src/GazeboRosVelodyneLaser.cpp)
 target_link_libraries(gazebo_ros_velodyne_laser
   ${catkin_LIBRARIES}

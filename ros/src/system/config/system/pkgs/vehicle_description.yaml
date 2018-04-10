@@ -1,7 +1,10 @@
 system:
+ flags:
+  system_shutdown: false
+  paused: false
+
  vehicle_description:
   flags:
-   postion_update_external: false
    lidar_initialized: false
    obstacles_initialized: false
- paused: false
+   postion_update_external: false

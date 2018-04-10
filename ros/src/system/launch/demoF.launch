@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-  <!-- demo of nooptcontrol planner with chrono and vehicle description-->
+  <!-- demo of nloptcontrol planner with chrono and vehicle description-->
 
   <!-- sim time setting -->
   <node name="ros_get_world_time_" pkg="get_world_time_test" type="ros_get_world_time" output="screen" />
@@ -15,15 +15,14 @@
   <rosparam command="load" file="$(arg planner_params_path)" />
   <!--  ************* vehicle_description args and parameters ***************  -->
   <arg name="vehicle_params_path" default="$(find system)/config/vehicle/hmmwv.yaml"/>
-  <arg name="obstacle_num" default="1"/>
   <arg name="gui" default="true"/>
   <!-- Use Chrono time-->
-  <arg name="paused" default="true"/>
+  <arg name="paused" default="true"/> <!-- NOTE this pause overrides system/flags/pause -->
 
   <rosparam command="load" file="$(arg vehicle_params_path)" />
 
   <!--  ************** common args and parameters ***************  -->
-  <arg name="system_params_path" default="$(find system)/config/system/demoF.yaml"/>
+  <arg name="system_params_path" default="$(find system)/config/system/demos/demoF.yaml"/>
   <arg name="case_params_path" default="$(find system)/config/case/s1.yaml"/>
   <arg name="chrono_params_path" default="$(find ros_chrono)/config/hmmwv_chrono_params.yaml"/>
 
@@ -35,7 +34,7 @@
   <rosparam command="load" file="$(arg chrono_params_path)"/>
 
   <!-- launch chrono -->
-  <arg name="path_follower" value="false" />
+  <arg name="path_follower" value="true" />
   <!--node name="Reference" pkg="traj_gen_chrono" type="traj_gen_chrono"/-->
   <node if="$(arg path_follower)" name="Chronode" pkg="ros_chrono" type="hmmwv_model" cwd="node" />
   <node unless="$(arg path_follower)" name="Chronode" pkg="ros_chrono" type="trajectory_follower"
@@ -51,10 +50,12 @@
     <arg name="system_params_path" value="$(arg system_params_path)"/>
     <arg name="vehicle_params_path" value="$(arg vehicle_params_path)"/>
     <arg name="case_params_path" value="$(arg case_params_path)"/>
-    <arg name="obstacle_num" value="$(arg obstacle_num)"/>
     <arg name="gui" value="$(arg gui)"/>
     <arg name="paused" value="$(arg paused)"/>
   </include>
+
+  <!-- display the trajectory -->
+  <node name="rviz" pkg="rviz" type="rviz" output="screen" args="-d $(find obstacle_detector)/resources/display.rviz"/>
 
   <!-- initialize system -->
   <node name="bootstrap" pkg="system" type="bootstrap.jl" output="screen"/>

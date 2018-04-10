@@ -2,6 +2,8 @@
 
 [Docker Hub repo](https://hub.docker.com/r/avpg/mavs/) ![mavs build status](https://img.shields.io/docker/build/avpg/mavs.svg)
 
+[![Build Status](https://travis-ci.org/JuliaMPC/MAVs.svg?branch=master)](https://travis-ci.org/JuliaMPC/MAVs)
+
 [![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://juliampc.github.io/AVExamples.jl/stable/)
 [![Latest](https://img.shields.io/badge/docs-latest-blue.svg)](https://juliampc.github.io/AVExamples.jl/latest/)
 

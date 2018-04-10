@@ -7,8 +7,8 @@ system:
   flags:
    initialized: false
    gui: true
-
+   
  planner: default
  default:
   flags:
-   initialized: true
+   initialized: false
