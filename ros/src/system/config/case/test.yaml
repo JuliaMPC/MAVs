@@ -3,6 +3,7 @@ case:
   x: 0
   yVal: 100
   psi: 0.7
+  tol: 4
 
  actual:
   X0:

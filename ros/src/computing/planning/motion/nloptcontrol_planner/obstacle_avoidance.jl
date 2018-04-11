@@ -11,6 +11,7 @@ using nav_msgs.msg
 
 import YAML
 
+using VehicleModels
 using NLOptControl
 using MAVs
 using PyCall
@@ -274,7 +275,7 @@ function loop(pub,pub_path,n,c)
 
       path = Path()
       path.header.stamp = get_rostime()
-      path.header.frame_id = "map"
+      path.header.frame_id = "map" # TODO get from rosparams
       path.poses = Array{PoseStamped}(length(msg.t))
       for i in 1:length(msg.t)
         path.poses[i]= PoseStamped()
@@ -316,8 +317,6 @@ function loop(pub,pub_path,n,c)
         # get chrono states, see if it is near goal
       end
 
-
-
       if !init  # calling this node initialized after the first solve so that /traj/ parameters are set
         init = true
         RobotOS.set_param("system/nloptcontrol_planner/flags/initialized",true)
@@ -342,26 +341,18 @@ function main()
   # message for solution to optimal control problem
   plannerNamespace = RobotOS.get_param("system/nloptcontrol_planner/namespace")
   pub = Publisher{Control}(string(plannerNamespace,"/control"), queue_size=10)
-  #pub_path = Publisher{Path}(string(plannerNamespace,"/path"), queue_size=10)
   pub_path = Publisher{Path}("/path", queue_size=10)
 
   sub = Subscriber{Control}(string(plannerNamespace, "/control"), setTrajParams, queue_size = 10)
-
-  # get the parameters
-  #if !RobotOS.has_param("planner/nloptcontrol_planner/misc")
-  #    error("Please set rosparam:planner/nloptcontrol_planner/misc")
-  #elseif !RobotOS.has_param("case")
-  #    error("Please set rosparam: case")
-  #elseif !RobotOS.has_param("planner/nloptcontrol_planner")
-  #    error("Please set rosparam: planner/nloptcontrol_planner")
-  #end
 
   # using the filenames set as rosparams, the datatypes of the parameters get messed up if they are put on the ROS server
   # and then loaded into julia through RobotOS.jl; but less is messed up by loading using YAML.jl
   case = YAML.load(open(RobotOS.get_param("case_params_path")))["case"]
   planner = YAML.load(open(RobotOS.get_param("planner_params_path")))["planner"]["nloptcontrol_planner"]
+  vehicle = YAML.load(open(RobotOS.get_param("vehicle_params_path")))["vehicle"]["nloptcontrol_planner"]
 
   c = YAML.load(open(string(Pkg.dir("MAVs"),"/config/empty.yaml")))
+  c["vehicle"] = vehicle
   c["weights"] = planner["weights"]
   c["misc"] = planner["misc"]
   c["solver"] = planner["solver"]
@@ -374,25 +365,9 @@ function main()
   else  # NOTE currently the the python parcer does not like assumed/obstacle format!, this will fail!
     c["obstacle"] = case["assumed"]["obstacle"]
   end
-  # fix messed up data types
-#  if c["solver"]["warm_start_init_point"]
-#    c["solver"]["warm_start_init_point"] = "yes"
-#  else
-#    c["solver"]["warm_start_init_point"] = "no"
-#  end
-  for keyA in ["weights", "misc", "X0", "solver", "tolerances"]
-    for (key,value) in c[keyA]
-      if isequal(value, "NaN"); c[keyA][key] = NaN; end
-    end
-  end
-  for keyA in ["misc"]
-    for (key,value) in c[keyA]
-      if isequal(typeof(c[keyA][key]),String); c[keyA][key] = Symbol(c[keyA][key]); end
-    end
-  end
+  fixYAML(c)   # fix messed up data types
 
-  n=initializeAutonomousControl(c);
-
+  n = initializeAutonomousControl(c);
   setInitStateParams(c)
 
   if RobotOS.get_param("system/nloptcontrol_planner/flags/known_environment")

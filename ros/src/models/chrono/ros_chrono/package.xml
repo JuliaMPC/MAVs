@@ -55,7 +55,7 @@
   <build_depend>message_generation</build_depend>
   <build_depend>ros_chrono_msgs</build_depend>
   <build_depend>nloptcontrol_planner</build_depend>
-
+  <build_depend>interpolation</build_depend>
   <build_depend>Chrono</build_depend>
 
   <build_export_depend>roscpp</build_export_depend>
@@ -69,7 +69,7 @@
   <exec_depend>message_runtime</exec_depend>
   <exec_depend>ros_chrono_msgs</exec_depend>
   <exec_depend>Chrono</exec_depend>
-
+  <exec_depend>interpolation</exec_depend>
   <!-- The export tag contains other, unspecified, tags -->
   <export>
     <!-- Other tools can request additional information be placed here -->

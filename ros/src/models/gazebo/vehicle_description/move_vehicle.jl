@@ -118,9 +118,9 @@ function loop(set_state,get_state)
          ms.pose.position.y = RobotOS.get_param("state/y")
          Q = tf.quaternion_from_euler(0, 0, RobotOS.get_param("state/psi"))
         else
-         ms.pose.position.x = RobotOS.get_param("vehicle/chrono/state/x")
-         ms.pose.position.y = RobotOS.get_param("vehicle/chrono/state/yVal")
-         Q = tf.quaternion_from_euler(0, 0, RobotOS.get_param("vehicle/chrono/state/psi"))
+         ms.pose.position.x = RobotOS.get_param("state/chrono/state/x")
+         ms.pose.position.y = RobotOS.get_param("state/chrono/state/yVal")
+         Q = tf.quaternion_from_euler(0, 0, RobotOS.get_param("state/chrono/state/psi"))
         end
         ms.pose.orientation.x = Q[1]
         ms.pose.orientation.y = Q[2]

@@ -29,7 +29,7 @@ int main(int argc, char** argv)
   ros::Time last_ros_time_;
   bool wait = true;
   double simulation_time_pre;
-  rosnode->getParam("vehicle/chrono/state/t", simulation_time_pre);
+  rosnode->getParam("state/chrono/state/t", simulation_time_pre);
   double simulation_time = simulation_time_pre;
   double delta_time = 0;
   while (wait)
@@ -45,7 +45,7 @@ int main(int argc, char** argv)
     msg.set_step(true);
 
     // get simulation step
-    rosnode->getParam("vehicle/chrono/state/t", simulation_time);
+    rosnode->getParam("state/chrono/state/t", simulation_time);
 
     delta_time = simulation_time - simulation_time_pre;
     if(delta_time)  pub->Publish(msg);

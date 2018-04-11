@@ -24,6 +24,9 @@ find_package(
   COMPONENTS Irrlicht
   CONFIG
 )
+
+find_package(interpolation REQUIRED)
+
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
@@ -116,7 +119,7 @@ catkin_package(
 #  INCLUDE_DIRS include
    LIBRARIES ros_chrono
    CATKIN_DEPENDS roscpp rospy std_msgs message_runtime ros_chrono_msgs
-   DEPENDS system_lib Chrono
+   DEPENDS system_lib Chrono interpolation
 )
 
 ###########
@@ -133,6 +136,7 @@ include_directories(
   ${CHRONO_INCLUDE_DIRS}
   ${CH_IRRLICHTINC}
   ${Irrlicht_INCLUDE_DIRS}
+  ${interpolation_INCLUDE_DIRS}
 )
 
 #--------------------------------------------------------------
@@ -213,7 +217,8 @@ target_link_libraries(trajectory_follower
   ChronoEngine_vehicle
   ChronoModels_vehicle
   ${catkin_LIBRARIES}
-  ${CHRONO_LIBRARIES})
+  ${CHRONO_LIBRARIES}
+  interpolation)
 #############
 ## Install ##
 #############

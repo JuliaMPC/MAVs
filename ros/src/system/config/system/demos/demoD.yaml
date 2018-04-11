@@ -2,7 +2,6 @@ system:
  planner: ros_base_planner
  plant: chrono
  params:
-  goal_tol: 4
   step_size: 0.001
  flags:
   goal_attained: false

@@ -1,4 +1,8 @@
 system:
+ plant: chrono
+ params:
+  step_size: 0.01
+  
  flags:
   system_shutdown: false
 
@@ -7,7 +11,7 @@ system:
   flags:
    initialized: false
    gui: true
-   
+
  planner: default
  default:
   flags:
