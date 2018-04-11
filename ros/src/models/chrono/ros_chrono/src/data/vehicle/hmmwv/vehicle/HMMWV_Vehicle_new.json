@@ -33,7 +33,7 @@
   "Steering Subsystems":
   [
     {
-      "Input File":           "hmmwv/steering/HMMWV_PitmanArm.json",
+      "Input File":           "hmmwv/steering/HMMWV_RackPinion.json",
       "Location":             [1.24498, 0, 0.101322],
       "Orientation":          [0.98699637, 0, 0.16074256, 0]
     }
@@ -42,6 +42,6 @@
   "Driveline":
   {
     "Input File":           "hmmwv/driveline/HMMWV_Driveline2WD.json",
-    "Suspension Indexes":   [1]
+    "Suspension Indexes":   [0, 1]
   }
 }

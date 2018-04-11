@@ -43,9 +43,11 @@
 //#include "chrono_models/vehicle/hmmwv/HMMWV_Pac02Tire.h"
 #include "chrono_vehicle/wheeled_vehicle/tire/RigidTire.h"
 #include "chrono_vehicle/wheeled_vehicle/tire/LugreTire.h"
+#include "chrono_models/vehicle/hmmwv/HMMWV_ReissnerTire.h"
 #include "chrono_vehicle/ChSubsysDefs.h"
 #include "chrono_vehicle/wheeled_vehicle/vehicle/WheeledVehicle.h"
 #include "chrono_vehicle/powertrain/ChShaftsPowertrain.h"
+#include "chrono_vehicle/powertrain/SimplePowertrain.h"
 
 #include <vector>
 
@@ -82,6 +84,7 @@ std::string pacejka_tire_file_left(data_path+"hmmwv/tire/HMMWV_pacejka_left.tir"
 std::string pacejka_tire_file_right(data_path+"hmmwv/tire/HMMWV_pacejka_right.tir");
 std::string lugre_tire_file(data_path+"hmmwv/tire/HMMWV_LugreTire.json");
 std::string rigid_tire_file(data_path+"hmmwv/tire/HMMWV_RigidTire.json");
+std::string reissner_tire_file(data_path+"hmmwv/tire/HMMWV_ReissnerTire.json");
 
 //std::string pacejka_tire_file(data_path+"hmmwv/tire/HMMWV_RigidTire.json");
 
@@ -231,7 +234,7 @@ void write_path(parameters &hmmwv_params, std::string path_file){
 void setChassisParams(ros::NodeHandle &n){
   std::ofstream myfile2;
 
-  myfile2.open("../../../../../../../opt/chrono/chrono/src/data/vehicle/hmmwv/chassis/HMMWV_Chassis.json",std::ofstream::out | std::ofstream::trunc);
+  myfile2.open(data_path+"hmmwv/chassis/HMMWV_Chassis.json",std::ofstream::out | std::ofstream::trunc);
   std::string s1 = "{ ";
   std::string s2 = "  \"Name\":     \"HMMWV chassis\",";
   std::string s3 = "  \"Type\":     \"Chassis\",";
@@ -242,7 +245,7 @@ void setChassisParams(ros::NodeHandle &n){
   std::string s8 = "     \"Centroidal Frame\":    {";
   std::string s9 = "                              \"Location\":    ";
   std::string s10;
-  n.getParam("/vehicle/chrono/vehicle_params/centroidLoc",s10);
+  n.getParam("vehicle/chrono/vehicle_params/centroidLoc",s10);
   std::string s11 = "                              \"Orientation\": ";
   std::string s12;
   n.getParam("/vehicle/chrono/vehicle_params/centroidOrientation",s12);
@@ -287,7 +290,7 @@ void setChassisParams(ros::NodeHandle &n){
   myfile2 << s9 << s10  << '\n';
   myfile2 << s11 << s12  << '\n';
   myfile2 << s13  << '\n';
-  myfile2 << s14 << s15  << '\n';
+  myfile2 << s14 << s15  <<'\n';
   myfile2 << s16 << s17  << '\n';
   myfile2 << s18 << '\n';
   myfile2 << s19 << '\n';
@@ -314,7 +317,7 @@ void setChassisParams(ros::NodeHandle &n){
 void setDrivelineParams(ros::NodeHandle &n){
   std::ofstream myfile2;
 
-  myfile2.open("../../../../../../../opt/chrono/chrono/src/data/vehicle/hmmwv/driveline/HMMWV_Driveline2WD.json",std::ofstream::out | std::ofstream::trunc);
+  myfile2.open(data_path+"hmmwv/driveline/HMMWV_Driveline2WD.json",std::ofstream::out | std::ofstream::trunc);
   std::string s1 = "{ ";
   std::string s2 = "  \"Name\":                       \"HMMWV RWD Driveline\",";
   std::string s3 = "  \"Type\":                       \"Driveline\",";
@@ -378,7 +381,7 @@ void setPowertrainParams(ros::NodeHandle &n){
   std::ofstream myfile2;
 
 //  myfile2.open(data_path+"hmmwv/powertrain/HMMWV_SimplePowertrain.json",std::ofstream::out | std::ofstream::trunc);
-  myfile2.open("../../../../../../../opt/chrono/chrono/data/vehicle/hmmwv/powertrain/HMMWV_SimplePowertrain.json",std::ofstream::out | std::ofstream::trunc);
+  myfile2.open(data_path+"hmmwv/powertrain/HMMWV_ShaftsPowertrain.json",std::ofstream::out | std::ofstream::trunc);
   std::string s1 = "{";
   std::string s2 = "  \"Name\":                    \"HMMWV Simplified Powertrain\",";
   std::string s3 = "  \"Type\":                    \"Powertrain\",";
@@ -413,7 +416,7 @@ void setPowertrainParams(ros::NodeHandle &n){
 void setSteeringParams(ros::NodeHandle &n){
   std::ofstream myfile2;
 
-  myfile2.open("../../../../../../../opt/chrono/chrono/src/data/vehicle/hmmwv/steering/HMMWV_RackPinion.json",std::ofstream::out | std::ofstream::trunc);
+  myfile2.open(data_path+"hmmwv/steering/HMMWV_RackPinion.json",std::ofstream::out | std::ofstream::trunc);
   std::string s1 = "{";
   std::string s2 = "  \"Name\":                       \"HMMWV Rack-Pinion Steering\",";
   std::string s3 = "  \"Type\":                       \"Steering\",";
@@ -484,7 +487,7 @@ void setBrakingParams(ros::NodeHandle &n){
   std::string s7 = "}";
   std::string s8 = "  \"Name\":                       \"HMMWV Brake Rear\",";
 
-  myfile2.open("../../../../../../../opt/chrono/chrono/src/data/vehicle/hmmwv/brake/HMMWV_BrakeSimple_Front.json",std::ofstream::out | std::ofstream::trunc);
+  myfile2.open(data_path+"hmmwv/brake/HMMWV_BrakeSimple_Front.json",std::ofstream::out | std::ofstream::trunc);
   myfile2 << s1 << '\n';
   myfile2 << s2 << '\n';
   myfile2 << s3 << '\n';
@@ -494,7 +497,8 @@ void setBrakingParams(ros::NodeHandle &n){
   myfile2 << s7  << '\n';
   myfile2.close();
 
-  myfile2.open("../../../../../../../opt/chrono/chrono/src/data/vehicle/hmmwv/brake/HMMWV_BrakeSimple_Rear.json",std::ofstream::out | std::ofstream::trunc);
+  myfile2.open(data_path+"hmmwv/brake/HMMWV_BrakeSimple_Rear.json",std::ofstream::out | std::ofstream::trunc);
+  myfile2 << s1 << '\n';
   myfile3 << s8 << '\n';
   myfile3 << s2 << '\n';
   myfile3 << s3 << '\n';
@@ -504,6 +508,8 @@ void setBrakingParams(ros::NodeHandle &n){
   myfile3 << s7  << '\n';
   myfile3.close();
 }
+
+
 // =============================================================================
 int main(int argc, char* argv[]) {
 
@@ -571,7 +577,10 @@ int main(int argc, char* argv[]) {
     // if(yaw0 >= 3*PI/2) yaw0 = -yaw0 + 5*PI/2;
     // else yaw0 = -yaw0 + PI/2;
     // yaw0 = -yaw0 + PI;
-
+    setSteeringParams(n);
+//    setDrivelineParams(n);
+//    setBrakingParams(n);
+//   setChassisParams(n);
     ChVector<> initLoc(x0, y0, z0);
 //    ChQuaternion<> initRot(q[0],q[1],q[2],q[3]);
 
@@ -601,12 +610,14 @@ int main(int argc, char* argv[]) {
     // Create the HMMWV vehicle, set parameters, and initialize
     // HMMWV_Reduced my_hmmwv;
     std::cout << "Start reading the file" << std::endl;
-    WheeledVehicle my_hmmwv(data_path + "hmmwv/vehicle/HMMWV_Vehicle_new.json",contact_method);
+    WheeledVehicle my_hmmwv(data_path + "hmmwv/vehicle/HMMWV_Vehicle.json",contact_method);
     my_hmmwv.Initialize(ChCoordsys<>(initLoc, initRot),0.0);
 
     std::cout << "Successfully read the file" << std::endl;
     my_hmmwv.SetChassisVehicleCollide(false);
-    my_hmmwv.SetChassisVisualizationType(VisualizationType::PRIMITIVES);
+    my_hmmwv.GetChassis()->SetVisualizationType(chassis_vis_type);
+//    my_hmmwv.GetChassis()->AddVisualizationAssets(chassis_vis_type);
+
     my_hmmwv.SetSuspensionVisualizationType(suspension_vis_type);
     my_hmmwv.SetSteeringVisualizationType(steering_vis_type);
     my_hmmwv.SetWheelVisualizationType(wheel_vis_type);
@@ -625,12 +636,21 @@ int main(int argc, char* argv[]) {
     LugreTire tire_rear_left(lugre_tire_file);
     LugreTire tire_rear_right(lugre_tire_file);
 */
+/*
+    HMMWV_ReissnerTire tire_front_left(reissner_tire_file);
+    HMMWV_ReissnerTire tire_front_right(reissner_tire_file);
+    HMMWV_ReissnerTire tire_rear_left(reissner_tire_file);
+    HMMWV_ReissnerTire tire_rear_right(reissner_tire_file);
+*/
 
-  RigidTire tire_front_left(rigid_tire_file);
-  RigidTire tire_front_right(rigid_tire_file);
-  RigidTire tire_rear_left(rigid_tire_file);
-  RigidTire tire_rear_right(rigid_tire_file);
-  TireForces tire_forces(4);
+
+    RigidTire tire_front_left(rigid_tire_file);
+    RigidTire tire_front_right(rigid_tire_file);
+    RigidTire tire_rear_left(rigid_tire_file);
+    RigidTire tire_rear_right(rigid_tire_file);
+
+
+    TireForces tire_forces(4);
 
     tire_front_left.Initialize(my_hmmwv.GetWheelBody(0), LEFT);
     tire_front_right.Initialize(my_hmmwv.GetWheelBody(1), LEFT);
@@ -670,8 +690,12 @@ int main(int argc, char* argv[]) {
     terrain.SetTexture(data_path+"terrain/textures/tile4.jpg", 200, 200);
     terrain.Initialize(terrainHeight, terrainLength, terrainWidth);
 
+    //SimplePowertrain powertrain(vehicle::GetDataFile("hmmwv/powertrain/HMMWV_SimplePowertrain.json"));
     HMMWV_Powertrain powertrain;
     powertrain.Initialize(my_hmmwv.GetChassisBody(),my_hmmwv.GetDriveshaft());
+    std::vector<double> GearRatios;
+    n.getParam("vehicle/chrono/vehicle_params/gearRatios",GearRatios);
+    powertrain.SetGearRatios(GearRatios);
     // ---------------------------------------
     // Create the vehicle Irrlicht application
     // ---------------------------------------

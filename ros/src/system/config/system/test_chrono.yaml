@@ -1,14 +1,10 @@
 system:
- flags:
-  system_shutdown: false
-
  chrono:
   namespace: chrono
   flags:
    initialized: false
    gui: true
-
  planner: default
  default:
   flags:
-   initialized: true
+   initialized: false
