@@ -65,14 +65,13 @@ int main(int argc, char **argv)
 
 
       // path....
-      /*
+
       x2[0]= 200;
       x2[1]= 200;
       y2[0] = 0;
       y2[1] = 50 ;
-      a.setParam("vehicle/chrono/default/traj/x",x2);
-      a.setParam("vehicle/chrono/default/traj/yVal",y2);
-*/
+      a.setParam("default/traj/x",x2);
+      a.setParam("default/traj/yVal",y2);
 
       ros::spinOnce();
       pub.publish(control_info);
