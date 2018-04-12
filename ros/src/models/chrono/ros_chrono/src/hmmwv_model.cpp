@@ -267,7 +267,7 @@ void setChassisParams(ros::NodeHandle &n){
   n.getParam("/vehicle/chrono/vehicle_params/driverLoc",s25);
   std::string s26 = "    \"Orientation\":  ";
   std::string s27;
-  n.getParam("/vehicle/chrono/vehicle_params/driverOrientiation",s27);
+  n.getParam("/vehicle/chrono/vehicle_params/driverOrientation",s27);
   std::string s28 = "  },";
   std::string s29 = "  \"Visualization\":";
   std::string s30 = "  {";
@@ -376,7 +376,7 @@ void setDrivelineParams(ros::NodeHandle &n){
   myfile2 << s26 ;
   myfile2.close();
 }
-
+/*
 void setPowertrainParams(ros::NodeHandle &n){
   std::ofstream myfile2;
 
@@ -412,7 +412,7 @@ void setPowertrainParams(ros::NodeHandle &n){
   myfile2 << s13  << '\n';
   myfile2.close();
 }
-
+*/
 void setSteeringParams(ros::NodeHandle &n){
   std::ofstream myfile2;
 
@@ -497,8 +497,8 @@ void setBrakingParams(ros::NodeHandle &n){
   myfile2 << s7  << '\n';
   myfile2.close();
 
-  myfile2.open(data_path+"hmmwv/brake/HMMWV_BrakeSimple_Rear.json",std::ofstream::out | std::ofstream::trunc);
-  myfile2 << s1 << '\n';
+  myfile3.open(data_path+"hmmwv/brake/HMMWV_BrakeSimple_Rear.json",std::ofstream::out | std::ofstream::trunc);
+  myfile3 << s1 << '\n';
   myfile3 << s8 << '\n';
   myfile3 << s2 << '\n';
   myfile3 << s3 << '\n';
@@ -578,9 +578,9 @@ int main(int argc, char* argv[]) {
     // else yaw0 = -yaw0 + PI/2;
     // yaw0 = -yaw0 + PI;
     setSteeringParams(n);
-//    setDrivelineParams(n);
-//    setBrakingParams(n);
-//   setChassisParams(n);
+    setDrivelineParams(n);
+    setBrakingParams(n);
+    setChassisParams(n);
     ChVector<> initLoc(x0, y0, z0);
 //    ChQuaternion<> initRot(q[0],q[1],q[2],q[3]);
 
@@ -851,6 +851,7 @@ int main(int argc, char* argv[]) {
     while(n.ok()){
       while (running) {
         if(gui_switch)  app.GetDevice()->run();
+        n.setParam("system/chrono/flags/running",true);
         double time = hmmwv_params.my_hmmwv.GetSystem()->GetChTime();
         // Get trajectory parameters again
         n.getParam("system/"+planner_namespace+"/flags/initialized",planner_init);
@@ -948,8 +949,8 @@ int main(int argc, char* argv[]) {
           wheel_states[3] = hmmwv_params.my_hmmwv.GetWheelState(3);
 
           double x, y, goal_tol;
-          n.getParam("state/chrono/state/x",x);
-          n.getParam("state/chrono/state/yVal",y);
+          n.getParam("state/chrono/x",x);
+          n.getParam("state/chrono/yVal",y);
           n.getParam("system/params/goal_tol",goal_tol);
           double distance  = sqrt( (goal_x-x)*(goal_x-x) + (goal_y-y)*(goal_y-y) );
           std::cout << "Square of distance to goal is: " << distance << std::endl;
@@ -1013,17 +1014,17 @@ int main(int argc, char* argv[]) {
           double theta_val=asin(2*(q0*q2-q3*q1));
           double phi_val= atan2(2*(q0*q1+q2*q3),1-2*(q1*q1+q2*q2));
 
-          n.setParam("state/chrono/state/t",time); //time in chrono simulation
-          n.setParam("state/chrono/state/x", global_pos[0]) ;
-          n.setParam("state/chrono/state/yVal",global_pos[1]);
-          n.setParam("state/chrono/state/ux",fabs(global_velCOM[0])); //speed measured at the origin of the chassis reference frame.
-          n.setParam("state/chrono/state/v", global_velCOM[1]);
-          n.setParam("state/chrono/state/ax", global_accCOM[0]);
-          n.setParam("state/chrono/state/psi",yaw_val); //in radians
-          n.setParam("state/chrono/state/theta",theta_val); //in radians
-          n.setParam("state/chrono/state/phi",phi_val); //in radians
-          n.setParam("state/chrono/state/r",-rot_dt[2]);//yaw rate
-          n.setParam("state/chrono/state/sa",slip_angle); //slip angle
+          n.setParam("state/chrono/t",time); //time in chrono simulation
+          n.setParam("state/chrono/x", global_pos[0]) ;
+          n.setParam("state/chrono/yVal",global_pos[1]);
+          n.setParam("state/chrono/ux",fabs(global_velCOM[0])); //speed measured at the origin of the chassis reference frame.
+          n.setParam("state/chrono/v", global_velCOM[1]);
+          n.setParam("state/chrono/ax", global_accCOM[0]);
+          n.setParam("state/chrono/psi",yaw_val); //in radians
+          n.setParam("state/chrono/theta",theta_val); //in radians
+          n.setParam("state/chrono/phi",phi_val); //in radians
+          n.setParam("state/chrono/r",-rot_dt[2]);//yaw rate
+          n.setParam("state/chrono/sa",slip_angle); //slip angle
           n.setParam("state/chrono/control/thr",hmmwv_params.throttle_input); //throttle input in the range [0,+1]
           n.setParam("state/chrono/control/brk",hmmwv_params.braking_input); //braking input in the range [0,+1]
           n.setParam("state/chrono/control/str",hmmwv_params.steering_input); //steeering input in the range [-1,+1]

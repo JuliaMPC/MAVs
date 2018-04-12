@@ -1,11 +1,11 @@
 #include <ros/ros.h>
 #include <tf/transform_broadcaster.h>
 #include <geometry_msgs/Pose.h>
-
+/*
 void poseCallback(const geometry_msgs::Pose& msg){
 
 }
-
+*/
 int main(int argc, char** argv){
   //ros::Rate rate(100.0);
   ros::init(argc, argv, "tf_position_broadcaster");

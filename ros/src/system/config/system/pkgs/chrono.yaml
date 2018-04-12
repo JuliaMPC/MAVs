@@ -6,8 +6,9 @@ system:
   namespace: chrono
   flags:
    initialized: false
+   running: false
    gui: true
-   
+
  planner: default
  default:
   flags:

@@ -18,7 +18,6 @@ $ catkin_make
 
 ```
 ## How to Start
-Change initial condition case/actual/X0/x to x=200.0 in case.yaml. Change system/planner value in global.yaml to default.
 
 ```
 $ cd $HOME/MAVs/ros

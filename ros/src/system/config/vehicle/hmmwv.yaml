@@ -111,8 +111,6 @@ vehicle:
    conicalGearRatio: "-0.2,"
    differentialRatio: "-1.0"
    gearRatios: "[-0.3, 0.2, 0.4, 0.8]"
-   maxEngineTorque: "1000.0,"
-   maxEngineSpeed: "2000"
    steeringLinkMass: "9.072,"
    steeringLinkInertia: "[1, 1, 1],"
    steeringLinkRadius: "0.03,"
