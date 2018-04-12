@@ -56,6 +56,7 @@ int main(int argc, char **argv)
         control_t[i] = secs + i;
         control_sa[i] = i * 0.01 + count * 0.01 / 2.0;
         control_vx[i] = i * 0.05 + count * 0.05 / 2.0;
+        // control_vx[i] = 5;
         std::cout << "The reference steering angle: " << control_sa[1] << std::endl;
       }
       control_info.t = control_t;

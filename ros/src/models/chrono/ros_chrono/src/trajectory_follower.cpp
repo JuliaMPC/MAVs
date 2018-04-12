@@ -35,6 +35,7 @@
 #include "nloptcontrol_planner/Control.h"
 #include <unistd.h>
 #include <interpolation.h>
+#include <PID.h>
 #include <vector>
 //#include "tf/tf.h"
 #include <sstream>
@@ -46,6 +47,9 @@
 #include <math.h>
 #include "chrono_models/vehicle/hmmwv/HMMWV.h"
 
+#include "chrono_thirdparty/rapidjson/document.h"
+#include "chrono_thirdparty/rapidjson/filereadstream.h"
+
 #define PI 3.1415926535
 //using veh_status.msg
 using namespace chrono;
@@ -54,6 +58,8 @@ using namespace chrono::vehicle;
 using namespace chrono::vehicle::hmmwv;
 
 using namespace alglib;
+
+using namespace rapidjson;
 // =============================================================================
 // Problem parameters
 // Main Data Path
@@ -124,10 +130,13 @@ bool state_output = false;
 int filter_window_size = 20;
 
 // In src/data/vehicle/hmmwv/steering/HMMWV_PitmanArm.json revolution joint
+double speed = 0.0;
 double maximum_steering_angle = 50.0;
 // Controller output
 double target_steering_interp = 0.0;
 double target_speed_interp = 0.0;
+double controller_output = 0.0;
+PID controller;
 
 // =============================================================================
 
@@ -198,16 +207,14 @@ void controlCallback(const nloptcontrol_planner::Control::ConstPtr& control_msg)
     std::cout << traj_t[i] << " ";
     std::cout << std::endl;
 
-/*
-  std::cout << "Steering trajectory: " << std::endl;
-  for(int i = 1; i < traj_sa.size(); i++)
-      std::cout << traj_sa[i] << " ";
-  std::cout << std::endl;
-*/
-
   std::cout << "Speed trajectory: " << " ";
   for(int i = 0; i < traj_vx.size(); i++)
       std::cout << traj_vx[i] << " ";
+  std::cout << std::endl;
+
+  std::cout << "Steering trajectory: " << " ";
+  for(int i = 0; i < traj_sa.size(); i++)
+      std::cout << traj_sa[i] << " ";
   std::cout << std::endl;
 
   real_1d_array t_array;
@@ -221,9 +228,16 @@ void controlCallback(const nloptcontrol_planner::Control::ConstPtr& control_msg)
   ae_int_t natural_bound_type = 2;
   spline1dbuildcubic(t_array, speed_array, s);
   target_speed_interp = spline1dcalc(s, time);
+  spline1dbuildcubic(t_array, steering_array, s);
+  target_steering_interp = spline1dcalc(s, time);
 
+  double speed_error = target_speed_interp - speed;
+  controller_output = controller.control(speed_error);
+
+  target_steering_interp = target_steering_interp / PI * 180.0 / maximum_steering_angle;
   // steering = steering * (-1);
-  std::cout << "Target_speed: " << target_speed_interp << " Target steering: " << target_steering_interp << std::endl;
+  // std::cout << "Target_speed: " << target_speed_interp << " Actual speed: " << speed << std::endl;
+  std::cout << "Target_steering: " << target_steering_interp << " Actual steering: " << target_steering_interp << std::endl;
   std::cout << std::endl;
 }
 
@@ -240,6 +254,16 @@ int main(int argc, char* argv[]) {
   else
       perror("getcwd() error");
     GetLog() << "Copyright (c) 2017 projectchrono.org\nChrono version: " << CHRONO_VERSION << "\n\n";
+
+    // read maximum_steering_angle from json
+    std::string filename("PitmanArm.json");
+    FILE* fp = fopen(filename.c_str(), "r");
+    char readBuffer[65536];
+    FileReadStream is(fp, readBuffer, sizeof(readBuffer));
+    fclose(fp);
+    Document d;
+    d.ParseStream<ParseFlag::kParseCommentsFlag>(is);
+    maximum_steering_angle = d["Revolute Joint"]["Maximum Angle"].GetDouble();
 
     SetChronoDataPath(CHRONO_DATA_DIR);
     vehicle::SetDataPath("opt/chrono/chrono/data/vehicle");
@@ -285,16 +309,8 @@ int main(int argc, char* argv[]) {
     n.getParam("hmmwv_chrono/X0/phi",roll0);
     n.getParam("system/chrono/flags/gui",gui_switch);
 
-    bool goal_attained;
+    bool goal_attained = false;
     bool running = true;
-
-  //  tf::Quaternion q = tf::createQuaternionFromRPY(roll0, pitch0, yaw0);
-    // Initial vehicle location and orientation
-
-    // convert yaw angle to chrono frame    (-pi,pi] or [-pi,pi)
-    // if(yaw0 >= 3*PI/2) yaw0 = -yaw0 + 5*PI/2;
-    // else yaw0 = -yaw0 + PI/2;
-    // yaw0 = -yaw0 + PI;
 
     ChVector<> initLoc(x0, y0, z0);
 //    ChQuaternion<> initRot(q[0],q[1],q[2],q[3]);
@@ -475,6 +491,12 @@ int main(int argc, char* argv[]) {
     n.setParam("vehicle/common/frict_coeff",frict_coeff);
     n.setParam("vehicle/common/rest_coeff",rest_coeff);
 
+    // set up the controller
+    controller.set_PID(0.3, 0.04, 0.001);
+    controller.set_step_size(step_size);
+    controller.set_output_limit(-1.0, 1.0);
+    controller.initialize();
+
     std::cout<< "Go into the loop..." << std::endl;
 
     while(n.ok()){
@@ -482,21 +504,32 @@ int main(int argc, char* argv[]) {
         if(gui_switch)  app.GetDevice()->run();
         hmmwv_params.target_speed = target_speed_interp;
 
-          // Hack for acceleration-braking maneuver
-          bool braking = false;
-          if (my_hmmwv.GetVehicle().GetVehicleSpeed() > hmmwv_params.target_speed)
-              braking = true;
-          if (braking) {
-              hmmwv_params.throttle_input = 0;
-              hmmwv_params.braking_input = 1;
-          }
-          else {
-              hmmwv_params.throttle_input = 1;
-              hmmwv_params.braking_input = 0;
-          }
+        // Hack for acceleration-braking maneuver
+        /* // on-off controller
+        bool braking = false;
+        if (my_hmmwv.GetVehicle().GetVehicleSpeed() > hmmwv_params.target_speed)
+            braking = true;
+        if (braking) {
+            hmmwv_params.throttle_input = 0;
+            hmmwv_params.braking_input = 1;
+        }
+        else {
+            hmmwv_params.throttle_input = 1;
+            hmmwv_params.braking_input = 0;
+        }
+        */
+        // pid controller
+        if (controller_output > 0){
+          hmmwv_params.throttle_input = controller_output;
+          hmmwv_params.braking_input = 0;
+        }
+        else{
+          hmmwv_params.throttle_input = 0;
+          hmmwv_params.braking_input = -controller_output;
+        }
 
-          // Hack for steering maneuver
-          hmmwv_params.steering_input = target_steering_interp;
+        // Hack for steering maneuver
+        hmmwv_params.steering_input = target_steering_interp;
 
         //     ros::Subscriber sub = n.subscribe<traj_gen_chrono::Control>("desired_ref", 1, &parameters::controlCallback, &hmmwv_params);
 
@@ -510,14 +543,6 @@ int main(int argc, char* argv[]) {
 
             hmmwv_params.render_frame++;
           }
-  /*
-          // Debug logging
-          if (debug_output && sim_frame % debug_steps == 0) {
-              GetLog() << "driver acceleration:  " << acc_driver.x() << "  " << acc_driver.y() << "  " << acc_driver.z()
-                       << "\n";
-              GetLog() << "CG acceleration:      " << acc_CG.x() << "  " << acc_CG.y() << "  " << acc_CG.z() << "\n";
-              GetLog() << "\n";
-          }*/
 
           ros_chrono_msgs::veh_status data_out;
   /*
@@ -564,6 +589,7 @@ int main(int argc, char* argv[]) {
           //ChVector<> euler_ang = global_orntn.Q_to_Rotv(); //convert to euler angles
           //ChPacejkaTire<> slip_angle = GetSlipAngle()
           double slip_angle = hmmwv_params.my_hmmwv.GetTire(0)->GetLongitudinalSlip();
+          speed = hmmwv_params.my_hmmwv.GetVehicle().GetVehicleSpeedCOM();
 
           double q0 = global_orntn[0];
           double q1 = global_orntn[1];
@@ -590,7 +616,6 @@ int main(int argc, char* argv[]) {
           n.setParam("state/chrono/control/str",hmmwv_params.steering_input); //steeering input in the range [-1,+1]
           n.setParam("system/simulation_time", time);
 
-
           data_out.t_chrono=time; //time in chrono simulation
           data_out.x_pos= global_pos[0];
           data_out.y_pos=global_pos[1];
@@ -608,9 +633,7 @@ int main(int argc, char* argv[]) {
         //  loop_rate.sleep();
 
          myfile1 << ' ' << global_pos[0] << ' '<< global_pos[1]  <<' ' << global_pos[2]  << '\n';
-
          ros::spinOnce();
-
          n.getParam("system/" + planner_namespace + "/flags/goal_attained",goal_attained);
          if(goal_attained){
            n.setParam("system/goal_attained","true");
