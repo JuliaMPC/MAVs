@@ -1,5 +1,6 @@
-{
+{ 
   "Name":                       "HMMWV Brake Rear",
+  "Name":                       "HMMWV Brake Front",
   "Type":                       "Brake",
   "Template":                   "BrakeSimple",
 
