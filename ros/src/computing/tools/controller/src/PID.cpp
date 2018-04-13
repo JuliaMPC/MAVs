@@ -46,7 +46,6 @@ double PID::control(const double &error){
     diff = 0;
   }
   output_ = Kp_ * error_ + Ki_ * integral_ + Kd_ * diff / step_size_;
-  std::cout << Kp_ * error_ << " " << Ki_ * integral_ << " " <<  Kd_ * diff / step_size_ << std::endl;
   if (output_ < output_lower_limit_) output_ = output_lower_limit_;
   else if (output_ > output_upper_limit_) output_ = output_upper_limit_;
 

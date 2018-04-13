@@ -896,7 +896,6 @@ int main(int argc, char* argv[]) {
           n.getParam("state/chrono/yVal",y);
           n.getParam("system/params/goal_tol",goal_tol);
           double distance  = sqrt( (goal_x-x)*(goal_x-x) + (goal_y-y)*(goal_y-y) );
-          std::cout << "Square of distance to goal is: " << distance << std::endl;
           if(distance < goal_tol){
             goal_attained = true;
             n.setParam("system/flags/goal_attained","true");

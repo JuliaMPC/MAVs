@@ -1,0 +1,5 @@
+controller:
+ Kp: 0.2
+ Ki: 0.04
+ Kd: 0.001
+ time_shift: 3.0

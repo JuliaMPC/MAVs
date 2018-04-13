@@ -3,6 +3,7 @@ system:
  plant: chrono
  params:
   step_size: 0.01
+  goal_tol: 4
  flags:
   goal_attained: false
   initialized: false
