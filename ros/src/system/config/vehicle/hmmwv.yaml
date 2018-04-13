@@ -94,7 +94,7 @@ vehicle:
   Fz_off: 100.
   # NOTE: a_t and b_t are calcuated in src/Three_DOF/parameters.jl in VehicleModels.jl
 
-chrono:
+ chrono:
   control:
    thr: 0.0
    brk: 0.0
