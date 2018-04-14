@@ -18,12 +18,12 @@ int main(int argc, char** argv){
   tf::Transform transform;
   tf::Quaternion q;
   while(1){
-    node.getParam("vehicle/chrono/state/x", x) ;
-    node.getParam("vehicle/chrono/state/yVal",y);
-    node.getParam("hmmwv_chrono/X0/z",z);
-    node.getParam("vehicle/chrono/state/psi",yaw); //in radians
-    node.getParam("vehicle/chrono/state/theta",p); //in radians
-    node.getParam("vehicle/chrono/state/phi",r); //in radians
+    node.getParam("state/chrono/x", x) ;
+    node.getParam("state/chrono/yVal",y);
+    node.getParam("state/chrono/X0/z",z);
+    node.getParam("state/chrono/psi",yaw); //in radians
+    node.getParam("state/chrono/theta",p); //in radians
+    node.getParam("state/chrono/phi",r); //in radians
     transform.setOrigin( tf::Vector3(x,y,z) );
     q.setRPY(r,p,y);
     transform.setRotation(q);

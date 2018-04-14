@@ -4,31 +4,21 @@
 #include <std_msgs/Float64.h>
 
 std::string planner_ns;
-ros::NodeHandle * nh;
 
 void poseCallback(const nav_msgs::Path path) {
-  std::vector<double> x_p;
-  std::vector<double> y_p;
+  std::vector<float> x_p;
+  std::vector<float> y_p;
    for (int i = 0; i < path.poses.size(); i++) {
-     x_p.push_back(path.poses[i].pose.position.x);
-     y_p.push_back(path.poses[i].pose.position.y);
+     x_p.push_back(roundf(path.poses[i].pose.position.x * 100)/100.0);
+     y_p.push_back(roundf(path.poses[i].pose.position.y * 100)/100.0);
+     //i++; // skipping one point tro reduce resolution
    }
 
    if (x_p.size() >= 2 && y_p.size() >= 2) {
 
+     ros::param::set("state/chrono/" + planner_ns + "/traj/" + "x", x_p);
+     ros::param::set("stste/chrono/" + planner_ns + "/traj/" + "yVal", y_p);
 
-     std::vector<double> x_pt(1000, 5.0);
-     std::vector<double> y_pt(1000, 5.0);
-     //nh->setParam("/vehicle/chrono/" + planner_ns + "/traj/" + "x", x_p);
-     //nh->setParam("/vehicle/chrono/" + planner_ns + "/traj/" + "yVal", y_p);
-     //while (!ros::master::check()){}
-     ros::param::set("vehicle/chrono/" + planner_ns + "/traj/" + "x1", x_pt);
-     while(!nh->getParamCached("vehicle/chrono/" + planner_ns + "/traj/" + "x1", x_pt)){}
-     std::cout<<"MASTER DATA2"<<"\n";
-     ros::param::set("/vehicle/chrono/" + planner_ns + "/traj/" + "yVal", y_pt);
-     while(!nh->getParamCached("vehicle/chrono/" + planner_ns + "/traj/" + "yVal", y_pt)){}
-     std::cout << "AFTER PARAMETER SET"<<"\n";
-     //nh->setParam("/system/" + planner_ns + "/flags/initialized", true);
      ros::param::set("/system/" + planner_ns + "/flags/initialized", true);
    }
 }
@@ -39,7 +29,6 @@ int main(int argc, char** argv) {
   ros::init(argc, argv, "navsPathConverter");
 
   ros::NodeHandle n;
-  nh = &n;
 
   ros::param::get("system/planner", planner_ns);
 

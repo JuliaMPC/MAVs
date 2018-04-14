@@ -10,7 +10,7 @@
 global_costmap:
   global_frame: /map
   robot_base_frame: base_link
-  update_frequency: 1
+  update_frequency: 2
   publish_frequency: 1
   static_map: false
   width: 500
