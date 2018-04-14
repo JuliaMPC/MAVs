@@ -760,8 +760,8 @@ int main(int argc, char* argv[]) {
     //Load xy parameters for the first timestep
   //  std::string planner_namespace;
   //  n.getParam("system/planner",planner_namespace);
-    n.getParam("state/chrono/"+planner_namespace +"/traj/x",hmmwv_params.x_traj_curr);
-    n.getParam("state/chrono/"+planner_namespace + "/traj/yVal",hmmwv_params.y_traj_curr);
+    n.getParam(planner_namespace +"/traj/x",hmmwv_params.x_traj_curr);
+    n.getParam(planner_namespace + "/traj/yVal",hmmwv_params.y_traj_curr);
     hmmwv_params.x_traj_prev=hmmwv_params.x_traj_curr;
     hmmwv_params.y_traj_prev=hmmwv_params.y_traj_curr;
 
@@ -857,8 +857,8 @@ int main(int argc, char* argv[]) {
         n.getParam("system/"+planner_namespace+"/flags/initialized",planner_init);
         if (planner_init){
           n.getParam("system/planner",planner_namespace);
-          n.getParam("state/chrono/"+planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
-          n.getParam("state/chrono/"+planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
+          n.getParam(planner_namespace+"/traj/x",hmmwv_params.x_traj_curr);
+          n.getParam(planner_namespace+"/traj/yVal",hmmwv_params.y_traj_curr);
 
           double num_pts = hmmwv_params.x_traj_curr.size();
 

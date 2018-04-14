@@ -16,8 +16,8 @@ void poseCallback(const nav_msgs::Path path) {
 
    if (x_p.size() >= 2 && y_p.size() >= 2) {
 
-     ros::param::set("state/chrono/"+planner_ns + "/traj/" + "x", x_p);
-     ros::param::set("state/chrono/"+planner_ns + "/traj/" + "yVal", y_p);
+     ros::param::set(planner_ns + "/traj/" + "x", x_p);
+     ros::param::set(planner_ns + "/traj/" + "yVal", y_p);
 
      ros::param::set("/system/" + planner_ns + "/flags/initialized", true);
    }
