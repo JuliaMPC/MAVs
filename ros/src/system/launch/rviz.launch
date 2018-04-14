@@ -29,8 +29,11 @@
     <arg name="paused" value="$(arg paused)"/>
   </include>
 
-  <!-- display the trajectory -->
-  <node name="rviz" pkg="rviz" type="rviz" output="screen" args="-d $(find system)/display.rviz"/>
+  <!-- display in rviz -->
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+  <node name="rviz" pkg="rviz" type="rviz" output="screen" args="-d $(find system)/display.rviz"
+    required="true" />
 
   <!--node name="unpause_gazebo" pkg="vehicle_description" type="unpause.jl" output="screen"/-->
 
