@@ -1,0 +1,17 @@
+system:
+ planner: nlopcontrol_planner
+ plant: 3DOF
+ params:
+  step_size: 0.001
+ flags:
+  goal_attained: false
+  initialized: true
+  paused: false
+  system_shutdown: false
+
+ vehicle_description:
+  flags:
+   running: true
+   lidar_initialized: false
+   obstacles_initialized: false
+   postion_update_external: false
