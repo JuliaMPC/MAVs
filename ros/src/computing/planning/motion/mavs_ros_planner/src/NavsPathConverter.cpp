@@ -9,13 +9,18 @@ void poseCallback(const nav_msgs::Path path) {
   std::vector<float> x_p;
   std::vector<float> y_p;
    for (int i = 0; i < path.poses.size(); i++) {
-     x_p.push_back(path.poses[i].pose.position.x);
-     y_p.push_back(path.poses[i].pose.position.y);
+     x_p.push_back(roundf(path.poses[i].pose.position.x * 100)/100.0);
+     y_p.push_back(roundf(path.poses[i].pose.position.y * 100)/100.0);
+     //i++; // skipping one point tro reduce resolution
    }
 
-   ros::param::set("vehicle/chrono/" + planner_ns + "/traj/" + "x", x_p);
-   ros::param::set("vehicle/chrono/" + planner_ns + "/traj/" + "yVal", y_p);
-   ros::param::set("system/" + planner_ns + "/flags/initialized", true);
+   if (x_p.size() >= 2 && y_p.size() >= 2) {
+
+     ros::param::set(planner_ns + "/traj/" + "x", x_p);
+     ros::param::set(planner_ns + "/traj/" + "yVal", y_p);
+
+     ros::param::set("/system/" + planner_ns + "/flags/initialized", true);
+   }
 }
 
 
@@ -28,6 +33,10 @@ int main(int argc, char** argv) {
   ros::param::get("system/planner", planner_ns);
 
   ros::Subscriber sub = n.subscribe<nav_msgs::Path>("/move_base/NavfnROS/plan", 1000, poseCallback);
-
-  ros::spin();
+  //n.setParam("/system/" + planner_ns + "/flags/path_converter_initialized", true);
+  //ros::spin();
+  while (1)
+  {
+    ros::spinOnce();
+  }
 }
