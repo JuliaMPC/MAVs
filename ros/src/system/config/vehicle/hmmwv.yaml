@@ -94,7 +94,7 @@ vehicle:
   Fz_off: 100.
   # NOTE: a_t and b_t are calcuated in src/Three_DOF/parameters.jl in VehicleModels.jl
 
- chrono:
+ chrono:    
   vehicle_params:
    frict_coeff: 0.9
    rest_coeff: 0.1

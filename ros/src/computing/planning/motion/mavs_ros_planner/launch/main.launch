@@ -22,7 +22,8 @@ are up and running -->
      <rosparam file="$(find system)/config/planner/ros_base_planner/local_costmap_params.yaml" command="load" />
      <rosparam file="$(find system)/config/planner/ros_base_planner/global_costmap_params.yaml" command="load" />
      <rosparam file="$(find system)/config/planner/ros_base_planner/base_local_planner_params.yaml" command="load" />
-   </node>
+     <rosparam file="$(find system)/config/planner/ros_base_planner/move_base_params.yaml" command="load"/>
+    </node>
 
    <node pkg="ros_base_planner" type="navsPathConverter" respawn="false" name="navsPathConverter" output="screen">
      <rosparam file="$(arg system_params_path)" command="load"/>

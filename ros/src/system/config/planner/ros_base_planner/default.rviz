@@ -6,8 +6,8 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
-        - /Map1
         - /Local Robot Footprint1
+        - /Global cost map1
         - /Planner Path1
       Splitter Ratio: 0.5
     Tree Height: 776
@@ -81,16 +81,6 @@ Visualization Manager:
       Use Fixed Frame: true
       Use rainbow: true
       Value: true
-    - Alpha: 0.699999988
-      Class: rviz/Map
-      Color Scheme: map
-      Draw Behind: false
-      Enabled: false
-      Name: Map
-      Topic: /move_base/global_costmap/costmap
-      Unreliable: false
-      Use Timestamp: false
-      Value: false
     - Alpha: 1
       Class: rviz/Polygon
       Color: 25; 255; 0
@@ -265,26 +255,26 @@ Visualization Manager:
   Value: true
   Views:
     Current:
-      Class: rviz/Orbit
-      Distance: 81.3509216
+      Class: rviz/ThirdPersonFollower
+      Distance: 79.9719925
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0
-        Y: 0
-        Z: 0
+        X: -16.0536327
+        Y: -0.0651621148
+        Z: -0.389971435
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.0500000007
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 1.48479652
-      Target Frame: <Fixed Frame>
-      Value: Orbit (rviz)
-      Yaw: 3.14540076
+      Pitch: 1.48479831
+      Target Frame: base_link
+      Value: ThirdPersonFollower (rviz)
+      Yaw: -3.13778448
     Saved: ~
 Window Geometry:
   Displays:
