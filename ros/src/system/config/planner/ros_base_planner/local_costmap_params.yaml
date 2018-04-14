@@ -5,10 +5,10 @@
 local_costmap:
   global_frame: /map
   robot_base_frame: base_link
-  update_frequency: 2
-  publish_frequency: 1
+  update_frequency: 5
+  publish_frequency: 2
   static_map: false
   rolling_window: true
-  width: 80
-  height: 80
+  width: 20
+  height: 20
   resolution: 0.1
