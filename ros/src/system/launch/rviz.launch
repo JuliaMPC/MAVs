@@ -32,6 +32,8 @@
   <!-- display in rviz -->
   <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+  <node pkg="hector_trajectory_server" type="hector_trajectory_server" name="hector_trajectory_server"
+     output="screen" />
   <node name="rviz" pkg="rviz" type="rviz" output="screen" args="-d $(find system)/display.rviz"
     required="true" />
 

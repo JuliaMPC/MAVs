@@ -38,7 +38,9 @@ RUN apt-get install -y \
         && apt-get install -y ros-kinetic-fake-localization \
         && apt-get install -y ros-kinetic-joy \
         && apt-get install -y ros-kinetic-robot-state-publisher \
+        && apt-get install -y ros-kinetic-joint-state-publisher \
         && apt-get install -y ros-kinetic-rviz \
+        && apt-get install -y ros-kinetic-hector-trajectory-server \
         && apt-get clean
 
         RUN apt-get update && apt-get install -y \
