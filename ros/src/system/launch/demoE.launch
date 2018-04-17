@@ -46,7 +46,11 @@
     <arg name="frame_id" value="$(arg frame_id)" />
     <arg name="manager" value="$(arg manager)" />
   </include>
+
   <!-- initialize system -->
   <node name="bootstrap" pkg="system" type="bootstrap.jl" output="screen"/>
+
+  <!-- unpause Gazebo -->
+  <node name="unpause_gazebo" pkg="vehicle_description" type="unpause.jl" output="screen"/>
 
 </launch>
