@@ -465,6 +465,7 @@ void controlCallback(const nloptcontrol_planner::Control::ConstPtr& control_msg)
   traj_sa = control_msg->sa;
   traj_vx = control_msg->vx;
 
+  /*
   std::cout << "Current time: "<< time << std::endl;
   std::cout << "Time trajectory: " << " ";
   for(int i = 0; i < traj_t.size(); i++)
@@ -480,10 +481,10 @@ void controlCallback(const nloptcontrol_planner::Control::ConstPtr& control_msg)
   for(int i = 0; i < traj_sa.size(); i++)
       std::cout << traj_sa[i] << " ";
   std::cout << std::endl;
-
-  //  std::cout << "Target_speed: " << target_speed_interp << " Actual speed: " << speed << std::endl;
-  //std::cout << "Target_steering: " << target_steering_interp << " Actual steering: " << target_steering_interp << std::endl;
-  std::cout << std::endl;
+*/
+  std::cout << "Target_speed: " << target_speed_interp << " Actual speed: " << speed << std::endl;
+  // std::cout << "Target_steering: " << target_steering_interp << " Actual steering: " << target_steering_interp << std::endl;
+  // std::cout << std::endl;
 }
 
 // =============================================================================
@@ -764,13 +765,14 @@ int main(int argc, char* argv[]) {
     n.setParam("vehicle/common/rest_coeff",rest_coeff);
 
     // set up the controller
-    double Kp, Ki, Kd;
+    double Kp, Ki, Kd, Kw;
     n.getParam("controller/Kp",Kp);
-    n.getParam("controller/Kp",Ki);
-    n.getParam("controller/Kp",Kd);
+    n.getParam("controller/Ki",Ki);
+    n.getParam("controller/Kd",Kd);
+    n.getParam("controller/Kw",Kw);
     n.getParam("controller/time_shift", time_shift);
 
-    controller.set_PID(Kp, Ki, Kd);
+    controller.set_PID(Kp, Ki, Kd, Kw);
     controller.set_step_size(step_size);
     controller.set_output_limit(-1.0, 1.0);
     controller.initialize();
