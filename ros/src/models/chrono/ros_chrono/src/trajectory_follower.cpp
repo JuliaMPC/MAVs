@@ -38,6 +38,7 @@
 #include <PID.h>
 #include <vector>
 #include <math.h>
+#include <string>
 //#include "tf/tf.h"
 #include <sstream>
 #include "chrono_vehicle/ChVehicleModelData.h"
@@ -766,15 +767,18 @@ int main(int argc, char* argv[]) {
 
     // set up the controller
     double Kp, Ki, Kd, Kw;
+    std::string windup_method;
     n.getParam("controller/Kp",Kp);
     n.getParam("controller/Ki",Ki);
     n.getParam("controller/Kd",Kd);
     n.getParam("controller/Kw",Kw);
+    n.getParam("controller/anti_windup",windup_method);
     n.getParam("controller/time_shift", time_shift);
 
     controller.set_PID(Kp, Ki, Kd, Kw);
     controller.set_step_size(step_size);
     controller.set_output_limit(-1.0, 1.0);
+    controller.set_windup_metohd(windup_method);
     controller.initialize();
     ae_int_t natural_bound_type = 2;
 
