@@ -1,5 +1,6 @@
 #ifndef PID_H_
 #define PID_H_
+#include <string>
 
 class PID{
 public:
@@ -11,6 +12,7 @@ public:
   void set_Kw(const double &Kw);
   void set_step_size(const double &step_size);
   void set_output_limit(const double &output_lower_limit, const double &output_upper_limit);
+  void set_windup_metohd(const std::string &s);
   void initialize();
   double control(const double &error);
 
@@ -27,6 +29,7 @@ private:
   double output_upper_limit_ = 0.0;
   double output_lower_limit_ = 0.0;
   double first_hit = true;
+  std::string windup = "clamping";
 };
 
 #endif
