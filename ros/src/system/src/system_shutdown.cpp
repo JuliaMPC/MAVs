@@ -75,7 +75,8 @@ void checkForShutdownRequest() {
         break;
       }
     } else {
-      ROS_WARN("Following parameter is expected for shutdown initiation but not found: %s.\n", shutdown_initiation_flags[i].c_str());
+      // for debug purposes 
+      // ROS_WARN("Following parameter is expected for shutdown initiation but not found: %s.\n", shutdown_initiation_flags[i].c_str());
     }
   }
 }
