@@ -7,7 +7,16 @@ system:
   goal_attained: false
   initialized: false
   paused: true
-  system_shutdown: false
+  override_shutdown_hook: false
+  data_logging_completed: true
+
+ shutdown:
+  flags:
+   running: true
+   initialized: false
+  params:
+    shutdown_initiation_flags: ["system/flags/goal_attained"]
+    shutdown_completion_flags: ["system/flags/data_logging_completed"]
 
  vehicle_description:
   flags:
