@@ -8,7 +8,7 @@
     <link name="base_footprint"/>
 
     <joint name="joint1" type="fixed" >
-      <origin xyz="${x0} ${y0} ${base_clearance}" rpy="0 0 ${psi0}" />
+      <origin xyz="0 0 ${base_clearance}" rpy="0 0 0" />
       <parent link="base_footprint" />
       <child link="${base_link}" />
     </joint>
@@ -44,6 +44,23 @@
     <gazebo reference="${base_link}">
       <!--material>Gazebo/Orange</material-->
       <turnGravityOff>false</turnGravityOff>
+    </gazebo>
+
+    <gazebo reference="${base_link}" >
+      <sensor name="my_contact" type="contact">
+        <plugin name="contact_sensor" filename="libcontact_sensor_mavs.so">
+          <rosParamName>/vehicle_collided</rosParamName>
+        </plugin>
+        <contact>
+            <!-- IMPORTANT: URDF to sdf parser creates name for the collision block by itself.
+            See: http://answers.gazebosim.org/question/15095/gazebo-contact-sensor-added-to-a-robot-link-in-urdf-file-is-not-working-as-expected/
+            and: http://answers.gazebosim.org/question/12687/problems-while-parsing-gazebo-urdf-elements-with-gazebo7-and-ros-jade/
+            BE CAREFUL when renaming base_footprint link defined at top, it should be
+            updated below as well-->
+          <collision>base_footprint_fixed_joint_lump__${base_link}_collision</collision>
+        </contact>
+        <update_rate>5</update_rate>
+      </sensor>
     </gazebo>
 
 

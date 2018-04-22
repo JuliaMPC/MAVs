@@ -1,0 +1,61 @@
+<!-- Reusable launch file for obstacle detection -->
+<launch>
+
+  <rosparam command="load" file="$(find system)/config/detection/obstacle_detector.yaml" />
+
+  <arg name="frame_id" doc="frame name" />
+  <arg name="manager" doc="nodelet manager name" />
+
+  <node name="$(arg manager)" pkg="nodelet" type="nodelet" args="manager" output="screen">
+    <param name="num_worker_threads" value="20"/>
+  </node>
+
+  <node name="obstacle_paramameters" pkg="obstacle_detector" type="obstacle_parameters.jl" output="screen"/>
+
+  <!--node pkg="tf2_ros" type="static_transform_publisher" name="map_to_scanner_base" args="0 0 0 1.57079632679 0 0 base_link $(arg frame_id)"/-->
+
+  <!-- Run a VoxelGrid filter to clean NaNs and downsample the data -->
+  <node  name="voxel_grid" pkg="nodelet" type="nodelet" args="load pcl/VoxelGrid $(arg manager)" output="screen">
+    <remap from="~input" to="/lidar_points"/>
+  </node>
+
+  <!-- Convert PointCloud2 to PointCloud1 -->
+  <node pkg="point_cloud_converter" name="point_cloud_converter" type="point_cloud_converter_node" >
+    <remap from="points2_in" to="/voxel_grid/output"/>
+    <remap from="points_out" to="/pcl" />
+		<!--
+		<remap from="points2_in" to="velodyne_points"/>
+		<remap from="points_out" to="velodyne_points" />
+		-->
+  </node>
+
+ <!-- remove scan merger -->
+ <!--node name="scans_merger" pkg="nodelet" type="nodelet" args="load obstacle_detector/ScansMerger $(arg manager)">
+</node-->
+
+  <node name="obstacle_extractor" pkg="nodelet" type="nodelet" args="load obstacle_detector/ObstacleExtractor $(arg manager)">
+  </node>
+
+  <node name="obstacle_tracker" pkg="nodelet" type="nodelet" args="load obstacle_detector/ObstacleTracker $(arg manager)">
+    <remap from="tracked_obstacles" to="obstacles"/>
+  </node>
+
+  <!--node name="obstacle_publisher_worker" pkg="nodelet" type="nodelet" args="load obstacle_detector/ObstaclePublisher $(arg manager)">
+    <param name="active"           value="false"/>
+    <param name="reset"            value="false"/>
+    <param name="fusion_example"   value="false"/>
+    <param name="fission_example"  value="false"/>
+    <param name="loop_rate"        value="10.0"/>
+    <param name="radius_margin"    value="0.25"/>
+    <rosparam param="x_vector">[10.0]</rosparam>
+    <rosparam param="y_vector">[0.0]</rosparam>
+    <rosparam param="r_vector">[1.0]</rosparam>
+    <rosparam param="vx_vector">[0.0]</rosparam>
+    <rosparam param="vy_vector">[0.0]</rosparam>
+    <param name="frame_id"         value="world"/>
+  </node-->
+
+  <node name="rviz" pkg="rviz" type="rviz" output="screen" args="-d $(find obstacle_detector)/resources/display.rviz"/>
+
+</launch>
+<!-- -->

@@ -19,17 +19,17 @@ function setObstacleParams(msg::Obstacles)
     end
 
     # update obstacle field parameters
-    RobotOS.set_param("obstacle_radius",r)
-    RobotOS.set_param("obstacle_x",x)
-    RobotOS.set_param("obstacle_y",y)
-    RobotOS.set_param("obstacle_vx",vx)
-    RobotOS.set_param("obstacle_vy",vy)
+    RobotOS.set_param("obstacle/radius",r)
+    RobotOS.set_param("obstacle/x",x)
+    RobotOS.set_param("obstacle/y",y)
+    RobotOS.set_param("obstacle/vx",vx)
+    RobotOS.set_param("obstacle/vy",vy)
   else
-    RobotOS.set_param("obstacle_radius",NaN)
-    RobotOS.set_param("obstacle_x",NaN)
-    RobotOS.set_param("obstacle_y",NaN)
-    RobotOS.set_param("obstacle_vx",NaN)
-    RobotOS.set_param("obstacle_vy",NaN)
+    RobotOS.set_param("obstacle/radius",NaN)
+    RobotOS.set_param("obstacle/x",NaN)
+    RobotOS.set_param("obstacle/y",NaN)
+    RobotOS.set_param("obstacle/vx",NaN)
+    RobotOS.set_param("obstacle/vy",NaN)
   end
 
   return nothing

@@ -11,8 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   roscpp
   std_msgs
-  message_generation
-  ros_chrono_msgs
+  nloptcontrol_planner
 )
 
 ## System dependencies are found with CMake's conventions
@@ -49,11 +48,11 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
- add_message_files(
-   FILES
-   Control.msg
+# add_message_files(
+#   FILES
+#   Control.msg
 #   Message2.msg
-)
+# )
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -107,7 +106,7 @@ generate_messages(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES ros_chrono_msgs
-   CATKIN_DEPENDS roscpp rospy std_msgs message_runtime
+   CATKIN_DEPENDS roscpp rospy std_msgs
 #  DEPENDS system_lib
 )
 
@@ -137,6 +136,8 @@ include_directories(
 ## The recommended prefix ensures that target names across packages don't collide
 # add_executable(${PROJECT_NAME}_node src/ros_chrono_msgs_node.cpp)
 add_executable(traj_gen_chrono src/traj_gen_chrono.cpp)
+add_dependencies(traj_gen_chrono ${catkin_EXPORTED_TARGETS})
+
 
 
 ## Rename C++ executable without prefix

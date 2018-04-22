@@ -16,7 +16,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
   ros_chrono_msgs
-  traj_gen_chrono
+  nloptcontrol_planner
 )
 
 find_package(
@@ -60,8 +60,7 @@ find_package(
 ## Generate messages in the 'msg' folder
 #add_message_files(
 #   FILES
-#   veh_status.msg
-#   command_chrono.msg
+#
 #)
 
 ## Generate services in the 'srv' folder
@@ -115,9 +114,9 @@ find_package(
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES ros_chrono
-   CATKIN_DEPENDS roscpp rospy std_msgs message_runtime
-#   DEPENDS system_lib Chrono
+   LIBRARIES ros_chrono
+   CATKIN_DEPENDS roscpp rospy std_msgs message_runtime ros_chrono_msgs
+   DEPENDS system_lib Chrono
 )
 
 ###########
@@ -133,7 +132,7 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
   ${CHRONO_INCLUDE_DIRS}
   ${CH_IRRLICHTINC}
-#  ${Irrlicht_INCLUDE_DIRS}
+  ${Irrlicht_INCLUDE_DIRS}
 )
 
 #--------------------------------------------------------------
@@ -164,6 +163,7 @@ MESSAGE(STATUS "...add hmmwv_model")
 ## The recommended prefix ensures that target names across packages don't collide
 # add_executable(${PROJECT_NAME}_node src/ros_chrono_node.cpp)
 add_executable(hmmwv_model src/hmmwv_model.cpp)
+add_executable(trajectory_follower src/trajectory_follower.cpp)
 
 #--------------------------------------------------------------
 # Set properties for your executable target
@@ -178,6 +178,12 @@ set_target_properties(hmmwv_model PROPERTIES
 	    COMPILE_FLAGS "${CHRONO_CXX_FLAGS} ${CH_CXX_FLAGS} ${CH_IRRLICHT_CXX_FLAGS} ${EXTRA_COMPILE_FLAGS}"
       COMPILE_DEFINITIONS "CHRONO_DATA_DIR=\"${CHRONO_DATA_DIR}\""
 	    LINK_FLAGS "${CHRONO_LINKER_FLAGS} ${LINKERFLAG_EXE}")
+
+set_target_properties(trajectory_follower PROPERTIES
+	    COMPILE_FLAGS "${CHRONO_CXX_FLAGS} ${CH_CXX_FLAGS} ${CH_IRRLICHT_CXX_FLAGS} ${EXTRA_COMPILE_FLAGS}"
+      COMPILE_DEFINITIONS "CHRONO_DATA_DIR=\"${CHRONO_DATA_DIR}\""
+	    LINK_FLAGS "${CHRONO_LINKER_FLAGS} ${LINKERFLAG_EXE}")
+
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
 ## target back to the shorter version for ease of user use
@@ -186,13 +192,22 @@ set_target_properties(hmmwv_model PROPERTIES
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-# add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(hmmwv_model ${catkin_EXPORTED_TARGETS})
+add_dependencies(trajectory_follower ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
 # target_link_libraries(${PROJECT_NAME}_node
 #   ${catkin_LIBRARIES}
 # )
 target_link_libraries(hmmwv_model
+  ChronoEngine
+  ChronoEngine_irrlicht
+  ChronoEngine_vehicle
+  ChronoModels_vehicle
+  ${catkin_LIBRARIES}
+  ${CHRONO_LIBRARIES})
+
+target_link_libraries(trajectory_follower
   ChronoEngine
   ChronoEngine_irrlicht
   ChronoEngine_vehicle
