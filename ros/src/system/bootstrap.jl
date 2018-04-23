@@ -61,6 +61,15 @@ function main()
     end
   end
 
+  if RobotOS.has_param("system/shutdown/flags/running")
+    if RobotOS.get_param("system/shutdown/flags/running")
+      while(!RobotOS.get_param("system/shutdown/flags/initialized"))
+        println("waiting on shudown node to initialize in system ...")
+        sleep(5)
+      end
+    end
+  end
+
   println("system has been initialized!")
   RobotOS.set_param("system/flags/paused",false)
   RobotOS.set_param("system/flags/initialized",true)

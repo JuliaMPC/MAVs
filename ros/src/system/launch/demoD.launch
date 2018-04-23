@@ -42,8 +42,10 @@
 
   <node name="Chronode" pkg="ros_chrono" type="hmmwv_model" cwd="node"/>
 
-  <node name="bootstrap" pkg="system" type="bootstrap.jl" output="screen"/>
+  <node name="system_shutdown" pkg="system" type="system_shutdown" output="screen" required="true">
+     <rosparam file="$(arg system_params_path)" command="load"/>
+  </node>
 
-  <!--node name="unpause_gazebo" pkg="vehicle_description" type="unpause.jl" output="screen"/-->
+  <node name="bootstrap" pkg="system" type="bootstrap.jl" output="screen"/>
 
 </launch>

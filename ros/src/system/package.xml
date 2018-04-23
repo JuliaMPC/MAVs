@@ -17,6 +17,9 @@
 
 
   <buildtool_depend>catkin</buildtool_depend>
+  
+  <depend>roscpp</depend>
+  <depend>rospy</depend>
 
   <exec_depend>nloptcontrol_planner</exec_depend>
   <exec_depend>vehicle_description</exec_depend>
