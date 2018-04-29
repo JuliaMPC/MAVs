@@ -9,6 +9,7 @@
   <arg name="case_params_path" default="$(find system)/config/case/s1.yaml"/>
   <arg name="gui" default="true"/>
   <arg name="paused" default="false"/> <!-- NOTE this pause overrides system/flags/pause -->
+  <arg name="record_robot_state" default="true"/>
 
   <arg name="laser_scan_topic" default="/lidar_points"/>
   <arg name="rviz_config_file" default="$(find system)/config/planner/ros_base_planner/default.rviz"/>
@@ -44,6 +45,13 @@
   <node name="system_shutdown" pkg="system" type="system_shutdown" output="screen" required="true">
      <rosparam file="$(arg system_params_path)" command="load"/>
   </node>
+
+  <!--node name="data_logger" pkg="system" type="data_logger" output="screen" required="true">
+     <rosparam file="$(arg system_params_path)" command="load"/>
+  </node-->
+
+  <node pkg="rosbag" type="record" name="record"
+       args="record -O robot_tf.bag tf"/>
 
   <node name="bootstrap" pkg="system" type="bootstrap.jl" output="screen"/>
 
