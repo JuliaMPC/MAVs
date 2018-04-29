@@ -48,7 +48,6 @@ function setTrajParams(msg::Control)
     RobotOS.set_param(string(plannerNamespace,"/traj/vx"),vx)
     RobotOS.set_param(string(plannerNamespace,"/traj/sa"),sa)
     RobotOS.set_param(string(plannerNamespace,"/traj/psi"),psi)
-    # println(y)
 
   else
     error("L !> 0")
@@ -193,14 +192,14 @@ function setInitStateParams(c)
     RobotOS.set_param("state/ux", RobotOS.get_param("case/actual/X0/ux"))
     RobotOS.set_param("state/ax", RobotOS.get_param("case/actual/X0/ax"))
   else
-    RobotOS.set_param("vehicle/chrono/state/x", RobotOS.get_param("case/actual/X0/x"))
-    RobotOS.set_param("vehicle/chrono/state/y", RobotOS.get_param("case/actual/X0/yVal"))
-    RobotOS.set_param("vehicle/chrono/state/sa",RobotOS.get_param("case/actual/X0/sa"))
-    RobotOS.set_param("vehicle/chrono/state/r", RobotOS.get_param("case/actual/X0/r"))
-    RobotOS.set_param("vehicle/chrono/state/psi", RobotOS.get_param("case/actual/X0/psi"))
-    RobotOS.set_param("vehicle/chrono/state/sa", RobotOS.get_param("case/actual/X0/sa"))
-    RobotOS.set_param("vehicle/chrono/state/ux", RobotOS.get_param("case/actual/X0/ux"))
-    RobotOS.set_param("vehicle/chrono/state/ax", RobotOS.get_param("case/actual/X0/ax"))
+    RobotOS.set_param("state/chrono/x", RobotOS.get_param("case/actual/X0/x"))
+    RobotOS.set_param("state/chrono/yVal", RobotOS.get_param("case/actual/X0/yVal"))
+    RobotOS.set_param("state/chrono/sa",RobotOS.get_param("case/actual/X0/sa"))
+    RobotOS.set_param("state/chrono/r", RobotOS.get_param("case/actual/X0/r"))
+    RobotOS.set_param("state/chrono/psi", RobotOS.get_param("case/actual/X0/psi"))
+    RobotOS.set_param("state/chrono/sa", RobotOS.get_param("case/actual/X0/sa"))
+    RobotOS.set_param("state/chrono/ux", RobotOS.get_param("case/actual/X0/ux"))
+    RobotOS.set_param("state/chrono/ax", RobotOS.get_param("case/actual/X0/ax"))
   end
   return nothing
 end
@@ -216,14 +215,14 @@ Date Create: 2/28/2018, Last Modified: 2/28/2018 \n
 function setStateData(n)
 
   # copy current vehicle state in case it changes
-  x=deepcopy(RobotOS.get_param("vehicle/chrono/state/x"))
-  y=deepcopy(RobotOS.get_param("vehicle/chrono/state/yVal"))
-  v=deepcopy(RobotOS.get_param("vehicle/chrono/state/sa"))
-  r=deepcopy(RobotOS.get_param("vehicle/chrono/state/r"))
-  psi=deepcopy(RobotOS.get_param("vehicle/chrono/state/psi"))
-  sa=deepcopy(RobotOS.get_param("vehicle/chrono/state/sa"))
-  ux=deepcopy(RobotOS.get_param("vehicle/chrono/state/ux"))
-  ax=deepcopy(RobotOS.get_param("vehicle/chrono/state/ax"))
+  x=deepcopy(RobotOS.get_param("state/chrono/x"))
+  y=deepcopy(RobotOS.get_param("state/chrono/yVal"))
+  v=deepcopy(RobotOS.get_param("state/chrono/sa"))
+  r=deepcopy(RobotOS.get_param("state/chrono/r"))
+  psi=deepcopy(RobotOS.get_param("state/chrono/psi"))
+  sa=deepcopy(RobotOS.get_param("state/chrono/sa"))
+  ux=deepcopy(RobotOS.get_param("state/chrono/ux"))
+  ax=deepcopy(RobotOS.get_param("state/chrono/ax"))
 
   X0 = [x,y,v,r,psi,sa,ux,ax]
   # println(X0)

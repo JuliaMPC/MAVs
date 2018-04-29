@@ -7,7 +7,6 @@ Panels:
         - /Global Options1
         - /Status1
         - /Obstacles1
-        - /PointCloud1
       Splitter Ratio: 0.5
     Tree Height: 535
   - Class: rviz/Selection
@@ -93,7 +92,21 @@ Visualization Manager:
           Value: true
         base_link:
           Value: true
+        front_left_wheel:
+          Value: true
+        front_right_wheel:
+          Value: true
         map:
+          Value: true
+        rear_left_wheel:
+          Value: true
+        rear_right_wheel:
+          Value: true
+        steer_left:
+          Value: true
+        steer_right:
+          Value: true
+        velodyne_base_link:
           Value: true
         velodyne_top_link:
           Value: true
@@ -106,6 +119,18 @@ Visualization Manager:
         map:
           base_footprint:
             base_link:
+              rear_left_wheel:
+                {}
+              rear_right_wheel:
+                {}
+              steer_left:
+                front_left_wheel:
+                  {}
+              steer_right:
+                front_right_wheel:
+                  {}
+              velodyne_base_link:
+                {}
               velodyne_top_link:
                 {}
       Update Interval: 0
@@ -120,25 +145,111 @@ Visualization Manager:
       Channel Name: intensity
       Class: rviz/PointCloud
       Color: 255; 255; 255
-      Color Transformer: ""
+      Color Transformer: Intensity
       Decay Time: 0
       Enabled: true
       Invert Rainbow: false
-      Max Color: 255; 255; 255
-      Max Intensity: 4096
-      Min Color: 0; 0; 0
+      Max Color: 85; 170; 255
+      Max Intensity: 0
+      Min Color: 85; 170; 255
       Min Intensity: 0
       Name: PointCloud
-      Position Transformer: ""
+      Position Transformer: XYZ
       Queue Size: 10
       Selectable: true
       Size (Pixels): 3
-      Size (m): 0.00999999978
-      Style: Flat Squares
+      Size (m): 0.100000001
+      Style: Points
       Topic: /pcl
       Unreliable: false
       Use Fixed Frame: true
-      Use rainbow: true
+      Use rainbow: false
+      Value: true
+    - Alpha: 1
+      Class: rviz/RobotModel
+      Collision Enabled: false
+      Enabled: true
+      Links:
+        All Links Enabled: true
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+        Link Tree Style: Links in Alphabetic Order
+        base_footprint:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        front_left_wheel:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        front_right_wheel:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        rear_left_wheel:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        rear_right_wheel:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        steer_left:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        steer_right:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        velodyne_base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        velodyne_top_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+      Name: RobotModel
+      Robot Description: robot_description
+      TF Prefix: ""
+      Update Interval: 0
+      Value: true
+      Visual Enabled: true
+    - Alpha: 1
+      Buffer Length: 1
+      Class: rviz/Path
+      Color: 0; 85; 255
+      Enabled: true
+      Head Diameter: 0.300000012
+      Head Length: 0.200000003
+      Length: 0.300000012
+      Line Style: Lines
+      Line Width: 0.0299999993
+      Name: Path
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0
+      Pose Color: 255; 85; 255
+      Pose Style: None
+      Radius: 0.0299999993
+      Shaft Diameter: 0.100000001
+      Shaft Length: 0.100000001
+      Topic: /trajectory
+      Unreliable: false
       Value: true
   Enabled: true
   Global Options:
@@ -165,25 +276,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 429.459717
+      Distance: 133.162216
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -197.440903
-        Y: -102.672699
-        Z: 11.8527517
+        X: 195.869034
+        Y: 4.20727968
+        Z: -3.93259168
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.0500000007
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 1.51979637
-      Target Frame: base_link
+      Pitch: 1.36979651
+      Target Frame: map
       Value: Orbit (rviz)
-      Yaw: 4.70318604
+      Yaw: 4.73318672
     Saved:
       - Class: rviz/Orbit
         Distance: 429.459717
@@ -221,5 +332,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1352
-  X: 133
-  Y: 101
+  X: 264
+  Y: 126

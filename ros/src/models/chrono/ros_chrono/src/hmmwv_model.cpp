@@ -376,43 +376,8 @@ void setDrivelineParams(ros::NodeHandle &n){
   myfile2 << s26 ;
   myfile2.close();
 }
-/*
-void setPowertrainParams(ros::NodeHandle &n){
-  std::ofstream myfile2;
 
-//  myfile2.open(data_path+"hmmwv/powertrain/HMMWV_SimplePowertrain.json",std::ofstream::out | std::ofstream::trunc);
-  myfile2.open(data_path+"hmmwv/powertrain/HMMWV_ShaftsPowertrain.json",std::ofstream::out | std::ofstream::trunc);
-  std::string s1 = "{";
-  std::string s2 = "  \"Name\":                    \"HMMWV Simplified Powertrain\",";
-  std::string s3 = "  \"Type\":                    \"Powertrain\",";
-  std::string s4 = "  \"Template\":                \"SimplePowertrain\",";
-  std::string s5 = "  \"Forward Gear Ratio\":      ";
-  std::string s6;
-  n.getParam("/vehicle/chrono/vehicle_params/forwardGearRatio",s6);
-  std::string s7 = "  \"Reverse Gear Ratio\":      ";
-  std::string s8;
-  n.getParam("/vehicle/chrono/vehicle_params/reverseGearRatio",s8);
-  std::string s9 = "  \"Maximum Engine Torque\":   ";
-  std::string s10;
-  n.getParam("/vehicle/chrono/vehicle_params/maxEngineTorque",s10);
-  std::string s11 = "  \"Maximum Engine Speed\":    ";
-  std::string s12;
-  n.getParam("/vehicle/chrono/vehicle_params/maxEngineSpeed",s12);
-  std::string s13 = "}";
 
-  myfile2 << s1 << '\n';
-  myfile2 << s2 << '\n';
-  myfile2 << s3 << '\n';
-  myfile2 << s4 << '\n';
-  myfile2 << '\n';
-  myfile2 << s5  << s6 << '\n';
-  myfile2 << s7  << s8 << '\n';
-  myfile2 << s9  << s10 << '\n';
-  myfile2 << s11  << s12 << '\n';
-  myfile2 << s13  << '\n';
-  myfile2.close();
-}
-*/
 void setSteeringParams(ros::NodeHandle &n){
   std::ofstream myfile2;
 
@@ -622,28 +587,6 @@ int main(int argc, char* argv[]) {
     my_hmmwv.SetSteeringVisualizationType(steering_vis_type);
     my_hmmwv.SetWheelVisualizationType(wheel_vis_type);
     //my_hmmwv.SetTireVisualizationType(tire_vis_type);
-    //Create Tire Model
-/*
-    ChPacejkaTire tire_front_left("FL",pacejka_tire_file_left);
-    ChPacejkaTire tire_front_right("FR",pacejka_tire_file_right);
-    ChPacejkaTire tire_rear_left("RL",pacejka_tire_file_left);
-    ChPacejkaTire tire_rear_right("RR",pacejka_tire_file_right);
-*/
-
-/*
-    LugreTire tire_front_left(lugre_tire_file);
-    LugreTire tire_front_right(lugre_tire_file);
-    LugreTire tire_rear_left(lugre_tire_file);
-    LugreTire tire_rear_right(lugre_tire_file);
-*/
-/*
-    HMMWV_ReissnerTire tire_front_left(reissner_tire_file);
-    HMMWV_ReissnerTire tire_front_right(reissner_tire_file);
-    HMMWV_ReissnerTire tire_rear_left(reissner_tire_file);
-    HMMWV_ReissnerTire tire_rear_right(reissner_tire_file);
-*/
-
-
     RigidTire tire_front_left(rigid_tire_file);
     RigidTire tire_front_right(rigid_tire_file);
     RigidTire tire_rear_left(rigid_tire_file);
@@ -953,7 +896,6 @@ int main(int argc, char* argv[]) {
           n.getParam("state/chrono/yVal",y);
           n.getParam("system/params/goal_tol",goal_tol);
           double distance  = sqrt( (goal_x-x)*(goal_x-x) + (goal_y-y)*(goal_y-y) );
-          std::cout << "Square of distance to goal is: " << distance << std::endl;
           if(distance < goal_tol){
             goal_attained = true;
             n.setParam("system/flags/goal_attained","true");
