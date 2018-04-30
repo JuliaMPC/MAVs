@@ -8,6 +8,7 @@
   <arg name="vehicle_params_path" default="$(find system)/config/vehicle/hmmwv.yaml"/>
   <arg name="case_params_path" default="$(find system)/config/case/s1.yaml"/>
   <arg name="gui" default="true"/>
+  <arg name="record_robot_state" default="true"/>
   <!-- Use Chrono time-->
   <arg name="paused" default="false"/>
 
@@ -45,6 +46,13 @@
   <node name="system_shutdown" pkg="system" type="system_shutdown" output="screen" required="true">
      <rosparam file="$(arg system_params_path)" command="load"/>
   </node>
+
+  <!--node name="data_logger" pkg="system" type="data_logger" output="screen" required="true">
+     <rosparam file="$(arg system_params_path)" command="load"/>
+  </node-->
+
+  <node pkg="rosbag" type="record" name="record"
+       args="record -O robot_tf.bag tf"/>
 
   <node name="bootstrap" pkg="system" type="bootstrap.jl" output="screen"/>
 

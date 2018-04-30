@@ -8,7 +8,6 @@ system:
   initialized: false
   paused: true
   override_shutdown_hook: false
-  data_logging_completed: true
 
  shutdown:
   flags:

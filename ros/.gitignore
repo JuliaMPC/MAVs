@@ -19,3 +19,7 @@ catkin_generated/
 /depends/build/
 /depends/devel/
 /depends/src/CMakeLists.txt
+
+# Data logs
+/src/system/data/*
+!/src/system/data/README.txt
