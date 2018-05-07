@@ -1,6 +1,7 @@
 planner:
   nloptcontrol_planner:
     misc:
+      mode: OCP
       model: ThreeDOFv2               # function name for VehicleModels.jl
       Xlims: [111.,250.]              # limit for X
       Ylims: [-1.,140.]               # limit for Y

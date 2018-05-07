@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y \
 	language-pack-en \
         && update-locale LANG=en_US.UTF-8 LC_MESSAGES=POSIX
 
-# Intall some basic GUI tools
+# Install some basic GUI tools
 RUN apt-get install -y \
         cmake-qt-gui \
         gnome-terminal

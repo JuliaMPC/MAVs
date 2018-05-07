@@ -145,7 +145,7 @@ end
 
 """
 # publishs the current state of the vehicle to ROS params
-#  isequal(RobotOS.get_param("system/plant"),"3DOF")
+# isequal(RobotOS.get_param("system/plant"),"3DOF")
 --------------------------------------------------------------------------------------\n
 Author: Huckleberry Febbo, Graduate Student, University of Michigan
 Date Create: 2/28/2018, Last Modified: 2/28/2018 \n
@@ -153,13 +153,11 @@ Date Create: 2/28/2018, Last Modified: 2/28/2018 \n
 """
 function setStateParams(n)
 
-  X0 = zeros(n.numStates)
+  X0 = zeros(n.ocp.state.num)
   # update using the current location of plant
-  for st in 1:n.numStates
-    X0[st]=n.r.dfs_plant[end][n.state.name[st]][end];
+  for st in 1:n.ocp.state.num
+    X0[st] = n.r.ip.plant[n.ocp.state.name[st]][end]
   end
-
-  # println(X0)
 
   RobotOS.set_param("state/x", X0[1])
   RobotOS.set_param("state/y", X0[2])
@@ -225,9 +223,7 @@ function setStateData(n)
   ax=deepcopy(RobotOS.get_param("state/chrono/ax"))
 
   X0 = [x,y,v,r,psi,sa,ux,ax]
-  # println(X0)
-  updateX0!(n,X0;(:userUpdate=>true))
-  # println("X0 updated!")
+  updateX0!(n,X0)
   return nothing
 end
 
@@ -243,11 +239,11 @@ function loop(pub,pub_path,n,c)
   init = false
   loop_rate = Rate(2.0) # 2 Hz
   while !is_shutdown()
-      println("Running model for the: ",n.r.eval_num," time")
+      println("Running model for the: ",n.mpc.v.evalNum," time")
 
       # update optimization parameters based off of latest obstacle information
       if !RobotOS.get_param("system/nloptcontrol_planner/flags/known_environment")
-        setObstacleData(n.params)
+        setObstacleData(n.ocp.params)
       end
 
       # update optimization parameters based off of latest vehicle state
@@ -255,21 +251,29 @@ function loop(pub,pub_path,n,c)
     #    setStateData(n)
     #  end  NOTE currently this is after the optimization, eventually put it just before
 
-      updateAutoParams!(n,c)                        # update model parameters
-      status = autonomousControl!(n)                # rerun optimization
+      updateAutoParams!(n)                        # update model parameters
+      #status = autonomousControl!(n)                # rerun optimization
+      status = optimize!(n)
+
+      # advance time
       if isequal(RobotOS.get_param("system/plant"),"3DOF") # otherwise an external update on the initial state of the vehicle is needed
-        n.mpc.t0_actual = (n.r.eval_num-1)*n.mpc.tex  # NOTE this is for testing
+        #n.mpc.t0_actual = (n.mpc.v.evalNum-1)*n.mpc.tex  # NOTE this is for testing
+        n.mpc.v.t = n.mpc.v.t + n.mpc.v.tex
+        n.mpc.v.evalNum = n.mpc.v.evalNum + 1
       else
-        n.mpc.t0_actual = to_sec(get_rostime())
+        #n.mpc.t0_actual = to_sec(get_rostime())
+        n.mpc.v.t = to_sec(get_rostime())
+        n.mpc.v.evalNum = n.mpc.v.evalNum + 1
       end
 
       msg = Control()
-      msg.t = n.mpc.t0_actual + n.r.t_st
-      msg.x = n.r.X[:,1]
-      msg.y = n.r.X[:,2]
-      msg.psi = n.r.X[:,5]
-      msg.sa = n.r.X[:,6]
-      msg.vx = n.r.X[:,7]
+      #msg.t = n.mpc.t0_actual + n.r.ocp.tst
+      msg.t = n.r.ocp.tst
+      msg.x = n.r.ocp.X[:,1]
+      msg.y = n.r.ocp.X[:,2]
+      msg.psi = n.r.ocp.X[:,5]
+      msg.sa = n.r.ocp.X[:,6]
+      msg.vx = n.r.ocp.X[:,7]
 
       publish(pub, msg)
 
@@ -286,32 +290,25 @@ function loop(pub,pub_path,n,c)
       end
       publish(pub_path, path)
 
-      # if the vehicle is very close to the goal sometimes the optimization returns with a small final time
-      # and it can even be negative (due to tolerances in NLP solver). If this is the case, the goal is slightly
-      # expanded from the previous check and one final check is performed otherwise the run is failed
-      if getvalue(n.tf) < 0.01 # assuming that the final time is a design variable, could check, but this module uses tf as a DV
-        if ((n.r.dfs_plant[end][:x][end]-c["goal"]["x"])^2 + (n.r.dfs_plant[end][:y][end]-c["goal"]["yVal"])^2)^0.5 < 4*n.XF_tol[1]
-           println("Expanded Goal Attained! \n"); n.mpc.goal_reached=true;
-           RobotOS.set_param("system/nloptcontrol_planner/flags/goal_attained",true)
-           break;
-       else
-           warn("Expanded Goal Not Attained! -> stopping simulation! \n"); break;
-       end
-     end
-
       if isequal(RobotOS.get_param("system/plant"),"3DOF") # otherwise an external update on the initial state of the vehicle is needed
-        simPlant!(n)      # simulating plant in VehicleModels.jl
-        setStateParams(n) # update X0 parameters in ROS and in NLOptControl.jl
-        updateX0!(n)      # update X0 in NLOptControl.jl
+        sol, U = simIPlant!(n)      # simulating plant in VehicleModels.jl
+        plant2dfs!(n,sol,U)
+        setStateParams(n) # update X0 parameters in ROS
+        if !n.s.mpc.predictX0 #  use the current known plant state to update OCP
+          push!(n.r.ip.X0p,currentIPState(n))
+        else
+          predictX0!(n)
+        end
+        updateX0!(n) # update X0 in NLOptControl.jl
       else
         setStateData(n)    # update X0 in NLOptControl.jl based off of state/ parameters
       end
 
       if isequal(RobotOS.get_param("system/plant"),"3DOF")
-        if ((n.r.dfs_plant[end][:x][end]-c["goal"]["x"])^2 + (n.r.dfs_plant[end][:y][end]-c["goal"]["yVal"])^2)^0.5 < 2*n.XF_tol[1]
-           println("Goal Attained! \n"); n.mpc.goal_reached=true;
-           RobotOS.set_param("system/nloptcontrol_planner/flags/goal_attained",true)
-           break;
+        goalReached!(n)
+        if isequal(n.f.mpc.goalReached,true)
+          RobotOS.set_param("system/nloptcontrol_planner/flags/goal_attained",true)
+          break
         end
       else
         # get chrono states, see if it is near goal
