@@ -14,3 +14,10 @@ This software simulates autonomous vehicles within a ROS environment.
 [**STABLE**](https://juliampc.github.io/AVExamples.jl/stable/) &mdash; **most recently tagged version of the documentation.**
 
 [**LATEST**](https://juliampc.github.io/AVExamples.jl/latest/) &mdash; **in-development version of the documentation.**
+
+
+## Requirements
+The following is currently a non-exhaustive list of requirements:
+```
+sudo apt-get install ros-kinetic-hector-nav-msgs ros-kinetic-hector-map-tools ros-kinetic-joint-state-publisher
+```
