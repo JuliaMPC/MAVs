@@ -293,12 +293,7 @@ function loop(pub,pub_path,n,c)
       if isequal(RobotOS.get_param("system/plant"),"3DOF") # otherwise an external update on the initial state of the vehicle is needed
         sol, U = simIPlant!(n)      # simulating plant in VehicleModels.jl
         plant2dfs!(n,sol,U)
-        setStateParams(n) # update X0 parameters in ROS
-        if !n.s.mpc.predictX0 #  use the current known plant state to update OCP
-          push!(n.r.ip.X0p,currentIPState(n))
-        else
-          predictX0!(n)
-        end
+        setStateParams(n) # update X0 parameters in 
         updateX0!(n) # update X0 in NLOptControl.jl
       else
         setStateData(n)    # update X0 in NLOptControl.jl based off of state/ parameters
