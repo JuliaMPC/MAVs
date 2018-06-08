@@ -79,12 +79,9 @@ using namespace alglib;
 using namespace rapidjson;
 // =============================================================================
 // Problem parameters
-// Main Data Path TODO fix this! should be a rosparam!
+// Main Data Path
 //std::string data_path("/home/shreyas/.julia/v0.6/MAVs/catkin_ws/data/vehicle/");
 std::string data_path("../../../src/models/chrono/ros_chrono/src/data/vehicle/");
-
-std::string chrono_data("../../../src/models/chrono/ros_chrono/src/data/");
-
 //std::string data_path("src/system/chrono/ros_chrono/src/data/vehicle/");
 // Contact method type
 ChMaterialSurface::ContactMethod contact_method = ChMaterialSurface::NSC;
@@ -505,10 +502,7 @@ int main(int argc, char* argv[]) {
       perror("getcwd() error");
     GetLog() << "Copyright (c) 2017 projectchrono.org\nChrono version: " << CHRONO_VERSION << "\n\n";
 
-
-    //fprintf(stdout, "CHRONO_DATA_DIR: %s\n", CHRONO_DATA_DIR);
     SetChronoDataPath(CHRONO_DATA_DIR);
-    //SetChronoDataPath(chrono_data);
     vehicle::SetDataPath(data_path);
 
     // read maximum_steering_angle from json

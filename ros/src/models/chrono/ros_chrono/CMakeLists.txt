@@ -171,6 +171,7 @@ MESSAGE(STATUS "...add hmmwv_model")
 # add_executable(${PROJECT_NAME}_node src/ros_chrono_node.cpp)
 add_executable(hmmwv_model src/hmmwv_model.cpp)
 add_executable(trajectory_follower src/trajectory_follower.cpp)
+add_executable(test_1 src/test_1.cpp)
 
 #--------------------------------------------------------------
 # Set properties for your executable target
@@ -191,6 +192,11 @@ set_target_properties(trajectory_follower PROPERTIES
       COMPILE_DEFINITIONS "CHRONO_DATA_DIR=\"${CHRONO_DATA_DIR}\""
 	    LINK_FLAGS "${CHRONO_LINKER_FLAGS} ${LINKERFLAG_EXE}")
 
+set_target_properties(test_1 PROPERTIES
+	    COMPILE_FLAGS "${CHRONO_CXX_FLAGS} ${CH_CXX_FLAGS} ${CH_IRRLICHT_CXX_FLAGS} ${EXTRA_COMPILE_FLAGS}"
+      COMPILE_DEFINITIONS "CHRONO_DATA_DIR=\"${CHRONO_DATA_DIR}\""
+	    LINK_FLAGS "${CHRONO_LINKER_FLAGS} ${LINKERFLAG_EXE}")
+
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
 ## target back to the shorter version for ease of user use
@@ -201,6 +207,7 @@ set_target_properties(trajectory_follower PROPERTIES
 ## same as for the library above
 add_dependencies(hmmwv_model ${catkin_EXPORTED_TARGETS})
 add_dependencies(trajectory_follower ${catkin_EXPORTED_TARGETS})
+add_dependencies(test_1 ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
 # target_link_libraries(${PROJECT_NAME}_node
@@ -223,6 +230,17 @@ target_link_libraries(trajectory_follower
   ${CHRONO_LIBRARIES}
   interpolation
   controller)
+
+target_link_libraries(test_1
+  ChronoEngine
+  ChronoEngine_irrlicht
+  ChronoEngine_vehicle
+  ChronoModels_vehicle
+  ${catkin_LIBRARIES}
+  ${CHRONO_LIBRARIES}
+  interpolation
+  controller)
+
 #############
 ## Install ##
 #############
