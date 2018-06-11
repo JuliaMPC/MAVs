@@ -116,15 +116,18 @@ echo 'export PATH="$PATH:/opt/julia-d386e40c17/bin"' >>  ~/.bashrc
 # Install Julia packages
 RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.add("NLOptControl")'
 RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.add("VehicleModels")'
-RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.checkout("NLOptControl")'
-RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.checkout("VehicleModels")'
+RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.pin("NLOptControl",v"0.1.6")'
+RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.pin("VehicleModels",v"0.1.4")'
+# RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.checkout("NLOptControl")'
+# RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.checkout("VehicleModels")'
 RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.add("RobotOS")'
 RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.add("PyCall")'
-RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.clone("https://github.com/huckl3b3rry87/MAVs.jl")'
+RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.clone("https://github.com/juliampc/MichiganAutonomousVehicles.jl")'
 
 # Install MAVs
 RUN echo 3
-RUN git clone -b dev https://github.com/tqshao/MAVs.git /home/$USERNAME/MAVs
+# RUN git clone -b dev https://github.com/tqshao/MAVs.git /home/$USERNAME/MAVs
+RUN git clone -b master https://github.com/juliaMPC/MAVs.git /home/$USERNAME/MAVs
 
 RUN /bin/bash -c 'source /opt/ros/kinetic/setup.bash; cd /home/$USERNAME/MAVs/ros/src; catkin_init_workspace; cd ..; catkin_make'
 RUN echo "source /home/$USERNAME/MAVs/ros/devel/setup.bash" >> /home/$USERNAME/.bashrc
