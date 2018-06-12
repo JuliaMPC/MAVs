@@ -13,7 +13,7 @@ import YAML
 
 using VehicleModels
 using NLOptControl
-using MAVs
+using MichiganAutonomousVehicles
 using PyCall
 
 @pyimport tf.transformations as tf
@@ -293,7 +293,7 @@ function loop(pub,pub_path,n,c)
       if isequal(RobotOS.get_param("system/plant"),"3DOF") # otherwise an external update on the initial state of the vehicle is needed
         sol, U = simIPlant!(n)      # simulating plant in VehicleModels.jl
         plant2dfs!(n,sol,U)
-        setStateParams(n) # update X0 parameters in 
+        setStateParams(n) # update X0 parameters in
         updateX0!(n) # update X0 in NLOptControl.jl
       else
         setStateData(n)    # update X0 in NLOptControl.jl based off of state/ parameters
@@ -343,7 +343,7 @@ function main()
   planner = YAML.load(open(RobotOS.get_param("planner_params_path")))["planner"]["nloptcontrol_planner"]
   vehicle = YAML.load(open(RobotOS.get_param("vehicle_params_path")))["vehicle"]["nloptcontrol_planner"]
 
-  c = YAML.load(open(string(Pkg.dir("MAVs"),"/config/empty.yaml")))
+  c = YAML.load(open(string(Pkg.dir("MichiganAutonomousVehicles"),"/config/empty.yaml")))
   c["vehicle"] = vehicle
   c["weights"] = planner["weights"]
   c["misc"] = planner["misc"]
