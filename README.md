@@ -17,6 +17,26 @@ Then follow the [Docker instructions](https://github.com/JuliaMPC/MAVs/tree/mast
 
 After this, to test the software, try running some of the system demos. The demos are included in the documetnation, for instance try [demoA](https://juliampc.github.io/AVExamples.jl/latest/demos/system/demoA.html).
 
+## Potential issue
+Something like this may appear:
+```
+ERROR: LoadError: Module RobotOS declares __precompile__(true) but require failed to create a usable precompiled cache file.
+Stacktrace:Waiting for '/gazebo/unpause_physics' service...
+ [1]
+_requirelidar simulation in Gazebo has been initialized
+(::Symbol) at ./loading.jl:502
+ [2] require(::Symbol) at ./loading.jl:405
+ [3] include_from_node1(::String) at ./loading.jl:576
+ [4] include(::String) at ./sysimg.jl:14
+ [5] process_options(::Base.JLOptions) at ./client.jl:305
+ [6] _start() at ./client.jl:371
+while loading /home/mavs/MAVs/ros/src/models/gazebo/vehicle_description/link_positions.jl, in expression starting on line 2
+````
+
+While [this issue](https://github.com/jdlangs/RobotOS.jl/issues/45) needs to be resolved, a workaround is available:
+```
+sudo rm -r /home/mavs/.julia/.cache
+```
 ## Requirements
 The following is currently a non-exhaustive list of requirements:
 ```
