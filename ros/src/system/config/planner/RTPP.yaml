@@ -3,7 +3,7 @@ planner:
     misc:
       mode: OCP
       IPplant: ThreeDOFv1
-      model: NaN             # function name
+      model: ThreeDOFv2      # function name
       Xlims: [111.,250.]     # plotting limit for x
       Ylims: [-1,130.]       # plotting limit for y
       Xmin: NaN              # min limit for x in OCP
@@ -18,9 +18,9 @@ planner:
       Lr: 50.                # LiDAR range (m)
       L_rd: 5.               # relaxation distance to LiDAR range
       Nck: NaN               # number of points per interval
-      N: NaN                 # number of points in :tm methods
-      solver: NaN            # either Ipopt of KNITRO
-      mpc_max_iter: 200      # an MPC parameter
+      N: 15                  # number of points in :tm methods
+      solver: Ipopt          # either Ipopt of KNITRO
+      mpc_max_iter: 1000      # an MPC parameter
       PredictX0: true        # if the state that the vehicle will be at when the optimization is finished is to be predicted
       FixedTp: true          # fixed final time for predicting X0
       finalTimeDV: true      # bool to indicate if the final time is a variable
@@ -28,7 +28,7 @@ planner:
       followDriver: NaN      # a bool to try and follow the driver
       followPath: NaN        # a bool to follow the path
       NF: NaN                # number to subtract off the constraint check vector-> used for activeSafety mode so driver sees obstacle before autonomy
-      integrationScheme: NaN
+      integrationScheme: trapezoidal
       tfMax: 10 # maximum final time in MPC
       EP: 0.01   # small number to avoid singularities TODO move this from VehicleModels.jl
       ux: NaN   # for constant speed case
