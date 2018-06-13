@@ -113,11 +113,12 @@ sudo tar -xvf julia-0.6.2-linux-x86_64.tar.gz -C /opt && \
 echo 'alias julia='/opt/julia-d386e40c17/bin/julia'' >> ~/.bashrc && \
 echo 'export PATH="$PATH:/opt/julia-d386e40c17/bin"' >>  ~/.bashrc
 
+
 # Install Julia packages
 RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.add("NLOptControl"); Pkg.add("VehicleModels"); Pkg.add("RobotOS");Pkg.add("PyCall");Pkg.clone("https://github.com/juliampc/MichiganAutonomousVehicles.jl")'
 
 # Install MAVs
-RUN echo 3
+RUN echo 4 # if you need to get the latest, change this number.
 RUN git clone -b master https://github.com/juliaMPC/MAVs.git /home/$USERNAME/MAVs
 
 RUN /bin/bash -c 'source /opt/ros/kinetic/setup.bash; cd /home/$USERNAME/MAVs/ros/src; catkin_init_workspace; cd ..; catkin_make'

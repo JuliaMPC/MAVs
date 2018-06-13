@@ -15,9 +15,8 @@ git clone https://github.com/JuliaMPC/MAVs
 ```
 Then follow the [Docker instructions](https://github.com/JuliaMPC/MAVs/tree/master/docker#mavs-docker).
 
-After this, to test the software, try running some of the system demos. The demos are included in the documetnation, for instance try [demoA](https://juliampc.github.io/AVExamples.jl/latest/demos/system/demoA.html).
-
-## Potential issue
+After this, to test the software:
+### Mitigate this issue
 Something like this may appear:
 ```
 ERROR: LoadError: Module RobotOS declares __precompile__(true) but require failed to create a usable precompiled cache file.
@@ -37,6 +36,12 @@ While [this issue](https://github.com/jdlangs/RobotOS.jl/issues/45) needs to be 
 ```
 sudo rm -r /home/mavs/.julia/.cache
 ```
+This issue happens frequently, so just run the avove command each time after ``run.sh`` is ran.
+
+### Run some of the system demos
+The demos are included in the documetnation, for instance try [demoA](https://juliampc.github.io/AVExamples.jl/latest/demos/system/demoA.html).
+
+
 ## Requirements
 The following is currently a non-exhaustive list of requirements:
 ```
