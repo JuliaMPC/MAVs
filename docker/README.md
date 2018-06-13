@@ -15,9 +15,9 @@ $ sh build.sh
 
 ## How to run
 ```
-$ Default shared directory path is /home/$USER/shared_dir
-$ sh run.sh
+# Default shared directory path is /home/$USER/shared_dir
+$ sudo sh run.sh
 
 # If you select your shared directory path
-$ sh run.sh {SHARED_DIR_PATH}
+$ sh run.sh kinetic {SHARED_DIR_PATH}
 ```
