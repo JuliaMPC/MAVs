@@ -54,10 +54,9 @@ RUN useradd -m $USERNAME && \
         chmod 0440 /etc/sudoers.d/$USERNAME && \
         # Replace 1000 with your user/group id
         usermod  --uid 1000 $USERNAME && \
-        groupmod --gid 1000 $USERNAME
-
-# Setup .bashrc for ROS
-RUN echo "source /opt/ros/kinetic/setup.bash" >> /home/$USERNAME/.bashrc && \
+        groupmod --gid 1000 $USERNAME \
+        # Setup .bashrc for ROS
+        echo "source /opt/ros/kinetic/setup.bash" >> /home/$USERNAME/.bashrc && \
         #Fix for qt and X server errors
         echo "export QT_X11_NO_MITSHM=1" >> /home/$USERNAME/.bashrc && \
         # cd to home on login
