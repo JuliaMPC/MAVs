@@ -86,15 +86,14 @@ RUN cd /opt/chrono/chrono_build ; sudo make \
         sudo wget https://julialang-s3.julialang.org/bin/linux/x64/0.6/julia-0.6.2-linux-x86_64.tar.gz && \
         sudo tar -xvf julia-0.6.2-linux-x86_64.tar.gz -C /opt && \
         echo 'alias julia='/opt/julia-d386e40c17/bin/julia'' >> ~/.bashrc && \
-        echo 'export PATH="$PATH:/opt/julia-d386e40c17/bin"' >>  ~/.bashrc
-
-# Install Julia packages
-RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.add("NLOptControl");Pkg.add("VehicleModels");Pkg.add("RobotOS");Pkg.add("PyCall");Pkg.clone("https://github.com/juliampc/MichiganAutonomousVehicles.jl")'
-# Install MAVs
-RUN echo 3
-RUN git clone -b master https://github.com/juliaMPC/MAVs.git /home/$USERNAME/MAVs \
- /bin/bash -c 'source /opt/ros/kinetic/setup.bash; cd /home/$USERNAME/MAVs/ros/src; catkin_init_workspace; cd ..; catkin_make' \
- echo "source /home/$USERNAME/MAVs/ros/devel/setup.bash" >> /home/$USERNAME/.bashrc
+        echo 'export PATH="$PATH:/opt/julia-d386e40c17/bin"' >>  ~/.bashrc \
+        # Install Julia packages
+         /opt/julia-d386e40c17/bin/julia -e 'Pkg.add("NLOptControl");Pkg.add("VehicleModels");Pkg.add("RobotOS");Pkg.add("PyCall");Pkg.clone("https://github.com/juliampc/MichiganAutonomousVehicles.jl")'\
+         echo 3 \
+         # Install MAVs \
+         git clone -b master https://github.com/juliaMPC/MAVs.git /home/$USERNAME/MAVs \
+         /bin/bash -c 'source /opt/ros/kinetic/setup.bash; cd /home/$USERNAME/MAVs/ros/src; catkin_init_workspace; cd ..; catkin_make' \
+         echo "source /home/$USERNAME/MAVs/ros/devel/setup.bash" >> /home/$USERNAME/.bashrc
 
 # Setting
 ENV LANG="en_US.UTF-8"
