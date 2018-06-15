@@ -17,16 +17,21 @@ RUN apt-get install -y \
         cmake-qt-gui \
         gnome-terminal
 
-        # Install ROS and remove Gazebo7 and related dependencies
+        # Intall ROS and remove Gazebo7 and related dependencies
 
         RUN echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list \
         && apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key \ 421C365BD9FF1F717815A3895523BAEEB01FA116 \
         && echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list \
         && wget http://packages.osrfoundation.org/gazebo.key -O - | apt-key add - \
         && apt-get update \
-        && apt-get install -y ros-kinetic-desktop-full \
-        && apt-get remove -y '*gazebo*' \
-        && apt-get update \
+        && apt-get install -y ros-kinetic-desktop-full
+
+        RUN apt-get remove -y '*gazebo*'
+        #&& apt-get remove ros-kinetic-gazebo* \
+        #&& apt-get purge ros-kinetic-gazebo* \
+        #&& apt autoremove
+
+        RUN apt-get update \
         && apt-get install -y python-rosinstall python-rosinstall-generator python-wstool \
         && apt-get install -y gazebo8 \
         && apt-get install -y ros-kinetic-gazebo8-ros-pkgs \
@@ -36,8 +41,9 @@ RUN apt-get install -y \
         && apt-get install -y ros-kinetic-joint-state-publisher \
         && apt-get install -y ros-kinetic-rviz \
         && apt-get install -y ros-kinetic-hector-trajectory-server \
-        && apt-get clean \
-        && apt-get update && apt-get install -y \
+        && apt-get clean
+
+        RUN apt-get update && apt-get install -y \
                 ros-kinetic-nmea-msgs ros-kinetic-roslint ros-kinetic-velodyne-description\
                 ros-kinetic-nmea-navsat-driver ros-kinetic-sound-play \
                 ros-kinetic-jsk-visualization ros-kinetic-grid-map \
@@ -47,11 +53,12 @@ RUN apt-get install -y \
                 ros-kinetic-voxel-grid ros-kinetic-move-base \
                 ros-kinetic-gazebo8-ros-control ros-kinetic-joystick-drivers \
                 libnlopt-dev freeglut3-dev qtbase5-dev libqt5opengl5-dev libssh2-1-dev \
-                libarmadillo-dev libpcap-dev gksu libgl1-mesa-dev libglew-dev python-wxgtk3.0 \
+                libarmadillo-dev libpcap-dev gksu libgl1-mesa-dev libglew-dev python-wxgtk3.0
+
         # Install missing dependencies
-        && sudo apt-get update && sudo apt-get install -y openni2-doc openni2-utils openni-doc openni-utils \
-        && sudo apt-get install -y libopenni0 libopenni-sensor-pointclouds0 libopenni2-0 libopenni-sensor-pointclouds-dev \
-        && sudo apt-get install -y libopenni2-dev libopenni-dev libopencv-dev libmosquitto-dev ros-kinetic-cmake-modules
+        RUN sudo apt-get update && sudo apt-get install -y openni2-doc openni2-utils openni-doc openni-utils
+        RUN sudo apt-get install -y libopenni0 libopenni-sensor-pointclouds0 libopenni2-0 libopenni-sensor-pointclouds-dev
+        RUN sudo apt-get install -y libopenni2-dev libopenni-dev libopencv-dev libmosquitto-dev ros-kinetic-cmake-modules
 
 # Add basic user
 ENV USERNAME mavs
