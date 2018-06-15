@@ -55,7 +55,7 @@ RUN apt-get install -y \
                 libnlopt-dev freeglut3-dev qtbase5-dev libqt5opengl5-dev libssh2-1-dev \
                 libarmadillo-dev libpcap-dev gksu libgl1-mesa-dev libglew-dev python-wxgtk3.0
 
-        # Install missing dependencies
+        # Install some missing dependencies
         RUN sudo apt-get update && sudo apt-get install -y openni2-doc openni2-utils openni-doc openni-utils
         RUN sudo apt-get install -y libopenni0 libopenni-sensor-pointclouds0 libopenni2-0 libopenni-sensor-pointclouds-dev
         RUN sudo apt-get install -y libopenni2-dev libopenni-dev libopencv-dev libmosquitto-dev ros-kinetic-cmake-modules
@@ -114,11 +114,15 @@ echo 'alias julia='/opt/julia-d386e40c17/bin/julia'' >> ~/.bashrc && \
 echo 'export PATH="$PATH:/opt/julia-d386e40c17/bin"' >>  ~/.bashrc
 
 # Install Julia packages
-RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.add("NLOptControl"); Pkg.add("VehicleModels"); Pkg.add("RobotOS");Pkg.add("PyCall");Pkg.clone("https://github.com/juliampc/MichiganAutonomousVehicles.jl")'
+RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.add("NLOptControl")'
+RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.add("VehicleModels")'
+RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.add("RobotOS")'
+RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.add("PyCall")'
+RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.clone("https://github.com/JuliaMPC/MichiganAutonomousVehicles.jl")'
 
 # Install MAVs
 RUN echo 3
-RUN git clone -b master https://github.com/juliaMPC/MAVs.git /home/$USERNAME/MAVs
+RUN git clone -b master https://github.com/JuliaMPC/MAVs /home/$USERNAME/MAVs
 
 RUN /bin/bash -c 'source /opt/ros/kinetic/setup.bash; cd /home/$USERNAME/MAVs/ros/src; catkin_init_workspace; cd ..; catkin_make'
 RUN echo "source /home/$USERNAME/MAVs/ros/devel/setup.bash" >> /home/$USERNAME/.bashrc
