@@ -24,9 +24,15 @@ RUN echo "deb http://packages.osrfoundation.org/gazebo/ubuntu `lsb_release -cs` 
     ros-kinetic-hector-slam \
     ros-kinetic-joy \
     ros-kinetic-perception-pcl \
+    ros-kinetic-velodyne-description \
     # for obstacle_detector
     libarmadillo-dev \
  && apt-get clean
+
+# Install Julia and setup environment
+RUN sudo wget https://julialang-s3.julialang.org/bin/linux/x64/0.6/julia-0.6.2-linux-x86_64.tar.gz \
+    && sudo tar -xvf julia-0.6.2-linux-x86_64.tar.gz -C /opt
+            #TODO, delete julia .tar file
 
 # Add basic user
 ENV USERNAME mavs
@@ -51,18 +57,19 @@ RUN echo "source /opt/ros/kinetic/setup.bash" >> /home/$USERNAME/.bashrc && \
 # Change user
 USER mavs
 
+RUN echo 4
+RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.add("MichiganAutonomousVehicles")'
 RUN git clone -b master https://github.com/JuliaMPC/MAVs /home/$USERNAME/MAVs
 
-RUN echo 3
-
 RUN /bin/bash -c 'source /opt/ros/kinetic/setup.bash; cd /home/$USERNAME/MAVs/ros/src; catkin_init_workspace; cd ..; catkin_make'
-RUN echo "source /home/$USERNAME/MAVs/ros/devel/setup.bash" >> /home/$USERNAME/.bashrc
+RUN echo "source /home/$USERNAME/MAVs/ros/devel/setup.bash" >> /home/$USERNAME/.bashrc && \
+    echo 'alias julia='/opt/julia-d386e40c17/bin/julia'' >> ~/.bashrc && \
+    echo 'export PATH="$PATH:/opt/julia-d386e40c17/bin"' >>  ~/.bashrc
 
-#RUN echo "source /opt/ros/kinetic/setup.bash" >> ~/.bashrc \
- #&& /bin/bash -c 'cd /home/$USERNAME/MAVs/ros/src; cd .. \
- #rosdep install --from-paths src --ignore-src --rosdistro kinetic -y \
- #catkin_make' \
- #&& echo "source /home/$USERNAME/MAVs/ros/devel/setup.bash" >> /home/$USERNAME/.bashrc
+
+# RUN sudo rm -r /home/mavs/.julia/.cache
 
 # Default CMD
 CMD ["/bin/bash"]
+
+#CMD ["/bin/bash", "bash -c '[ -d /home/mavs/.julia/.cache] && sudo rm -rf /home/mavs/.julia/.cache'"]

@@ -1,13 +1,15 @@
 # MAVs Docker
-Assuming the NVIDIA drivers and Docker and nvidia-docker are properly
-installed.
 
-[Docker installation](https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/)
+## Requirements
 
+Tested on Ubuntu Xenial (16.04)
 
-[nvidia-docker installation](https://github.com/NVIDIA/nvidia-docker)
+* An X server
+* [Docker](https://www.docker.com/get-docker)
+* [nvidia-docker](https://github.com/NVIDIA/nvidia-docker/wiki/Installation)
 
 ## How to build
+
 ```
 $ cd MAVs/docker
 $ sh build.sh

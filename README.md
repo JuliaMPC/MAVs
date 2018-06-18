@@ -15,6 +15,9 @@ git clone https://github.com/JuliaMPC/MAVs
 ```
 Then follow the [Docker instructions](https://github.com/JuliaMPC/MAVs/tree/master/docker#mavs-docker).
 
+* Note: currently, the entire repo is cloned twice (once by the above command and once by the Docker file).
+* In the future this software may be configured to save space and only cloned once
+
 After this, to test the software:
 ### Mitigate this issue
 Something like this may appear:
@@ -36,10 +39,10 @@ While [this issue](https://github.com/jdlangs/RobotOS.jl/issues/45) needs to be 
 ```
 sudo rm -r /home/mavs/.julia/.cache
 ```
-This issue happens frequently, so just run the avove command each time after ``run.sh`` is ran.
+This issue happens frequently, so just run the above command is there is a cache error from julia. Then rerun.
 
 ### Run some of the system demos
-The demos are included in the documetnation, for instance try [demoA](https://juliampc.github.io/AVExamples.jl/latest/demos/system/demoA.html).
+The demos are included in the documentation, for instance try [demoA](https://juliampc.github.io/AVExamples.jl/latest/demos/system/demoA.html).
 
 
 ## Requirements
