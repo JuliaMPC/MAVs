@@ -5,11 +5,9 @@ services:
 before_install:
   - cd docker
   - docker build -t mav -f Dockerfile .
-  - ./run.sh
 #  - docker build -t mavs/sinatra .
 #  - docker run -d -p 127.0.0.1:80:4567 carlad/sinatra /bin/sh -c "cd /root/sinatra; bundle exec foreman start;"
 #  - docker ps -a
 #  - docker run carlad/sinatra /bin/sh -c "cd /root/sinatra; bundle exec rake test"
 script:
-  - cd MAVs/ros
-  - catkin_make
+  - roslaunch system demoA.launch
