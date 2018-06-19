@@ -10,4 +10,6 @@ before_install:
 #  - docker ps -a
 #  - docker run carlad/sinatra /bin/sh -c "cd /root/sinatra; bundle exec rake test"
 script:
+  - sh run.sh
+  - sudo rm -rf /home/mavs/.julia/.cache
   - roslaunch system demoA.launch
