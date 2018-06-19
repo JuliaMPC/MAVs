@@ -13,7 +13,7 @@ RUN apt-get update \
  && apt-get clean
 
 
-# Get gazebo binaries
+# Get Gazebo binaries
 RUN echo "deb http://packages.osrfoundation.org/gazebo/ubuntu `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list \
  && wget http://packages.osrfoundation.org/gazebo.key -O - | apt-key add - \
  && apt-get update \
@@ -29,7 +29,7 @@ RUN echo "deb http://packages.osrfoundation.org/gazebo/ubuntu `lsb_release -cs` 
     libarmadillo-dev \
  && apt-get clean
 
-# Install Julia and setup environment
+# Install julia
 RUN sudo wget https://julialang-s3.julialang.org/bin/linux/x64/0.6/julia-0.6.2-linux-x86_64.tar.gz \
     && sudo tar -xvf julia-0.6.2-linux-x86_64.tar.gz -C /opt
             #TODO, delete julia .tar file
@@ -56,20 +56,19 @@ RUN echo "source /opt/ros/kinetic/setup.bash" >> /home/$USERNAME/.bashrc && \
 
 # Change user
 USER mavs
-
-RUN echo 4
-RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.add("MichiganAutonomousVehicles")'
-RUN git clone -b master https://github.com/JuliaMPC/MAVs /home/$USERNAME/MAVs
-
-RUN /bin/bash -c 'source /opt/ros/kinetic/setup.bash; cd /home/$USERNAME/MAVs/ros/src; catkin_init_workspace; cd ..; catkin_make'
-RUN echo "source /home/$USERNAME/MAVs/ros/devel/setup.bash" >> /home/$USERNAME/.bashrc && \
+# change number (below in RUN echo ###) to force rebuild starting from here
+RUN echo 4 && \
+    # install MichiganAutonomousVehicles.jl
+    /opt/julia-d386e40c17/bin/julia -e 'Pkg.add("MichiganAutonomousVehicles")' && \
+    # clone mavs
+    git clone -b master https://github.com/JuliaMPC/MAVs /home/$USERNAME/MAVs && \
+    # build mavs
+    /bin/bash -c 'source /opt/ros/kinetic/setup.bash; cd /home/$USERNAME/MAVs/ros/src; catkin_init_workspace; cd ..; catkin_make' && \
+    echo "source /home/$USERNAME/MAVs/ros/devel/setup.bash" >> /home/$USERNAME/.bashrc && \
     echo 'alias julia='/opt/julia-d386e40c17/bin/julia'' >> ~/.bashrc && \
     echo 'export PATH="$PATH:/opt/julia-d386e40c17/bin"' >>  ~/.bashrc
 
-
-# RUN sudo rm -r /home/mavs/.julia/.cache
+# sudo rm -rf /home/mavs/.julia/.cache
 
 # Default CMD
 CMD ["/bin/bash"]
-
-#CMD ["/bin/bash", "bash -c '[ -d /home/mavs/.julia/.cache] && sudo rm -rf /home/mavs/.julia/.cache'"]
