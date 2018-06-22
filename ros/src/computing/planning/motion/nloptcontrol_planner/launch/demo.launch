@@ -20,4 +20,8 @@
 
   <!-- Obstacle Avoidance-->
   <node name="obstacle_avoidance" pkg="nloptcontrol_planner" type="obstacle_avoidance.jl" output="screen"/>
+
+  <!-- initialize system -->
+  <node name="bootstrap" pkg="system" type="bootstrap.jl" output="screen"/>
+
 </launch>
