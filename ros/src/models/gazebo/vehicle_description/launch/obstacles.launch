@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <launch>
-  <arg name="case_params_file" default="$(find system)/config/case/case1.yaml"/>
-  <arg name="obstacle_idx" default="0"/>
+  <arg name="case_params_path"/>
+  <arg name="obstacle_idx"/>
 
 <!-- spawn obstacles -->
 <group ns="$(eval 'Obstacle' + str(arg('obstacle_idx')))">
   <arg name="idx" value="$(arg obstacle_idx)"/>
-  <param name="obstacles" command="$(find xacro)/xacro --inorder $(find vehicle_description)/urdf/obstacles.urdf.xacro idx:=$(arg idx) case_params_file:=$(arg case_params_file)" />
+  <param name="obstacles" command="$(find xacro)/xacro --inorder $(find vehicle_description)/urdf/obstacles.urdf.xacro idx:=$(arg idx) case_params_file:=$(arg case_params_path)" />
   <node args="-urdf -param obstacles -model obstacle_$(arg idx)" name="spawn_obstacle" output="screen" pkg="gazebo_ros" respawn="false" type="spawn_model" />
 </group>
 

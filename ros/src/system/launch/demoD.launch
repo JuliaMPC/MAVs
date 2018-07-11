@@ -17,9 +17,6 @@
 
   <arg name="chrono_params_path" default="$(find system)/config/planner/chrono_testing/hmmwv_chrono_params.yaml"/>
 
-  <param name="system_params_path" value="$(arg system_params_path)"/>
-  <param name="case_params_path" value="$(arg case_params_path)"/>
-
   <rosparam command="load" file="$(arg case_params_path)" />
   <rosparam command="load" file="$(arg system_params_path)" />
   <rosparam command="load" file="$(arg vehicle_params_path)" />

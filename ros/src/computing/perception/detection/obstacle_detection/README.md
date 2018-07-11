@@ -3,7 +3,7 @@ This obstacle detector is forked from https://github.com/tysik/obstacle_detector
 We made some modifications so that the package can detect and track obstacles from 3D PointCloud. Detected obstacles come in a form of circles. The working principles of the method are described in an article provided in the resources folder.
 
 # Motivation
-This obstacle detection algoritms can predict the postion (x,y), velocty (x,y), and size (assuming circular obstacles).
+This obstacle detection algorithms can predict the position (x,y), velocity (x,y), and size (assuming circular obstacles).
 
 # Testing
 ```
@@ -27,7 +27,3 @@ Name | Description
 `/obstacle/vy`| global velocity in global y direction in (m/s)
 `/obstacle/x`| current global x (m) position of vehicle in (m)
 `/obstacle/y`| current global y (m) position of vehicle in (m)
-
-
-
-
