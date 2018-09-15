@@ -27,6 +27,8 @@ RUN echo "deb http://packages.osrfoundation.org/gazebo/ubuntu `lsb_release -cs` 
     ros-kinetic-velodyne-description \
     # for obstacle_detector
     libarmadillo-dev \
+    # for RobotOS.jl
+    python-yaml \
  && apt-get clean
 
 # Install julia
@@ -57,9 +59,9 @@ RUN echo "source /opt/ros/kinetic/setup.bash" >> /home/$USERNAME/.bashrc && \
 # Change user
 USER mavs
 # change number (below in RUN echo ###) to force rebuild starting from here
-RUN echo 4 && \
+RUN echo 7 && \
     # install MichiganAutonomousVehicles.jl
-    /opt/julia-d386e40c17/bin/julia -e 'Pkg.add("MichiganAutonomousVehicles")' && \
+    /opt/julia-d386e40c17/bin/julia -e 'Pkg.add("MichiganAutonomousVehicles");ENV["PYTHON"]="/usr/bin/python2.7";Pkg.build("PyCall");' && \
     # clone mavs
     git clone -b master https://github.com/JuliaMPC/MAVs /home/$USERNAME/MAVs && \
     # build mavs
@@ -68,7 +70,16 @@ RUN echo 4 && \
     echo 'alias julia='/opt/julia-d386e40c17/bin/julia'' >> ~/.bashrc && \
     echo 'export PATH="$PATH:/opt/julia-d386e40c17/bin"' >>  ~/.bashrc
 
-# sudo rm -rf /home/mavs/.julia/.cache
+   # ENV["PYTHON"]="/usr/bin/python"
+
+RUN echo 4 && \
+    # get latest MichiganAutonomousVehicles.jl
+    /opt/julia-d386e40c17/bin/julia -e 'Pkg.checkout("MichiganAutonomousVehicles")'
+
+#RUN sudo apt-get install python-yaml
+
+#ENV["PYTHON"]="/usr/bin/python2.7"
+#Pkg.build("PyCall")
 
 # Default CMD
 CMD ["/bin/bash"]
