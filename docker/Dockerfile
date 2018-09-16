@@ -10,8 +10,8 @@ RUN apt-get update \
     lsb-release \
     sudo \
     mesa-utils \
- && apt-get clean
-
+    software-properties-common \
+ && rm -rf /var/lib/apt/lists/*
 
 # Get Gazebo binaries
 RUN echo "deb http://packages.osrfoundation.org/gazebo/ubuntu `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list \
@@ -29,12 +29,19 @@ RUN echo "deb http://packages.osrfoundation.org/gazebo/ubuntu `lsb_release -cs` 
     libarmadillo-dev \
     # for RobotOS.jl
     python-yaml \
- && apt-get clean
+ && rm -rf /var/lib/apt/lists/*
+
+# to deal with rviz issue https://github.com/ros-visualization/rviz/issues/1291
+RUN sudo add-apt-repository ppa:ubuntu-x-swat/updates \
+ && sudo apt-get update -y \
+ && sudo apt-get dist-upgrade -y  \
+ && rm -rf /var/lib/apt/lists/*
 
 # Install julia
 RUN sudo wget https://julialang-s3.julialang.org/bin/linux/x64/0.6/julia-0.6.2-linux-x86_64.tar.gz \
-    && sudo tar -xvf julia-0.6.2-linux-x86_64.tar.gz -C /opt
+    && sudo tar -xvf julia-0.6.2-linux-x86_64.tar.gz -C /opt \
             #TODO, delete julia .tar file
+    && rm -rf /var/lib/apt/lists/*
 
 # Add basic user
 ENV USERNAME mavs
@@ -70,16 +77,11 @@ RUN echo 7 && \
     echo 'alias julia='/opt/julia-d386e40c17/bin/julia'' >> ~/.bashrc && \
     echo 'export PATH="$PATH:/opt/julia-d386e40c17/bin"' >>  ~/.bashrc
 
-   # ENV["PYTHON"]="/usr/bin/python"
-
 RUN echo 4 && \
     # get latest MichiganAutonomousVehicles.jl
     /opt/julia-d386e40c17/bin/julia -e 'Pkg.checkout("MichiganAutonomousVehicles")'
 
-#RUN sudo apt-get install python-yaml
-
-#ENV["PYTHON"]="/usr/bin/python2.7"
-#Pkg.build("PyCall")
+RUN export LIBGL_ALWAYS_SOFTWARE=1
 
 # Default CMD
 CMD ["/bin/bash"]
