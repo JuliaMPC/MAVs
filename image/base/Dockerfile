@@ -37,11 +37,11 @@ RUN sudo add-apt-repository ppa:ubuntu-x-swat/updates \
  && sudo apt-get dist-upgrade -y  \
  && rm -rf /var/lib/apt/lists/*
 
-# Install julia
-RUN sudo wget https://julialang-s3.julialang.org/bin/linux/x64/0.6/julia-0.6.2-linux-x86_64.tar.gz \
-    && sudo tar -xvf julia-0.6.2-linux-x86_64.tar.gz -C /opt \
-            #TODO, delete julia .tar file
-    && rm -rf /var/lib/apt/lists/*
+ # Install julia
+ RUN sudo wget https://julialang-s3.julialang.org/bin/linux/x64/0.6/julia-0.6.2-linux-x86_64.tar.gz \
+     && sudo tar -xvf julia-0.6.2-linux-x86_64.tar.gz -C /opt \
+             #TODO, delete julia .tar file
+     && rm -rf /var/lib/apt/lists/*
 
 # Add basic user
 ENV USERNAME mavs
@@ -65,19 +65,4 @@ RUN echo "source /opt/ros/kinetic/setup.bash" >> /home/$USERNAME/.bashrc && \
 
 # Change user
 USER mavs
-# change number (below in RUN echo ###) to force rebuild starting from here
-RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.add("MichiganAutonomousVehicles");ENV["PYTHON"]="/usr/bin/python2.7";Pkg.build("PyCall");' && \
-    # clone mavs
-    git clone -b master https://github.com/JuliaMPC/MAVs /home/$USERNAME/MAVs && \
-    # build mavs
-    /bin/bash -c 'source /opt/ros/kinetic/setup.bash; cd /home/$USERNAME/MAVs/ros/src; catkin_init_workspace; cd ..; catkin_make' && \
-    echo "source /home/$USERNAME/MAVs/ros/devel/setup.bash" >> /home/$USERNAME/.bashrc && \
-    echo 'alias julia='/opt/julia-d386e40c17/bin/julia'' >> ~/.bashrc && \
-    echo 'export PATH="$PATH:/opt/julia-d386e40c17/bin"' >>  ~/.bashrc
-
-RUN echo 5 && \
-    # get latest MichiganAutonomousVehicles.jl
-    /opt/julia-d386e40c17/bin/julia -e 'Pkg.checkout("MichiganAutonomousVehicles")'
-
-# Default CMD
-CMD ["/bin/bash"]
+RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.add("MichiganAutonomousVehicles");ENV["PYTHON"]="/usr/bin/python2.7";Pkg.build("PyCall");' 
