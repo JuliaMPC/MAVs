@@ -9,7 +9,7 @@ RUN git clone -b master https://github.com/JuliaMPC/MAVs /home/$USERNAME/MAVs &&
     echo 'export PATH="$PATH:/opt/julia-d386e40c17/bin"' >>  ~/.bashrc
 
 # get latest MichiganAutonomousVehicles.jl
-RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.checkout("MichiganAutonomousVehicles")'
+#RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.checkout("MichiganAutonomousVehicles")'
 
 # Default CMD
 CMD ["/bin/bash"]
