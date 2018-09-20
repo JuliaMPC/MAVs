@@ -11,7 +11,7 @@ Tested on Ubuntu Xenial (16.04)
 ## How to build
 
 ```
-$ cd MAVs/docker
+$ cd MAVs/image/mavs_test
 $ sh build.sh
 ```
 
