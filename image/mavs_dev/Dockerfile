@@ -4,6 +4,7 @@ MAINTAINER Huckleberry Febbo <febbo@umich.edu>
 RUN apt-get update \
  && apt-get install -y \
     wget \
+    unzip \
     lsb-release \
     sudo \
     git-core \
@@ -38,13 +39,11 @@ RUN echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc
     libarmadillo-dev \
     # for RobotOS.jl
     python-yaml \
- && rm -rf /var/lib/apt/lists/*
-
- # TODO push to previous container
- # to deal with rviz issue https://github.com/ros-visualization/rviz/issues/1291
-RUN add-apt-repository ppa:ubuntu-x-swat/updates \
+    # to deal with rviz issue https://github.com/ros-visualization/rviz/issues/1291
+ && add-apt-repository ppa:ubuntu-x-swat/updates \
  && apt-get update -y \
  && apt-get dist-upgrade -y  \
+ && rosdep update \
  && rm -rf /var/lib/apt/lists/*
 
 # Install julia
@@ -73,10 +72,8 @@ RUN echo "source /opt/ros/kinetic/setup.bash" >> /home/$USERNAME/.bashrc && \
       # cd to home on login
       echo "cd" >> /home/$USERNAME/.bashrc
 
-
 USER mavs
 RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.add("MichiganAutonomousVehicles");ENV["PYTHON"]="/usr/bin/python2.7";Pkg.build("PyCall");Pkg.build("Ipopt");'
-
 
 RUN git clone -b master https://github.com/JuliaMPC/MAVs /home/$USERNAME/MAVs && \
    /bin/bash -c 'source /opt/ros/kinetic/setup.bash; cd /home/$USERNAME/MAVs/ros/src; catkin_init_workspace; cd ..; catkin_make' && \
@@ -84,8 +81,21 @@ RUN git clone -b master https://github.com/JuliaMPC/MAVs /home/$USERNAME/MAVs &&
    echo 'alias julia='/opt/julia-d386e40c17/bin/julia'' >> ~/.bashrc && \
    echo 'export PATH="$PATH:/opt/julia-d386e40c17/bin"' >>  ~/.bashrc
 
- # get latest MichiganAutonomousVehicles.jl
- #RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.checkout("MichiganAutonomousVehicles")'
+# Install Chrono
+RUN sudo wget http://downloads.sourceforge.net/irrlicht/irrlicht-1.8.4.zip && \
+sudo unzip irrlicht-1.8.4.zip -d /home/mavs && \
+cd /home/mavs/irrlicht-1.8.4/source/Irrlicht && \
+sudo make sharedlib && sudo make install
 
- # Default CMD
- CMD ["/bin/bash"]
+# copy chrono to the docker and build it
+RUN cd /opt ; sudo mkdir -p chrono/chrono_source chrono/chrono_build ; cd chrono/chrono_source && \
+sudo git clone -b master https://github.com/projectchrono/chrono.git
+COPY chrono_build /opt/chrono/chrono_build
+RUN cd /opt/chrono/chrono_build ; sudo make
+#TODO: change to develop branch on Chrono
+
+# get latest MichiganAutonomousVehicles.jl
+#RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.checkout("MichiganAutonomousVehicles")'
+
+# Default CMD
+CMD ["/bin/bash"]
