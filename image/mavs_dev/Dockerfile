@@ -43,7 +43,6 @@ RUN echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc
  && add-apt-repository ppa:ubuntu-x-swat/updates \
  && apt-get update -y \
  && apt-get dist-upgrade -y  \
- && rosdep update \
  && rm -rf /var/lib/apt/lists/*
 
 # Install julia

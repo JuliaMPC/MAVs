@@ -14,7 +14,7 @@ else
 fi
 echo "Shared directory: ${HOST_DIR}"
 
-nvidia-docker run \
+docker run \
     -it --rm \
     --volume=$XSOCK:$XSOCK:rw \
     --volume=$XAUTH:$XAUTH:rw \
@@ -24,4 +24,4 @@ nvidia-docker run \
     -u mavs \
     --privileged -v /dev/bus/usb:/dev/bus/usb \
     --net=host \
-    mavs
+    dev

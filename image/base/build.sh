@@ -2,4 +2,4 @@
 
 # Build Docker Image
 
-nvidia-docker build -t base -f Dockerfile .
+docker build -t base -f Dockerfile .
