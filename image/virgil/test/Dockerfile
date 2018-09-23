@@ -1,4 +1,9 @@
-FROM avpg/mavs:base
+FROM avpg/virgil:base
+
+# TODO: move this to another image.
+LABEL com.nvidia.volumes.needed="nvidia_driver"
+ENV PATH /usr/local/nvidia/bin:${PATH}
+ENV LD_LIBRARY_PATH /usr/local/nvidia/lib:/usr/local/nvidia/lib64:${LD_LIBRARY_PATH}
 
 # Change user
 USER mavs

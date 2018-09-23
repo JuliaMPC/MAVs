@@ -14,14 +14,13 @@ else
 fi
 echo "Shared directory: ${HOST_DIR}"
 
-docker run \
+nvidia-docker run \
     -it --rm \
     --volume=$XSOCK:$XSOCK:rw \
     --volume=$XAUTH:$XAUTH:rw \
     --volume=$HOST_DIR:$SHARED_DIR:rw \
     --env="XAUTHORITY=${XAUTH}" \
     --env="DISPLAY=${DISPLAY}" \
-    -u mavs \
     --privileged -v /dev/bus/usb:/dev/bus/usb \
     --net=host \
     dev
