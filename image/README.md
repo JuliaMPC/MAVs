@@ -1,4 +1,4 @@
-# MAVs Docker
+# MAVs Docker (virgil)
 
 ## Requirements
 
@@ -11,7 +11,7 @@ Tested on Ubuntu Xenial (16.04)
 ## How to build
 
 ```
-$ cd MAVs/image/mavs_test
+$ cd MAVs/image/virgil/test
 $ sh build.sh
 ```
 
