@@ -16,5 +16,10 @@ RUN git clone -b master https://github.com/JuliaMPC/MAVs /home/$USERNAME/MAVs \
 # get latest MichiganAutonomousVehicles.jl
 #RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.checkout("MichiganAutonomousVehicles")'
 
+#to avoid: https://forum.manjaro.org/t/kde-plasma-related-error-messages-in-journal/21790/2
+RUN echo 'QT_LOGGING_RULES=’*=false’' \
+ 'export QT_LOGGING_RULES' \
+ 'rm -r /home/mavs/.julia/.cache '
+
 # Default CMD
 CMD ["/bin/bash"]
