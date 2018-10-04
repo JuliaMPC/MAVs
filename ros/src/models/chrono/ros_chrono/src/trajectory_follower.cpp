@@ -20,6 +20,8 @@
 // Find proper yaw rate calculation
 // Subsscribe to msg from obstacle_avoidance_chrono, callback to that to calculate ChBezierCurve
 // =============================================================================
+#include <RigidTerrain.h> // Added by me on 2018-10-4
+
 
 #include <fstream>
 #include<iostream>
