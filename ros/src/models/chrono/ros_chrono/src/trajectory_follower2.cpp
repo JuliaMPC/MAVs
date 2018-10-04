@@ -188,7 +188,7 @@ class ChDriverSelector : public irr::IEventReceiver {
 struct parameters
 {
     RigidTerrain terrain;
-    TireForces tire_forces;
+    // TireForces tire_forces;
     WheeledVehicle my_hmmwv;
     ChRealtimeStepTimer realtime_timer;
     int sim_frame;
@@ -610,7 +610,7 @@ int main(int argc, char* argv[]) {
     RigidTire tire_rear_right(rigid_tire_file);
 
 
-    TireForces tire_forces(4);
+    // TireForces tire_forces(4);
 
     tire_front_left.Initialize(my_hmmwv.GetWheelBody(0), LEFT);
     tire_front_right.Initialize(my_hmmwv.GetWheelBody(1), LEFT);
