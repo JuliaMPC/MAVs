@@ -636,7 +636,7 @@ int main(int argc, char* argv[]) {
     n.getParam("vehicle/common/frict_coeff",frict_coeff);
     n.getParam("vehicle/common/rest_coeff",rest_coeff);
 
-    RigidTerrain terrain(my_hmmwv.GetSystem());
+    GranularTerrain terrain(my_hmmwv.GetSystem());
     my_hmmwv.GetWheel(0)->SetContactFrictionCoefrrficient(frict_coeff);
     my_hmmwv.GetWheel(0)->SetContactRestitutionCoefficient(rest_coeff);
 

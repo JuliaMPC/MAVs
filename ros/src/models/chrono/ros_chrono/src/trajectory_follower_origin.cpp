@@ -42,6 +42,7 @@
 #include <sstream>
 #include "chrono_vehicle/ChVehicleModelData.h"
 #include "chrono_vehicle/terrain/RigidTerrain.h"
+#include "chrono_vehicle/terrain/GranularTerrain.h"
 #include "chrono_vehicle/driver/ChIrrGuiDriver.h"
 #include "chrono_vehicle/driver/ChPathFollowerDriver.h"
 #include "chrono_vehicle/wheeled_vehicle/utils/ChWheeledVehicleIrrApp.h"
@@ -166,7 +167,7 @@ class ChDriverSelector : public irr::IEventReceiver {
 
 struct parameters
 {
-    RigidTerrain terrain;
+    GranularTerrain terrain;
     HMMWV_Reduced my_hmmwv;
     ChRealtimeStepTimer realtime_timer;
     int sim_frame;
@@ -362,7 +363,7 @@ int main(int argc, char* argv[]) {
     n.getParam("vehicle/common/frict_coeff",frict_coeff);
     n.getParam("vehicle/common/rest_coeff",rest_coeff);
 
-    RigidTerrain terrain(my_hmmwv.GetSystem());
+    GranularTerrain terrain(my_hmmwv.GetSystem());
     my_hmmwv.GetVehicle().GetWheel(0)->SetContactFrictionCoefficient(frict_coeff);
     my_hmmwv.GetVehicle().GetWheel(0)->SetContactRestitutionCoefficient(rest_coeff);
 
