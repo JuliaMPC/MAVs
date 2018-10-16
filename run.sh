@@ -11,16 +11,9 @@ done
 
 XSOCK=/tmp/.X11-unix
 XAUTH=/home/$USER/.Xauthority
-SHARED_DIR=/home/mavs/shared_dir
-HOST_DIR=/home/$USER/shared_dir
+SHARED_DIR=/home/mavs/MAVs/shared_dir
+HOST_DIR=/home/$USER/MAVs/shared_dir
 
-if [ "$1" = "" ]
-then
-    # Create Shared Folder
-    mkdir -p $SHARED_DIR
-else
-    HOST_DIR=$1
-fi
 echo "Shared directory: ${HOST_DIR}"
 
 nvidia-docker run \
@@ -32,6 +25,6 @@ nvidia-docker run \
     --env="DISPLAY=${DISPLAY}" \
     --privileged -v /dev/bus/usb:/dev/bus/usb \
     --net=host \
-    dev
+    mavs
 
 xhost -local:root

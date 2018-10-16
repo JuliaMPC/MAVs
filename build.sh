@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Pull Docker base image from docker hub
-docker pull c1yxuan/kinetic-desktop-opengl
+docker pull c1yxuan/avpg_base
 
 # Build Docker Image
-docker build -t dev -f Dockerfile .
+docker build -t mavs -f Dockerfile .
