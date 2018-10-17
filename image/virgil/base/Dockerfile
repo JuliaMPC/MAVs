@@ -1,7 +1,42 @@
-FROM osrf/ros:kinetic-desktop
-MAINTAINER Huckleberry Febbo <febbo@umich.edu>
+# This is an auto generated Dockerfile for ros:ros-core
+# generated from docker_images/create_ros_core_image.Dockerfile.em
+# FROM ubuntu:xenial
+FROM nvidia/opengl:runtime
 
+# install packages
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    dirmngr \
+    gnupg2 \
+    && rm -rf /var/lib/apt/lists/*
+
+# setup keys
+RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 421C365BD9FF1F717815A3895523BAEEB01FA116
+
+# setup sources.list
+RUN echo "deb http://packages.ros.org/ros/ubuntu xenial main" > /etc/apt/sources.list.d/ros-latest.list
+
+# install bootstrap tools
+RUN apt-get update && apt-get install --no-install-recommends -y \
+    python-rosdep \
+    python-rosinstall \
+    python-vcstools \
+    && rm -rf /var/lib/apt/lists/*
+
+# setup environment
+ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
+
+# install ros packages
+ENV ROS_DISTRO kinetic
 RUN apt-get update && apt-get install -y \
+    ros-kinetic-desktop-full \
+    && rm -rf /var/lib/apt/lists/*
+
+# setup entrypoint
+COPY ./ros_entrypoint.sh /
+
+RUN apt-get update \
+ && apt-get install -y \
     wget \
     unzip \
     lsb-release \
@@ -10,7 +45,11 @@ RUN apt-get update && apt-get install -y \
     mesa-utils \
     software-properties-common \
     # for Ipopt
-    build-essential gfortran pkg-config liblapack-dev libblas-dev \
+    build-essential \
+    gfortran \
+    pkg-config \
+    liblapack-dev \
+    libblas-dev \
     # for obstacle_detector
     libarmadillo-dev \
     # for RobotOS.jl
@@ -38,14 +77,14 @@ RUN echo "deb http://packages.osrfoundation.org/gazebo/ubuntu `lsb_release -cs` 
 # Install julia
 RUN sudo wget https://julialang-s3.julialang.org/bin/linux/x64/0.6/julia-0.6.2-linux-x86_64.tar.gz \
  && sudo tar -xvf julia-0.6.2-linux-x86_64.tar.gz -C /opt \
- #TODO, delete julia .tar file
- && rm -rf /var/lib/apt/lists/*
+ && rm -rf /var/lib/apt/lists/* \
+ && rm julia-0.6.2-linux-x86_64.tar.gz*
 
 # Add basic user
 ENV USERNAME mavs
 ENV PULSE_SERVER /run/pulse/native
 RUN useradd -m $USERNAME && \
-      echo "$USERNAME:$USERNAME" | chpasswd && \
+       echo "$USERNAME:$USERNAME" | chpasswd && \
       usermod --shell /bin/bash $USERNAME && \
       usermod -aG sudo $USERNAME && \
       echo "$USERNAME ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/$USERNAME && \
@@ -56,16 +95,16 @@ RUN useradd -m $USERNAME && \
 
 # Setup .bashrc for ROS
 RUN echo "source /opt/ros/kinetic/setup.bash" >> /home/$USERNAME/.bashrc \
- #Fix for qt and X server errors
- && echo "export QT_X11_NO_MITSHM=1" >> /home/$USERNAME/.bashrc \
- # cd to home on login
- && echo "cd" >> /home/$USERNAME/.bashrc
+#Fix for qt and X server errors
+&& echo "export QT_X11_NO_MITSHM=1" >> /home/$USERNAME/.bashrc \
+# cd to home on login
+&& echo "cd" >> /home/$USERNAME/.bashrc
 
- # Change user
+# Change user
 USER mavs
- # Install julia
+
+# Install julia and Chrono
 RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.add("MichiganAutonomousVehicles");ENV["PYTHON"]="/usr/bin/python2.7";Pkg.build("PyCall");Pkg.build("Ipopt");' \
- # Install Chrono
  && sudo wget http://downloads.sourceforge.net/irrlicht/irrlicht-1.8.4.zip \
  && sudo unzip irrlicht-1.8.4.zip -d /home/mavs \
  && cd /home/mavs/irrlicht-1.8.4/source/Irrlicht \
@@ -75,5 +114,9 @@ RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.add("MichiganAutonomousVehicles");EN
  && cd /opt ; sudo mkdir -p chrono/chrono_source chrono/chrono_build ; cd chrono/chrono_source \
  && sudo git clone -b develop https://github.com/projectchrono/chrono.git
 
+# Copy chrono_build and make file
 COPY chrono_build /opt/chrono/chrono_build
 RUN cd /opt/chrono/chrono_build ; sudo make
+
+ENTRYPOINT ["/ros_entrypoint.sh"]
+CMD ["bash"]
