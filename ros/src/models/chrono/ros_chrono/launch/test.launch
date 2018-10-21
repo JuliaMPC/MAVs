@@ -1,0 +1,5 @@
+<launch>
+
+  <node name="traj" pkg="ros_chrono" type="test_1" cwd="node" output="screen"/>
+
+</launch>
