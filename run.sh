@@ -1,9 +1,7 @@
 #!/bin/sh
 
 # Runs a docker container with the image created by build.sh
-xhost +local:root
-
-until sudo nvidia-docker ps
+until nvidia-docker ps
 do
     echo "Waiting for docker server"
     sleep 1
@@ -30,5 +28,4 @@ nvidia-docker run \
     --privileged -v /dev/bus/usb:/dev/bus/usb \
     --net=host \
     mavs
-
-xhost -local:root
+    
