@@ -154,12 +154,7 @@ int main(int argc, char* argv[]) {
     // ------------------------------
     ros::init(argc, argv, "steering_controller");
     ros::NodeHandle node;
-    char cwd[100];
     
-    getcwd(cwd, sizeof(cwd));
-    ROS_INFO("CWD: %s",cwd);
-
-
     // Declare ROS subscriber to subscribe planner topic
     ros::Subscriber planner_sub = node.subscribe("/trejactory", 100, plannerCallback);
 
@@ -174,7 +169,7 @@ int main(int argc, char* argv[]) {
     node.getParam("system/params/step_size",step_size);
     node.getParam("system/params/goal_tol",goal_tol);
 
-    double target_speed = 12.0, pitch0 = 0, roll0 = 0, x = 0, y = 0, z0 = 0;
+    double target_speed = 12.0, pitch0 = 0, roll0 = 0, x = 0, y = 0, z0 = 0.5;
     node.getParam("state/chrono/X0/v_des",target_speed);
     node.getParam("state/chrono/X0/theta",pitch0);
     node.getParam("state/chrono/X0/phi",roll0);
@@ -182,7 +177,7 @@ int main(int argc, char* argv[]) {
     node.getParam("state/chrono/yVal",y);
     node.getParam("state/chrono/X0/z",z0);
 
-    double yaw0 = 0, x0 = 0, y0 = 0;
+    double yaw0 = 0, x0 = -125, y0 = -125;
     node.getParam("case/actual/X0/psi",yaw0);
     node.getParam("case/actual/X0/x",x0);
     node.getParam("case/actual/X0/yVal",y0);
@@ -206,11 +201,10 @@ int main(int argc, char* argv[]) {
     
     
     // Declare loop rate
-    ros::Rate loop_rate(1.0/step_size);
+    ros::Rate loop_rate(int(1/step_size));
 
     // Initial vehicle location and orientation
-    // ChVector<> initLoc(x0, y0, z0);
-    ChVector<> initLoc(-125, -125, 0.5);
+    ChVector<> initLoc(x0, y0, z0);
     // ChQuaternion<> initRot(q[0],q[1],q[2],q[3]);
 
     double t0 = std::cos(yaw0 * 0.5f);
@@ -343,7 +337,7 @@ int main(int argc, char* argv[]) {
     while (ros::ok()) {
         
         // app.GetDevice()->run()
-        
+
         // Extract system state
         double time = my_hmmwv.GetSystem()->GetChTime();
         ChVector<> acc_CG = my_hmmwv.GetVehicle().GetChassisBody()->GetPos_dtdt();
@@ -388,11 +382,39 @@ int main(int argc, char* argv[]) {
         my_hmmwv.Advance(step);
         app.Advance(step);
 
-        // Increment simulation frame number
-        sim_frame++;
+        // Get vehicle information from Chrono vehicle model
+        ChVector<> pos_global = my_hmmwv.GetVehicle().GetVehicleCOMPos();
+        ChVector<> spd_global = my_hmmwv.GetChassisBody()->GetPos_dt();
+        ChVector<> acc_global = my_hmmwv.GetChassisBody()->GetPos_dtdt();
+        ChQuaternion<> rot_global = my_hmmwv.GetVehicle().GetVehicleRot();//global orientation as quaternion
+        ChVector<> rot_dt = my_hmmwv.GetChassisBody()->GetWvel_loc(); //global orientation as quaternion
+        
+        double slip_angle = my_hmmwv.GetTire(0)->GetSlipAngle();
+        double speed = my_hmmwv.GetVehicle().GetVehicleSpeedCOM();
+
+        double q0 = rot_global[0];
+        double q1 = rot_global[1];
+        double q2 = rot_global[2];
+        double q3 = rot_global[3];
+
+        double yaw_val=atan2(2*(q0*q3+q1*q2),1-2*(q2*q2+q3*q3));
+        double theta_val=asin(2*(q0*q2-q3*q1));
+        double phi_val= atan2(2*(q0*q1+q2*q3),1-2*(q1*q1+q2*q2));
 
         // Update vehicleinfo_data
-        vehicleinfo_data.t_chrono = time;
+        vehicleinfo_data.t_chrono = time; // time in chrono simulation
+        vehicleinfo_data.x_pos = pos_global[0];
+        vehicleinfo_data.y_pos = pos_global[1];
+        vehicleinfo_data.x_v = spd_global[0]; // speed measured at the origin of the chassis reference frame.
+        vehicleinfo_data.y_v = spd_global[1];
+        vehicleinfo_data.x_a = acc_global[0];
+        vehicleinfo_data.yaw_curr = yaw_val; // in radians
+        vehicleinfo_data.yaw_rate = -rot_dt[2];// yaw rate
+        vehicleinfo_data.sa = slip_angle; // slip angle
+        vehicleinfo_data.thrt_in = 0; // throttle input in the range [0,+1]
+        vehicleinfo_data.brk_in = 0; // braking input in the range [0,+1]
+        vehicleinfo_data.str_in = 0; // steeering input in the range [-1,+1]
+
         // Publish current vehicle information
         vehicleinfo_pub.publish(vehicleinfo_data);
 
