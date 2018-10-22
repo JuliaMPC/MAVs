@@ -106,6 +106,9 @@ int filter_window_size = 20;
 
 // Control Input
 std::vector<double> traj_t(1,0);
+std::vector<double> traj_x(1,0);
+std::vector<double> traj_y(1,0);
+std::vector<double> traj_psi(1,0);
 std::vector<double> traj_sa(1,0);
 std::vector<double> traj_vx(1,0);
 
@@ -139,9 +142,12 @@ class ChDriverSelector : public irr::IEventReceiver {
 // =============================================================================
 
 void plannerCallback(const nloptcontrol_planner::Control::ConstPtr& control_msgs) {
-    traj_t = control_msgs->t;
-    traj_sa = control_msgs->sa;
-    traj_vx = control_msgs->vx;
+    traj_t = control_msgs.t;
+    traj_x = control_msgs.x;
+    traj_y = control_msgs.y;
+    traj_psi = control_msgs.psi;
+    traj_sa = control_msgs.sa;
+    traj_vx = control_msgs.vx;
 }
 
 
@@ -336,8 +342,6 @@ int main(int argc, char* argv[]) {
 
     while (ros::ok()) {
         
-        // app.GetDevice()->run()
-
         // Extract system state
         double time = my_hmmwv.GetSystem()->GetChTime();
         ChVector<> acc_CG = my_hmmwv.GetVehicle().GetChassisBody()->GetPos_dtdt();
@@ -350,6 +354,9 @@ int main(int argc, char* argv[]) {
         // End simulation
         if (time >= t_end)
             break;
+
+        // Design feedback control loop
+        // ============================
 
         // Collect output data from modules (for inter-module communication)
         double throttle_input = traj_vx[0];
@@ -411,9 +418,9 @@ int main(int argc, char* argv[]) {
         vehicleinfo_data.yaw_curr = yaw_val; // in radians
         vehicleinfo_data.yaw_rate = -rot_dt[2];// yaw rate
         vehicleinfo_data.sa = slip_angle; // slip angle
-        vehicleinfo_data.thrt_in = 0; // throttle input in the range [0,+1]
-        vehicleinfo_data.brk_in = 0; // braking input in the range [0,+1]
-        vehicleinfo_data.str_in = 0; // steeering input in the range [-1,+1]
+        vehicleinfo_data.thrt_in = throttle_input; // throttle input in the range [0,+1]
+        vehicleinfo_data.brk_in = braking_input; // braking input in the range [0,+1]
+        vehicleinfo_data.str_in = steering_input; // steeering input in the range [-1,+1]
 
         // Publish current vehicle information
         vehicleinfo_pub.publish(vehicleinfo_data);
