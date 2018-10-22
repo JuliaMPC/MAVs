@@ -103,7 +103,6 @@ double fps = 60;
 
 int filter_window_size = 20;
 
-
 // Control Input
 std::vector<double> traj_t(1,0);
 std::vector<double> traj_x(1,0);
@@ -142,12 +141,12 @@ class ChDriverSelector : public irr::IEventReceiver {
 // =============================================================================
 
 void plannerCallback(const nloptcontrol_planner::Control::ConstPtr& control_msgs) {
-    traj_t = control_msgs.t;
-    traj_x = control_msgs.x;
-    traj_y = control_msgs.y;
-    traj_psi = control_msgs.psi;
-    traj_sa = control_msgs.sa;
-    traj_vx = control_msgs.vx;
+    traj_t = control_msgs->t;
+    traj_x = control_msgs->x;
+    traj_y = control_msgs->y;
+    traj_psi = control_msgs->psi;
+    traj_sa = control_msgs->sa;
+    traj_vx = control_msgs->vx;
 }
 
 
