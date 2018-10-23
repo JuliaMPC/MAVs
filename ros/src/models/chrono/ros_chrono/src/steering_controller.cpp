@@ -19,8 +19,16 @@
 //
 // =============================================================================
 
+// C/C++ library
 #include <iostream>
+#include <math.h>
+#include <vector>
+#include <string>
 #include <unistd.h>
+
+// Computing tool library
+#include "interpolation.h"
+#include "PID.h"
 
 // ROS include library
 #include "ros/ros.h"
@@ -46,6 +54,7 @@ using namespace chrono;
 using namespace chrono::geometry;
 using namespace chrono::vehicle;
 using namespace chrono::vehicle::hmmwv;
+using namespace alglib;
 
 
 std::string data_path("MAVs/ros/src/models/chrono/ros_chrono/src/data/vehicle/");
@@ -92,8 +101,8 @@ double terrainWidth = 300.0;   // size in Y direction
 ChVector<> trackPoint(0.0, 0.0, 1.75);
 
 // Simulation step size
-double step_size = 2e-3;
-double tire_step_size = 1e-3;
+double step_size = 5e-3;
+double tire_step_size = 2.5e-3;
 
 // Simulation end time
 double t_end = 100;
@@ -110,6 +119,12 @@ std::vector<double> traj_y(1,0);
 std::vector<double> traj_psi(1,0);
 std::vector<double> traj_sa(1,0);
 std::vector<double> traj_vx(1,0);
+
+// Control Output
+double traj_sa_interp = 0.0;
+double traj_vx_interp = 0.0;
+double controller_output = 0.0;
+PID controller;
 
 // =============================================================================
 
@@ -170,7 +185,7 @@ int main(int argc, char* argv[]) {
     
 
     // Get parameters from ROS Parameter Server
-    double step_size = 0.01, goal_tol = 0.1;
+    double goal_tol = 0.1;
     node.getParam("system/params/step_size",step_size);
     node.getParam("system/params/goal_tol",goal_tol);
 
@@ -196,13 +211,23 @@ int main(int argc, char* argv[]) {
     node.getParam("vehicle/common/rest_coeff",rest_coeff);
     node.getParam("vehicle/chrono/vehicle_params/gearRatios",gear_ratios);
     
-    double Kp, Ki, Kd, Kw;
-    std::string windup_method;
+    // ---------------------
+    // Set up PID controller
+    // ---------------------
+    double Kp = 0.5, Ki = 0.0, Kd = 0.0, Kw = 0.002, time_shift = 3.0;
+    std::string windup_method("clamping");
     node.getParam("controller/Kp",Kp);
     node.getParam("controller/Ki",Ki);
     node.getParam("controller/Kd",Kd);
     node.getParam("controller/Kw",Kw);
-    node.getParam("controller/anti_windup",windup_method);
+    node.getParam("controller/anti_windup", windup_method);
+    node.getParam("controller/time_shift", time_shift);
+
+    controller.set_PID(Kp, Ki, Kd, Kw);
+    controller.set_step_size(step_size);
+    controller.set_output_limit(-1.0, 1.0);
+    controller.set_windup_metohd(windup_method);
+    controller.initialize();
     
     
     // Declare loop rate
@@ -339,6 +364,13 @@ int main(int argc, char* argv[]) {
     int sim_frame = 0;
     int render_frame = 0;
 
+    double speed = 0.0;
+    // Collect output data from modules (for inter-module communication)
+    double throttle_input = 0;
+    double steering_input = 0;
+    double braking_input = 0;
+
+
     while (ros::ok()) {
         
         // Extract system state
@@ -354,13 +386,39 @@ int main(int argc, char* argv[]) {
         if (time >= t_end)
             break;
 
-        // Design feedback control loop
-        // ============================
+        // --------------------------
+        // interpolation using ALGLIB 
+        // --------------------------
+        // real_1d_array t_array;
+        // real_1d_array sa_array;
+        // real_1d_array vx_array;
 
-        // Collect output data from modules (for inter-module communication)
-        double throttle_input = traj_vx[0];
-        double steering_input = traj_sa[0];
-        double braking_input = 0;
+        // t_array.setcontent(traj_t);
+        // sa_array.setcontent(traj_sa);
+        // vx_array.setcontent(traj_vx);
+        // spline1dinterpolant s_vx;
+        // spline1dinterpolant s_sa;
+        // spline1dbuildcubic(t_array, vx_array, s_vx);
+        // traj_vx_interp = spline1dcalc(s_vx, time + time_shift);
+        // spline1dbuildcubic(t_array, sa_array, s_sa);
+        // traj_sa_interp = spline1dcalc(s_sa, time);
+
+        // throttle or brake output
+        // double vx_err = traj_vx_interp - speed;
+        double vx_err = traj_vx[0] - speed;
+        controller_output = controller.control(vx_err);
+        if (controller_output > 0){
+            throttle_input = controller_output;
+            braking_input = 0;
+        }
+        else {
+            throttle_input = 0;
+            braking_input = -controller_output;
+        }
+        
+        // steering angle output (There should a saturation threshold)
+        // traj_sa_interp = traj_sa_interp;
+        steering_input = traj_sa[0];
 
         // Update sentinel and target location markers for the path-follower controller.
         // Note that we do this whether or not we are currently using the path-follower driver.
@@ -396,7 +454,7 @@ int main(int argc, char* argv[]) {
         ChVector<> rot_dt = my_hmmwv.GetChassisBody()->GetWvel_loc(); //global orientation as quaternion
         
         double slip_angle = my_hmmwv.GetTire(0)->GetSlipAngle();
-        double speed = my_hmmwv.GetVehicle().GetVehicleSpeedCOM();
+        speed = my_hmmwv.GetVehicle().GetVehicleSpeedCOM();
 
         double q0 = rot_global[0];
         double q1 = rot_global[1];
@@ -411,7 +469,8 @@ int main(int argc, char* argv[]) {
         vehicleinfo_data.t_chrono = time; // time in chrono simulation
         vehicleinfo_data.x_pos = pos_global[0];
         vehicleinfo_data.y_pos = pos_global[1];
-        vehicleinfo_data.x_v = spd_global[0]; // speed measured at the origin of the chassis reference frame.
+        // vehicleinfo_data.x_v = spd_global[0]; // speed measured at the origin of the chassis reference frame.
+        vehicleinfo_data.x_v = speed;
         vehicleinfo_data.y_v = spd_global[1];
         vehicleinfo_data.x_a = acc_global[0];
         vehicleinfo_data.yaw_curr = yaw_val; // in radians
