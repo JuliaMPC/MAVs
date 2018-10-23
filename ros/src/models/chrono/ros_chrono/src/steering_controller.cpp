@@ -59,10 +59,39 @@ using namespace alglib;
 
 std::string data_path("MAVs/ros/src/models/chrono/ros_chrono/src/data/vehicle/");
 
-// The extended steering controller only works inside the path limits
-// =============================================================================
-// Problem parameters
+// Rigid terrain dimensions
+double terrainHeight = 0;
+double terrainLength = 300.0;  // size in X direction
+double terrainWidth = 300.0;   // size in Y direction
 
+// Simulation step size (Share with ROS)
+double step_size = 5e-3;
+double tire_step_size = 2.5e-3;
+
+// Simulation end time
+double t_end = 100;
+
+// ROS Control Input (Topic)
+std::vector<double> traj_t(2,0);
+std::vector<double> traj_x(2,0);
+std::vector<double> traj_y(2,0);
+std::vector<double> traj_psi(2,0);
+std::vector<double> traj_sa(2,0);
+std::vector<double> traj_vx(2,0);
+
+// Interpolator
+double traj_sa_interp = 0.0;
+double traj_vx_interp = 0.0;
+
+// PID controller
+double Kp = 0.5, Ki = 0.0, Kd = 0.0, Kw = 0.0, time_shift = 3.0; // PID controller parameter
+std::string windup_method("clamping"); // Anti-windup method
+double controller_output = 0.0;
+PID controller;
+
+// ------
+// Chrono
+// ------
 // Contact method type
 ChMaterialSurface::ContactMethod contact_method = ChMaterialSurface::SMC;
 
@@ -92,39 +121,12 @@ VisualizationType tire_vis_type = VisualizationType::NONE;
 ////std::string path_file("paths/NATO_double_lane_change.txt");
 std::string path_file("paths/ISO_double_lane_change.txt");
 
-// Rigid terrain dimensions
-double terrainHeight = 0;
-double terrainLength = 300.0;  // size in X direction
-double terrainWidth = 300.0;   // size in Y direction
-
 // Point on chassis tracked by the chase camera
 ChVector<> trackPoint(0.0, 0.0, 1.75);
 
-// Simulation step size
-double step_size = 5e-3;
-double tire_step_size = 2.5e-3;
-
-// Simulation end time
-double t_end = 100;
-
 // Render FPS
 double fps = 60;
-
 int filter_window_size = 20;
-
-// Control Input
-std::vector<double> traj_t(1,0);
-std::vector<double> traj_x(1,0);
-std::vector<double> traj_y(1,0);
-std::vector<double> traj_psi(1,0);
-std::vector<double> traj_sa(1,0);
-std::vector<double> traj_vx(1,0);
-
-// Control Output
-double traj_sa_interp = 0.0;
-double traj_vx_interp = 0.0;
-double controller_output = 0.0;
-PID controller;
 
 // =============================================================================
 
@@ -182,31 +184,33 @@ int main(int argc, char* argv[]) {
     ros::Publisher vehicleinfo_pub = node.advertise<ros_chrono_msgs::veh_status>("/vehicleinfo", 1);
     ros_chrono_msgs::veh_status vehicleinfo_data;
 
-    
+    // Define variables for ROS parameters server
+    double goal_tol = 0.1; // Path following tolerance
+    double target_speed = 0.0; // Desired velocity
+    double x0 = 0.0, y0 = 0.0, z0 = 0.5; // Initial global position
+    double roll0 = 0.0, pitch0 = 0.0, yaw0 = 0.0; // Initial global orientation
+    double x = 0, y = 0;
+    double goal_x = 0, goal_y = 0; // Goal position
+    double frict_coeff = 0, rest_coeff = 0, gear_ratios = 1; //Chrono Vehicle parameters
 
     // Get parameters from ROS Parameter Server
-    double goal_tol = 0.1;
-    node.getParam("system/params/step_size",step_size);
+    node.getParam("system/params/step_size", step_size); // ROS loop rate and Chrono step size
     node.getParam("system/params/goal_tol",goal_tol);
 
-    double target_speed = 12.0, pitch0 = 0, roll0 = 0, x = 0, y = 0, z0 = 0.5;
-    node.getParam("state/chrono/X0/v_des",target_speed);
-    node.getParam("state/chrono/X0/theta",pitch0);
-    node.getParam("state/chrono/X0/phi",roll0);
-    node.getParam("state/chrono/x",x);
-    node.getParam("state/chrono/yVal",y);
-    node.getParam("state/chrono/X0/z",z0);
-
-    double yaw0 = 0, x0 = -125, y0 = -125;
-    node.getParam("case/actual/X0/psi",yaw0);
-    node.getParam("case/actual/X0/x",x0);
-    node.getParam("case/actual/X0/yVal",y0);
+    node.getParam("state/chrono/X0/v_des", target_speed); // desired velocity
+    node.getParam("state/chrono/X0/theta", pitch0); // initial pitch
+    node.getParam("state/chrono/X0/phi", roll0); // initial roll
+    node.getParam("state/chrono/X0/z", z0); // initial z
+    node.getParam("state/chrono/x", x); // global x position
+    node.getParam("state/chrono/yVal", y); // global y position
     
-    double goal_x = 0, goal_y = 0;
+    node.getParam("case/actual/X0/psi",yaw0); // initial yaw
+    node.getParam("case/actual/X0/x",x0); // initial x
+    node.getParam("case/actual/X0/yVal",y0); // initial y
+    
     node.getParam("case/goal/x",goal_x);
     node.getParam("case/goal/yVal",goal_y);
 
-    double frict_coeff = 0, rest_coeff = 0, gear_ratios = 1;
     node.getParam("vehicle/common/frict_coeff",frict_coeff);
     node.getParam("vehicle/common/rest_coeff",rest_coeff);
     node.getParam("vehicle/chrono/vehicle_params/gearRatios",gear_ratios);
@@ -214,8 +218,6 @@ int main(int argc, char* argv[]) {
     // ---------------------
     // Set up PID controller
     // ---------------------
-    double Kp = 0.5, Ki = 0.0, Kd = 0.0, Kw = 0.002, time_shift = 3.0;
-    std::string windup_method("clamping");
     node.getParam("controller/Kp",Kp);
     node.getParam("controller/Ki",Ki);
     node.getParam("controller/Kd",Kd);
@@ -233,7 +235,7 @@ int main(int argc, char* argv[]) {
     // Declare loop rate
     ros::Rate loop_rate(int(1/step_size));
 
-    // Initial vehicle location and orientation
+    // Set initial vehicle location and orientation
     ChVector<> initLoc(x0, y0, z0);
     // ChQuaternion<> initRot(q[0],q[1],q[2],q[3]);
 
@@ -249,8 +251,7 @@ int main(int argc, char* argv[]) {
     double q0_2 = t0 * t2 * t5 + t1 * t3 * t4;
     double q0_3 = t1 * t2 * t4 - t0 * t3 * t5;
 
-    // ChQuaternion<> initRot(q0_0,q0_1,q0_2,q0_3);
-    ChQuaternion<> initRot(1, 0, 0, 0);
+    ChQuaternion<> initRot(q0_0,q0_1,q0_2,q0_3);
 
     // ------------------------------
     // Create the vehicle and terrain
@@ -286,6 +287,7 @@ int main(int argc, char* argv[]) {
     patch->SetTexture(data_path+"terrain/textures/tile4.jpg", 200, 200);
     terrain.Initialize();
 
+    // This should be delete -------------------------
     // ----------------------
     // Create the Bezier path
     // ----------------------
@@ -361,15 +363,13 @@ int main(int argc, char* argv[]) {
 
     // Initialize simulation frame counter and simulation time
     ChRealtimeStepTimer realtime_timer;
-    int sim_frame = 0;
-    int render_frame = 0;
 
+    // Vehicle velocity
     double speed = 0.0;
-    // Collect output data from modules (for inter-module communication)
+    // Collect controller output data from modules (for inter-module communication)
     double throttle_input = 0;
     double steering_input = 0;
     double braking_input = 0;
-
 
     while (ros::ok()) {
         
@@ -403,7 +403,7 @@ int main(int argc, char* argv[]) {
         // spline1dbuildcubic(t_array, sa_array, s_sa);
         // traj_sa_interp = spline1dcalc(s_sa, time);
 
-        // throttle or brake output
+        // PID controller output form throttle or brake
         // double vx_err = traj_vx_interp - speed;
         double vx_err = traj_vx[0] - speed;
         controller_output = controller.control(vx_err);
