@@ -47,31 +47,42 @@ int main(int argc, char **argv)
 
     ros::WallRate loop_rate(2);
 
-    double count = 0;
+    long count = 0;
     while (ros::ok())
     {
 
-      double secs = ros::Time::now().toSec();
-      for(int i = 0; i < control_num; i++){
-        control_t[i] = secs + i;
-        control_sa[i] = i * 0.01 + count * 0.01 / 2.0;
-        control_vx[i] = i * 0.05 + count * 0.05 / 2.0;
-        // control_vx[i] = 5;
-        std::cout << "The reference steering angle: " << control_sa[1] << std::endl;
-      }
+      // double secs = ros::Time::now().toSec();
+      // for(int i = 0; i < control_num; i++){
+      //   control_t[i] = secs + i;
+      //   control_sa[i] = i * 0.01 + count * 0.01 / 2.0;
+      //   control_vx[i] = i * 0.05 + count * 0.05 / 2.0;
+      //   // control_vx[i] = 5;
+      //   std::cout << "The reference steering angle: " << control_sa[1] << std::endl;
+      // }
+      if(count % 10 < 5) {
+         control_vx[0] = 4;
+         control_sa[0] = 0.0;
+       }
+       else {
+         control_vx[0] = 4;
+         control_sa[0] = 0.4;
+       }
+
       control_info.t = control_t;
       control_info.sa = control_sa;
       control_info.vx = control_vx;
-
-
+      //control_info.x = 0.0;
+      //control_info.y = 0.0;
+      //control_info.psi = 0.0;
       // path....
 
-      x2[0]= 200;
-      x2[1]= 200;
-      y2[0] = 0;
-      y2[1] = 50 ;
-      a.setParam("default/traj/x",x2);
-      a.setParam("default/traj/yVal",y2);
+      // x2[0]= 200;
+      // x2[1]= 200;
+      // y2[0] = 0;
+      // y2[1] = 50 ;
+      // a.setParam("default/traj/x",x2);
+      // a.setParam("default/traj/yVal",y2);
+
 
       ros::spinOnce();
       pub.publish(control_info);
