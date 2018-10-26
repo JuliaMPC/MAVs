@@ -1,0 +1,18 @@
+<launch>
+  <arg name="system_params_path"/>
+  <arg name="vehicle_params_path"/>
+  <arg name="case_params_path"/>
+  <arg name="chrono_params_path"/>
+
+  <rosparam command="load" file="$(arg system_params_path)"/>
+  <rosparam command="load" file="$(arg vehicle_params_path)"/>
+  <rosparam command="load" file="$(arg case_params_path)"/>
+  <rosparam command="load" file="$(arg chrono_params_path)"/>
+
+  <!--rosparam command="load" file="$(find system)/config/case/case1.yaml"/>
+  <rosparam command="load" file="$(find system)/config/system/demoD.yaml"/>
+  <rosparam command="load" file="$(find system)/config/system/test_chrono.yaml"/>
+  <rosparam command="load" file="$(find system)/config/vehicle/hmmwv.yaml"/-->
+  <node name="Reference" pkg="traj_gen_chrono" type="traj_gen_chrono"/>
+  <node name="Chronode" pkg="ros_chrono" type="hmmwv_model" cwd="node" />
+</launch>
