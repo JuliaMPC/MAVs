@@ -80,7 +80,7 @@ RUN sudo wget https://julialang-s3.julialang.org/bin/linux/x64/0.6/julia-0.6.2-l
  && rm -rf /var/lib/apt/lists/* \
  && rm julia-0.6.2-linux-x86_64.tar.gz*
 
-# Add basic user
+# Add basic user to connect the container to host's X server for display.
 ENV USERNAME mavs
 ENV PULSE_SERVER /run/pulse/native
 RUN useradd -m $USERNAME && \
