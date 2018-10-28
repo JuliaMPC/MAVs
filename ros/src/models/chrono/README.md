@@ -12,18 +12,16 @@ the initial desired path. The vehicle's states are published in a ROS msg and al
 
 ## How to Build
 ```
-
 $ cd ~/MAVs/ros
 $ catkin_make
-
 ```
 ## How to Start
-
 ```
 $ cd $HOME/MAVs/ros
 $ roslaunch ros_chrono path_follower.launch
 $ rosparam set system/default/flags/initialized true
 ```
+
 ## Turn off Chrono GUI
 To turn off the GUI, change the value of system/chrono/flags/gui to false in test_chrono.yaml.
 ```
@@ -37,8 +35,6 @@ Change initial conditions to x=200.0 in case1.yaml. To change initial trajectory
 $ sudo gedit ros/src/models/chrono/ros_chrono/config/hmmwv_params.yaml
 $ sudo gedit ros/src/system/config/vehicle/hmmwv.yaml
 $ sudo gedit ros/src/system/config/case1.yaml
-
-
 ```
 
 ## Change Values of Updated Path
@@ -48,10 +44,8 @@ For the path_follower demo, update the parameters of x2, y2 in traj_gen_chrono.c
 ## Monitor Vehicle State
 
 Open another terminal and type:
-
 ```
 $ rostopic echo vehicleinfo
-
 ```
 This displays all states and inputs specified in the veh_status.msg file.
 
@@ -59,7 +53,6 @@ This displays all states and inputs specified in the veh_status.msg file.
 
 ```
 $ rosparam get <param_name>
-
 ```
 
 ## Current Differences between 3DOF Vehicle model and HMMWV model:
