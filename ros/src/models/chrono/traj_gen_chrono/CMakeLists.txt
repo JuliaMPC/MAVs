@@ -7,11 +7,21 @@ project(traj_gen_chrono)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
+SET(Chrono_DIR "/opt/chrono/chrono_build/cmake")
+
+LIST(APPEND CMAKE_PREFIX_PATH "${CMAKE_INSTALL_PREFIX}/opt/chrono/chrono_build/lib64")
+
 find_package(catkin REQUIRED COMPONENTS
   rospy
   roscpp
   std_msgs
   nloptcontrol_planner
+)
+
+find_package(
+  Chrono
+  COMPONENTS Irrlicht
+  CONFIG
 )
 
 ## System dependencies are found with CMake's conventions
@@ -119,7 +129,19 @@ catkin_package(
 include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
+  ${CHRONO_INCLUDE_DIRS}
 )
+
+#--------------------------------------------------------------
+# Tweaks to disable some warnings with MSVC
+#--------------------------------------------------------------
+if(MSVC)
+    add_definitions("-D_CRT_SECURE_NO_DEPRECATE")  # avoids deprecation warnings
+    add_definitions("-D_SCL_SECURE_NO_DEPRECATE")  # avoids deprecation warnings
+    set(EXTRA_COMPILE_FLAGS "/wd4275")             # disable warnings triggered by Irrlicht
+else()
+    set(EXTRA_COMPILE_FLAGS "")
+endif()
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
@@ -136,6 +158,7 @@ include_directories(
 ## The recommended prefix ensures that target names across packages don't collide
 # add_executable(${PROJECT_NAME}_node src/ros_chrono_msgs_node.cpp)
 add_executable(traj_gen_chrono src/traj_gen_chrono.cpp)
+add_executable(path_gen_chrono src/path_gen_chrono.cpp)
 add_dependencies(traj_gen_chrono ${catkin_EXPORTED_TARGETS})
 
 
@@ -145,16 +168,26 @@ add_dependencies(traj_gen_chrono ${catkin_EXPORTED_TARGETS})
 ## target back to the shorter version for ease of user use
 ## e.g. "rosrun someones_pkg node" instead of "rosrun someones_pkg someones_pkg_node"
 # set_target_properties(${PROJECT_NAME}_node PROPERTIES OUTPUT_NAME node PREFIX "")
+set_target_properties(path_gen_chrono PROPERTIES
+	    COMPILE_FLAGS "${CHRONO_CXX_FLAGS} ${CH_CXX_FLAGS} ${CH_IRRLICHT_CXX_FLAGS} ${EXTRA_COMPILE_FLAGS}"
+      COMPILE_DEFINITIONS "CHRONO_DATA_DIR=\"${CHRONO_DATA_DIR}\""
+	    LINK_FLAGS "${CHRONO_LINKER_FLAGS} ${LINKERFLAG_EXE}")
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(path_gen_chrono ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
- target_link_libraries(traj_gen_chrono
+target_link_libraries(traj_gen_chrono
    ${catkin_LIBRARIES}
 )
 
+target_link_libraries(path_gen_chrono
+  ChronoEngine
+  ${catkin_LIBRARIES}
+  ${CHRONO_LIBRARIES}
+)
 #############
 ## Install ##
 #############
