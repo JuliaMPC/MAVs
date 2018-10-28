@@ -31,12 +31,14 @@
   <build_depend>rospy</build_depend>
   <build_depend>std_msgs</build_depend>
   <build_depend> nloptcontrol_planner </build_depend>
+  <build_depend>Chrono</build_depend>
 
 
   <run_depend>roscpp</run_depend>
   <run_depend>rospy</run_depend>
   <run_depend>std_msgs</run_depend>
 
+  <run_depend>Chrono</run_depend>
 
 
   <!-- for obstacle message service -->
