@@ -13,6 +13,10 @@ To run MAVs, first clone the repo as:
 ```
 git clone https://github.com/JuliaMPC/MAVs
 ```
+Or for the develop branch
+```
+git clone -b develop https://github.com/JuliaMPC/MAVs
+```
 Then follow the [Docker instructions](https://github.com/JuliaMPC/MAVs/tree/master/docker#mavs-docker).
 
 * Note: currently, the entire repo is cloned twice (once by the above command and once by the Docker file).
