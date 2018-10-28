@@ -5,12 +5,23 @@ system:
  flags:
   paused: true
 
+ shutdown:
+  flags:
+   running: true
+   initialized: false
+   goal_attained: false
+  params:
+    shutdown_initiation_flags: ["system/flags/goal_attained", "/vehicle_collided"]
+    shutdown_completion_flags: []
+
  vehicle_description:
   flags:
    running: true
    lidar_initialized: false
    obstacles_initialized: false
    postion_update_external: false
+  params:
+   step_distance: 0.5
 
  obstacle_detector:
   flags:
