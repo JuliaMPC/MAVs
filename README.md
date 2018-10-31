@@ -41,7 +41,7 @@ while loading /home/mavs/MAVs/ros/src/models/gazebo/vehicle_description/link_pos
 
 While [this issue](https://github.com/jdlangs/RobotOS.jl/issues/45) needs to be resolved, a workaround is available:
 ```
-sudo rm -r /home/mavs/.julia/.cache
+rm -rf /home/mavs/.julia/.cache
 ```
 This issue happens frequently, so just run the above command is there is a cache error from julia. Then rerun.
 
