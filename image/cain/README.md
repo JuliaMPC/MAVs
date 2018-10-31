@@ -25,10 +25,11 @@ Currently this should be avpg_base, where the image name is specified in the bui
 $docker tag avpg_base avpg/cain:base_cudagl
 ```
 assuming that the image name is avpg_base
-```
+
 5) publish the image
 ```
 $docker push avpg/cain:base_cudagl
+```
 
 see the [docker tutorial on containers](https://docs.docker.com/get-started/part2/#build-the-app) for more detailed instructions
 

@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Runs a docker container with the image created by build.sh
-until docker ps
+until nvidia-docker ps
 do
     echo "Waiting for docker server"
     sleep 1
@@ -16,7 +16,7 @@ SRC_HOST="$(pwd)"/ros/src
 
 echo "Shared directory: ${SHARED_CONTAINER}"
 
-docker run \
+nvidia-docker run \
     --user mavs \
     -it --rm \
     --volume=$XSOCK:$XSOCK:rw \
