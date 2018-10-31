@@ -1,6 +1,6 @@
-FROM c1yxuan/avpg_base
+FROM avpg/cain:base_cudagl
 
-# create a folder and copy all the files in ros/ with mavs owner
+# create a folder and copy all the files in ros/ with MAVs owner
 RUN mkdir -p /home/$USERNAME/MAVs/ros
 COPY --chown=mavs:mavs ros /home/$USERNAME/MAVs/ros
 RUN /bin/bash -c 'source /opt/ros/kinetic/setup.bash; cd /home/$USERNAME/MAVs/ros/src; sudo rosdep init; rosdep update; catkin_init_workspace; cd ..; catkin_make' \
