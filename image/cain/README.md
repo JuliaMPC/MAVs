@@ -4,6 +4,7 @@
 Tested on Ubuntu Xenial (16.04)
 * An X server
 * [Docker](https://www.docker.com/get-docker)
+* [nvidia-docker](https://github.com/NVIDIA/nvidia-docker/wiki/Installation)
 
 ## How to update base image on docker hub
 1) Run
