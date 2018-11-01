@@ -7,7 +7,7 @@ ENV LD_LIBRARY_PATH /usr/local/nvidia/lib:/usr/local/nvidia/lib64:${LD_LIBRARY_P
 
 # Change user
 USER mavs
-RUN git clone -b master https://github.com/Scarabrine/MAVs.git /home/$USERNAME/MAVs \
+RUN git clone -b master https://github.com/JuliaMPC/MAVs /home/$USERNAME/MAVs \
     && /bin/bash -c 'source /opt/ros/kinetic/setup.bash; cd /home/$USERNAME/MAVs/ros/src; catkin_init_workspace;sudo rosdep init;rosdep update;cd ..; catkin_make' \
     && echo "source /home/$USERNAME/MAVs/ros/devel/setup.bash" >> /home/$USERNAME/.bashrc \
     && echo 'alias julia='/opt/julia-d386e40c17/bin/julia'' >> ~/.bashrc \

@@ -538,17 +538,13 @@ int main(int argc, char* argv[]) {
     n.getParam("system/"+planner_namespace+"/flags/initialized",planner_init);
     std::cout << "The planner state:" << planner_init << std::endl;
     ros::Subscriber sub = n.subscribe(planner_namespace+"/control", 100, controlCallback);
-    ROS_INFO("before load");
 
-
+    //planner_init2=planner_init1;
   //    n.getParam("system/"+planner_namespace+"/flags/initialized",planner_init2);
 
-	//deleted at 10/19/2018
-  /*
       if(!planner_init){
         waitForLoaded(n);
     }
-  */
   //std::string planner_init;
 
     n.getParam("system/"+planner_namespace+"/flags/initialized",planner_init);
@@ -556,7 +552,7 @@ int main(int argc, char* argv[]) {
     // Desired vehicle speed (m/s)
     double target_speed;
     n.getParam("state/chrono/X0/v_des",target_speed);
-    ROS_INFO("initial position");
+
     //Initial Position
     double x0, y0, z0, yaw0, pitch0, roll0, goal_x, goal_y;;
     bool gui_switch;
@@ -603,47 +599,40 @@ int main(int argc, char* argv[]) {
     // ------------------------------
     // Create the vehicle and terrain
     // ------------------------------
-    ROS_INFO("Create HMMWV");
+
     // Create the HMMWV vehicle, set parameters, and initialize
     std::cout << "Start reading the file" << std::endl;
-    // 10/19/2018 the line below is buggy
     WheeledVehicle my_hmmwv(data_path + "hmmwv/vehicle/HMMWV_Vehicle.json",contact_method); // Yes
-    std::cout << "end reading" << std::endl;
     my_hmmwv.Initialize(ChCoordsys<>(initLoc, initRot),0.0);
 
     std::cout << "Successfully read the file" << std::endl;
     my_hmmwv.SetChassisVehicleCollide(false);
     my_hmmwv.GetChassis()->SetVisualizationType(chassis_vis_type);
 //    my_hmmwv.GetChassis()->AddVisualizationAssets(chassis_vis_type);
-	
-    std::cout << "SetSuspensionVisualizationType" << std::endl;
+
     my_hmmwv.SetSuspensionVisualizationType(suspension_vis_type);
     my_hmmwv.SetSteeringVisualizationType(steering_vis_type);
     my_hmmwv.SetWheelVisualizationType(wheel_vis_type);
     //my_hmmwv.SetTireVisualizationType(tire_vis_type);
-
-    std::cout << "tire_front" << std::endl;
     RigidTire tire_front_left(rigid_tire_file);
     RigidTire tire_front_right(rigid_tire_file);
     RigidTire tire_rear_left(rigid_tire_file);
     RigidTire tire_rear_right(rigid_tire_file);
 
-	
+
     TerrainForces tire_forces(4);
 
-    std::cout << "tire_forces" << std::endl;
     tire_front_left.Initialize(my_hmmwv.GetWheelBody(0), LEFT);
     tire_front_right.Initialize(my_hmmwv.GetWheelBody(1), LEFT);
     tire_rear_left.Initialize(my_hmmwv.GetWheelBody(2), RIGHT);
     tire_rear_right.Initialize(my_hmmwv.GetWheelBody(3), RIGHT);
 
-    std::cout << "SetVisualizationType" << std::endl;
+
     tire_front_left.SetVisualizationType(tire_vis_type);
     tire_front_right.SetVisualizationType(tire_vis_type);
     tire_rear_left.SetVisualizationType(tire_vis_type);
     tire_rear_right.SetVisualizationType(tire_vis_type);
 
-    ROS_INFO("create the terrain");
     // Create the terrain
     float frict_coeff, rest_coeff;
     n.getParam("vehicle/common/frict_coeff",frict_coeff);
@@ -686,7 +675,7 @@ int main(int argc, char* argv[]) {
     // ---------------------------------------
     // Create the vehicle Irrlicht application
     // ---------------------------------------
-	ROS_INFO("Irrlicht");
+
     ChVehicleIrrApp app(&my_hmmwv, &powertrain, L"Steering Controller Demo",
                         irr::core::dimension2d<irr::u32>(800, 640));
 
@@ -772,7 +761,6 @@ int main(int argc, char* argv[]) {
     utils::ChRunningAverage fwd_acc_driver_filter(filter_window_size);
     utils::ChRunningAverage lat_acc_driver_filter(filter_window_size);
 
-	ROS_INFO("myfile1");
     std::ofstream myfile1;
     myfile1.open(data_path+"paths/position.txt",std::ofstream::out | std::ofstream::trunc);
     //get mass and moment of inertia about z axis
@@ -804,7 +792,6 @@ int main(int argc, char* argv[]) {
     n.setParam("vehicle/common/rest_coeff",rest_coeff);
 
     // set up the controller
-	ROS_INFO("set controller");
     double Kp, Ki, Kd, Kw;
     std::string windup_method;
     n.getParam("controller/Kp",Kp);
@@ -822,11 +809,9 @@ int main(int argc, char* argv[]) {
     ae_int_t natural_bound_type = 2;
 
     std::cout<< "Go into the loop..." << std::endl;
-	ROS_INFO("before loop");
+
     while(n.ok()){
-	ROS_INFO("n.ok()");
       while (running) {
-	ROS_INFO("in running");
         if(gui_switch)  app.GetDevice()->run();
         ros::spinOnce();
         n.setParam("system/chrono/flags/running",true);

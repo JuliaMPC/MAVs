@@ -50,16 +50,12 @@
 
 #include "chrono_models/vehicle/hmmwv/HMMWV.h"
 
-
-#include "chrono_thirdparty/rapidjson/document.h"
-#include "chrono_thirdparty/rapidjson/filereadstream.h"
-
 using namespace chrono;
 using namespace chrono::geometry;
 using namespace chrono::vehicle;
 using namespace chrono::vehicle::hmmwv;
 using namespace alglib;
-using namespace rapidjson;
+
 
 std::string data_path("MAVs/ros/src/models/chrono/ros_chrono/src/data/vehicle/");
 
@@ -83,19 +79,14 @@ std::vector<double> traj_psi(2,0);
 std::vector<double> traj_sa(2,0);
 std::vector<double> traj_vx(2,0);
 
-//steering maximum
-double maximum_steering_angle;
-
-
 // Interpolator
 double traj_sa_interp = 0.0;
 double traj_vx_interp = 0.0;
 
 // PID controller
-double Kp = 0.5, Ki = 0.1, Kd = 0.0, Kw = 0.0, time_shift = 3.0; // PID controller parameter
+double Kp = 0.5, Ki = 0.0, Kd = 0.0, Kw = 0.0, time_shift = 3.0; // PID controller parameter
 std::string windup_method("clamping"); // Anti-windup method
 double controller_output = 0.0;
-double controller_output2 = 0.0;
 PID controller;
 
 // ------
@@ -167,7 +158,6 @@ class ChDriverSelector : public irr::IEventReceiver {
 // =============================================================================
 
 void plannerCallback(const nloptcontrol_planner::Control::ConstPtr& control_msgs) {
-//void plannerCallback(const nloptcontrol_planner::Control::ConstPtr& control_msgs) {
     traj_t = control_msgs->t;
     traj_x = control_msgs->x;
     traj_y = control_msgs->y;
@@ -180,26 +170,15 @@ void plannerCallback(const nloptcontrol_planner::Control::ConstPtr& control_msgs
 // =============================================================================
 
 int main(int argc, char* argv[]) {
-    // read maximum_steering_angle from json
-    std::string filename(data_path + "hmmwv/steering/HMMWV_PitmanArm.json"); // Yes
-    FILE* fp = fopen(filename.c_str(), "r");
-    char readBuffer[65536];
-    FileReadStream is(fp, readBuffer, sizeof(readBuffer));
-    fclose(fp);
-    Document d;
-    d.ParseStream<ParseFlag::kParseCommentsFlag>(is);
-    maximum_steering_angle = d["Revolute Joint"]["Maximum Angle"].GetDouble();
-    std::cout << "max steering: "<< maximum_steering_angle << std::endl;
-
+    
     // ------------------------------
     // Initialize ROS node handle
     // ------------------------------
-    ros::init(argc, argv, "steering_controller");
+    ros::init(argc, argv, "velocity_controller");
     ros::NodeHandle node;
     
     // Declare ROS subscriber to subscribe planner topic
-    //ros::Subscriber planner_sub = node.subscribe("/trejactory", 100, plannerCallback);
-    ros::Subscriber planner_sub = node.subscribe("/control", 100, plannerCallback);
+    ros::Subscriber planner_sub = node.subscribe("/trejactory", 100, plannerCallback);
 
     // Declare ROS publisher to advertise vehicleinfo topic
     ros::Publisher vehicleinfo_pub = node.advertise<ros_chrono_msgs::veh_status>("/vehicleinfo", 1);
@@ -385,13 +364,12 @@ int main(int argc, char* argv[]) {
     // Initialize simulation frame counter and simulation time
     ChRealtimeStepTimer realtime_timer;
 
-    // Vehicle steering angle
+    // Vehicle velocity
     double speed = 0.0;
-    double steering = 0.0;			///
     // Collect controller output data from modules (for inter-module communication)
-    double throttle_input = 0;			///
-    double steering_input = 0;			///
-    double braking_input = 0;			///
+    double throttle_input = 0;
+    double steering_input = 0;
+    double braking_input = 0;
 
     while (ros::ok()) {
         
@@ -427,26 +405,20 @@ int main(int argc, char* argv[]) {
 
         // PID controller output form throttle or brake
         // double vx_err = traj_vx_interp - speed;
-   	//double sa_err = traj_sa[0] - steering;		///
-        //controller_output = controller.control(sa_err);	///?? +traj_sa[0]
-	steering_input = traj_sa[0]/M_PI*180/maximum_steering_angle;//controller_output;		///??
-	//braking_input = 0;				///
-	//throttle_input = 0;				///
-	double vx_err = traj_vx[0] - speed;
-        controller_output2 = controller.control(vx_err);
-        if (controller_output2 > 0){
-            throttle_input = controller_output2;
+        double vx_err = traj_vx[0] - speed;
+        controller_output = controller.control(vx_err);
+        if (controller_output > 0){
+            throttle_input = controller_output;
             braking_input = 0;
         }
         else {
             throttle_input = 0;
-            braking_input = -controller_output2;
+            braking_input = -controller_output;
         }
-        
         
         // steering angle output (There should a saturation threshold)
         // traj_sa_interp = traj_sa_interp;
-        
+        steering_input = traj_sa[0];
 
         // Update sentinel and target location markers for the path-follower controller.
         // Note that we do this whether or not we are currently using the path-follower driver.
@@ -481,8 +453,8 @@ int main(int argc, char* argv[]) {
         ChQuaternion<> rot_global = my_hmmwv.GetVehicle().GetVehicleRot();//global orientation as quaternion
         ChVector<> rot_dt = my_hmmwv.GetChassisBody()->GetWvel_loc(); //global orientation as quaternion
         
-        steering = my_hmmwv.GetTire(0)->GetSlipAngle();
-        speed = my_hmmwv.GetVehicle().GetVehicleSpeedCOM();	////???
+        double slip_angle = my_hmmwv.GetTire(0)->GetSlipAngle();
+        speed = my_hmmwv.GetVehicle().GetVehicleSpeedCOM();
 
         double q0 = rot_global[0];
         double q1 = rot_global[1];
@@ -498,12 +470,12 @@ int main(int argc, char* argv[]) {
         vehicleinfo_data.x_pos = pos_global[0];
         vehicleinfo_data.y_pos = pos_global[1];
         // vehicleinfo_data.x_v = spd_global[0]; // speed measured at the origin of the chassis reference frame.
-        vehicleinfo_data.x_v = speed;				////???
+        vehicleinfo_data.x_v = speed;
         vehicleinfo_data.y_v = spd_global[1];
         vehicleinfo_data.x_a = acc_global[0];
         vehicleinfo_data.yaw_curr = yaw_val; // in radians
         vehicleinfo_data.yaw_rate = -rot_dt[2];// yaw rate
-        vehicleinfo_data.sa = steering_input*(M_PI/180*maximum_steering_angle); // slip angle		////???
+        vehicleinfo_data.sa = slip_angle; // slip angle
         vehicleinfo_data.thrt_in = throttle_input; // throttle input in the range [0,+1]
         vehicleinfo_data.brk_in = braking_input; // braking input in the range [0,+1]
         vehicleinfo_data.str_in = steering_input; // steeering input in the range [-1,+1]
