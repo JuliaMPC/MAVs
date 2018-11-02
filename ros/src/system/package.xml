@@ -20,6 +20,7 @@
   
   <depend>roscpp</depend>
   <depend>rospy</depend>
+
   <!-- New added part for rostest, start -->
   <depend>rostest</depend> 
   <depend>genmsg</depend>
@@ -33,7 +34,7 @@
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>
-    <!-- Other tools can request additional information be placed here -->
+  <!-- Other tools can request additional information be placed here -->
 
   </export>
 </package>

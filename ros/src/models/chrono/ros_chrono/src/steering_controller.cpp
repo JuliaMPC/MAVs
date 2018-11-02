@@ -61,7 +61,11 @@ using namespace chrono::vehicle::hmmwv;
 using namespace alglib;
 using namespace rapidjson;
 
-std::string data_path("MAVs/ros/src/models/chrono/ros_chrono/src/data/vehicle/");
+
+//std::string data_path("MAVs/ros/src/models/chrono/ros_chrono/src/data/vehicle/");
+// to run demo_steering.launch
+//change at 10/31/2018
+std::string data_path("../../../src/models/chrono/ros_chrono/src/data/vehicle/");
 
 // Rigid terrain dimensions
 double terrainHeight = 0;
@@ -128,8 +132,8 @@ VisualizationType tire_vis_type = VisualizationType::NONE;
 ////std::string path_file("paths/straight.txt");
 ////std::string path_file("paths/curve.txt");
 ////std::string path_file("paths/NATO_double_lane_change.txt");
-std::string path_file("paths/ISO_double_lane_change.txt");
 
+std::string path_file("paths/ISO_double_lane_change.txt");
 // Point on chassis tracked by the chase camera
 ChVector<> trackPoint(0.0, 0.0, 1.75);
 
@@ -189,6 +193,7 @@ int main(int argc, char* argv[]) {
     Document d;
     d.ParseStream<ParseFlag::kParseCommentsFlag>(is);
     maximum_steering_angle = d["Revolute Joint"]["Maximum Angle"].GetDouble();
+    //maximum_steering_angle = 50.0;
     std::cout << "max steering: "<< maximum_steering_angle << std::endl;
 
     // ------------------------------
@@ -199,7 +204,11 @@ int main(int argc, char* argv[]) {
     
     // Declare ROS subscriber to subscribe planner topic
     //ros::Subscriber planner_sub = node.subscribe("/trejactory", 100, plannerCallback);
-    ros::Subscriber planner_sub = node.subscribe("/control", 100, plannerCallback);
+
+    //change at 10/31/2018
+    std::string planner_namespace;
+    node.getParam("system/planner",planner_namespace);
+    ros::Subscriber planner_sub = node.subscribe(planner_namespace + "/control", 100, plannerCallback);
 
     // Declare ROS publisher to advertise vehicleinfo topic
     ros::Publisher vehicleinfo_pub = node.advertise<ros_chrono_msgs::veh_status>("/vehicleinfo", 1);
@@ -215,6 +224,7 @@ int main(int argc, char* argv[]) {
     double frict_coeff = 0, rest_coeff = 0, gear_ratios = 1; //Chrono Vehicle parameters
 
     // Get parameters from ROS Parameter Server
+    
     node.getParam("system/params/step_size", step_size); // ROS loop rate and Chrono step size
     node.getParam("system/params/goal_tol",goal_tol);
 
@@ -226,7 +236,7 @@ int main(int argc, char* argv[]) {
     node.getParam("state/chrono/yVal", y); // global y position
     
     node.getParam("case/actual/X0/psi",yaw0); // initial yaw
-    node.getParam("case/actual/X0/x",x0); // initial x
+    //node.getParam("case/actual/X0/x",x0); // initial x
     node.getParam("case/actual/X0/yVal",y0); // initial y
     
     node.getParam("case/goal/x",goal_x);
@@ -245,7 +255,7 @@ int main(int argc, char* argv[]) {
     node.getParam("controller/Kw",Kw);
     node.getParam("controller/anti_windup", windup_method);
     node.getParam("controller/time_shift", time_shift);
-
+	
     controller.set_PID(Kp, Ki, Kd, Kw);
     controller.set_step_size(step_size);
     controller.set_output_limit(-1.0, 1.0);

@@ -5,11 +5,9 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
 )
-catkin_metapackage() # rostest example: catkin_package()
+catkin_metapackage()
 
-include_directories(
-	${catkin_INCLUDE_DIRS}
-)
+include_directories(${catkin_INCLUDE_DIRS})
 
 catkin_package(
   CATKIN_DEPENDS
@@ -22,10 +20,9 @@ target_link_libraries(system_shutdown ${catkin_LIBRARIES})
 
 add_dependencies(system_shutdown ${catkin_EXPORTED_TARGETS})
 
-
-##############
-# g Tests
-##############
+#####################
+# g Tests and rostest
+#####################
 # New added for rostest
 if(CATKIN_ENABLE_TESTING)
 	message("\n\nGoing to build the tests!\n\n")
@@ -33,7 +30,7 @@ if(CATKIN_ENABLE_TESTING)
 	find_package(gtest)
 	# You can add arbitrary new test files in the end of add_rostest_gtest
 	add_rostest_gtest(test_mynode test/gtest_launch.launch src/test/mytest.cpp)
-	add_rostest(test/demo_test.test) #perhaps
+	add_rostest(launch/demoA.launch) #perhaps
 
 	target_link_libraries(test_mynode ${catkin_LIBRARIES} ${GTEST_LIBRARIES})
 endif()
