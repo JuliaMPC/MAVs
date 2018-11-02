@@ -8,8 +8,6 @@
 #include "chrono/core/ChFileutils.h"
 #include "chrono_vehicle/utils/ChVehiclePath.h"
 
-std::string path_file("MAVs/ros/src/models/chrono/ros_chrono/src/data/vehicle/paths/ISO_double_lane_change.txt");
-
 using namespace chrono;
 
 int main(int argc, char **argv) {
@@ -19,9 +17,11 @@ int main(int argc, char **argv) {
     // create node handle
     ros::NodeHandle node;
 
-    ros::Publisher pub = node.advertise<nloptcontrol_planner::Control>("/control", 10);
-
-    auto path = ChBezierCurve::read(path_file);
+    std::string planner_namespace;
+    node.getParam("system/planner",planner_namespace);
+    ros::Publisher pub = node.advertise<nloptcontrol_planner::Control>(planner_namespace + "/control", 10);
+    // ros::Publisher pub = node.advertise<nloptcontrol_planner::Control>("/control", 10);
+  
     nloptcontrol_planner::Control control_info;
     int control_num = 2;
     std::vector<double> control_t(control_num,0.0);
@@ -38,28 +38,20 @@ int main(int argc, char **argv) {
 
     int count = 0;
     while (ros::ok()) {
-        ROS_INFO("Hello world");
-
-        // if (count < path->getNumPoints()-1) {
-        //     ChVector<> pos_1 = path->getPoint(count);
-        //     ChVector<> pos_2 = path->getPoint(count+1);
-
-        //     control_info.x = {pos_1[0], pos_2[0]};
-        //     control_info.y = {pos_1[1], pos_2[1]};
-
-        //     count++;
-        // }
-
         count++;
-        if (count % 2)
-            control_info.y =  {-125.0000, -125.0000};
-        else
+        if (count % 2){
+            ROS_INFO("Swithed to right lane");
             control_info.y =  {-120.0000, -120.0000};
+        }
+        else {
+            ROS_INFO("Swithed to left lane");
+            control_info.y =  {-122.0000, -122.0000};
+        }
 
-        control_info.vx[0] = 12;
+        control_info.vx[0] = 10;
+        pub.publish(control_info);
 
         ros::spinOnce();
-        pub.publish(control_info);
         loop_rate.sleep();
     }
     return 0;
