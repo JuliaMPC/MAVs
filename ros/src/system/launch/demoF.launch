@@ -9,7 +9,7 @@
 
 
   <!--  ************* nloptcontrol_planner args and parameters ***************  -->
-  <arg name="planner_params_path" default="$(find system)/config/planner/RTPP.yaml"/>
+  <arg name="planner_params_path" default="$(find system)/config/planner/nloptcontrol_planner/RTPP.yaml"/>
   <!--param name="planner_params_path" value="$(arg planner_params_path)"/-->
   <rosparam command="load" file="$(arg planner_params_path)" />
   <!--  ************* vehicle_description args and parameters ***************  -->

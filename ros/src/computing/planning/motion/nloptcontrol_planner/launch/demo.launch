@@ -1,7 +1,7 @@
 <launch>
 
   <arg name="case_params_path" default="$(find system)/config/case/s1.yaml"/>
-  <arg name="planner_params_path" default="$(find system)/config/planner/RTPP.yaml"/>
+  <arg name="planner_params_path" default="$(find system)/config/planner/nloptcontrol_planner/RTPP.yaml"/>
   <arg name="system_params_path" default="$(find system)/config/system/pkgs/nloptcontrol_planner.yaml"/>
   <arg name="vehicle_params_path" default="$(find system)/config/vehicle/hmmwv.yaml"/>
 
