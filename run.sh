@@ -9,12 +9,12 @@ done
 
 XSOCK=/tmp/.X11-unix
 XAUTH=/home/$USER/.Xauthority
-SHARED_CONTAINER=/home/mavs/MAVs/shared_dir
-SHARED_HOST="$(pwd)"/shared_dir
+RESULTS_CONTAINER=/home/mavs/MAVs/results
+RESULTS_HOST="$(pwd)"/results
 SRC_CONTAINER=/home/mavs/MAVs/ros/src
 SRC_HOST="$(pwd)"/ros/src
 
-echo "Shared directory: ${SHARED_CONTAINER}"
+echo "Results directory: ${RESULTS_CONTAINER}"
 
 nvidia-docker run \
     --user mavs \

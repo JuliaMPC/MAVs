@@ -127,12 +127,12 @@ int main(int argc, char* argv[]) {
     
     // Declare ROS subscriber to subscribe planner topic
     std::string planner_namespace;
-    node.getParam("system/chrono", planner_namespace);
+    node.getParam("system/planner", planner_namespace);
     ros::Subscriber planner_sub = node.subscribe(planner_namespace+"/control", 100, plannerCallback);
 
     // Declare ROS publisher to advertise vehicleinfo topic
     std::string chrono_namespace;
-    node.getParam("system/chrono", chrono_namespace);
+    node.getParam("system/chrono/namespace", chrono_namespace);
     ros::Publisher vehicleinfo_pub = node.advertise<ros_chrono_msgs::veh_status>(chrono_namespace+"/vehicleinfo", 1);
     ros_chrono_msgs::veh_status vehicleinfo_data;
 
@@ -267,8 +267,8 @@ int main(int argc, char* argv[]) {
     RigidTerrain terrain(my_hmmwv.GetSystem());
     auto patch = terrain.AddPatch(ChCoordsys<>(ChVector<>(0, 0, terrainHeight - 5), QUNIT),
                                   ChVector<>(terrainLength, terrainWidth, 10));
-    patch->SetContactFrictionCoefficient(0.8f);
-    patch->SetContactRestitutionCoefficient(0.01f);
+    patch->SetContactFrictionCoefficient(frict_coeff);
+    patch->SetContactRestitutionCoefficient(rest_coeff);
     patch->SetContactMaterialProperties(2e7f, 0.3f);
     patch->SetColor(ChColor(1, 1, 1));
     patch->SetTexture(data_path+"terrain/textures/tile4.jpg", 200, 200);

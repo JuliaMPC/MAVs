@@ -8,7 +8,7 @@ RUN /bin/bash -c 'source /opt/ros/kinetic/setup.bash; cd /home/$USERNAME/MAVs/ro
     && echo 'alias julia='/opt/julia-d386e40c17/bin/julia'' >> ~/.bashrc \
     && echo 'export PATH="$PATH:/opt/julia-d386e40c17/bin"' >>  ~/.bashrc
 
-RUN mkdir -p /home/$USERNAME/MAVs/shared_dir
+RUN mkdir -p /home/$USERNAME/MAVs/results
 
 RUN echo "rm -rf /home/mavs/.julia/.cache"
 
