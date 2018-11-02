@@ -1,7 +1,5 @@
-# This is an auto generated Dockerfile for ros:ros-core
-# generated from docker_images/create_ros_core_image.Dockerfile.em
-# FROM ubuntu:xenial
-FROM nvidia/opengl:runtime
+FROM nvidia/cudagl:9.0-devel-ubuntu16.04
+MAINTAINER Huckleberry Febbo <febbo@umich.edu>
 
 # install packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -75,8 +73,8 @@ RUN echo "deb http://packages.osrfoundation.org/gazebo/ubuntu `lsb_release -cs` 
  && apt-get clean
 
 # Install julia
-RUN sudo wget https://julialang-s3.julialang.org/bin/linux/x64/0.6/julia-0.6.2-linux-x86_64.tar.gz \
- && sudo tar -xvf julia-0.6.2-linux-x86_64.tar.gz -C /opt \
+RUN wget https://julialang-s3.julialang.org/bin/linux/x64/0.6/julia-0.6.2-linux-x86_64.tar.gz \
+ && tar -xvf julia-0.6.2-linux-x86_64.tar.gz -C /opt \
  && rm -rf /var/lib/apt/lists/* \
  && rm julia-0.6.2-linux-x86_64.tar.gz*
 

@@ -54,7 +54,7 @@ function loop_straight_line(set_state,get_state)
         # Define position to move robot
         vehPose = gs_r.pose  # use the current position
         vehPose.position.x = gs_r.pose.position.x
-        vehPose.position.y = gs_r.pose.position.y + 0.05
+        vehPose.position.y = gs_r.pose.position.y + RobotOS.get_param("system/vehicle_description/params/step_distance")
 
         # Define the robot state
         ms = ModelState()

@@ -28,4 +28,3 @@ nvidia-docker run \
     --privileged -v /dev/bus/usb:/dev/bus/usb \
     --net=host \
     mavs
-    

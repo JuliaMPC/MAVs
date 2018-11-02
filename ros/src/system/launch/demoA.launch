@@ -35,6 +35,11 @@
     <arg name="manager" value="$(arg manager)" />
   </include>
 
+  <!--  system_shutdown node -->
+  <node name="system_shutdown" pkg="system" type="system_shutdown" output="screen" required="true">
+     <rosparam file="$(arg system_params_path)" command="load"/>
+  </node>
+
   <!-- initialize system -->
   <node name="bootstrap" pkg="system" type="bootstrap.jl" output="screen"/>
 
