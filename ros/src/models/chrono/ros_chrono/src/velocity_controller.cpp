@@ -127,12 +127,12 @@ int main(int argc, char* argv[]) {
     
     // Declare ROS subscriber to subscribe planner topic
     std::string planner_namespace;
-    node.getParam("system/chrono", planner_namespace);
+    node.getParam("system/planner", planner_namespace);
     ros::Subscriber planner_sub = node.subscribe(planner_namespace+"/control", 100, plannerCallback);
 
     // Declare ROS publisher to advertise vehicleinfo topic
     std::string chrono_namespace;
-    node.getParam("system/chrono", chrono_namespace);
+    node.getParam("system/chrono/namespace", chrono_namespace);
     ros::Publisher vehicleinfo_pub = node.advertise<ros_chrono_msgs::veh_status>(chrono_namespace+"/vehicleinfo", 1);
     ros_chrono_msgs::veh_status vehicleinfo_data;
 

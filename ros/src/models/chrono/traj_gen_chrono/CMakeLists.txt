@@ -159,7 +159,7 @@ endif()
 # add_executable(${PROJECT_NAME}_node src/ros_chrono_msgs_node.cpp)
 add_executable(traj_gen_chrono src/traj_gen_chrono.cpp)
 add_executable(path_gen_chrono src/path_gen_chrono.cpp)
-add_dependencies(traj_gen_chrono ${catkin_EXPORTED_TARGETS})
+add_executable(vel_gen_chrono src/vel_gen_chrono.cpp)
 
 
 
@@ -176,7 +176,9 @@ set_target_properties(path_gen_chrono PROPERTIES
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(traj_gen_chrono ${catkin_EXPORTED_TARGETS})
 add_dependencies(path_gen_chrono ${catkin_EXPORTED_TARGETS})
+add_dependencies(vel_gen_chrono ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(traj_gen_chrono
@@ -188,6 +190,11 @@ target_link_libraries(path_gen_chrono
   ${catkin_LIBRARIES}
   ${CHRONO_LIBRARIES}
 )
+
+target_link_libraries(vel_gen_chrono
+   ${catkin_LIBRARIES}
+)
+
 #############
 ## Install ##
 #############
