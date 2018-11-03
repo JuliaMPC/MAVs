@@ -31,7 +31,7 @@ planner:
       integrationScheme: trapezoidal
       tfMax: 10 # maximum final time in MPC
       EP: 0.01   # small number to avoid singularities TODO move this from VehicleModels.jl
-      constantSpeed: false
+      constantSpeed: true
       x0slackVariables: true
       xFslackVariables: true
       movingObstacles: true
