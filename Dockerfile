@@ -11,7 +11,11 @@ RUN /bin/bash -c 'source /opt/ros/kinetic/setup.bash; cd /home/$USERNAME/MAVs/ro
 RUN mkdir -p /home/$USERNAME/MAVs/shared_dir
 
 # update MichiganAutonomousVehicles.jl and remove .cache to avoid errors with PyCall.jl
+<<<<<<< HEAD
 RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.checkout("MichiganAutonomousVehicles")' \
+=======
+RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.add("MichiganAutonomousVehicles") \
+>>>>>>> 5893bb0239479ed67ed03177f1c211aa43658960
     && echo "rm -rf /home/mavs/.julia/.cache"
 
 # Default CMD
