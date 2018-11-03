@@ -29,7 +29,7 @@ planner:
       followPath: NaN        # a bool to follow the path
       NF: NaN                # number to subtract off the constraint check vector-> used for activeSafety mode so driver sees obstacle before autonomy
       integrationScheme: trapezoidal
-      tfMax: 10 # maximum final time in MPC
+      tfMax: 10.0 # maximum final time in MPC
       EP: 0.01   # small number to avoid singularities TODO move this from VehicleModels.jl
       constantSpeed: false
       x0slackVariables: true
