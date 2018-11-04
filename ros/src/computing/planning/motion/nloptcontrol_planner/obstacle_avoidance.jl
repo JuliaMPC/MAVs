@@ -18,6 +18,17 @@ using PyCall
 
 @pyimport tf.transformations as tf
 
+
+"""
+--------------------------------------------------------------------------------------\n
+Author: Huckleberry Febbo, Graduate Student, University of Michigan
+Date Create: 11/4/2018, Last Modified: 11/4/2018 \n
+--------------------------------------------------------------------------------------\n
+"""
+function goalAttained(xa,ya,xg,yg,gTol)
+   return ((xa-xg)^2 + (ya-yg)^2)^0.5 < gTol
+end
+
 """
 # used to publish the solution of the ocp to ROS params
 --------------------------------------------------------------------------------------\n
@@ -299,14 +310,19 @@ function loop(pub,pub_path,n,c)
         setStateData(n)    # update X0 in NLOptControl.jl based off of state/ parameters
       end
 
+      # TODO currently ocpSave needs to be true. That may cause too much time and use up too much RAM, so in the future need to get around this.
       if isequal(RobotOS.get_param("system/plant"),"3DOF")
-        goalReached!(n)
-        if isequal(n.f.mpc.goalReached,true)
-          RobotOS.set_param("system/nloptcontrol_planner/flags/goal_attained",true)
+          xa = n.r.ip.plant[n.ocp.state.name[1]][end]
+          ya = n.r.ip.plant[n.ocp.state.name[2]][end]
+          xg = c["goal"]["x"]
+          yg = c["goal"]["yVal"]
+          gTol = 2*c["goal"]["tol"]
+        if goalAttained(xa,ya,xg,yg,gTol)
+          RobotOS.set_param("system/flags/goal_attained",true)
           break
         end
       else
-        # get chrono states, see if it is near goal
+          error("need to get chrono states, see if it the actual vehicle is near goal")
       end
 
       if !init  # calling this node initialized after the first solve so that /traj/ parameters are set
