@@ -12,7 +12,13 @@ RUN mkdir -p /home/$USERNAME/MAVs/shared_dir
 
 # update MichiganAutonomousVehicles.jl and remove .cache to avoid errors with PyCall.jl
 RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.checkout("MichiganAutonomousVehicles")' \
-    && echo "rm -rf /home/mavs/.julia/.cache"
+    && echo "rm -rf /home/mavs/.julia/.cache" \
+    && /opt/julia-d386e40c17/bin/julia -e 'ENV["PYTHON"]="/usr/bin/python2.7"; Pkg.build("PyCall");' \
+    && /opt/julia-d386e40c17/bin/julia -e 'Base.compilecache("PyCall")' \
+    && /opt/julia-d386e40c17/bin/julia -e 'Base.compilecache("RobotOS")' \
+    && /opt/julia-d386e40c17/bin/julia -e 'Base.compilecache("NLOptControl")'
+
+#RUN /opt/julia-d386e40c17/bin/julia -e 'Base.compilecache("MichiganAutonomousVehicles")'
 
 # Default CMD
 CMD ["/bin/bash"]
