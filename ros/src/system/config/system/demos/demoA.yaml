@@ -3,6 +3,7 @@ system:
   step_size: 0.001
   simulation_time: 1.0
  flags:
+  initialized: false
   paused: true
 
  shutdown:
