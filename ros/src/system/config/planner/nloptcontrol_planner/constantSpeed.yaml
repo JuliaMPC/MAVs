@@ -2,8 +2,7 @@ planner:
   nloptcontrol_planner:
     misc:
       mode: OCP
-      IPplant: ThreeDOFv1
-      model: ThreeDOFv2      # function name
+      model: ThreeDOFv3      # function name
       Xlims: [111.,250.]     # plotting limit for x
       Ylims: [-1,130.]       # plotting limit for y
       Xmin: NaN              # min limit for x in OCP
@@ -31,7 +30,6 @@ planner:
       integrationScheme: trapezoidal
       tfMax: 10.0 # maximum final time in MPC
       EP: 0.01   # small number to avoid singularities TODO move this from VehicleModels.jl
-      constantSpeed: true
       x0slackVariables: true
       xFslackVariables: true
       movingObstacles: true
