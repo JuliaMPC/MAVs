@@ -23,9 +23,6 @@ system:
    initialized: false
    known_environment: true
 
- flags:
-  system_shutdown: false
-
  chrono:
   namespace: chrono
   flags:
