@@ -310,19 +310,17 @@ function loop(pub,pub_path,n,c)
         setStateData(n)    # update X0 in NLOptControl.jl based off of state/ parameters
       end
 
-      # TODO currently ocpSave needs to be true. That may cause too much time and use up too much RAM, so in the future need to get around this.
       if isequal(RobotOS.get_param("system/plant"),"3DOF")
           xa = n.r.ip.plant[n.ocp.state.name[1]][end]
           ya = n.r.ip.plant[n.ocp.state.name[2]][end]
-          xg = c["goal"]["x"]
-          yg = c["goal"]["yVal"]
-          gTol = 2*c["goal"]["tol"]
-        if goalAttained(xa,ya,xg,yg,gTol)
-          RobotOS.set_param("system/flags/goal_attained",true)
-          break
-        end
       else
-          error("need to get chrono states, see if it the actual vehicle is near goal")
+          xa = deepcopy(RobotOS.get_param("state/chrono/x"))
+          ya = deepcopy(RobotOS.get_param("state/chrono/yVal"))
+      end
+
+      if goalAttained(xa,ya,c["goal"]["x"],c["goal"]["yVal"],2*c["goal"]["tol"])
+        RobotOS.set_param("system/flags/goal_attained",true)
+        break
       end
 
       if !init  # calling this node initialized after the first solve so that /traj/ parameters are set
