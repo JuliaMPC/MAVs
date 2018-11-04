@@ -36,7 +36,7 @@ planner:
       movingObstacles: true
       onlyOptimal: false
       evalConstraints: false
-      ocpSave: true
+      ocpSave: false
 
     weights:
       ic: 100.0
