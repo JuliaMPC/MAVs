@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- demo of nloptcontrol_planner with ros_chrono with steering_controller.cpp -->
+
+  <!--  ************** load args and parameters ***************  -->
+  <!--                 common args and parameters          -->
+  <arg name="system_params_path" default="$(find system)/config/system/demos/demoH.yaml"/>
+  <arg name="vehicle_params_path" default="$(find system)/config/vehicle/hmmwv.yaml"/>
+  <arg name="case_params_path" default="$(find system)/config/case/s1.yaml"/>
+  <rosparam command="load" file="$(arg case_params_path)" />
+  <rosparam command="load" file="$(arg system_params_path)" />
+  <rosparam command="load" file="$(arg vehicle_params_path)" />
+
+  <!--               nloptcontrol_planner args and parameters    -->
+  <arg name="planner_params_path" default="$(find system)/config/planner/nloptcontrol_planner/default.yaml"/>
+  <rosparam command="load" file="$(arg planner_params_path)" />
+
+  <!--  ************** load args and parameters ***************  -->
+
+  <!--  ************** launch scripts ***************  -->
+
+  <include file="$(find nloptcontrol_planner)/launch/main.launch">
+    <arg name="case_params_path" value="$(arg case_params_path)"/>
+    <arg name="planner_params_path" value="$(arg planner_params_path)"/>
+    <arg name="system_params_path" value="$(arg system_params_path)"/>
+    <arg name="vehicle_params_path" value="$(arg vehicle_params_path)"/>
+  </include>
+
+  <!--  ************** launch scripts ***************  -->
+
+
+  <!--  ************** additional nodes ***************  -->
+
+  <!--                ros_chrono -->
+  <node name="Chronode" pkg="ros_chrono" type="steering_controller" cwd="node" />
+
+  <!--                initialize system -->
+  <node name="bootstrap" pkg="system" type="bootstrap.jl" output="screen"/>
+
+  <!--                 display the trajectory -->
+  <node name="rviz" pkg="rviz" type="rviz" output="screen" args="-d $(find obstacle_detector)/resources/display.rviz"/>
+
+  <!--                 system_shutdown node -->
+  <node name="system_shutdown" pkg="system" type="system_shutdown" output="screen" required="true">
+     <rosparam file="$(arg system_params_path)" command="load"/>
+  </node>
+
+  <!--  ************** additional nodes ***************  -->
+
+</launch>
