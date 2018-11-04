@@ -4,10 +4,13 @@ planner:
       mode: OCP
       IPplant: ThreeDOFv1
       model: ThreeDOFv2      # function name
+      Xlims: NaN     # N/A plotting limit for x
+      Ylims: NaN       # N/A plotting limit for y
       Xmin: NaN              # min limit for x in OCP
       Xmax: NaN              # max limit for x in OCP
       Ymin: NaN              # min limit for y in OCP
       Ymax: NaN              # max limit for y in OCP
+      tp: NaN                # N/A prediction horizon (s)
       tex: 0.5               # execution horizon (s)
       sm: 2.                 # (m) distance to see if obstacle was hit (for crash checking)
       sm1: 2.5               # (m) distance 1 to make sure we don't hit obstacle (for optimization)
@@ -33,7 +36,7 @@ planner:
       movingObstacles: true
       onlyOptimal: false
       evalConstraints: false
-      ocpSave: false
+      ocpSave: true
 
     weights:
       ic: 100.0
