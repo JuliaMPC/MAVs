@@ -21,7 +21,7 @@ nvidia-docker run \
     -it --rm \
     --volume=$XSOCK:$XSOCK:rw \
     --volume=$XAUTH:$XAUTH:rw \
-    --volume=$SHARED_HOST:$SHARED_CONTAINER:rw \
+    --volume=$RESULTS_HOST:$RESULTS_CONTAINER:rw \
     --volume=$SRC_HOST:$SRC_CONTAINER:rw \
     --env="XAUTHORITY=${XAUTH}" \
     --env="DISPLAY=${DISPLAY}" \
