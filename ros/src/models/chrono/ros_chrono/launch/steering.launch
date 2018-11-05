@@ -10,5 +10,8 @@
   <rosparam command="load" file="$(arg chrono_params_path)"/>
  
   <node name="Reference" pkg="traj_gen_chrono" type="traj_gen_chrono"/>
+  <test test-name="Reference_test" pkg="traj_gen_chrono" type="traj_gen_chrono"/>
+
   <node name="Chronode" pkg="ros_chrono" type="steering_controller" cwd="node" />
+  <test test-name="Chronode_test" pkg="ros_chrono" type="steering_controller" />
 </launch>
