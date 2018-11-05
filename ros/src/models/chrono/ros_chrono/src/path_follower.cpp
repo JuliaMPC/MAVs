@@ -58,7 +58,7 @@ using namespace alglib;
 
 const double PI  = 3.14159265359;
 
-std::string data_path("MAVs/ros/src/models/chrono/ros_chrono/src/data/vehicle/");
+std::string data_path("../../../src/models/chrono/ros_chrono/src/data/vehicle/");
 
 // The extended steering controller only works inside the path limits
 // =============================================================================
@@ -194,11 +194,15 @@ int main(int argc, char* argv[]) {
     // ------------------------------
     // Initialize ROS node handle
     // ------------------------------
-    ros::init(argc, argv, "steering_controller");
+    ros::init(argc, argv, "path_follower");
     ros::NodeHandle node;
+
     
     // Declare ROS subscriber to subscribe planner topic
-    ros::Subscriber planner_sub = node.subscribe("/control", 100, plannerCallback);
+    std::string planner_namespace;
+    node.getParam("system/planner",planner_namespace);
+    ros::Subscriber planner_sub = node.subscribe(planner_namespace + "/control", 100, plannerCallback);
+    //ros::Subscriber planner_sub = node.subscribe("/control", 100, plannerCallback);
 
     // Declare ROS publisher to advertise vehicleinfo topic
     ros::Publisher vehicleinfo_pub = node.advertise<ros_chrono_msgs::veh_status>("/vehicleinfo", 1);
