@@ -1,10 +1,13 @@
 system:
+
  params:
   step_size: 0.001
   simulation_time: 1.0
- flags:
-  paused: true
 
+ flags:
+  initialized: false
+  paused: true
+  
  shutdown:
   flags:
    running: true

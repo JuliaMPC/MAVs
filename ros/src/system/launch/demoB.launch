@@ -3,7 +3,7 @@
   <!-- demo of nloptcontrol_planner with vehicle_description-->
 
   <!--  ************* nloptcontrol_planner args and parameters ***************  -->
-  <arg name="planner_params_path" default="$(find system)/config/planner/RTPP.yaml"/>
+  <arg name="planner_params_path" default="$(find system)/config/planner/nloptcontrol_planner/default.yaml"/>
   <rosparam command="load" file="$(arg planner_params_path)" />
 
   <!--  ************* vehicle_description args and parameters ***************  -->
@@ -33,8 +33,16 @@
     <arg name="paused" value="$(arg paused)"/>
   </include>
 
+  <!--  system_shutdown node -->
+  <node name="system_shutdown" pkg="system" type="system_shutdown" output="screen" required="true">
+     <rosparam file="$(arg system_params_path)" command="load"/>
+  </node>
+
   <!-- initialize system -->
   <node name="bootstrap" pkg="system" type="bootstrap.jl" output="screen"/>
+
+  <!-- save data -->
+  <node pkg="rosbag" type="record" name="record" args="record -O /home/mavs/MAVs/shared_dir/opt.bag /nloptcontrol_planner/Optimization"/>
 
   <!-- unpause Gazebo -->
   <node name="unpause_gazebo" pkg="vehicle_description" type="unpause.jl" output="screen"/>

@@ -10,7 +10,7 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 ## Declare ROS messages and services
-add_message_files(DIRECTORY msg FILES Control.msg)
+add_message_files(DIRECTORY msg FILES Control.msg Optimization.msg)
 
 install(DIRECTORY config
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
