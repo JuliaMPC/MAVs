@@ -4,7 +4,21 @@
 
 class PID{
 public:
-  PID(){};
+  PID(){
+    Kp_ = 0.0, Ki_ = 0.0, Kd_ = 0.0, Kw_ = 0.0;
+    output_ = 0.0;
+    previous_output_ = 0.0;
+    error_ = 0.0;
+    previous_error_ = 0.0;
+    integral_ = 0.0;
+    windup_integral_ = 0.0;
+    step_size_ = 1.0;
+    output_upper_limit_ = 0.0;
+    output_lower_limit_ = 0.0;
+    first_hit = true;
+    windup = "clamping";
+  };
+
   void set_PID(const double &Kp, const double &Ki, const double &Kd, const double &Kw);
   void set_Kp(const double &Kp);
   void set_Ki(const double &Ki);
@@ -18,18 +32,18 @@ public:
 
 
 private:
-  double Kp_ = 0.0, Ki_ = 0.0, Kd_ = 0.0, Kw_ = 0.0;
-  double output_ = 0.0;
-  double previous_output_ = 0.0;
-  double error_ = 0.0;
-  double previous_error_ = 0.0;
-  double integral_ = 0.0;
-  double windup_integral_ = 0.0;
-  double step_size_ = 1.0;
-  double output_upper_limit_ = 0.0;
-  double output_lower_limit_ = 0.0;
-  double first_hit = true;
-  std::string windup = "clamping";
+  double Kp_, Ki_, Kd_, Kw_;
+  double output_;
+  double previous_output_;
+  double error_;
+  double previous_error_;
+  double integral_;
+  double windup_integral_;
+  double step_size_;
+  double output_upper_limit_;
+  double output_lower_limit_;
+  double first_hit;
+  std::string windup;
 };
 
 #endif
