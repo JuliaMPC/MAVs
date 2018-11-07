@@ -199,7 +199,7 @@ void controlCallback(const nloptcontrol_planner::Control::ConstPtr& control_msg)
   double time = ros::Time::now().toSec();
   std::vector<double> traj_t = control_msg->t;
   std::vector<double> traj_sa = control_msg->sa;
-  std::vector<double> traj_vx = control_msg->vx;
+  std::vector<double> traj_ux = control_msg->ux;
   std::cout << "Current time: "<< time << " ";
 
   std::cout << "Time trajectory: " << " ";
@@ -208,8 +208,8 @@ void controlCallback(const nloptcontrol_planner::Control::ConstPtr& control_msg)
     std::cout << std::endl;
 
   std::cout << "Speed trajectory: " << " ";
-  for(int i = 0; i < traj_vx.size(); i++)
-      std::cout << traj_vx[i] << " ";
+  for(int i = 0; i < traj_ux.size(); i++)
+      std::cout << traj_ux[i] << " ";
   std::cout << std::endl;
 
   std::cout << "Steering trajectory: " << " ";
@@ -223,7 +223,7 @@ void controlCallback(const nloptcontrol_planner::Control::ConstPtr& control_msg)
 
   t_array.setcontent(traj_t);
   steering_array.setcontent(traj_sa);
-  speed_array.setcontent(traj_vx);
+  speed_array.setcontent(traj_ux);
   spline1dinterpolant s;
   ae_int_t natural_bound_type = 2;
   spline1dbuildcubic(t_array, speed_array, s);

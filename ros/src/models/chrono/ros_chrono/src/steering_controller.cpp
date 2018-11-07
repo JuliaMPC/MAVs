@@ -85,7 +85,7 @@ std::vector<double> traj_x(2,0);
 std::vector<double> traj_y(2,0);
 std::vector<double> traj_psi(2,0);
 std::vector<double> traj_sa(2,0);
-std::vector<double> traj_vx(2,0);
+std::vector<double> traj_ux(2,0);
 
 //steering maximum
 double maximum_steering_angle;
@@ -93,7 +93,7 @@ double maximum_steering_angle;
 
 // Interpolator
 double traj_sa_interp = 0.0;
-double traj_vx_interp = 0.0;
+double traj_ux_interp = 0.0;
 
 // PID controller
 double Kp = 0.5, Ki = 0.1, Kd = 0.0, Kw = 0.0, time_shift = 3.0; // PID controller parameter
@@ -177,7 +177,7 @@ void plannerCallback(const nloptcontrol_planner::Control::ConstPtr& control_msgs
     traj_y = control_msgs->y;
     traj_psi = control_msgs->psi;
     traj_sa = control_msgs->sa;
-    traj_vx = control_msgs->vx;
+    traj_ux = control_msgs->ux;
 }
 
 
@@ -201,7 +201,7 @@ int main(int argc, char* argv[]) {
     // ------------------------------
     ros::init(argc, argv, "steering_controller");
     ros::NodeHandle node;
-    
+
     // Declare ROS subscriber to subscribe planner topic
     //ros::Subscriber planner_sub = node.subscribe("/trejactory", 100, plannerCallback);
 
@@ -224,7 +224,7 @@ int main(int argc, char* argv[]) {
     double frict_coeff = 0, rest_coeff = 0, gear_ratios = 1; //Chrono Vehicle parameters
 
     // Get parameters from ROS Parameter Server
-    
+
     node.getParam("system/params/step_size", step_size); // ROS loop rate and Chrono step size
     node.getParam("system/params/goal_tol",goal_tol);
 
@@ -234,18 +234,18 @@ int main(int argc, char* argv[]) {
     node.getParam("state/chrono/X0/z", z0); // initial z
     node.getParam("state/chrono/x", x); // global x position
     node.getParam("state/chrono/yVal", y); // global y position
-    
+
     node.getParam("case/actual/X0/psi",yaw0); // initial yaw
     //node.getParam("case/actual/X0/x",x0); // initial x
     node.getParam("case/actual/X0/yVal",y0); // initial y
-    
+
     node.getParam("case/goal/x",goal_x);
     node.getParam("case/goal/yVal",goal_y);
 
     node.getParam("vehicle/common/frict_coeff",frict_coeff);
     node.getParam("vehicle/common/rest_coeff",rest_coeff);
     node.getParam("vehicle/chrono/vehicle_params/gearRatios",gear_ratios);
-    
+
     // ---------------------
     // Set up PID controller
     // ---------------------
@@ -255,14 +255,14 @@ int main(int argc, char* argv[]) {
     node.getParam("controller/Kw",Kw);
     node.getParam("controller/anti_windup", windup_method);
     node.getParam("controller/time_shift", time_shift);
-	
+
     controller.set_PID(Kp, Ki, Kd, Kw);
     controller.set_step_size(step_size);
     controller.set_output_limit(-1.0, 1.0);
     controller.set_windup_metohd(windup_method);
     controller.initialize();
-    
-    
+
+
     // Declare loop rate
     ros::Rate loop_rate(int(1/step_size));
 
@@ -332,7 +332,7 @@ int main(int argc, char* argv[]) {
 
     ChVehicleIrrApp app(&my_hmmwv.GetVehicle(), &my_hmmwv.GetPowertrain(), L"Steering PID Controller Demo",
                         irr::core::dimension2d<irr::u32>(800, 640));
-    
+
     app.SetHUDLocation(500, 20);
     app.SetSkyBox();
     app.AddTypicalLogo();
@@ -388,7 +388,7 @@ int main(int argc, char* argv[]) {
     // ---------------
     // Simulation loop
     // ---------------
-    
+
     // Driver location in vehicle local frame
     ChVector<> driver_pos = my_hmmwv.GetChassis()->GetLocalDriverCoordsys().pos;
 
@@ -404,7 +404,7 @@ int main(int argc, char* argv[]) {
     double braking_input = 0;			///
 
     while (ros::ok()) {
-        
+
         // Extract system state
         double time = my_hmmwv.GetSystem()->GetChTime();
         ChVector<> acc_CG = my_hmmwv.GetVehicle().GetChassisBody()->GetPos_dtdt();
@@ -419,31 +419,31 @@ int main(int argc, char* argv[]) {
             break;
 
         // --------------------------
-        // interpolation using ALGLIB 
+        // interpolation using ALGLIB
         // --------------------------
         // real_1d_array t_array;
         // real_1d_array sa_array;
-        // real_1d_array vx_array;
+        // real_1d_array ux_array;
 
         // t_array.setcontent(traj_t);
         // sa_array.setcontent(traj_sa);
-        // vx_array.setcontent(traj_vx);
-        // spline1dinterpolant s_vx;
+        // ux_array.setcontent(traj_ux);
+        // spline1dinterpolant s_ux;
         // spline1dinterpolant s_sa;
-        // spline1dbuildcubic(t_array, vx_array, s_vx);
-        // traj_vx_interp = spline1dcalc(s_vx, time + time_shift);
+        // spline1dbuildcubic(t_array, ux_array, s_ux);
+        // traj_ux_interp = spline1dcalc(s_ux, time + time_shift);
         // spline1dbuildcubic(t_array, sa_array, s_sa);
         // traj_sa_interp = spline1dcalc(s_sa, time);
 
         // PID controller output form throttle or brake
-        // double vx_err = traj_vx_interp - speed;
+        // double ux_err = traj_ux_interp - speed;
    	//double sa_err = traj_sa[0] - steering;		///
         //controller_output = controller.control(sa_err);	///?? +traj_sa[0]
 	steering_input = traj_sa[0]/M_PI*180/maximum_steering_angle;//controller_output;		///??
 	//braking_input = 0;				///
 	//throttle_input = 0;				///
-	double vx_err = traj_vx[0] - speed;
-        controller_output2 = controller.control(vx_err);
+	double ux_err = traj_ux[0] - speed;
+        controller_output2 = controller.control(ux_err);
         if (controller_output2 > 0){
             throttle_input = controller_output2;
             braking_input = 0;
@@ -452,11 +452,11 @@ int main(int argc, char* argv[]) {
             throttle_input = 0;
             braking_input = -controller_output2;
         }
-        
-        
+
+
         // steering angle output (There should a saturation threshold)
         // traj_sa_interp = traj_sa_interp;
-        
+
 
         // Update sentinel and target location markers for the path-follower controller.
         // Note that we do this whether or not we are currently using the path-follower driver.
@@ -490,7 +490,7 @@ int main(int argc, char* argv[]) {
         ChVector<> acc_global = my_hmmwv.GetChassisBody()->GetPos_dtdt();
         ChQuaternion<> rot_global = my_hmmwv.GetVehicle().GetVehicleRot();//global orientation as quaternion
         ChVector<> rot_dt = my_hmmwv.GetChassisBody()->GetWvel_loc(); //global orientation as quaternion
-        
+
         steering = my_hmmwv.GetTire(0)->GetSlipAngle();
         speed = my_hmmwv.GetVehicle().GetVehicleSpeedCOM();	////???
 

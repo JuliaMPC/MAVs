@@ -120,11 +120,11 @@ std::vector<double> traj_x(1,0);
 std::vector<double> traj_y(1,0);
 std::vector<double> traj_psi(1,0);
 std::vector<double> traj_sa(1,0);
-std::vector<double> traj_vx(1,0);
+std::vector<double> traj_ux(1,0);
 
 // Control Output
 double traj_sa_interp = 0.0;
-double traj_vx_interp = 0.0;
+double traj_ux_interp = 0.0;
 double controller_output = 0.0;
 PID controller;
 PID path_follower_controller_dist;
@@ -165,7 +165,7 @@ void plannerCallback(const nloptcontrol_planner::Control::ConstPtr& control_msgs
     traj_y = control_msgs->y;
     traj_psi = control_msgs->psi;
     traj_sa = control_msgs->sa;
-    traj_vx = control_msgs->vx;
+    traj_ux = control_msgs->ux;
 }
 
 double get_PosError(ChVector<> pos_global,
@@ -179,7 +179,7 @@ double get_PosError(ChVector<> pos_global,
 
     traj_dir_x /= traj_len;
     traj_dir_y /= traj_len;
-    
+
     double car2traj_x = traj_x[0] - pos_global[0];
     double car2traj_y = traj_y[0] - pos_global[1];
     double PosError = car2traj_y * traj_dir_x - car2traj_x * traj_dir_y;
@@ -190,14 +190,14 @@ double get_PosError(ChVector<> pos_global,
 // =============================================================================
 
 int main(int argc, char* argv[]) {
-    
+
     // ------------------------------
     // Initialize ROS node handle
     // ------------------------------
     ros::init(argc, argv, "steering_controller");
     ros::NodeHandle node;
 
-    
+
     // Declare ROS subscriber to subscribe planner topic
     std::string planner_namespace;
     node.getParam("system/planner",planner_namespace);
@@ -208,7 +208,7 @@ int main(int argc, char* argv[]) {
     ros::Publisher vehicleinfo_pub = node.advertise<ros_chrono_msgs::veh_status>("/vehicleinfo", 1);
     ros_chrono_msgs::veh_status vehicleinfo_data;
 
-    
+
 
     // Get parameters from ROS Parameter Server
     double goal_tol = 0.1;
@@ -227,7 +227,7 @@ int main(int argc, char* argv[]) {
     node.getParam("case/actual/X0/psi",yaw0);
     node.getParam("case/actual/X0/x",x0);
     node.getParam("case/actual/X0/yVal",y0);
-    
+
     double goal_x = 0, goal_y = 0;
     node.getParam("case/goal/x",goal_x);
     node.getParam("case/goal/yVal",goal_y);
@@ -236,7 +236,7 @@ int main(int argc, char* argv[]) {
     node.getParam("vehicle/common/frict_coeff",frict_coeff);
     node.getParam("vehicle/common/rest_coeff",rest_coeff);
     node.getParam("vehicle/chrono/vehicle_params/gearRatios",gear_ratios);
-    
+
     // ---------------------
     // Set up PID controller
     // ---------------------
@@ -268,7 +268,7 @@ int main(int argc, char* argv[]) {
     path_follower_controller_angle.set_output_limit(-0.5, 0.5);
     path_follower_controller_angle.set_windup_metohd(windup_method);
     path_follower_controller_angle.initialize();
-    
+
     // Declare loop rate
     ros::Rate loop_rate(int(1/step_size));
 
@@ -338,7 +338,7 @@ int main(int argc, char* argv[]) {
 
     ChVehicleIrrApp app(&my_hmmwv.GetVehicle(), &my_hmmwv.GetPowertrain(), L"Steering PID Controller Demo",
                         irr::core::dimension2d<irr::u32>(800, 640));
-    
+
     app.SetHUDLocation(500, 20);
     app.SetSkyBox();
     app.AddTypicalLogo();
@@ -394,7 +394,7 @@ int main(int argc, char* argv[]) {
     // ---------------
     // Simulation loop
     // ---------------
-    
+
     // Driver location in vehicle local frame
     ChVector<> driver_pos = my_hmmwv.GetChassis()->GetLocalDriverCoordsys().pos;
 
@@ -411,7 +411,7 @@ int main(int argc, char* argv[]) {
 
 
     while (ros::ok()) {
-        
+
         // Extract system state
         double time = my_hmmwv.GetSystem()->GetChTime();
         ChVector<> acc_CG = my_hmmwv.GetVehicle().GetChassisBody()->GetPos_dtdt();
@@ -426,24 +426,24 @@ int main(int argc, char* argv[]) {
             break;
 
         // --------------------------
-        // interpolation using ALGLIB 
+        // interpolation using ALGLIB
         // --------------------------
         // real_1d_array t_array;
         // real_1d_array sa_array;
-        // real_1d_array vx_array;
+        // real_1d_array ux_array;
 
         // t_array.setcontent(traj_t);
         // sa_array.setcontent(traj_sa);
-        // vx_array.setcontent(traj_vx);
-        // spline1dinterpolant s_vx;
+        // ux_array.setcontent(traj_ux);
+        // spline1dinterpolant s_ux;
         // spline1dinterpolant s_sa;
-        // spline1dbuildcubic(t_array, vx_array, s_vx);
-        // traj_vx_interp = spline1dcalc(s_vx, time + time_shift);
+        // spline1dbuildcubic(t_array, ux_array, s_ux);
+        // traj_ux_interp = spline1dcalc(s_ux, time + time_shift);
         // spline1dbuildcubic(t_array, sa_array, s_sa);
         // traj_sa_interp = spline1dcalc(s_sa, time);
 
         // throttle or brake output
-        // double vx_err = traj_vx_interp - speed;
+        // double ux_err = traj_ux_interp - speed;
 
 
         // Update sentinel and target location markers for the path-follower controller.
@@ -479,7 +479,7 @@ int main(int argc, char* argv[]) {
         ChVector<> acc_global = my_hmmwv.GetChassisBody()->GetPos_dtdt();
         ChQuaternion<> rot_global = my_hmmwv.GetVehicle().GetVehicleRot();//global orientation as quaternion
         ChVector<> rot_dt = my_hmmwv.GetChassisBody()->GetWvel_loc(); //global orientation as quaternion
-        
+
         double slip_angle = my_hmmwv.GetTire(0)->GetSlipAngle();
         speed = my_hmmwv.GetVehicle().GetVehicleSpeedCOM();
 
@@ -493,13 +493,13 @@ int main(int argc, char* argv[]) {
         double phi_val= atan2(2*(q0*q1+q2*q3),1-2*(q1*q1+q2*q2));
 
         // Control speed
-        double vx_err = traj_vx[0] - speed;
+        double ux_err = traj_ux[0] - speed;
 
-        if ((traj_x[1] - traj_x[0])*(traj_x[1] - pos_global[0]) + 
+        if ((traj_x[1] - traj_x[0])*(traj_x[1] - pos_global[0]) +
             (traj_y[1] - traj_y[0])*(traj_y[1] - pos_global[1]) < 0)
-                vx_err = -speed;
+                ux_err = -speed;
 
-        controller_output = controller.control(vx_err);
+        controller_output = controller.control(ux_err);
         if (controller_output > 0){
             throttle_input = controller_output;
             braking_input = 0;
@@ -509,10 +509,10 @@ int main(int argc, char* argv[]) {
             braking_input = -controller_output;
         }
 
-        
-        
+
+
         // std::cout << "pos_global: " << pos_global[0] << ", traj_x: " << traj_x[0] << "traj_y: " << traj_y[0] <<std::endl;
-        
+
         // Control angle
         double pos_err = get_PosError(pos_global, traj_x, traj_y);
 

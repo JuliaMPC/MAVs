@@ -165,7 +165,7 @@ double time_shift = 0.0;
 PID controller;
 std::vector<double> traj_t(2,0);
 std::vector<double> traj_sa(2,0);
-std::vector<double> traj_vx(2,0);
+std::vector<double> traj_ux(2,0);
 
 // =============================================================================
 
@@ -471,7 +471,7 @@ void setBrakingParams(ros::NodeHandle &n){
 void controlCallback(const nloptcontrol_planner::Control::ConstPtr& control_msg){
   traj_t = control_msg->t;
   traj_sa = control_msg->sa;
-  traj_vx = control_msg->vx;
+  traj_ux = control_msg->ux;
 
   /*
   std::cout << "Current time: "<< time << std::endl;
@@ -481,8 +481,8 @@ void controlCallback(const nloptcontrol_planner::Control::ConstPtr& control_msg)
     std::cout << std::endl;
 
   std::cout << "Speed trajectory: " << " ";
-  for(int i = 0; i < traj_vx.size(); i++)
-      std::cout << traj_vx[i] << " ";
+  for(int i = 0; i < traj_ux.size(); i++)
+      std::cout << traj_ux[i] << " ";
   std::cout << std::endl;
 
   std::cout << "Steering trajectory: " << " ";
@@ -642,7 +642,7 @@ int main(int argc, char* argv[]) {
     my_hmmwv.GetWheel(0)->SetContactFrictionCoefficient(frict_coeff);
     my_hmmwv.GetWheel(0)->SetContactRestitutionCoefficient(rest_coeff);
 
-    
+
     /*change: 10/11/2018 */
     auto patch1 = terrain.AddPatch(ChCoordsys<>(ChVector<>(0, 0, -5), QUNIT), ChVector<>(20,20, 10));
     patch1->SetContactFrictionCoefficient(0.9f); //
@@ -661,7 +661,7 @@ int main(int argc, char* argv[]) {
     terrain.SetTexture(data_path+"terrain/textures/tile4.jpg", 200, 200);
     terrain.Initialize(terrainHeight, terrainLength, terrainWidth);*/
     /*end_change*/
-    
+
 
     SimplePowertrain powertrain(vehicle::GetDataFile(data_path + "hmmwv/powertrain/HMMWV_SimplePowertrain.json")); // Yes
     // HMMWV_Powertrain powertrain;
@@ -848,11 +848,11 @@ int main(int argc, char* argv[]) {
 
           t_array.setcontent(traj_t);
           steering_array.setcontent(traj_sa);
-          speed_array.setcontent(traj_vx);
-          spline1dinterpolant s_vx;
+          speed_array.setcontent(traj_ux);
+          spline1dinterpolant s_ux;
           spline1dinterpolant s_sa;
-          spline1dbuildcubic(t_array, speed_array, s_vx);
-          target_speed_interp = spline1dcalc(s_vx, time + time_shift);
+          spline1dbuildcubic(t_array, speed_array, s_ux);
+          target_speed_interp = spline1dcalc(s_ux, time + time_shift);
           spline1dbuildcubic(t_array, steering_array, s_sa);
           target_steering_interp = spline1dcalc(s_sa, time);
 

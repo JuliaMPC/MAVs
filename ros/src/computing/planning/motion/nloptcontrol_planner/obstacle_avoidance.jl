@@ -39,26 +39,24 @@ function setTrajParams(msg::Control)
   L = length(msg.t)
 
   if L > 0
-    t = (); sa = (); vx = (); x = (); y = (); psi = ();
+    t = (); sa = (); ux = (); x = (); y = (); psi = ();
     for i in 1:L
       t = (t..., msg.t[i])
       x = (x..., msg.x[i])
       y = (y..., msg.y[i])
-      vx = (vx..., msg.vx[i])
-      sa = (sa..., msg.sa[i])
       psi = (psi..., msg.psi[i])
+      sa = (sa..., msg.sa[i])
+      ux = (ux..., msg.ux[i])
     end
 
     # update trajectory parameters
-    plannerNamespace = RobotOS.get_param("system/nloptcontrol_planner/namespace")
-
-    RobotOS.set_param(string(plannerNamespace,"/traj/t"),t)
-    RobotOS.set_param(string(plannerNamespace,"/traj/x"),x)
-    RobotOS.set_param(string(plannerNamespace,"/traj/yVal"),y)
-    RobotOS.set_param(string(plannerNamespace,"/traj/vx"),vx)
-    RobotOS.set_param(string(plannerNamespace,"/traj/sa"),sa)
-    RobotOS.set_param(string(plannerNamespace,"/traj/psi"),psi)
-
+    #plannerNamespace = RobotOS.get_param("system/nloptcontrol_planner/namespace")
+    RobotOS.set_param(string("/trajectory/t"),t)
+    RobotOS.set_param(string("/trajectory/x"),x)
+    RobotOS.set_param(string("/trajectory/y"),y)
+    RobotOS.set_param(string("/trajectory/psi"),psi)
+    RobotOS.set_param(string("/trajectory/sa"),sa)
+    RobotOS.set_param(string("/trajectory/ux"),ux)
   else
     error("L !> 0")
   end
@@ -278,7 +276,7 @@ function loop(pub,pub_opt,pub_path,n,c)
       ctr.y = n.r.ocp.X[:,2]
       ctr.psi = n.r.ocp.X[:,5]
       ctr.sa = n.r.ocp.X[:,6]
-      ctr.vx = n.r.ocp.X[:,7]
+      ctr.ux = n.r.ocp.X[:,7]
       publish(pub, ctr)
 
       opt = Optimization()
