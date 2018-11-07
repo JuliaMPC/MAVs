@@ -67,6 +67,8 @@ using namespace rapidjson;
 //change at 10/31/2018
 std::string data_path("../../../src/models/chrono/ros_chrono/src/data/vehicle/");
 
+//2018/11/2
+bool receive = false;
 // Rigid terrain dimensions
 double terrainHeight = 0;
 double terrainLength = 300.0;  // size in X direction
@@ -178,6 +180,7 @@ void plannerCallback(const nloptcontrol_planner::Control::ConstPtr& control_msgs
     traj_psi = control_msgs->psi;
     traj_sa = control_msgs->sa;
     traj_vx = control_msgs->vx;
+    receive = true;
 }
 
 
@@ -402,6 +405,14 @@ int main(int argc, char* argv[]) {
     double throttle_input = 0;			///
     double steering_input = 0;			///
     double braking_input = 0;			///
+    
+    bool is_init;
+    node.getParam("system/flags/initialized", is_init);
+
+    while (!is_init) {
+        node.getParam("system/flags/initialized", is_init);
+        std::cout << "waiting for waiting on obstacle_avoidance.jl in nloptcontrol_planner ..." << std::endl;
+    }
 
     while (ros::ok()) {
         
@@ -439,10 +450,9 @@ int main(int argc, char* argv[]) {
         // double vx_err = traj_vx_interp - speed;
    	//double sa_err = traj_sa[0] - steering;		///
         //controller_output = controller.control(sa_err);	///?? +traj_sa[0]
-	steering_input = traj_sa[0]/M_PI*180/maximum_steering_angle;//controller_output;		///??
-	//braking_input = 0;				///
-	//throttle_input = 0;				///
-	double vx_err = traj_vx[0] - speed;
+	if(receive){
+        steering_input = traj_sa[0]/M_PI*180/maximum_steering_angle;//controller_output;        ///??
+        double vx_err = traj_vx[0] - speed;
         controller_output2 = controller.control(vx_err);
         if (controller_output2 > 0){
             throttle_input = controller_output2;
@@ -452,8 +462,16 @@ int main(int argc, char* argv[]) {
             throttle_input = 0;
             braking_input = -controller_output2;
         }
+    }
+    else{
+        throttle_input = 0;
+        braking_input = 0;
+        steering_input = 0;
+    }
         
-        
+        throttle_input = 0;          /// new added to kill oscillation
+        steering_input = 0;          /// new added to kill oscillation
+        braking_input = 0;           /// new added to kill oscillation
         // steering angle output (There should a saturation threshold)
         // traj_sa_interp = traj_sa_interp;
         
