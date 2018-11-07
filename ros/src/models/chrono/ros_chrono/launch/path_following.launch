@@ -1,7 +1,7 @@
 <launch>
   <arg name="system_params_path" default="$(find system)/config/system/pkgs/chrono.yaml"/>
   <arg name="vehicle_params_path" default="$(find system)/config/vehicle/hmmwv.yaml"/>
-  <arg name="case_params_path" default="$(find system)/config/case/path_follower.yaml"/>
+  <arg name="case_params_path" default="$(find system)/config/case/path_following.yaml"/>
   <arg name="chrono_params_path" default="$(find system)/config/planner/chrono_testing/hmmwv_chrono_params.yaml"/>
 
   <rosparam command="load" file="$(arg system_params_path)"/>
@@ -10,5 +10,5 @@
   <rosparam command="load" file="$(arg chrono_params_path)"/>
  
   <node name="path" pkg="traj_gen_chrono" type="path_gen_chrono" output="screen"/>
-  <node name="Chronode" pkg="ros_chrono" type="path_follower" cwd="node" />
+  <node name="Chronode" pkg="ros_chrono" type="path_following" cwd="node" />
 </launch>
