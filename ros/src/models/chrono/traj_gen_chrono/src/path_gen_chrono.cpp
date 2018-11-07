@@ -4,6 +4,7 @@
 #include "ros/ros.h"
 #include "std_msgs/String.h"
 #include "nloptcontrol_planner/Trajectory.h"
+#include "ros_chrono_msgs/veh_status.h"
 // Chrono library
 #include "chrono/core/ChFileutils.h"
 #include "chrono_vehicle/utils/ChVehiclePath.h"
@@ -56,8 +57,7 @@ int main(int argc, char **argv) {
     node.getParam("case/path/pos_tol", pos_tol);
     node.getParam("case/path/pos_delay", pos_delay);
 
-    nloptcontrol_planner::Control control_info;
-    control_info.vx = std::vector<double> {control_vx};
+    control_info.ux = std::vector<double> {control_vx};
     ros::Rate loop_rate(test_rate);
 
     int count = 0, path_status = 0;
