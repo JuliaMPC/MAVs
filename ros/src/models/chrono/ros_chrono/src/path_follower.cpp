@@ -33,7 +33,7 @@
 // ROS include library
 #include "ros/ros.h"
 #include "std_msgs/Float64.h"
-#include "nloptcontrol_planner/Control.h"
+#include "nloptcontrol_planner/Trajectory.h"
 #include "ros_chrono_msgs/veh_status.h"
 
 // Chrono include library
@@ -159,7 +159,7 @@ class ChDriverSelector : public irr::IEventReceiver {
 
 // =============================================================================
 
-void plannerCallback(const nloptcontrol_planner::Control::ConstPtr& control_msgs) {
+void plannerCallback(const nloptcontrol_planner::Trajectory::ConstPtr& control_msgs) {
     traj_t = control_msgs->t;
     traj_x = control_msgs->x;
     traj_y = control_msgs->y;

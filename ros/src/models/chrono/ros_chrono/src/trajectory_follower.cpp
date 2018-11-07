@@ -32,7 +32,7 @@
 #include "ros/ros.h"
 #include "std_msgs/String.h"
 #include "ros_chrono_msgs/veh_status.h"
-#include "nloptcontrol_planner/Control.h"
+#include "nloptcontrol_planner/Trajectory.h"
 #include <unistd.h>
 #include <interpolation.h>
 #include <PID.h>
@@ -468,7 +468,7 @@ void setBrakingParams(ros::NodeHandle &n){
   myfile3.close();
 }
 
-void controlCallback(const nloptcontrol_planner::Control::ConstPtr& control_msg){
+void controlCallback(const nloptcontrol_planner::Trajectory::ConstPtr& control_msg){
   traj_t = control_msg->t;
   traj_sa = control_msg->sa;
   traj_ux = control_msg->ux;
@@ -816,7 +816,7 @@ int main(int argc, char* argv[]) {
         ros::spinOnce();
         n.setParam("system/chrono/flags/running",true);
 
-        //     ros::Subscriber sub = n.subscribe<traj_gen_chrono::Control>("desired_ref", 1, &parameters::controlCallback, &hmmwv_params);
+        //     ros::Subscriber sub = n.subscribe<traj_gen_chrono::Trajectory>("desired_ref", 1, &parameters::controlCallback, &hmmwv_params);
 
           // Render scene and output POV-Ray data
         if (hmmwv_params.sim_frame % hmmwv_params.render_steps == 0 && gui_switch) {

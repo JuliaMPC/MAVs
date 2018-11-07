@@ -3,7 +3,7 @@
 #include "std_msgs/String.h"
 #include <sstream>
 #include <vector>
-#include "nloptcontrol_planner/Control.h"
+#include "nloptcontrol_planner/Trajectory.h"
 
 double default_loop_rate = 0.2;
 
@@ -18,8 +18,8 @@ int main(int argc, char **argv)
     std::string planner_namespace;
     node.getParam("system/planner", planner_namespace);
 
-    ros::Publisher pub = node.advertise<nloptcontrol_planner::Control>(planner_namespace+"/control", 10);
-    nloptcontrol_planner::Control control_msgs;
+    ros::Publisher pub = node.advertise<nloptcontrol_planner::Trajectory>(planner_namespace+"/control", 10);
+    nloptcontrol_planner::Trajectory control_msgs;
 
     int msgs_len = 10;
     std::vector<double> control_t(msgs_len, 0.0);

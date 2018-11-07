@@ -3,8 +3,8 @@
 #include "std_msgs/String.h"
 #include <sstream>
 #include <vector>
-#include "nloptcontrol_planner/Control.h"
-//#include "traj_gen_chrono/Control.h"
+#include "nloptcontrol_planner/Trajectory.h"
+//#include "traj_gen_chrono/Trajectory.h"
 
 /**
  * This tutorial demonstrates simple sending of messages over the ROS system.
@@ -35,8 +35,8 @@ int main(int argc, char **argv)
   std::string planner_namespace;
   a.getParam("system/planner",planner_namespace);
 
-  ros::Publisher pub = a.advertise<nloptcontrol_planner::Control>(planner_namespace + "/control", 10);
-  nloptcontrol_planner::Control control_info;
+  ros::Publisher pub = a.advertise<nloptcontrol_planner::Trajectory>(planner_namespace + "/control", 10);
+  nloptcontrol_planner::Trajectory control_info;
   int control_num = 10;
   std::vector<double> control_t(control_num,0.0);
   std::vector<double> control_sa(control_num,0.0);

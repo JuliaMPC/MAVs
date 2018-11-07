@@ -3,7 +3,7 @@
 // ROS library
 #include "ros/ros.h"
 #include "std_msgs/String.h"
-#include "nloptcontrol_planner/Control.h"
+#include "nloptcontrol_planner/Trajectory.h"
 // Chrono library
 #include "chrono/core/ChFileutils.h"
 #include "chrono_vehicle/utils/ChVehiclePath.h"
@@ -19,10 +19,10 @@ int main(int argc, char **argv) {
 
     std::string planner_namespace;
     node.getParam("system/planner",planner_namespace);
-    ros::Publisher pub = node.advertise<nloptcontrol_planner::Control>(planner_namespace + "/control", 10);
-    // ros::Publisher pub = node.advertise<nloptcontrol_planner::Control>("/control", 10);
+    ros::Publisher pub = node.advertise<nloptcontrol_planner::Trajectory>(planner_namespace + "/control", 10);
+    // ros::Publisher pub = node.advertise<nloptcontrol_planner::Trajectory>("/control", 10);
 
-    nloptcontrol_planner::Control control_info;
+    nloptcontrol_planner::Trajectory control_info;
     int control_num = 2;
     std::vector<double> control_t(control_num,0.0);
     std::vector<double> control_sa(control_num,0.0);
