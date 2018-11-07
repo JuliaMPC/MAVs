@@ -1,7 +1,7 @@
 #!/usr/bin/env julia
 using RobotOS
 @rosimport geometry_msgs.msg: Point, Pose, Pose2D, PoseStamped, Vector3, Twist
-@rosimport nloptcontrol_planner.msg: Control, Optimization
+@rosimport nloptcontrol_planner.msg: Trajectory, Optimization
 @rosimport nav_msgs.msg: Path
 
 rostypegen()
@@ -35,30 +35,28 @@ Author: Huckleberry Febbo, Graduate Student, University of Michigan
 Date Create: 2/28/2018, Last Modified: 3/10/2018 \n
 --------------------------------------------------------------------------------------\n
 """
-function setTrajParams(msg::Control)
+function setTrajParams(msg::Trajectory)
   L = length(msg.t)
 
   if L > 0
-    t = (); sa = (); vx = (); x = (); y = (); psi = ();
+    t = (); sa = (); ux = (); x = (); y = (); psi = ();
     for i in 1:L
       t = (t..., msg.t[i])
       x = (x..., msg.x[i])
       y = (y..., msg.y[i])
-      vx = (vx..., msg.vx[i])
-      sa = (sa..., msg.sa[i])
       psi = (psi..., msg.psi[i])
+      sa = (sa..., msg.sa[i])
+      ux = (ux..., msg.ux[i])
     end
 
     # update trajectory parameters
-    plannerNamespace = RobotOS.get_param("system/nloptcontrol_planner/namespace")
-
-    RobotOS.set_param(string(plannerNamespace,"/traj/t"),t)
-    RobotOS.set_param(string(plannerNamespace,"/traj/x"),x)
-    RobotOS.set_param(string(plannerNamespace,"/traj/yVal"),y)
-    RobotOS.set_param(string(plannerNamespace,"/traj/vx"),vx)
-    RobotOS.set_param(string(plannerNamespace,"/traj/sa"),sa)
-    RobotOS.set_param(string(plannerNamespace,"/traj/psi"),psi)
-
+    #plannerNamespace = RobotOS.get_param("system/nloptcontrol_planner/namespace")
+    RobotOS.set_param(string("/trajectory/t"),t)
+    RobotOS.set_param(string("/trajectory/x"),x)
+    RobotOS.set_param(string("/trajectory/y"),y)
+    RobotOS.set_param(string("/trajectory/psi"),psi)
+    RobotOS.set_param(string("/trajectory/sa"),sa)
+    RobotOS.set_param(string("/trajectory/ux"),ux)
   else
     error("L !> 0")
   end
@@ -271,15 +269,15 @@ function loop(pub,pub_opt,pub_path,n,c)
         n.mpc.v.evalNum = n.mpc.v.evalNum + 1
       end
 
-      ctr = Control()
-      #ctr.t = n.mpc.t0_actual + n.r.ocp.tst
-      ctr.t = n.r.ocp.tst
-      ctr.x = n.r.ocp.X[:,1]
-      ctr.y = n.r.ocp.X[:,2]
-      ctr.psi = n.r.ocp.X[:,5]
-      ctr.sa = n.r.ocp.X[:,6]
-      ctr.vx = n.r.ocp.X[:,7]
-      publish(pub, ctr)
+      traj = Trajectory()
+      #traj.t = n.mpc.t0_actual + n.r.ocp.tst
+      traj.t = n.r.ocp.tst
+      traj.x = n.r.ocp.X[:,1]
+      traj.y = n.r.ocp.X[:,2]
+      traj.psi = n.r.ocp.X[:,5]
+      traj.sa = n.r.ocp.X[:,6]
+      traj.ux = n.r.ocp.X[:,7]
+      publish(pub, traj)
 
       opt = Optimization()
       opt.texP = n.mpc.v.tex
@@ -295,13 +293,13 @@ function loop(pub,pub_opt,pub_path,n,c)
       path = Path()
       path.header.stamp = get_rostime()
       path.header.frame_id = "map" # TODO get from rosparams
-      path.poses = Array{PoseStamped}(length(ctr.t))
-      for i in 1:length(ctr.t)
+      path.poses = Array{PoseStamped}(length(traj.t))
+      for i in 1:length(traj.t)
         path.poses[i]= PoseStamped()
         path.poses[i].header.frame_id = "map"
         path.poses[i].header.stamp = get_rostime()
-        path.poses[i].pose.position.x = ctr.x[i]
-        path.poses[i].pose.position.y = ctr.y[i]
+        path.poses[i].pose.position.x = traj.x[i]
+        path.poses[i].pose.position.y = traj.y[i]
       end
       publish(pub_path, path)
 
@@ -350,11 +348,11 @@ function main()
 
   # message for solution to optimal control problem
   plannerNamespace = RobotOS.get_param("system/nloptcontrol_planner/namespace")
-  pub = Publisher{Control}(string(plannerNamespace,"/control"), queue_size=10)
+  pub = Publisher{Trajectory}(string(plannerNamespace,"/control"), queue_size=10)
   pub_opt = Publisher{Optimization}(string(plannerNamespace,"/opt"), queue_size=10)
   pub_path = Publisher{Path}("/path", queue_size=10)
 
-  sub = Subscriber{Control}(string(plannerNamespace, "/control"), setTrajParams, queue_size = 10)
+  sub = Subscriber{Trajectory}(string(plannerNamespace, "/control"), setTrajParams, queue_size = 10)
 
   # using the filenames set as rosparams, the datatypes of the parameters get messed up if they are put on the ROS server
   # and then loaded into julia through RobotOS.jl; but less is messed up by loading using YAML.jl

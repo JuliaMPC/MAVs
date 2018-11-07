@@ -3,8 +3,8 @@
 #include "std_msgs/String.h"
 #include <sstream>
 #include <vector>
-#include "nloptcontrol_planner/Control.h"
-//#include "traj_gen_chrono/Control.h"
+#include "nloptcontrol_planner/Trajectory.h"
+//#include "traj_gen_chrono/Trajectory.h"
 
 /**
  * This tutorial demonstrates simple sending of messages over the ROS system.
@@ -35,12 +35,12 @@ int main(int argc, char **argv)
   std::string planner_namespace;
   a.getParam("system/planner",planner_namespace);
 
-  ros::Publisher pub = a.advertise<nloptcontrol_planner::Control>(planner_namespace + "/control", 10);
-  nloptcontrol_planner::Control control_info;
+  ros::Publisher pub = a.advertise<nloptcontrol_planner::Trajectory>(planner_namespace + "/control", 10);
+  nloptcontrol_planner::Trajectory control_info;
   int control_num = 10;
   std::vector<double> control_t(control_num,0.0);
   std::vector<double> control_sa(control_num,0.0);
-  std::vector<double> control_vx(control_num,0.0);
+  std::vector<double> control_ux(control_num,0.0);
   control_info.x = std::vector<double>(control_num,0.0);
   control_info.y = std::vector<double>(control_num,0.0);
   control_info.psi = std::vector<double>(control_num,0.0);
@@ -55,22 +55,22 @@ int main(int argc, char **argv)
       // for(int i = 0; i < control_num; i++){
       //   control_t[i] = secs + i;
       //   control_sa[i] = i * 0.01 + count * 0.01 / 2.0;
-      //   control_vx[i] = i * 0.05 + count * 0.05 / 2.0;
-      //   // control_vx[i] = 5;
+      //   control_ux[i] = i * 0.05 + count * 0.05 / 2.0;
+      //   // control_ux[i] = 5;
       //   std::cout << "The reference steering angle: " << control_sa[1] << std::endl;
       // }
       if(count % 10 < 5) {
-         control_vx[0] = 4;
+         control_ux[0] = 4;
          control_sa[0] = 0.0;
        }
        else {
-         control_vx[0] = 4;
+         control_ux[0] = 4;
          control_sa[0] = 0.4;
        }
 
       control_info.t = control_t;
       control_info.sa = control_sa;
-      control_info.vx = control_vx;
+      control_info.ux = control_ux;
       //control_info.x = 0.0;
       //control_info.y = 0.0;
       //control_info.psi = 0.0;

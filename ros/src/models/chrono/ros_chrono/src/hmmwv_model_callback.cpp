@@ -32,7 +32,7 @@
 #include "ros/ros.h"
 #include "std_msgs/String.h"
 #include "ros_chrono_msgs/veh_status.h"
-#include "traj_gen_chrono/Control.h"
+#include "traj_gen_chrono/Trajectory.h"
 #include <sstream>
 #include "chrono_vehicle/ChVehicleModelData.h"
 #include "chrono_vehicle/terrain/RigidTerrain.h"
@@ -218,7 +218,7 @@ struct parameters
 } ;
 //----------------------callback
 
-void controlCallback(const traj_gen_chrono::Control::ConstPtr &msg, parameters &hmmwv_params,ChVehicleIrrApp &app,ChIrrGuiDriver &driver_gui,
+void controlCallback(const traj_gen_chrono::Trajectory::ConstPtr &msg, parameters &hmmwv_params,ChVehicleIrrApp &app,ChIrrGuiDriver &driver_gui,
 double &target_speed,double &time,ros_chrono_msgs::veh_status &data_out, ros::Publisher &vehicleinfo_pub){
 
   app.SetPaused(1);
@@ -492,7 +492,7 @@ char cwd[1024];
     ChIrrGuiDriver driver_gui(app);
     driver_gui.Initialize();
 
-    /*
+    /*Trajectory
     ChPathFollowerDriver driver_follower(my_hmmwv.GetVehicle(), path, "my_path", target_speed);
     driver_follower.GetSteeringController().SetLookAheadDistance(5);
     driver_follower.GetSteeringController().SetGains(0.5, 0, 0);
@@ -619,9 +619,9 @@ char cwd[1024];
         callback_act=0;
         ros_chrono_msgs::veh_status data_out;
 
-        ros::Subscriber sub = n.subscribe<traj_gen_chrono::Control>("desired_ref", 10, boost::bind(controlCallback, _1, boost::ref(hmmwv_params),boost::ref(app),boost::ref(driver_gui),
+        ros::Subscriber sub = n.subscribe<traj_gen_chrono::Trajectory>("desired_ref", 10, boost::bind(controlCallback, _1, boost::ref(hmmwv_params),boost::ref(app),boost::ref(driver_gui),
         boost::ref(target_speed),boost::ref(time),boost::ref(data_out),boost::ref(vehicleinfo_pub)));
-//        ros::Subscriber sub = n.subscribe<traj_gen_chrono::Control>("desired_ref", 10, boost::bind(controlCallback, _1, boost::ref(hmmwv_params),boost::ref(app)));
+//        ros::Subscriber sub = n.subscribe<traj_gen_chrono::Trajectory>("desired_ref", 10, boost::bind(controlCallback, _1, boost::ref(hmmwv_params),boost::ref(app)));
       //  if (sub){
         std::cout << callback_act;
       //  }

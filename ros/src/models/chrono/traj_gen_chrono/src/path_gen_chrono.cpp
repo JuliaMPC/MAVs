@@ -3,9 +3,7 @@
 // ROS library
 #include "ros/ros.h"
 #include "std_msgs/String.h"
-#include "nloptcontrol_planner/Control.h"
-#include "ros_chrono_msgs/veh_status.h"
-
+#include "nloptcontrol_planner/Trajectory.h"
 // Chrono library
 #include "chrono/core/ChFileutils.h"
 #include "chrono_vehicle/utils/ChVehiclePath.h"
@@ -30,8 +28,18 @@ int main(int argc, char **argv) {
 
     std::string planner_namespace;
     node.getParam("system/planner",planner_namespace);
-    ros::Publisher pub = node.advertise<nloptcontrol_planner::Control>(planner_namespace + "/control", 10);
-    // ros::Publisher pub = node.advertise<nloptcontrol_planner::Control>("/control", 10);
+    ros::Publisher pub = node.advertise<nloptcontrol_planner::Trajectory>(planner_namespace + "/control", 10);
+    // ros::Publisher pub = node.advertise<nloptcontrol_planner::Trajectory>("/control", 10);
+
+    nloptcontrol_planner::Trajectory control_info;
+    int control_num = 2;
+    std::vector<double> control_t(control_num,0.0);
+    std::vector<double> control_sa(control_num,0.0);
+    std::vector<double> control_ux(control_num,0.0);
+    control_info.x = std::vector<double>(control_num,0.0);
+    control_info.y = std::vector<double>(control_num,0.0);
+    control_info.psi = std::vector<double>(control_num,0.0);
+    control_info.ux = std::vector<double>(control_num,0.0);
 
     ros::Subscriber vehicleinfo_sub = node.subscribe("/vehicleinfo", 100, vehCallback);
 
@@ -72,8 +80,7 @@ int main(int argc, char **argv) {
             }
         }
 
-        control_info.x = path_status ? path_1_x : path_2_x;
-        control_info.y = path_status ? path_1_y : path_2_y;
+        control_info.ux[0] = 10;
         pub.publish(control_info);
 
         ros::spinOnce();

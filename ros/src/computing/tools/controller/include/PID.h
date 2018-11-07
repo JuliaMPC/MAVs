@@ -4,7 +4,7 @@
 
 class PID{
 public:
-  PID() {
+  PID(){
     Kp_ = 0.0, Ki_ = 0.0, Kd_ = 0.0, Kw_ = 0.0;
     output_ = 0.0;
     previous_output_ = 0.0;
@@ -16,8 +16,8 @@ public:
     output_upper_limit_ = 0.0;
     output_lower_limit_ = 0.0;
     first_hit = true;
-    std::string windup = "clamping";
-  }
+    windup = "clamping";
+  };
 
   void set_PID(const double &Kp, const double &Ki, const double &Kd, const double &Kw);
   void set_Kp(const double &Kp);

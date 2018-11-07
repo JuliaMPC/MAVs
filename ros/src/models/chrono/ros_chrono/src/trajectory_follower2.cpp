@@ -32,7 +32,7 @@
 #include "ros/ros.h"
 #include "std_msgs/String.h"
 #include "ros_chrono_msgs/veh_status.h"
-#include "nloptcontrol_planner/Control.h"
+#include "nloptcontrol_planner/Trajectory.h"
 #include <unistd.h>
 #include <interpolation.h>
 #include <PID.h>
@@ -158,7 +158,7 @@ double time_shift = 0.0;
 PID controller;
 std::vector<double> traj_t(2,0);
 std::vector<double> traj_sa(2,0);
-std::vector<double> traj_vx(2,0);
+std::vector<double> traj_ux(2,0);
 
 // =============================================================================
 
@@ -461,10 +461,10 @@ void setBrakingParams(ros::NodeHandle &n){
   myfile3.close();
 }
 
-void controlCallback(const nloptcontrol_planner::Control::ConstPtr& control_msg){
+void controlCallback(const nloptcontrol_planner::Trajectory::ConstPtr& control_msg){
   traj_t = control_msg->t;
   traj_sa = control_msg->sa;
-  traj_vx = control_msg->vx;
+  traj_ux = control_msg->ux;
 
   /*
   std::cout << "Current time: "<< time << std::endl;
@@ -474,8 +474,8 @@ void controlCallback(const nloptcontrol_planner::Control::ConstPtr& control_msg)
     std::cout << std::endl;
 
   std::cout << "Speed trajectory: " << " ";
-  for(int i = 0; i < traj_vx.size(); i++)
-      std::cout << traj_vx[i] << " ";
+  for(int i = 0; i < traj_ux.size(); i++)
+      std::cout << traj_ux[i] << " ";
   std::cout << std::endl;
 
   std::cout << "Steering trajectory: " << " ";
@@ -790,7 +790,7 @@ int main(int argc, char* argv[]) {
         ros::spinOnce();
         n.setParam("system/chrono/flags/running",true);
 
-        //     ros::Subscriber sub = n.subscribe<traj_gen_chrono::Control>("desired_ref", 1, &parameters::controlCallback, &hmmwv_params);
+        //     ros::Subscriber sub = n.subscribe<traj_gen_chrono::Trajectory>("desired_ref", 1, &parameters::controlCallback, &hmmwv_params);
 
           // Render scene and output POV-Ray data
         if (hmmwv_params.sim_frame % hmmwv_params.render_steps == 0 && gui_switch) {
@@ -822,11 +822,11 @@ int main(int argc, char* argv[]) {
 
           t_array.setcontent(traj_t);
           steering_array.setcontent(traj_sa);
-          speed_array.setcontent(traj_vx);
-          spline1dinterpolant s_vx;
+          speed_array.setcontent(traj_ux);
+          spline1dinterpolant s_ux;
           spline1dinterpolant s_sa;
-          spline1dbuildcubic(t_array, speed_array, s_vx);
-          target_speed_interp = spline1dcalc(s_vx, time + time_shift);
+          spline1dbuildcubic(t_array, speed_array, s_ux);
+          target_speed_interp = spline1dcalc(s_ux, time + time_shift);
           spline1dbuildcubic(t_array, steering_array, s_sa);
           target_steering_interp = spline1dcalc(s_sa, time);
 
