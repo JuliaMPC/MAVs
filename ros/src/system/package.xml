@@ -21,6 +21,12 @@
   <depend>roscpp</depend>
   <depend>rospy</depend>
 
+  <!-- New added part for rostest, start -->
+  <depend>rostest</depend> 
+  <depend>genmsg</depend>
+  <depend>std_msgs</depend>
+  <!-- New added part for rostest, end -->
+
   <exec_depend>nloptcontrol_planner</exec_depend>
   <exec_depend>vehicle_description</exec_depend>
   <exec_depend>obstacle_detector</exec_depend>

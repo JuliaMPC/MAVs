@@ -194,7 +194,7 @@ int main(int argc, char* argv[]) {
     // ------------------------------
     // Initialize ROS node handle
     // ------------------------------
-    ros::init(argc, argv, "steering_controller");
+    ros::init(argc, argv, "path_follower");
     ros::NodeHandle node;
 
 
