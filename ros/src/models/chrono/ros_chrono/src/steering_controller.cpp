@@ -407,10 +407,10 @@ int main(int argc, char* argv[]) {
     double braking_input = 0;			///
     
     bool is_init;
-    node.getParam("system/nloptcontrol_planner/flags/initialized", is_init);
+    node.getParam("system/flags/initialized", is_init);;
 
     while (!is_init) {
-        node.getParam("system/nloptcontrol_planner/flags/initialized", is_init);
+        node.getParam("system/flags/initialized", is_init);
         std::cout << "waiting for waiting on obstacle_avoidance.jl in nloptcontrol_planner ..." << std::endl;
     }
 
