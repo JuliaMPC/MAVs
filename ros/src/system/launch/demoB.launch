@@ -42,7 +42,7 @@
   <node name="bootstrap" pkg="system" type="bootstrap.jl" output="screen"/>
 
   <!-- save data -->
-  <node pkg="rosbag" type="record" name="record" args="record -O /home/mavs/MAVs/shared_dir/opt.bag /nloptcontrol_planner/Optimization"/>
+  <node pkg="rosbag" type="record" name="record" args="record -O /home/mavs/MAVs/results/opt.bag /nlopcontrol_planner/opt"/>
 
   <!-- unpause Gazebo -->
   <node name="unpause_gazebo" pkg="vehicle_description" type="unpause.jl" output="screen"/>

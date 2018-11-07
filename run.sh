@@ -17,6 +17,7 @@ SRC_HOST="$(pwd)"/ros/src
 echo "Results directory: ${RESULTS_CONTAINER}"
 
 nvidia-docker run \
+    --name mavs_container \
     --user mavs \
     -it --rm \
     --volume=$XSOCK:$XSOCK:rw \
