@@ -330,13 +330,13 @@ int main(int argc, char* argv[]) {
     double throttle_input = 0;			///
     double steering_input = 0;			///
     double braking_input = 0;			///
-    /*
+    
     bool is_init;
     node.getParam("system/nloptcontrol_planner/flags/initialized", is_init);
     while (!is_init) {
         node.getParam("system/nloptcontrol_planner/flags/initialized", is_init);
         std::cout << "waiting for all initialized ..." << std::endl;
-    }*/
+    }
 
 
     // read maximum_steering_angle
