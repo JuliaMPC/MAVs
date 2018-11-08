@@ -437,7 +437,7 @@ int main(int argc, char* argv[]) {
         vehicleinfo_data.x_pos = pos_global[0];
         vehicleinfo_data.y_pos = pos_global[1];
         // vehicleinfo_data.x_v = spd_global[0]; // speed measured at the origin of the chassis reference frame.
-        vehicleinfo_data.x_v = speed;				////???
+        vehicleinfo_data.x_v = spd_global[0];				////???
         vehicleinfo_data.y_v = spd_global[1];
         vehicleinfo_data.x_a = acc_global[0];
         vehicleinfo_data.yaw_curr = yaw_val; // in radians
@@ -453,7 +453,7 @@ int main(int argc, char* argv[]) {
         node.setParam("/state/chrono/psi", yaw_val);
         node.setParam("/state/chrono/theta", theta_val);
         node.setParam("/state/chrono/phi", phi_val);
-        node.setParam("/state/chrono/ux", speed);
+        node.setParam("/state/chrono/ux", spd_global[0]);
         node.setParam("state/chrono/v", spd_global[1]);
         node.setParam("/state/chrono/ax", acc_global[0]);
         node.setParam("/state/chrono/r", -rot_dt[2]);
