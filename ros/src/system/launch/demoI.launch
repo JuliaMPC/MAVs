@@ -44,13 +44,13 @@
   <!--  ************** additional nodes ***************  -->
 
   <!--ros_chrono-->
-  <node name="Chronode" pkg="ros_chrono" type="steering_controller" cwd="node" />
+  <node name="Chronode" pkg="ros_chrono" type="steering_controller" cwd="node"  output="screen"/>
 
   <!--initialize system-->
   <node name="bootstrap" pkg="system" type="bootstrap.jl" output="screen"/>
 
   <!--unpause Gazebo-->
-  <node name="unpause_gazebo" pkg="vehicle_description" type="unpause.jl" output="screen"/>
+  <node name="unpause_gazebo" pkg="vehicle_description" type="unpause.jl"/>
 
   <!--display trajectory-->
   <node name="rviz" pkg="rviz" type="rviz" output="screen" args="-d $(find obstacle_detector)/resources/display.rviz"/>
