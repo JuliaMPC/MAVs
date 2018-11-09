@@ -32,7 +32,7 @@ end
 # used to publish the solution of the ocp to ROS params
 --------------------------------------------------------------------------------------\n
 Author: Huckleberry Febbo, Graduate Student, University of Michigan
-Date Create: 2/28/2018, Last Modified: 3/10/2018 \n
+Date Create: 2/28/2018, Last Modified: 11/9/2018 \n
 --------------------------------------------------------------------------------------\n
 """
 function setTrajParams(msg::Trajectory)
@@ -40,13 +40,19 @@ function setTrajParams(msg::Trajectory)
 
   if L > 0
     t = (); sa = (); ux = (); x = (); y = (); psi = ();
+    v = (); r = (); ax = (); sr = (); jx = ();
     for i in 1:L
       t = (t..., msg.t[i])
       x = (x..., msg.x[i])
       y = (y..., msg.y[i])
+      v = (v..., msg.v[i])
+      r = (r..., msg.r[i])
       psi = (psi..., msg.psi[i])
       sa = (sa..., msg.sa[i])
       ux = (ux..., msg.ux[i])
+      ax = (ax..., msg.ax[i])
+      sr = (sr..., msg.sr[i])
+      jx = (jx..., msg.jx[i])
     end
 
     # update trajectory parameters
@@ -54,9 +60,16 @@ function setTrajParams(msg::Trajectory)
     RobotOS.set_param(string("/trajectory/t"),t)
     RobotOS.set_param(string("/trajectory/x"),x)
     RobotOS.set_param(string("/trajectory/y"),y)
+    RobotOS.set_param(string("/trajectory/v"),v)
+    RobotOS.set_param(string("/trajectory/r"),r)
     RobotOS.set_param(string("/trajectory/psi"),psi)
     RobotOS.set_param(string("/trajectory/sa"),sa)
     RobotOS.set_param(string("/trajectory/ux"),ux)
+    RobotOS.set_param(string("/trajectory/ax"),ax)
+    RobotOS.set_param(string("/trajectory/sr"),sr)
+    RobotOS.set_param(string("/trajectory/jx"),jx)
+
+
   else
     error("L !> 0")
   end
@@ -226,7 +239,7 @@ end
 """
 --------------------------------------------------------------------------------------\n
 Author: Huckleberry Febbo, Graduate Student, University of Michigan
-Date Create: 4/6/2017, Last Modified: 3/10/2018 \n
+Date Create: 4/6/2017, Last Modified: 11/9/2018 \n
 --------------------------------------------------------------------------------------\n
 """
 function loop(pub,pub_opt,pub_path,n,c)
@@ -249,14 +262,7 @@ function loop(pub,pub_opt,pub_path,n,c)
 
       updateAutoParams!(n)                           # update model parameters
 
-      # TODO store ROS time before optimization
-
       status = optimize!(n)
-
-     # TODO calculte error between predicted initial state and acutal state just before controls are published
-
-     # TODO store the initialization X0, solve time, predicted time, and error in state,
-
 
       # advance time
       if isequal(RobotOS.get_param("system/plant"),"3DOF") # otherwise an external update on the initial state of the vehicle is needed
@@ -282,7 +288,6 @@ function loop(pub,pub_opt,pub_path,n,c)
       traj.ax = n.r.ocp.X[:,8]
       traj.sr = n.r.ocp.U[:,1]
       traj.jx = n.r.ocp.U[:,2]
-
       publish(pub, traj)
 
       opt = Optimization()
