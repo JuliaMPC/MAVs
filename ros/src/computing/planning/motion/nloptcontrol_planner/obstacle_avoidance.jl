@@ -274,9 +274,15 @@ function loop(pub,pub_opt,pub_path,n,c)
       traj.t = n.r.ocp.tst
       traj.x = n.r.ocp.X[:,1]
       traj.y = n.r.ocp.X[:,2]
+      traj.v = n.r.ocp.X[:,3]
+      traj.r = n.r.ocp.X[:,4]
       traj.psi = n.r.ocp.X[:,5]
       traj.sa = n.r.ocp.X[:,6]
       traj.ux = n.r.ocp.X[:,7]
+      traj.ax = n.r.ocp.X[:,8]
+      traj.sr = n.r.ocp.U[:,1]
+      traj.jx = n.r.ocp.U[:,2]
+
       publish(pub, traj)
 
       opt = Optimization()
