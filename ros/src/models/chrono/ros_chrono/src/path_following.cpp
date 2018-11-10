@@ -94,11 +94,6 @@ VisualizationType tire_vis_type = VisualizationType::NONE;
 // std::string path_file("paths/ISO_double_lane_change.txt");
 std::string path_file("paths/switch_lane.txt");
 
-// Rigid terrain dimensions
-double terrainHeight = 0;
-double terrainLength = 700.0;  // size in X direction
-double terrainWidth = 700.0;   // size in Y direction
-
 // Point on chassis tracked by the chase camera
 ChVector<> trackPoint(0.0, 0.0, 1.75);
 
@@ -115,14 +110,14 @@ double fps = 60;
 int filter_window_size = 20;
 
 // Control Input
-std::vector<double> traj_t(2,0);
-std::vector<double> traj_x(2,0);
-std::vector<double> traj_y(2,0);
-std::vector<double> traj_psi(2,0);
-std::vector<double> traj_sa(2,0);
-std::vector<double> traj_ux(2,0);
-bool receive_flag = false;
+std::vector<double> traj_t;
+std::vector<double> traj_x;
+std::vector<double> traj_y;
+std::vector<double> traj_psi;
+std::vector<double> traj_sa;
+std::vector<double> traj_ux;
 
+bool receive_flag = false;
 
 // Control Output
 double traj_sa_interp = 0.0;
@@ -200,6 +195,14 @@ int main(int argc, char* argv[]) {
     ros::init(argc, argv, "path_follower");
     ros::NodeHandle node;
 
+    // Rigid terrain dimensions
+    double terrainHeight;
+    double terrainLength;  // size in X direction
+    double terrainWidth;   // size in Y direction
+
+    node.getParam("system/terrain/terrainHeight",terrainHeight);
+    node.getParam("system/terrain/terrainLength",terrainLength);
+    node.getParam("system/terrain/terrainWidth",terrainWidth);
 
     // Declare ROS subscriber to subscribe planner topic
     std::string planner_namespace;
