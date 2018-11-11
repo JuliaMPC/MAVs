@@ -1,7 +1,10 @@
 <?xml version="1.0"?>
 
 <launch>
-  <!-- Demo to show vechicle state visualizatrion (actual and estimated) from nlopcontrol_planner-->
+
+  <!-- Demo to show vechicle state visualizatrion (actual and estimated) from nlopcontrol_planner
+     WARN: To run this demo make sure to set system/shutdown/flags/running: false in system/config/system/pkgs/nloptcontrol_planner.yaml
+    OR: Add shutdown node to this launch file, which will close the plots automatically as the goal is achieved -->
 
   <arg name="case_params_path" default="$(find system)/config/case/s1.yaml"/>
   <arg name="planner_params_path" default="$(find system)/config/planner/nloptcontrol_planner/default.yaml"/>
