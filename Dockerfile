@@ -1,5 +1,10 @@
 FROM avpg/cain:base_cudagl
 
+#install pyqtgraph for visualization
+RUN sudo apt-get update \
+    && sudo apt-get install -y python-pip \
+    && sudo pip install pyqtgraph
+
 # create a folder and copy all the files in ros/ with MAVs owner
 RUN mkdir -p /home/$USERNAME/MAVs/ros
 COPY --chown=mavs:mavs ros /home/$USERNAME/MAVs/ros
