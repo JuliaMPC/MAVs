@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+
+<launch>
+
+  <!-- Reads optimization message object in plots all states [x,y,v,r,psi,sa,ux,ax]-->
+  <node name="console" pkg="rqt_gui" type="rqt_gui" output="screen" args="--perspective-file $(find visualization)/state_plots.perspective" />
+
+</launch>
