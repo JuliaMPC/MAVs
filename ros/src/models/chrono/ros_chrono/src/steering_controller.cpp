@@ -133,7 +133,7 @@ void plannerCallback(const nloptcontrol_planner::Trajectory::ConstPtr& control_m
     // Reset time_counter
     time_counter = 0;
     current_index = 0;
-    ROS_INFO("New callback");
+    //ROS_INFO("New callback");
     /*
     for (int i = 0; i < traj_t.size(); i++) {
         std::cout << traj_t[i] - traj_t[0] <<" "<<traj_ux[i]<<std::endl;
