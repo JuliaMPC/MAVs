@@ -47,7 +47,6 @@
 #include "chrono_vehicle/driver/ChPathFollowerDriver.h"
 #include "chrono_vehicle/utils/ChVehiclePath.h"
 #include "chrono_vehicle/wheeled_vehicle/utils/ChWheeledVehicleIrrApp.h"
-
 #include "chrono_models/vehicle/hmmwv/HMMWV.h"
 
 
@@ -62,24 +61,15 @@ using namespace alglib;
 using namespace rapidjson;
 
 
-//std::string data_path("MAVs/ros/src/models/chrono/ros_chrono/src/data/vehicle/");
 // to run demo_steering.launch
 //change at 10/31/2018
 std::string data_path("../../../src/models/chrono/ros_chrono/src/data/vehicle/");
 
-//2018/11/2
-bool receive = false;
 // Rigid terrain dimensions
 double terrainHeight = 0;
-double terrainLength = 300.0;  // size in X direction
-double terrainWidth = 300.0;   // size in Y direction
+double terrainLength = 500.0;  // size in X direction
+double terrainWidth = 500.0;   // size in Y direction
 
-// Simulation step size (Share with ROS)
-double step_size = 5e-3;
-double tire_step_size = 2.5e-3;
-
-// Simulation end time
-double t_end = 100;
 
 // ROS Control Input (Topic)
 std::vector<double> traj_t(2,0);
@@ -89,20 +79,16 @@ std::vector<double> traj_psi(2,0);
 std::vector<double> traj_sa(2,0);
 std::vector<double> traj_ux(2,0);
 
-//steering maximum
-double maximum_steering_angle;
-
-
 // Interpolator
+real_1d_array t_array;
+real_1d_array sa_array;
+real_1d_array ux_array;
+spline1dinterpolant s_ux;
+spline1dinterpolant s_sa;
+double time_counter = 0.0;
 double traj_sa_interp = 0.0;
 double traj_ux_interp = 0.0;
-
-// PID controller
-double Kp = 0.5, Ki = 0.1, Kd = 0.0, Kw = 0.0, time_shift = 3.0; // PID controller parameter
-std::string windup_method("clamping"); // Anti-windup method
-double controller_output = 0.0;
-double controller_output2 = 0.0;
-PID controller;
+int current_index = 0;
 
 // ------
 // Chrono
@@ -127,107 +113,69 @@ SteeringType steering_type = SteeringType::PITMAN_ARM;
 VisualizationType chassis_vis_type = VisualizationType::PRIMITIVES;
 VisualizationType suspension_vis_type = VisualizationType::PRIMITIVES;
 VisualizationType steering_vis_type = VisualizationType::PRIMITIVES;
-VisualizationType wheel_vis_type = VisualizationType::MESH;
+VisualizationType wheel_vis_type = VisualizationType::PRIMITIVES;
 VisualizationType tire_vis_type = VisualizationType::NONE;
 
-// Input file names for the path-follower driver model
-////std::string path_file("paths/straight.txt");
-////std::string path_file("paths/curve.txt");
-////std::string path_file("paths/NATO_double_lane_change.txt");
-
-std::string path_file("paths/ISO_double_lane_change.txt");
 // Point on chassis tracked by the chase camera
 ChVector<> trackPoint(0.0, 0.0, 1.75);
-
-// Render FPS
-double fps = 60;
-int filter_window_size = 20;
-
-// =============================================================================
-
-// Custom Irrlicht event receiver for selecting current driver model.
-class ChDriverSelector : public irr::IEventReceiver {
-    public:
-        ChDriverSelector(const ChVehicle& vehicle, ChPathFollowerDriver* driver_follower, ChIrrGuiDriver* driver_gui)
-            : m_vehicle(vehicle),
-            m_driver_follower(driver_follower),
-            m_driver_gui(driver_gui),
-            m_driver(m_driver_follower),
-            m_using_gui(false) {}
-
-        ChDriver* GetDriver() { return m_driver; }
-        bool UsingGUI() const { return m_using_gui; }
-
-        virtual bool OnEvent(const irr::SEvent& event) {
-            return false;
-        }
-
-    private:
-        bool m_using_gui;
-        const ChVehicle& m_vehicle;
-        ChPathFollowerDriver* m_driver_follower;
-        ChIrrGuiDriver* m_driver_gui;
-        ChDriver* m_driver;
-};
 
 // =============================================================================
 
 void plannerCallback(const nloptcontrol_planner::Trajectory::ConstPtr& control_msgs) {
-//void plannerCallback(const nloptcontrol_planner::Trajectory::ConstPtr& control_msgs) {
+    ROS_INFO("Trajectory messages received");
     traj_t = control_msgs->t;
     traj_x = control_msgs->x;
     traj_y = control_msgs->y;
     traj_psi = control_msgs->psi;
     traj_sa = control_msgs->sa;
     traj_ux = control_msgs->ux;
-    receive = true;
+    
+    // Reset time_counter
+    time_counter = 0;
+    current_index = 0;
+    //ROS_INFO("New callback");
+    /*
+    for (int i = 0; i < traj_t.size(); i++) {
+        std::cout << traj_t[i] - traj_t[0] <<" "<<traj_ux[i]<<std::endl;
+        //ROS_INFO("ref: t = %0.4f, u = %0.4f", traj_t[i] - traj_t[0], traj_ux[i]);
+    }
+    ROS_INFO("End new callback");*/
 }
 
 
 // =============================================================================
 
 int main(int argc, char* argv[]) {
-    // read maximum_steering_angle from json
-    std::string filename(data_path + "hmmwv/steering/HMMWV_PitmanArm.json"); // Yes
-    FILE* fp = fopen(filename.c_str(), "r");
-    char readBuffer[65536];
-    FileReadStream is(fp, readBuffer, sizeof(readBuffer));
-    fclose(fp);
-    Document d;
-    d.ParseStream<ParseFlag::kParseCommentsFlag>(is);
-    maximum_steering_angle = d["Revolute Joint"]["Maximum Angle"].GetDouble();
-    //maximum_steering_angle = 50.0;
-    std::cout << "max steering: "<< maximum_steering_angle << std::endl;
-
+    
     // ------------------------------
     // Initialize ROS node handle
     // ------------------------------
     ros::init(argc, argv, "steering_controller");
     ros::NodeHandle node;
-
+    
     // Declare ROS subscriber to subscribe planner topic
-    //ros::Subscriber planner_sub = node.subscribe("/trejactory", 100, plannerCallback);
-
-    //change at 10/31/2018
     std::string planner_namespace;
     node.getParam("system/planner",planner_namespace);
     ros::Subscriber planner_sub = node.subscribe(planner_namespace + "/control", 100, plannerCallback);
 
     // Declare ROS publisher to advertise vehicleinfo topic
-    ros::Publisher vehicleinfo_pub = node.advertise<ros_chrono_msgs::veh_status>("/vehicleinfo", 1);
+    std::string chrono_namespace;
+    node.getParam("system/chrono/namespace", chrono_namespace);
+    ros::Publisher vehicleinfo_pub = node.advertise<ros_chrono_msgs::veh_status>(chrono_namespace+"/vehicleinfo", 1);
     ros_chrono_msgs::veh_status vehicleinfo_data;
 
+
     // Define variables for ROS parameters server
+    double step_size = 5e-3;
+    double tire_step_size = step_size / 2.0;
     double goal_tol = 0.1; // Path following tolerance
     double target_speed = 0.0; // Desired velocity
     double x0 = 0.0, y0 = 0.0, z0 = 0.5; // Initial global position
     double roll0 = 0.0, pitch0 = 0.0, yaw0 = 0.0; // Initial global orientation
     double x = 0, y = 0;
     double goal_x = 0, goal_y = 0; // Goal position
-    double frict_coeff = 0, rest_coeff = 0, gear_ratios = 1; //Chrono Vehicle parameters
 
     // Get parameters from ROS Parameter Server
-
     node.getParam("system/params/step_size", step_size); // ROS loop rate and Chrono step size
     node.getParam("system/params/goal_tol",goal_tol);
 
@@ -237,37 +185,76 @@ int main(int argc, char* argv[]) {
     node.getParam("state/chrono/X0/z", z0); // initial z
     node.getParam("state/chrono/x", x); // global x position
     node.getParam("state/chrono/yVal", y); // global y position
-
+    
     node.getParam("case/actual/X0/psi",yaw0); // initial yaw
-    //node.getParam("case/actual/X0/x",x0); // initial x
+    node.getParam("case/actual/X0/x",x0); // initial x
     node.getParam("case/actual/X0/yVal",y0); // initial y
-
+    
     node.getParam("case/goal/x",goal_x);
     node.getParam("case/goal/yVal",goal_y);
 
-    node.getParam("vehicle/common/frict_coeff",frict_coeff);
-    node.getParam("vehicle/common/rest_coeff",rest_coeff);
-    node.getParam("vehicle/chrono/vehicle_params/gearRatios",gear_ratios);
-
+    // Load chrono vehicle_params
+    double frict_coeff, rest_coeff, gear_ratios;
+    std::vector<double> centroidLoc, centroidOrientation;
+    double chassisMass;
+    std::vector<double> chassisInertia;
+    std::vector<double> driverLoc, driverOrientation;
+    std::vector<double> motorBlockDirection, axleDirection;
+    double driveshaftInertia, differentialBoxInertia, conicalGearRatio, differentialRatio;
+    std::vector<double> gearRatios;
+    double steeringLinkMass, steeringLinkRadius, steeringLinkLength;
+    std::vector<double> steeringLinkInertia;
+    double pinionRadius, pinionMaxAngle, maxBrakeTorque;
+    node.getParam("vehicle/chrono/vehicle_params/frict_coeff", frict_coeff);
+    node.getParam("vehicle/chrono/vehicle_params/rest_coeff", rest_coeff);
+    node.getParam("vehicle/chrono/vehicle_params/gearRatios", gear_ratios);
+    node.getParam("vehicle/chrono/vehicle_params/centroidLoc", centroidLoc);
+    node.getParam("vehicle/chrono/vehicle_params/centroidOrientation", centroidOrientation);
+    node.getParam("vehicle/chrono/vehicle_params/chassisMass", chassisMass);
+    node.getParam("vehicle/chrono/vehicle_params/chassisInertia", chassisInertia);
+    node.getParam("vehicle/chrono/vehicle_params/driverLoc", driverLoc);
+    node.getParam("vehicle/chrono/vehicle_params/driverOrientation", driverOrientation);
+    node.getParam("vehicle/chrono/vehicle_params/motorBlockDirection", motorBlockDirection);
+    node.getParam("vehicle/chrono/vehicle_params/axleDirection", axleDirection);
+    node.getParam("vehicle/chrono/vehicle_params/driveshaftInertia", driveshaftInertia);
+    node.getParam("vehicle/chrono/vehicle_params/differentialBoxInertia", differentialBoxInertia);
+    node.getParam("vehicle/chrono/vehicle_params/conicalGearRatio", conicalGearRatio);
+    node.getParam("vehicle/chrono/vehicle_params/differentialRatio", differentialRatio);
+    node.getParam("vehicle/chrono/vehicle_params/gearRatios", gearRatios);
+    node.getParam("vehicle/chrono/vehicle_params/steeringLinkMass", steeringLinkMass);
+    node.getParam("vehicle/chrono/vehicle_params/steeringLinkInertia", steeringLinkInertia);
+    node.getParam("vehicle/chrono/vehicle_params/steeringLinkRadius", steeringLinkRadius);
+    node.getParam("vehicle/chrono/vehicle_params/steeringLinkLength", steeringLinkLength);
+    node.getParam("vehicle/chrono/vehicle_params/pinionRadius", pinionRadius);
+    node.getParam("vehicle/chrono/vehicle_params/pinionMaxAngle", pinionMaxAngle);
+    node.getParam("vehicle/chrono/vehicle_params/maxBrakeTorque", maxBrakeTorque);
+    
     // ---------------------
     // Set up PID controller
     // ---------------------
+    // PID controller
+    double Kp = 0.5, Ki = 0.1, Kd = 0.0, Kw = 0.0, time_shift = 3.0; // PID controller parameter
+    std::string windup_method("clamping"); // Anti-windup method
+    double controller_output = 0.0;
+    double controller_output2 = 0.0;
+    PID controller;
+
     node.getParam("controller/Kp",Kp);
     node.getParam("controller/Ki",Ki);
     node.getParam("controller/Kd",Kd);
     node.getParam("controller/Kw",Kw);
     node.getParam("controller/anti_windup", windup_method);
     node.getParam("controller/time_shift", time_shift);
-
+	
     controller.set_PID(Kp, Ki, Kd, Kw);
     controller.set_step_size(step_size);
     controller.set_output_limit(-1.0, 1.0);
     controller.set_windup_metohd(windup_method);
     controller.initialize();
-
-
+    
+    
     // Declare loop rate
-    ros::Rate loop_rate(int(1/step_size));
+    ros::Rate loop_rate(int(1.0/step_size));
 
     // Set initial vehicle location and orientation
     ChVector<> initLoc(x0, y0, z0);
@@ -314,20 +301,12 @@ int main(int argc, char* argv[]) {
     RigidTerrain terrain(my_hmmwv.GetSystem());
     auto patch = terrain.AddPatch(ChCoordsys<>(ChVector<>(0, 0, terrainHeight - 5), QUNIT),
                                   ChVector<>(terrainLength, terrainWidth, 10));
-    patch->SetContactFrictionCoefficient(0.8f);
-    patch->SetContactRestitutionCoefficient(0.01f);
+    patch->SetContactFrictionCoefficient(frict_coeff);
+    patch->SetContactRestitutionCoefficient(rest_coeff);
     patch->SetContactMaterialProperties(2e7f, 0.3f);
     patch->SetColor(ChColor(1, 1, 1));
     patch->SetTexture(data_path+"terrain/textures/tile4.jpg", 200, 200);
     terrain.Initialize();
-
-    // This should be delete -------------------------
-    // ----------------------
-    // Create the Bezier path
-    // ----------------------
-
-    // From data file
-    auto path = ChBezierCurve::read(data_path+path_file);
 
     // ---------------------------------------
     // Create the vehicle Irrlicht application
@@ -335,10 +314,8 @@ int main(int argc, char* argv[]) {
 
     ChVehicleIrrApp app(&my_hmmwv.GetVehicle(), &my_hmmwv.GetPowertrain(), L"Steering PID Controller Demo",
                         irr::core::dimension2d<irr::u32>(800, 640));
-
+    
     app.SetHUDLocation(500, 20);
-    app.SetSkyBox();
-    app.AddTypicalLogo();
     app.AddTypicalLights(irr::core::vector3df(-150.f, -150.f, 200.f), irr::core::vector3df(-150.f, 150.f, 200.f), 100,
                          100);
     app.AddTypicalLights(irr::core::vector3df(150.f, -150.f, 200.f), irr::core::vector3df(150.0f, 150.f, 200.f), 100,
@@ -348,45 +325,9 @@ int main(int argc, char* argv[]) {
 
     app.SetTimestep(step_size);
 
-    // Visualization of controller points (sentinel & target)
-    irr::scene::IMeshSceneNode* ballS = app.GetSceneManager()->addSphereSceneNode(0.1f);
-    irr::scene::IMeshSceneNode* ballT = app.GetSceneManager()->addSphereSceneNode(0.1f);
-    ballS->getMaterial(0).EmissiveColor = irr::video::SColor(0, 255, 0, 0);
-    ballT->getMaterial(0).EmissiveColor = irr::video::SColor(0, 0, 255, 0);
-
-    // -------------------------
-    // Create the driver systems
-    // -------------------------
-
-    // Create both a GUI driver and a path-follower and allow switching between them
-    ChIrrGuiDriver driver_gui(app);
-    driver_gui.Initialize();
-
-    ChPathFollowerDriver driver_follower(my_hmmwv.GetVehicle(), path, "my_path", target_speed);
-    driver_follower.GetSteeringController().SetLookAheadDistance(5);
-    driver_follower.GetSteeringController().SetGains(0.8, 0, 0);
-    driver_follower.GetSpeedController().SetGains(0.4, 0, 0);
-    driver_follower.Initialize();
-
-    // Create and register a custom Irrlicht event receiver to allow selecting the
-    // current driver model.
-    ChDriverSelector selector(my_hmmwv.GetVehicle(), &driver_follower, &driver_gui);
-
-    app.SetUserEventReceiver(&selector);
-
     // Finalize construction of visualization assets
     app.AssetBindAll();
     app.AssetUpdateAll();
-
-    // -----------------
-    // Initialize output
-    // -----------------
-
-    utils::ChRunningAverage fwd_acc_GC_filter(filter_window_size);
-    utils::ChRunningAverage lat_acc_GC_filter(filter_window_size);
-
-    utils::ChRunningAverage fwd_acc_driver_filter(filter_window_size);
-    utils::ChRunningAverage lat_acc_driver_filter(filter_window_size);
 
     // ---------------
     // Simulation loop
@@ -400,104 +341,88 @@ int main(int argc, char* argv[]) {
 
     // Vehicle steering angle
     double speed = 0.0;
-    double steering = 0.0;			///
+    double steering = 0.0;
     // Collect controller output data from modules (for inter-module communication)
-    double throttle_input = 0;			///
-    double steering_input = 0;			///
-    double braking_input = 0;			///
-
+    double throttle_input = 0;
+    double steering_input = 0;
+    double braking_input = 0;
+    
     bool is_init;
-    node.getParam("system/flags/initialized", is_init);
-
+    node.getParam("system/nloptcontrol_planner/flags/initialized", is_init);
     while (!is_init) {
-        node.getParam("system/flags/initialized", is_init);
-        std::cout << "waiting for waiting on obstacle_avoidance.jl in nloptcontrol_planner ..." << std::endl;
+        node.getParam("system/nloptcontrol_planner/flags/initialized", is_init);
     }
 
+    // read maximum_steering_angle
+    double maximum_steering_angle;
+    maximum_steering_angle = my_hmmwv.GetVehicle().GetMaxSteeringAngle();
+
+    traj_t[1] = 20.0;
+
     while (ros::ok()) {
-
-        // Extract system state
+        // Extract chrono system state
         double time = my_hmmwv.GetSystem()->GetChTime();
-        ChVector<> acc_CG = my_hmmwv.GetVehicle().GetChassisBody()->GetPos_dtdt();
-        ChVector<> acc_driver = my_hmmwv.GetVehicle().GetVehicleAcceleration(driver_pos);
-        double fwd_acc_CG = fwd_acc_GC_filter.Add(acc_CG.x());
-        double lat_acc_CG = lat_acc_GC_filter.Add(acc_CG.y());
-        double fwd_acc_driver = fwd_acc_driver_filter.Add(acc_driver.x());
-        double lat_acc_driver = lat_acc_driver_filter.Add(acc_driver.y());
-
-        // End simulation
-        if (time >= t_end)
-            break;
-
+        
         // --------------------------
-        // interpolation using ALGLIB
+        // interpolation using ALGLIB 
         // --------------------------
-        // real_1d_array t_array;
-        // real_1d_array sa_array;
-        // real_1d_array ux_array;
+        // Shift time to zero
+        for (int i = 0; i < traj_t.size(); i++) {
+            traj_t[i] = traj_t[i] - traj_t[0];
+        }
+        
+        /*
+        t_array.setcontent(traj_t.size(), &(traj_t[0]));
+        sa_array.setcontent(traj_sa.size(), &(traj_sa[0]));
+        ux_array.setcontent(traj_ux.size(), &(traj_ux[0]));
+        spline1dbuildcubic(t_array, ux_array, s_ux);
+        spline1dbuildcubic(t_array, sa_array, s_sa);
+        traj_ux_interp = spline1dcalc(s_ux, time_counter);
+        traj_sa_interp = spline1dcalc(s_sa, time_counter);*/
 
-        // t_array.setcontent(traj_t);
-        // sa_array.setcontent(traj_sa);
-        // ux_array.setcontent(traj_ux);
-        // spline1dinterpolant s_ux;
-        // spline1dinterpolant s_sa;
-        // spline1dbuildcubic(t_array, ux_array, s_ux);
-        // traj_ux_interp = spline1dcalc(s_ux, time + time_shift);
-        // spline1dbuildcubic(t_array, sa_array, s_sa);
-        // traj_sa_interp = spline1dcalc(s_sa, time);
+        while(current_index < (traj_t.size()-1) && time_counter > traj_t[current_index+1]){
+            current_index++;
+        }
+        traj_ux_interp = (traj_ux[current_index+1]-traj_ux[current_index])/(traj_t[current_index+1]-traj_t[current_index])*(time_counter - traj_t[current_index]) + traj_ux[current_index];
+        traj_sa_interp = (traj_sa[current_index+1]-traj_sa[current_index])/(traj_t[current_index+1]-traj_t[current_index])*(time_counter - traj_t[current_index]) + traj_sa[current_index];
 
-        // PID controller output form throttle or brake
-        // double ux_err = traj_ux_interp - speed;
-   	//double sa_err = traj_sa[0] - steering;		///
-        //controller_output = controller.control(sa_err);	///?? +traj_sa[0]
-	if(receive){
-        steering_input = traj_sa[0]/M_PI*180/maximum_steering_angle;//controller_output;        ///??
-        double ux_err = traj_ux[0] - speed;
-        controller_output2 = controller.control(ux_err);
-        if (controller_output2 > 0){
-            throttle_input = controller_output2;
+        time_counter += step_size;
+        //ROS_INFO("t = %0.4f, ux = %0.4f", time_counter, traj_ux_interp);
+        //std::cout << time_counter << " "<<traj_ux_interp<<std::endl;
+        
+        // steering angle
+        steering_input = traj_sa_interp / maximum_steering_angle;
+        // steering_input = traj_sa[0] / maximum_steering_angle;
+        if(steering_input < -1.0){
+            steering_input = -1.0;
+        }
+        else if(steering_input > 1.0){
+            steering_input = 1.0;
+        }
+
+        // PID controller output for throttle or brake
+	    double ux_err = traj_ux_interp - speed;
+        // double ux_err = traj_ux[0] - speed;
+        controller_output = controller.control(ux_err);
+        if (controller_output > 0){
+            throttle_input = controller_output;
             braking_input = 0;
         }
         else {
             throttle_input = 0;
-            braking_input = -controller_output2;
+            braking_input = -controller_output;
         }
-    }
-    else{
-        throttle_input = 0;
-        braking_input = 0;
-        steering_input = 0;
-    }
-
-        throttle_input = 0;          /// new added to kill oscillation
-        steering_input = 0;          /// new added to kill oscillation
-        braking_input = 0;           /// new added to kill oscillation
-        // steering angle output (There should a saturation threshold)
-        // traj_sa_interp = traj_sa_interp;
-
-
-        // Update sentinel and target location markers for the path-follower controller.
-        // Note that we do this whether or not we are currently using the path-follower driver.
-        const ChVector<>& pS = driver_follower.GetSteeringController().GetSentinelLocation();
-        const ChVector<>& pT = driver_follower.GetSteeringController().GetTargetLocation();
-        ballS->setPosition(irr::core::vector3df((irr::f32)pS.x(), (irr::f32)pS.y(), (irr::f32)pS.z()));
-        ballT->setPosition(irr::core::vector3df((irr::f32)pT.x(), (irr::f32)pT.y(), (irr::f32)pT.z()));
-
+        
         app.BeginScene(true, true, irr::video::SColor(255, 140, 161, 192));
         app.DrawAll();
 
         // Update modules (process inputs from other modules)
-        driver_follower.Synchronize(time);
-        driver_gui.Synchronize(time);
         terrain.Synchronize(time);
         my_hmmwv.Synchronize(time, steering_input, braking_input, throttle_input, terrain);
-        std::string msg = selector.UsingGUI() ? "GUI driver" : "Follower driver";
-        app.Synchronize(msg, steering_input, throttle_input, braking_input);
+        app.Synchronize("", steering_input, throttle_input, braking_input);
 
         // Advance simulation for one timestep for all modules
         double step = realtime_timer.SuggestSimulationStep(step_size);
-        driver_follower.Advance(step);
-        driver_gui.Advance(step);
         terrain.Advance(step);
         my_hmmwv.Advance(step);
         app.Advance(step);
@@ -508,9 +433,9 @@ int main(int argc, char* argv[]) {
         ChVector<> acc_global = my_hmmwv.GetChassisBody()->GetPos_dtdt();
         ChQuaternion<> rot_global = my_hmmwv.GetVehicle().GetVehicleRot();//global orientation as quaternion
         ChVector<> rot_dt = my_hmmwv.GetChassisBody()->GetWvel_loc(); //global orientation as quaternion
-
+        
         steering = my_hmmwv.GetTire(0)->GetSlipAngle();
-        speed = my_hmmwv.GetVehicle().GetVehicleSpeedCOM();	////???
+        speed = my_hmmwv.GetVehicle().GetVehicleSpeedCOM();
 
         double q0 = rot_global[0];
         double q1 = rot_global[1];
@@ -525,20 +450,33 @@ int main(int argc, char* argv[]) {
         vehicleinfo_data.t_chrono = time; // time in chrono simulation
         vehicleinfo_data.x_pos = pos_global[0];
         vehicleinfo_data.y_pos = pos_global[1];
-        // vehicleinfo_data.x_v = spd_global[0]; // speed measured at the origin of the chassis reference frame.
-        vehicleinfo_data.x_v = speed;				////???
+        vehicleinfo_data.x_v = spd_global[0];
         vehicleinfo_data.y_v = spd_global[1];
         vehicleinfo_data.x_a = acc_global[0];
         vehicleinfo_data.yaw_curr = yaw_val; // in radians
         vehicleinfo_data.yaw_rate = -rot_dt[2];// yaw rate
-        vehicleinfo_data.sa = steering_input*(M_PI/180*maximum_steering_angle); // slip angle		////???
+        vehicleinfo_data.sa = steering_input/maximum_steering_angle;
         vehicleinfo_data.thrt_in = throttle_input; // throttle input in the range [0,+1]
         vehicleinfo_data.brk_in = braking_input; // braking input in the range [0,+1]
         vehicleinfo_data.str_in = steering_input; // steeering input in the range [-1,+1]
 
+        node.setParam("/state/t", time);
+        node.setParam("/state/x", pos_global[0]);
+        node.setParam("/state/yVal", pos_global[1]);
+        node.setParam("/state/psi", yaw_val);
+        node.setParam("/state/theta", theta_val);
+        node.setParam("/state/phi", phi_val);
+        node.setParam("/state/ux", speed);
+        node.setParam("/state/v", spd_global[1]);
+        node.setParam("/state/ax", acc_global[0]);
+        node.setParam("/state/r", -rot_dt[2]);
+        node.setParam("/state/sa", vehicleinfo_data.sa);
+        node.setParam("/control/thr", throttle_input);
+        node.setParam("/control/brk", braking_input);
+        node.setParam("/control/str", steering_input);
+
         // Publish current vehicle information
         vehicleinfo_pub.publish(vehicleinfo_data);
-
         app.EndScene();
 
         ros::spinOnce();
@@ -547,3 +485,4 @@ int main(int argc, char* argv[]) {
 
     return 0;
 }
+
