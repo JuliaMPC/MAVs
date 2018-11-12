@@ -8,7 +8,7 @@
 
   <arg name="case_params_path" default="$(find system)/config/case/s1.yaml"/>
   <arg name="planner_params_path" default="$(find system)/config/planner/nloptcontrol_planner/default.yaml"/>
-  <arg name="system_params_path" default="$(find system)/config/system/pkgs/nloptcontrol_planner.yaml"/>
+  <arg name="system_params_path" default="$(find system)/config/system/demoJ.yaml"/>
   <arg name="vehicle_params_path" default="$(find system)/config/vehicle/hmmwv.yaml"/>
 
   <param name="case_params_path" value="$(arg case_params_path)"/>
