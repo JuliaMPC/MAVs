@@ -416,6 +416,8 @@ int main(int argc, char* argv[]) {
     double braking_input = 0;
 
     bool is_init;
+    node.setParam("system/chrono/flags/initialized", true);
+
     node.getParam("system/flags/initialized", is_init);
 
     while (!is_init) {
@@ -527,7 +529,7 @@ int main(int argc, char* argv[]) {
             throttle_input = 0;
             braking_input = 0;
         }
-        
+
 
         // std::cout << "pos_global: " << pos_global[0] << ", traj_x: " << traj_x[0] << "traj_y: " << traj_y[0] <<std::endl;
 

@@ -129,7 +129,7 @@ void plannerCallback(const nloptcontrol_planner::Trajectory::ConstPtr& control_m
     traj_psi = control_msgs->psi;
     traj_sa = control_msgs->sa;
     traj_ux = control_msgs->ux;
-    
+
     // Reset time_counter
     time_counter = 0;
     current_index = 0;
@@ -146,13 +146,13 @@ void plannerCallback(const nloptcontrol_planner::Trajectory::ConstPtr& control_m
 // =============================================================================
 
 int main(int argc, char* argv[]) {
-    
+
     // ------------------------------
     // Initialize ROS node handle
     // ------------------------------
     ros::init(argc, argv, "steering_controller");
     ros::NodeHandle node;
-    
+
     // Declare ROS subscriber to subscribe planner topic
     std::string planner_namespace;
     node.getParam("system/planner",planner_namespace);
@@ -179,19 +179,15 @@ int main(int argc, char* argv[]) {
     node.getParam("system/params/step_size", step_size); // ROS loop rate and Chrono step size
     node.getParam("system/params/goal_tol",goal_tol);
 
-    node.getParam("state/chrono/X0/v_des", target_speed); // desired velocity
-    node.getParam("state/chrono/X0/theta", pitch0); // initial pitch
-    node.getParam("state/chrono/X0/phi", roll0); // initial roll
-    node.getParam("state/chrono/X0/z", z0); // initial z
-    node.getParam("state/chrono/x", x); // global x position
-    node.getParam("state/chrono/yVal", y); // global y position
-    
-    node.getParam("case/actual/X0/psi",yaw0); // initial yaw
-    node.getParam("case/actual/X0/x",x0); // initial x
-    node.getParam("case/actual/X0/yVal",y0); // initial y
-    
-    node.getParam("case/goal/x",goal_x);
-    node.getParam("case/goal/yVal",goal_y);
+    node.getParam("case/actual/X0/x", x0); // initial x
+    node.getParam("case/actual/X0/yVal", y0); // initial y
+    node.getParam("case/actual/X0/psi", yaw0); // initial yaw angle
+  //  node.getParam("case/actual/X0/v", v); // lateral velocity
+
+    node.getParam("case/actual/X0/theta", pitch0); // initial pitch
+    node.getParam("case/actual/X0/phi", roll0); // initial roll
+    node.getParam("case/actual/X0/z", z0); // initial z
+
 
     // Load chrono vehicle_params
     double frict_coeff, rest_coeff, gear_ratios;
@@ -228,7 +224,7 @@ int main(int argc, char* argv[]) {
     node.getParam("vehicle/chrono/vehicle_params/pinionRadius", pinionRadius);
     node.getParam("vehicle/chrono/vehicle_params/pinionMaxAngle", pinionMaxAngle);
     node.getParam("vehicle/chrono/vehicle_params/maxBrakeTorque", maxBrakeTorque);
-    
+
     // ---------------------
     // Set up PID controller
     // ---------------------
@@ -245,14 +241,14 @@ int main(int argc, char* argv[]) {
     node.getParam("controller/Kw",Kw);
     node.getParam("controller/anti_windup", windup_method);
     node.getParam("controller/time_shift", time_shift);
-	
+
     controller.set_PID(Kp, Ki, Kd, Kw);
     controller.set_step_size(step_size);
     controller.set_output_limit(-1.0, 1.0);
     controller.set_windup_metohd(windup_method);
     controller.initialize();
-    
-    
+
+
     // Declare loop rate
     ros::Rate loop_rate(int(1.0/step_size));
 
@@ -314,7 +310,7 @@ int main(int argc, char* argv[]) {
 
     ChVehicleIrrApp app(&my_hmmwv.GetVehicle(), &my_hmmwv.GetPowertrain(), L"Steering PID Controller Demo",
                         irr::core::dimension2d<irr::u32>(800, 640));
-    
+
     app.SetHUDLocation(500, 20);
     app.AddTypicalLights(irr::core::vector3df(-150.f, -150.f, 200.f), irr::core::vector3df(-150.f, 150.f, 200.f), 100,
                          100);
@@ -346,12 +342,14 @@ int main(int argc, char* argv[]) {
     double throttle_input = 0;
     double steering_input = 0;
     double braking_input = 0;
-    
+
     bool is_init;
-    node.getParam("system/nloptcontrol_planner/flags/initialized", is_init);
+    node.setParam("system/chrono/flags/initialized", true);
+    node.getParam("system/flags/initialized", is_init);
     while (!is_init) {
-        node.getParam("system/nloptcontrol_planner/flags/initialized", is_init);
+        node.getParam("system/flags/initialized", is_init);
     }
+
 
     // read maximum_steering_angle
     double maximum_steering_angle;
@@ -362,15 +360,15 @@ int main(int argc, char* argv[]) {
     while (ros::ok()) {
         // Extract chrono system state
         double time = my_hmmwv.GetSystem()->GetChTime();
-        
+
         // --------------------------
-        // interpolation using ALGLIB 
+        // interpolation using ALGLIB
         // --------------------------
         // Shift time to zero
         for (int i = 0; i < traj_t.size(); i++) {
             traj_t[i] = traj_t[i] - traj_t[0];
         }
-        
+
         /*
         t_array.setcontent(traj_t.size(), &(traj_t[0]));
         sa_array.setcontent(traj_sa.size(), &(traj_sa[0]));
@@ -389,7 +387,7 @@ int main(int argc, char* argv[]) {
         time_counter += step_size;
         //ROS_INFO("t = %0.4f, ux = %0.4f", time_counter, traj_ux_interp);
         //std::cout << time_counter << " "<<traj_ux_interp<<std::endl;
-        
+
         // steering angle
         steering_input = traj_sa_interp / maximum_steering_angle;
         // steering_input = traj_sa[0] / maximum_steering_angle;
@@ -412,7 +410,7 @@ int main(int argc, char* argv[]) {
             throttle_input = 0;
             braking_input = -controller_output;
         }
-        
+
         app.BeginScene(true, true, irr::video::SColor(255, 140, 161, 192));
         app.DrawAll();
 
@@ -433,7 +431,7 @@ int main(int argc, char* argv[]) {
         ChVector<> acc_global = my_hmmwv.GetChassisBody()->GetPos_dtdt();
         ChQuaternion<> rot_global = my_hmmwv.GetVehicle().GetVehicleRot();//global orientation as quaternion
         ChVector<> rot_dt = my_hmmwv.GetChassisBody()->GetWvel_loc(); //global orientation as quaternion
-        
+
         steering = my_hmmwv.GetTire(0)->GetSlipAngle();
         speed = my_hmmwv.GetVehicle().GetVehicleSpeedCOM();
 
@@ -455,14 +453,14 @@ int main(int argc, char* argv[]) {
         vehicleinfo_data.x_a = acc_global[0];
         vehicleinfo_data.yaw_curr = yaw_val; // in radians
         vehicleinfo_data.yaw_rate = -rot_dt[2];// yaw rate
-        vehicleinfo_data.sa = steering_input/maximum_steering_angle;
+        vehicleinfo_data.sa = steering_input*maximum_steering_angle;
         vehicleinfo_data.thrt_in = throttle_input; // throttle input in the range [0,+1]
         vehicleinfo_data.brk_in = braking_input; // braking input in the range [0,+1]
         vehicleinfo_data.str_in = steering_input; // steeering input in the range [-1,+1]
 
         node.setParam("/state/t", time);
         node.setParam("/state/x", pos_global[0]);
-        node.setParam("/state/yVal", pos_global[1]);
+        node.setParam("/state/y", pos_global[1]);
         node.setParam("/state/psi", yaw_val);
         node.setParam("/state/theta", theta_val);
         node.setParam("/state/phi", phi_val);
@@ -485,4 +483,3 @@ int main(int argc, char* argv[]) {
 
     return 0;
 }
-
