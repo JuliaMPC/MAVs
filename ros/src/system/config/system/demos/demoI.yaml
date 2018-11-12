@@ -29,7 +29,7 @@ system:
   namespace: chrono
   flags:
    initialized: false
-   running: false
+   running: true
    gui: true
 
  vehicle_description:
@@ -38,3 +38,8 @@ system:
    lidar_initialized: false
    obstacles_initialized: false
    postion_update_external: true
+
+ sim_time:
+   flags:
+    initialized: false
+    running: true
