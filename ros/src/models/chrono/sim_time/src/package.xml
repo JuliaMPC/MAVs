@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-  <name>get_world_time_test</name>
+  <name>sim_time</name>
   <version>0.0.1</version>
   <description>Example of integrating a Gazebo message within ROS to control stepping the world.</description>
 

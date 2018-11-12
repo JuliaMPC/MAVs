@@ -6,7 +6,7 @@
   <arg name="debug" default="false"/>
   <arg name="world_name" default="worlds/empty.world"/> <!-- Note: the world_name is with respect to GAZEBO_RESOURCE_PATH environmental variable -->
 
-  <node name="ros_get_world_time_1" pkg="get_world_time_test" type="ros_get_world_time" output="screen" />
+  <node name="ros_get_world_time_1" pkg="sim_time" type="ros_get_world_time" output="screen" />
 
   <!-- set use_sim_time flag -->
   <group if="$(arg use_sim_time)">
@@ -24,7 +24,7 @@
   <!-- start gazebo server-->
   <node name="gazebo" pkg="gazebo_ros" type="$(arg script_type)" respawn="false" output="log"
 	args="$(arg command_arg1) $(arg command_arg2) $(arg world_name)" />
-	
+
   <!-- start gazebo client -->
   <group if="$(arg gui)">
     <node name="gazebo_gui" pkg="gazebo_ros" type="gzclient" respawn="false" output="log"/>

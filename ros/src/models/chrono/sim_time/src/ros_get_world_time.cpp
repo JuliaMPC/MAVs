@@ -29,9 +29,17 @@ int main(int argc, char** argv)
   ros::Time last_ros_time_;
   bool wait = true;
   double simulation_time_pre;
-  rosnode->getParam("state/chrono/t", simulation_time_pre);
+  rosnode->getParam("state/t", simulation_time_pre);
   double simulation_time = simulation_time_pre;
   double delta_time = 0;
+  
+  bool is_init;
+  rosnode->setParam("system/sim_time/flags/initialized", true);
+  rosnode->getParam("system/flags/initialized", is_init);
+  while (!is_init) {
+      rosnode->getParam("system/flags/initialized", is_init);
+  }
+
   while (wait)
   {
     // last_ros_time_ = ros::Time::now();
@@ -45,7 +53,7 @@ int main(int argc, char** argv)
     msg.set_step(true);
 
     // get simulation step
-    rosnode->getParam("state/chrono/t", simulation_time);
+    rosnode->getParam("state/t", simulation_time);
 
     delta_time = simulation_time - simulation_time_pre;
     if(delta_time)  pub->Publish(msg);
