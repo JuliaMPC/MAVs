@@ -18,6 +18,11 @@ using PyCall
 
 @pyimport tf.transformations as tf
 
+
+#          1  2  3  4  5    6   7   8
+#names = [:x,:y,:v,:r,:psi,:sa,:ux,:ax];
+#descriptions = ["X (m)","Y (m)","Lateral Velocity (m/s)", "Yaw Rate (rad/s)","Yaw Angle (rad)", "Steering Angle (rad)", "Longitudinal Velocity (m/s)", "Longitudinal Acceleration (m/s^2)"];
+
 """
 --------------------------------------------------------------------------------------\n
 Author: Huckleberry Febbo, Graduate Student, University of Michigan
@@ -244,9 +249,12 @@ Date Create: 4/6/2017, Last Modified: 11/9/2018 \n
 """
 function loop(pub,pub_opt,pub_path,n,c)
 
+  n.s.mpc.shiftX0 = true # tmp
+
   tA = get_rostime()
   init = false
-  loop_rate = Rate(2.0) # 2 Hz
+  tex = RobotOS.get_param("planner/nloptcontrol_planner/misc/tex")
+  loop_rate = Rate(1/tex)
   while !is_shutdown()
       println("Running model for the: ",n.mpc.v.evalNum," time")
 
@@ -264,6 +272,11 @@ function loop(pub,pub_opt,pub_path,n,c)
 
       status = optimize!(n)
 
+    #  if !isequal(n.r.ocp.status, :Optimal)
+    @show n.r.ocp.tSolve
+    @show n.r.ocp.status
+        @show n.r.ocp.constraint.value
+  #    end
       # advance time
       if isequal(RobotOS.get_param("system/plant"),"3DOF") # otherwise an external update on the initial state of the vehicle is needed
         #n.mpc.t0_actual = (n.mpc.v.evalNum-1)*n.mpc.tex  # NOTE this is for testing
@@ -321,7 +334,7 @@ function loop(pub,pub_opt,pub_path,n,c)
         updateX0!(n)                # update X0 in NLOptControl.jl
       else
          updateX0!(n,getStateData(n))
-      end
+      end  # consider shifting to feasible.
 
       if isequal(RobotOS.get_param("system/plant"),"3DOF")
           xa = n.r.ip.plant[n.ocp.state.name[1]][end]
