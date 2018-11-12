@@ -6,7 +6,7 @@
   <!--common args and parameters-->
   <arg name="system_params_path" default="$(find system)/config/system/demos/demoI.yaml"/>
   <arg name="vehicle_params_path" default="$(find system)/config/vehicle/hmmwv.yaml"/>
-  <arg name="case_params_path" default="$(find system)/config/case/s1.yaml"/>
+  <arg name="case_params_path" default="$(find system)/config/case/s2.yaml"/>
   <rosparam command="load" file="$(arg case_params_path)" />
   <rosparam command="load" file="$(arg system_params_path)" />
   <rosparam command="load" file="$(arg vehicle_params_path)" />
@@ -18,6 +18,9 @@
   <!--vehicle_description args and parameters-->
   <arg name="gui" default="true"/>
   <arg name="paused" default="true"/> <!-- NOTE this pause overrides system/flags/pause -->
+
+  <!-- sim time setting -->
+  <param name="use_sim_time" value="true"/>
 
   <!--  ************** load args and parameters ***************  -->
 
@@ -45,6 +48,7 @@
 
   <!--ros_chrono-->
   <node name="Chronode" pkg="ros_chrono" type="steering_controller" cwd="node"  output="screen"/>
+  <node name="sim_time" pkg="sim_time" type="ros_get_world_time" output="screen" />
 
   <!--initialize system-->
   <node name="bootstrap" pkg="system" type="bootstrap.jl" output="screen"/>
@@ -59,6 +63,10 @@
   <node name="system_shutdown" pkg="system" type="system_shutdown" output="screen" required="true">
      <rosparam file="$(arg system_params_path)" command="load"/>
   </node>
+
+  <!-- Run the visualization node, this node starts only after system/flags/initialized becomes True
+  So make sure to initilize this parameter in your code -->
+  <node name="visualization" pkg="visualization" type="start.sh" />
 
   <!--  ************** additional nodes ***************  -->
 
