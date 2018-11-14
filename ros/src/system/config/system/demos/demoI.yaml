@@ -4,6 +4,7 @@ system:
 
  params:
   step_size: 0.01
+  goal_tol: 0.1
 
  flags:
   goal_attained: false
