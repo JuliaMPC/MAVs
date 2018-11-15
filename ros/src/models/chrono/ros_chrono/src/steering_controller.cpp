@@ -103,6 +103,19 @@ VisualizationType tire_vis_type = VisualizationType::NONE;
 
 // =============================================================================
 
+ChVector<> global2veh(double yaw_angle, ChVector<> ChVector_global) {
+    // Construct rotation matrix
+    ChVector<> R1(std::cos(yaw_angle), std::sin(yaw_angle), 0.0);
+    ChVector<> R2(-std::sin(yaw_angle), std::cos(yaw_angle), 0.0);
+    ChVector<> R3(0.0, 0.0, 1.0);
+
+    auto veh_x = R1 ^ ChVector_global; // dot product in chrono
+    auto veh_y = R2 ^ ChVector_global; // dot product in chrono
+    auto veh_z = R3 ^ ChVector_global; // dot product in chrono
+
+    return ChVector<> (veh_x, veh_y, veh_z);
+}
+
 void plannerCallback(const nloptcontrol_planner::Trajectory::ConstPtr& control_msgs) {
     ROS_INFO("Trajectory messages received");
     traj_t = control_msgs->t;
@@ -146,9 +159,9 @@ int main(int argc, char* argv[]) {
     // Define variables for ROS parameters server
     double step_size;
     double tire_step_size;
-    double goal_tol;                          // Path following tolerance
-    double x0, y0, z0;                   // Initial global position
-    double roll0, pitch0, yaw0;             // Initial global orientation
+    double goal_tol;                            // Path following tolerance
+    double x0, y0, z0;                     // Initial global position
+    double roll0, pitch0, yaw0, ux0, ax0, sa0;  // Initial global orientation
     double terrainHeight;
     double terrainLength;  // size in X direction
     double terrainWidth;   // size in Y direction
@@ -165,12 +178,15 @@ int main(int argc, char* argv[]) {
 
     node.getParam("case/actual/X0/x", x0); // initial x
     node.getParam("case/actual/X0/yVal", y0); // initial y
-    node.getParam("case/actual/X0/psi", yaw0); // initial yaw angle
-  //  node.getParam("case/actual/X0/v", v); // lateral velocity
-
+    node.getParam("case/actual/X0/z", z0); // initial z
+    //node.getParam("case/actual/X0/v", v); // lateral velocity
+    //node.getParam("case/actual/X0/r", r); // lateral velocity
     node.getParam("case/actual/X0/theta", pitch0); // initial pitch
     node.getParam("case/actual/X0/phi", roll0); // initial roll
-    node.getParam("case/actual/X0/z", z0); // initial z
+    node.getParam("case/actual/X0/psi", yaw0); // initial yaw angle
+    node.getParam("case/actual/X0/sa", sa0);
+    node.getParam("case/actual/X0/ux", ux0);
+    node.getParam("case/actual/X0/ax", ax0);
     
 
     // Load chrono vehicle_params
@@ -239,7 +255,6 @@ int main(int argc, char* argv[]) {
 
     // Set initial vehicle location and orientation
     ChVector<> initLoc(x0, y0, z0);
-    // ChQuaternion<> initRot(q[0],q[1],q[2],q[3]);
 
     double t0 = std::cos(yaw0 * 0.5f);
     double t1 = std::sin(yaw0 * 0.5f);
@@ -264,6 +279,7 @@ int main(int argc, char* argv[]) {
     my_hmmwv.SetContactMethod(contact_method);
     my_hmmwv.SetChassisFixed(false);
     my_hmmwv.SetInitPosition(ChCoordsys<>(initLoc, initRot));
+    my_hmmwv.SetInitFwdVel(ux0);
     my_hmmwv.SetPowertrainType(powertrain_model);
     my_hmmwv.SetDriveType(drive_type);
     my_hmmwv.SetSteeringType(steering_type);
@@ -330,7 +346,8 @@ int main(int argc, char* argv[]) {
     while (!is_init) {
         node.getParam("system/flags/initialized", is_init);
     }
-    ChVector<> pos_global0 = my_hmmwv.GetVehicle().GetVehicleCOMPos(); 
+    //ChVector<> pos_global0 = my_hmmwv.GetVehicle().GetVehicleCOMPos();
+    //std::cout << "initial: (" << pos_global0[0] <<" ," << pos_global0[1] << ")" << std::endl;
     while (ros::ok()) {
         // Extract chrono system state
         double time = my_hmmwv.GetSystem()->GetChTime();
@@ -339,7 +356,7 @@ int main(int argc, char* argv[]) {
         // interpolation using ALGLIB
         // --------------------------
         // Shift time to zero
-        if(!traj_t.empty()){
+        if(traj_t.size() > 1) {
             for (int i = 0; i < traj_t.size(); i++) {
                 traj_t[i] = traj_t[i] - traj_t[0];
             }
@@ -351,6 +368,11 @@ int main(int argc, char* argv[]) {
                 traj_sa_interp = (traj_sa[current_index+1]-traj_sa[current_index])/(traj_t[current_index+1]-traj_t[current_index])*(time_counter - traj_t[current_index]) + traj_sa[current_index];
             }
         }
+        else if(traj_t.size() == 1){
+            traj_ux_interp = traj_ux[0];
+            traj_sa_interp = traj_sa[0];
+        }
+
         time_counter += step_size;
 
         // steering angle
@@ -399,21 +421,30 @@ int main(int argc, char* argv[]) {
         }
 
         // Get vehicle information from Chrono vehicle model
-        ChVector<> pos_global = my_hmmwv.GetVehicle().GetVehicleCOMPos(); // global vehicle COM location
-        ChQuaternion<> rot_global = my_hmmwv.GetVehicle().GetVehicleRot(); // global orientation as quaternion
+        ChVector<> VehicleCOMPos = my_hmmwv.GetVehicle().GetVehicleCOMPos(); // global vehicle COM location
+        ChQuaternion<> VehicleRot = my_hmmwv.GetVehicle().GetVehicleRot(); // global orientation as quaternion
         ChVector<> rot_dt = my_hmmwv.GetChassisBody()->GetWvel_loc(); // actual angular speed (expressed in local coords)
-        //ChVector<> spd_global = my_hmmwv.GetChassisBody()->GetPos_dt(); // global speed (m/s)        
-        //ChVector<> acc_global = my_hmmwv.GetChassisBody()->GetPos_dtdt(); // global acceleration (m/s^2)
+        ChVector<> VehiclePos = my_hmmwv.GetVehicle().GetVehiclePos(); // gloabal vehicle frame origin location
         
         // Compute steering angle
         double steering_angle = steering_input * maximum_steering_angle; // steering angle (rad)
         
         // Compute yaw angle
-        double q0 = rot_global[0];
-        double q1 = rot_global[1];
-        double q2 = rot_global[2];
-        double q3 = rot_global[3];
+        double q0 = VehicleRot[0];
+        double q1 = VehicleRot[1];
+        double q2 = VehicleRot[2];
+        double q3 = VehicleRot[3];
         double yaw_angle = atan2(2*(q0*q3+q1*q2),1-2*(q2*q2+q3*q3));
+
+        ChVector<> ORI2COM = global2veh(yaw_angle, VehicleCOMPos - VehiclePos);
+
+        ChVector<> VehicleRot_dt = my_hmmwv.GetChassisBody()->GetWvel_loc(); // actual angular speed (expressed in local coords)
+        ChVector<> VehicleCOMVel_global = my_hmmwv.GetVehicle().GetVehiclePointVelocity(ORI2COM); // vehicle COM velocity (m/s)
+        ChVector<> VehicleCOMAcc = my_hmmwv.GetVehicle().GetVehicleAcceleration(ORI2COM); // vehicle COM acceleration (m/s^2)
+
+        ChVector<> VehicleCOMVel = global2veh(yaw_angle, VehicleCOMVel_global);
+        //ROS_INFO("VehicleCOMAcc[0]: %0.4f, VehicleCOMAcc[1]: %0.4f", VehicleCOMAcc[0], VehicleCOMAcc[1]);
+
 
         // Compute longitudinal speed and lateral speed
         long_velocity = my_hmmwv.GetVehicle().GetVehicleSpeedCOM(); // longitudinal velocity (m/s)
@@ -423,36 +454,33 @@ int main(int argc, char* argv[]) {
         double long_acceleration = 0;
 
         // Update vehicle state 
-        node.setParam("/state/x", pos_global[0]);       // global x position (m)
-        node.setParam("/state/y", pos_global[1]);       // global y position (m)
-        node.setParam("/state/v", lat_velocity);        // lateral velocity (m/s)
-        node.setParam("/state/r", -rot_dt[2]);          // yaw rate (rad/s)
-        node.setParam("/state/psi", yaw_angle);         // global heading angle (yaw angle) (rad)
-        node.setParam("/state/sa", steering_angle);     // steering angle at the tire (rad)
-        node.setParam("/state/ux", long_velocity);      // longitudinal velocity  (vehicle frame) (m/s)
-        node.setParam("/state/ax", long_acceleration);  // longitudinal acceleration (vehicle frame) (m/s^2)
+        node.setParam("/state/x", VehicleCOMPos[0]);       // global x position (m)
+        node.setParam("/state/y", VehicleCOMPos[1]);       // global y position (m)
+        node.setParam("/state/v", VehicleCOMVel[1]);       //// lateral velocity (m/s) 
+        node.setParam("/state/r", VehicleRot_dt[2]);       //// yaw rate (rad/s) 
+        node.setParam("/state/psi", yaw_angle);            // global heading angle (yaw angle) (rad)
+        node.setParam("/state/sa", steering_angle);        // steering angle at the tire (rad)
+        node.setParam("/state/ux", VehicleCOMVel[0]);      //// longitudinal velocity  (vehicle frame) (m/s) 
+        node.setParam("/state/ax", VehicleCOMAcc[0]);      //// longitudinal acceleration (vehicle frame) (m/s^2) 
         node.setParam("/control/thr", throttle_input);
         node.setParam("/control/brk", braking_input);
         node.setParam("/control/str", steering_input);
-
-        // Update vehicleinfo_data
+        //std::cout << "state: (" << pos_global[0] <<" ," << pos_global[1] << "," << yaw_angle << ")" << std::endl;
+         // Update vehicleinfo_data
         vehicleinfo_data.t_chrono = time; // time in chrono simulation
-        vehicleinfo_data.x_pos = pos_global[0];
-        vehicleinfo_data.y_pos = pos_global[1];
-        //vehicleinfo_data.x_v = spd_global[0];
-        //vehicleinfo_data.y_v = spd_global[1];
-        //vehicleinfo_data.x_a = acc_global[0];
-        vehicleinfo_data.yaw_curr = yaw_angle; 
-        vehicleinfo_data.yaw_rate = -rot_dt[2];
-        vehicleinfo_data.sa = steering_angle; 
-        vehicleinfo_data.thrt_in = throttle_input; 
-        vehicleinfo_data.brk_in = braking_input; 
-        vehicleinfo_data.str_in = steering_input; 
-
-
+        vehicleinfo_data.x_pos = VehicleCOMPos[0];
+        vehicleinfo_data.y_pos = VehicleCOMPos[1];
+        vehicleinfo_data.x_v = VehicleCOMVel[0];
+        vehicleinfo_data.y_v = VehicleCOMVel[1];
+        vehicleinfo_data.x_a = VehicleCOMAcc[0];
+        vehicleinfo_data.yaw_curr = yaw_angle; // yaw angle (rad)
+        vehicleinfo_data.yaw_rate = VehicleRot_dt[2];// yaw rate (rad/s)
+        vehicleinfo_data.sa = steering_angle; // steering angle at the tire (rad)
+        vehicleinfo_data.thrt_in = throttle_input; // throttle input in the range [0,+1]
+        vehicleinfo_data.brk_in = braking_input; // braking input in the range [0,+1]
+        vehicleinfo_data.str_in = steering_input; // steeering input in the range [-1,+1]
         // Publish current vehicle information
         vehicleinfo_pub.publish(vehicleinfo_data);
-        //ROS_INFO("x =%.1f, y = %.1f, psi = %.2f, v = %.2f", pos_global[0], pos_global[1], yaw_angle, lat_velocity);
         if(gui) {
             app.EndScene();
         }
