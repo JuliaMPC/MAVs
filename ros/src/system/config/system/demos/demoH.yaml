@@ -4,6 +4,7 @@ system:
 
  params:
   step_size: 0.01
+  tire_step_size: 0.005
 
  flags:
   goal_attained: false
@@ -31,3 +32,7 @@ system:
    initialized: false
    running: false
    gui: true
+  field:
+   h: 0
+   l: 500.0
+   w: 500.0

@@ -7,7 +7,9 @@
   <arg name="system_params_path" default="$(find system)/config/system/demos/demoH.yaml"/>
   <arg name="vehicle_params_path" default="$(find system)/config/vehicle/hmmwv.yaml"/>
   <arg name="case_params_path" default="$(find system)/config/case/s1.yaml"/>
+  <arg name="pid_params_path" default="$(find system)/config/pidcontroller/pidcontrol.yaml"/>
   <rosparam command="load" file="$(arg case_params_path)" />
+  <rosparam command="load" file="$(arg pid_params_path)" />
   <rosparam command="load" file="$(arg system_params_path)" />
   <rosparam command="load" file="$(arg vehicle_params_path)" />
 

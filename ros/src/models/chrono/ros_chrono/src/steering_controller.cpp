@@ -59,10 +59,7 @@ using namespace alglib;
 
 std::string data_path("/opt/chrono/chrono_build/data/vehicle/");
 
-// Rigid terrain dimensions
-double terrainHeight = 0;
-double terrainLength = 500.0;  // size in X direction
-double terrainWidth = 500.0;   // size in Y direction
+
 
 // ROS Control Input (Topic)
 std::vector<double> traj_t;
@@ -73,11 +70,6 @@ std::vector<double> traj_sa;
 std::vector<double> traj_ux;
 
 // Interpolator
-real_1d_array t_array;
-real_1d_array sa_array;
-real_1d_array ux_array;
-spline1dinterpolant s_ux;
-spline1dinterpolant s_sa;
 double time_counter = 0.0;
 double traj_sa_interp = 0.0;
 double traj_ux_interp = 0.0;
@@ -157,24 +149,32 @@ int main(int argc, char* argv[]) {
     double goal_tol;                          // Path following tolerance
     double x0, y0, z0;                   // Initial global position
     double roll0, pitch0, yaw0;             // Initial global orientation
+    double terrainHeight;
+    double terrainLength;  // size in X direction
+    double terrainWidth;   // size in Y direction
 
     // Get parameters from ROS Parameter Server
-    bool read1 = node.getParam("system/params/step_size", step_size); // ROS loop rate and Chrono step size
-    tire_step_size = step_size/2.0;
-    bool read2 = node.getParam("system/params/goal_tol",goal_tol);
+    node.getParam("system/params/step_size", step_size); // ROS loop rate and Chrono step size
+    node.getParam("system/params/tire_step_size", tire_step_size);
+    node.getParam("system/params/goal_tol",goal_tol);
+    // Rigid terrain dimensions
+    node.getParam("system/chrono/field/h", terrainHeight); 
+    node.getParam("system/chrono/field/l", terrainLength); 
+    node.getParam("system/chrono/field/w", terrainWidth); 
 
-    bool read3 = node.getParam("case/actual/X0/x", x0); // initial x
-    bool read4 = node.getParam("case/actual/X0/yVal", y0); // initial y
-    bool read5 = node.getParam("case/actual/X0/psi", yaw0); // initial yaw angle
+
+    node.getParam("case/actual/X0/x", x0); // initial x
+    node.getParam("case/actual/X0/yVal", y0); // initial y
+    node.getParam("case/actual/X0/psi", yaw0); // initial yaw angle
   //  node.getParam("case/actual/X0/v", v); // lateral velocity
 
-    bool read6 = node.getParam("case/actual/X0/theta", pitch0); // initial pitch
-    bool read7 = node.getParam("case/actual/X0/phi", roll0); // initial roll
-    bool read8 = node.getParam("case/actual/X0/z", z0); // initial z
+    node.getParam("case/actual/X0/theta", pitch0); // initial pitch
+    node.getParam("case/actual/X0/phi", roll0); // initial roll
+    node.getParam("case/actual/X0/z", z0); // initial z
     
 
     // Load chrono vehicle_params
-    double frict_coeff, rest_coeff, gear_ratios;
+    double frict_coeff, rest_coeff;
     std::vector<double> centroidLoc, centroidOrientation;
     double chassisMass;
     std::vector<double> chassisInertia;
@@ -187,7 +187,6 @@ int main(int argc, char* argv[]) {
     double pinionRadius, pinionMaxAngle, maxBrakeTorque;
     node.getParam("vehicle/chrono/vehicle_params/frict_coeff", frict_coeff);
     node.getParam("vehicle/chrono/vehicle_params/rest_coeff", rest_coeff);
-    node.getParam("vehicle/chrono/vehicle_params/gearRatios", gear_ratios);
     node.getParam("vehicle/chrono/vehicle_params/centroidLoc", centroidLoc);
     node.getParam("vehicle/chrono/vehicle_params/centroidOrientation", centroidOrientation);
     node.getParam("vehicle/chrono/vehicle_params/chassisMass", chassisMass);
@@ -213,7 +212,7 @@ int main(int argc, char* argv[]) {
     // Set up PID controller
     // ---------------------
     // PID controller
-    double Kp, Ki, Kd, Kw, time_shift; // PID controller parameter
+    double Kp, Ki, Kd, Kw, time_shift, upper_output, lower_output; // PID controller parameter
     std::string windup_method; // Anti-windup method
     PID controller;
 
@@ -221,6 +220,8 @@ int main(int argc, char* argv[]) {
     node.getParam("controller/Ki",Ki);
     node.getParam("controller/Kd",Kd);
     node.getParam("controller/Kw",Kw);
+    node.getParam("controller/upper_limit", upper_output);
+    node.getParam("controller/lower_limit", lower_output);
     node.getParam("controller/anti_windup", windup_method);
     node.getParam("controller/time_shift", time_shift);
 
@@ -228,7 +229,7 @@ int main(int argc, char* argv[]) {
 
     controller.set_PID(Kp, Ki, Kd, Kw);
     controller.set_step_size(step_size);
-    controller.set_output_limit(-1.0, 1.0);
+    controller.set_output_limit(lower_output, upper_output);
     controller.set_windup_metohd(windup_method);
     controller.initialize();
 
@@ -312,15 +313,11 @@ int main(int argc, char* argv[]) {
     // Simulation loop
     // ---------------
 
-    // Driver location in vehicle local frame
-    ChVector<> driver_pos = my_hmmwv.GetChassis()->GetLocalDriverCoordsys().pos;
-
     // Initialize simulation frame counter and simulation time
     ChRealtimeStepTimer realtime_timer;
 
     // Vehicle steering angle
     double long_velocity = 0.0;
-    double steering = 0.0;
     // Collect controller output data from modules (for inter-module communication)
     double throttle_input = 0;
     double steering_input = 0;
@@ -334,7 +331,6 @@ int main(int argc, char* argv[]) {
         node.getParam("system/flags/initialized", is_init);
     }
     ChVector<> pos_global0 = my_hmmwv.GetVehicle().GetVehicleCOMPos(); 
-    ROS_INFO("x0 = %f, y0 = %f", pos_global0[0], pos_global0[1]);
     while (ros::ok()) {
         // Extract chrono system state
         double time = my_hmmwv.GetSystem()->GetChTime();
@@ -347,15 +343,6 @@ int main(int argc, char* argv[]) {
             for (int i = 0; i < traj_t.size(); i++) {
                 traj_t[i] = traj_t[i] - traj_t[0];
             }
-            /*
-            t_array.setcontent(traj_t.size(), &(traj_t[0]));
-            sa_array.setcontent(traj_sa.size(), &(traj_sa[0]));
-            ux_array.setcontent(traj_ux.size(), &(traj_ux[0]));
-            spline1dbuildcubic(t_array, ux_array, s_ux);
-            spline1dbuildcubic(t_array, sa_array, s_sa);
-            traj_ux_interp = spline1dcalc(s_ux, time_counter);
-            traj_sa_interp = spline1dcalc(s_sa, time_counter);*/
-
             while(current_index < (traj_t.size()-1) && time_counter > traj_t[current_index+1]){
                 current_index++;
             }
@@ -365,13 +352,9 @@ int main(int argc, char* argv[]) {
             }
         }
         time_counter += step_size;
-        //ROS_INFO("t = %0.4f, ux = %0.4f", time_counter, traj_ux_interp);
-        //std::cout << time_counter << " "<<traj_ux_interp<<std::endl;
 
         // steering angle
         steering_input = traj_sa_interp / maximum_steering_angle;
-        // steering_input = traj_sa[0] / maximum_steering_angle;
-        ROS_INFO("interp: sa = %f, v = %f", traj_sa_interp, traj_ux_interp );
         if(steering_input < -1.0){
             steering_input = -1.0;
         }
@@ -381,7 +364,6 @@ int main(int argc, char* argv[]) {
         
         // PID controller output for throttle or brake
 	    double ux_err = traj_ux_interp - long_velocity;
-        // double ux_err = traj_ux[0] - long_velocity;
         double controller_output = controller.control(ux_err);
         if(controller_output > 0) {
             throttle_input = controller_output;
@@ -470,7 +452,7 @@ int main(int argc, char* argv[]) {
 
         // Publish current vehicle information
         vehicleinfo_pub.publish(vehicleinfo_data);
-        ROS_INFO("x =%f, y = %f, psi = %f, v = %f", pos_global[0], pos_global[1], yaw_angle, lat_velocity);
+        //ROS_INFO("x =%.1f, y = %.1f, psi = %.2f, v = %.2f", pos_global[0], pos_global[1], yaw_angle, lat_velocity);
         if(gui) {
             app.EndScene();
         }
