@@ -53,5 +53,5 @@ pages = [
 )
 
 deploydocs(
-    repo="github.com/JuliaMPC/AVExamples.jl.git",
+    repo="github.com/JuliaMPC/MAVs.git",
 )
