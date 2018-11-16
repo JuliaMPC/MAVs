@@ -1,6 +1,3 @@
 results/
-*.jl.cov
-*.jl.*.cov
-*.jl.mem
-docs/build/
-docs/site/
+/docs/build
+/docs/Manifest.toml
