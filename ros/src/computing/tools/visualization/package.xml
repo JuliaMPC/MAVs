@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package>
+  <name>visualization</name>
+  <version>0.0.0</version>
+  <description>visualization</description>
+
+  <maintainer email="jsumit@umich.edu">Sumit Joshi</maintainer>
+
+
+  <!-- One license tag required, multiple allowed, one license per tag -->
+  <!-- Commonly used license strings: -->
+  <!--   BSD, MIT, Boost Software License, GPLv2, GPLv3, LGPLv2.1, LGPLv3 -->
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>roscpp</build_depend>
+
+  <run_depend>catkin</run_depend>
+  <run_depend>roscpp</run_depend>
+
+</package>

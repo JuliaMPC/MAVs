@@ -29,7 +29,7 @@ system:
   namespace: chrono
   flags:
    initialized: false
-   running: true
+   running: false
    gui: true
 
  vehicle_description:
@@ -39,7 +39,11 @@ system:
    obstacles_initialized: false
    postion_update_external: true
 
- sim_time:
-   flags:
-    initialized: false
-    running: true
+ terrain:
+  terrainWidth: 0
+  terrainLength: 700.0
+  terrainWidth: 700.0
+
+ control_initial_size: 2
+ receive_flag: false
+

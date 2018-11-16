@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(get_world_time_test)
+project(sim_time)
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp

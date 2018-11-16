@@ -80,6 +80,8 @@ int main(int argc, char **argv) {
             }
         }
 
+        control_info.x = path_status ? path_1_x : path_2_x;
+        control_info.y = path_status ? path_1_y : path_2_y;
         control_info.ux[0] = 10;
         pub.publish(control_info);
 

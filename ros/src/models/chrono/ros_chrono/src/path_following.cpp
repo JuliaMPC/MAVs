@@ -94,11 +94,6 @@ VisualizationType tire_vis_type = VisualizationType::NONE;
 // std::string path_file("paths/ISO_double_lane_change.txt");
 std::string path_file("paths/switch_lane.txt");
 
-// Rigid terrain dimensions
-double terrainHeight = 0;
-double terrainLength = 300.0;  // size in X direction
-double terrainWidth = 300.0;   // size in Y direction
-
 // Point on chassis tracked by the chase camera
 ChVector<> trackPoint(0.0, 0.0, 1.75);
 
@@ -115,12 +110,14 @@ double fps = 60;
 int filter_window_size = 20;
 
 // Control Input
-std::vector<double> traj_t(1,0);
-std::vector<double> traj_x(1,0);
-std::vector<double> traj_y(1,0);
-std::vector<double> traj_psi(1,0);
-std::vector<double> traj_sa(1,0);
-std::vector<double> traj_ux(1,0);
+std::vector<double> traj_t;
+std::vector<double> traj_x;
+std::vector<double> traj_y;
+std::vector<double> traj_psi;
+std::vector<double> traj_sa;
+std::vector<double> traj_ux;
+
+bool receive_flag = false;
 
 // Control Output
 double traj_sa_interp = 0.0;
@@ -166,6 +163,7 @@ void plannerCallback(const nloptcontrol_planner::Trajectory::ConstPtr& control_m
     traj_psi = control_msgs->psi;
     traj_sa = control_msgs->sa;
     traj_ux = control_msgs->ux;
+    receive_flag = true;
 }
 
 double get_PosError(ChVector<> pos_global,
@@ -197,6 +195,14 @@ int main(int argc, char* argv[]) {
     ros::init(argc, argv, "path_follower");
     ros::NodeHandle node;
 
+    // Rigid terrain dimensions
+    double terrainHeight;
+    double terrainLength;  // size in X direction
+    double terrainWidth;   // size in Y direction
+
+    node.getParam("system/terrain/terrainHeight",terrainHeight);
+    node.getParam("system/terrain/terrainLength",terrainLength);
+    node.getParam("system/terrain/terrainWidth",terrainWidth);
 
     // Declare ROS subscriber to subscribe planner topic
     std::string planner_namespace;
@@ -409,6 +415,15 @@ int main(int argc, char* argv[]) {
     double steering_input = 0;
     double braking_input = 0;
 
+    bool is_init;
+    node.setParam("system/chrono/flags/initialized", true);
+
+    node.getParam("system/flags/initialized", is_init);
+
+    while (!is_init) {
+        node.getParam("system/flags/initialized", is_init);
+        std::cout << "waiting for waiting on obstacle_avoidance.jl in nloptcontrol_planner ..." << std::endl;
+    }
 
     while (ros::ok()) {
 
@@ -493,36 +508,46 @@ int main(int argc, char* argv[]) {
         double phi_val= atan2(2*(q0*q1+q2*q3),1-2*(q1*q1+q2*q2));
 
         // Control speed
-        double ux_err = traj_ux[0] - speed;
+        if (receive_flag) {
+            double ux_err = traj_ux[traj_ux.size() - 1] - speed;
 
-        if ((traj_x[1] - traj_x[0])*(traj_x[1] - pos_global[0]) +
-            (traj_y[1] - traj_y[0])*(traj_y[1] - pos_global[1]) < 0)
-                ux_err = -speed;
+            // if ((traj_x[1] - traj_x[0])*(traj_x[1] - pos_global[0]) +
+            //     (traj_y[1] - traj_y[0])*(traj_y[1] - pos_global[1]) < 0)
+            //         ux_err = -speed;
 
-        controller_output = controller.control(ux_err);
-        if (controller_output > 0){
-            throttle_input = controller_output;
-            braking_input = 0;
+            controller_output = controller.control(ux_err);
+            if (controller_output > 0){
+                throttle_input = controller_output;
+                braking_input = 0;
+            }
+            else {
+                throttle_input = 0;
+                braking_input = -controller_output;
+            }
         }
         else {
             throttle_input = 0;
-            braking_input = -controller_output;
+            braking_input = 0;
         }
-
 
 
         // std::cout << "pos_global: " << pos_global[0] << ", traj_x: " << traj_x[0] << "traj_y: " << traj_y[0] <<std::endl;
 
         // Control angle
-        double pos_err = get_PosError(pos_global, traj_x, traj_y);
+        if (receive_flag) {
+            double pos_err = get_PosError(pos_global, traj_x, traj_y);
 
-        std::cout << "atan2:      "<<atan2(traj_y[1] - traj_y[0],traj_x[1] - traj_x[0])<<"\n";
-        double yaw_err = atan2(traj_y[1] - traj_y[0],traj_x[1] - traj_x[0]) - yaw_val;
-        yaw_err = std::fmod(yaw_err + PI, 2*PI) - PI;
-        steering_input = path_follower_controller_dist.control(pos_err) +
-                         path_follower_controller_angle.control(yaw_err);
+            std::cout << "atan2:      "<<atan2(traj_y[1] - traj_y[0],traj_x[1] - traj_x[0])<<"\n";
+            double yaw_err = atan2(traj_y[1] - traj_y[0],traj_x[1] - traj_x[0]) - yaw_val;
+            yaw_err = std::fmod(yaw_err + PI, 2*PI) - PI;
+            steering_input = path_follower_controller_dist.control(pos_err) +
+                             path_follower_controller_angle.control(yaw_err);
 
-        std::cout << "pos_err: " << pos_err << ", yaw_err: " << yaw_err << "steering_input: " << steering_input <<std::endl;
+            std::cout << "pos_err: " << pos_err << ", yaw_err: " << yaw_err << "steering_input: " << steering_input <<std::endl;
+        }
+        else {
+            steering_input = 0;
+        }
         // steering angle output (There should a saturation threshold)
         // traj_sa_interp = traj_sa_interp;
 

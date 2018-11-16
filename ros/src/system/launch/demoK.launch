@@ -4,9 +4,9 @@
 
   <!--  ************** load args and parameters ***************  -->
   <!--common args and parameters-->
-  <arg name="system_params_path" default="$(find system)/config/system/demos/demoI.yaml"/>
+  <arg name="system_params_path" default="$(find system)/config/system/demos/demoK.yaml"/>
   <arg name="vehicle_params_path" default="$(find system)/config/vehicle/hmmwv.yaml"/>
-  <arg name="case_params_path" default="$(find system)/config/case/s2.yaml"/>
+  <arg name="case_params_path" default="$(find system)/config/case/s1.yaml"/>
   <rosparam command="load" file="$(arg case_params_path)" />
   <rosparam command="load" file="$(arg system_params_path)" />
   <rosparam command="load" file="$(arg vehicle_params_path)" />
@@ -47,14 +47,13 @@
   <!--  ************** additional nodes ***************  -->
 
   <!--ros_chrono-->
-  <node name="Chronode" pkg="ros_chrono" type="steering_controller" cwd="node"  output="screen"/>
-  <node name="sim_time" pkg="sim_time" type="ros_get_world_time" output="screen" />
-
+  <node name="Chronode" pkg="ros_chrono" type="path_following" cwd="node" />
+  <node name="ros_get_world_time_" pkg="get_world_time_test" type="ros_get_world_time" output="screen" />
   <!--initialize system-->
   <node name="bootstrap" pkg="system" type="bootstrap.jl" output="screen"/>
 
   <!--unpause Gazebo-->
-  <node name="unpause_gazebo" pkg="vehicle_description" type="unpause.jl"/>
+  <node name="unpause_gazebo" pkg="vehicle_description" type="unpause.jl" output="screen"/>
 
   <!--display trajectory-->
   <node name="rviz" pkg="rviz" type="rviz" output="screen" args="-d $(find obstacle_detector)/resources/display.rviz"/>
@@ -63,10 +62,6 @@
   <node name="system_shutdown" pkg="system" type="system_shutdown" output="screen" required="true">
      <rosparam file="$(arg system_params_path)" command="load"/>
   </node>
-
-  <!-- Run the visualization node, this node starts only after system/flags/initialized becomes True
-  So make sure to initilize this parameter in your code -->
-  <node name="visualization" pkg="visualization" type="start.sh" />
 
   <!--  ************** additional nodes ***************  -->
 

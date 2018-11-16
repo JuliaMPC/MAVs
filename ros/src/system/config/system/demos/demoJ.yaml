@@ -1,9 +1,8 @@
 system:
- planner: nlopcontrol_planner
- plant: chrono
+ plant: 3DOF
 
  params:
-  step_size: 0.01
+  goal_tol: 4
 
  flags:
   goal_attained: false
@@ -12,7 +11,7 @@ system:
 
  shutdown:
   flags:
-   running: true
+   running: false
    initialized: false
   params:
     shutdown_initiation_flags: ["system/flags/goal_attained", "/vehicle_collided"]
@@ -24,22 +23,3 @@ system:
    running: true
    initialized: false
    known_environment: true
-
- chrono:
-  namespace: chrono
-  flags:
-   initialized: false
-   running: true
-   gui: true
-
- vehicle_description:
-  flags:
-   running: true
-   lidar_initialized: false
-   obstacles_initialized: false
-   postion_update_external: true
-
- sim_time:
-   flags:
-    initialized: false
-    running: true
