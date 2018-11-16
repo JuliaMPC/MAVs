@@ -3,6 +3,7 @@ This software simulates autonomous vehicles within a ROS environment.
 
 ## Documentation
 [**STABLE**](https://juliampc.github.io/MAVs/stable/) &mdash; **most recently tagged version of the documentation.**
+
 [**LATEST**](https://juliampc.github.io/MAVs/latest/) &mdash; **in-development version of the documentation.**
 
 ## Installation and Getting Started
