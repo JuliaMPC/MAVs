@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+
+<launch>
+
+  <node name="plotter" pkg="visualization" type="plot_traj.py" output="screen" />
+  <node name="plotter2" pkg="visualization" type="tSolve_plot.py" output="screen" />
+
+</launch>
