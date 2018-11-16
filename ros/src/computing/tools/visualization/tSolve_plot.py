@@ -14,8 +14,9 @@ def plot_tsolve(msg):
     plt.ylabel("Sove Time [s]")
     plt.ylim(0.3,0.7)
     # if counter % 10 == 0:
-	plt.plot(solve_num,msg.tSolve,'g*')
-	plt.plot(solve_num,msg.tSolve,'r*')
+    
+    plt.plot(solve_num,msg.tSolve,'g*')
+
     # plt.axis("equal")
     plt.draw()
     plt.pause(0.00001)
