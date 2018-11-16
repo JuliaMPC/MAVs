@@ -52,19 +52,28 @@ function main()
     end
   end
 
-  if RobotOS.has_param("system/nloptcontrol_planner/flags/running")
-    if RobotOS.get_param("system/nloptcontrol_planner/flags/running")
-      while(!RobotOS.get_param("system/nloptcontrol_planner/flags/initialized"))
-        println("waiting on obstacle_avoidance.jl in nloptcontrol_planner ...")
+  if RobotOS.has_param("system/shutdown/flags/running")
+    if RobotOS.get_param("system/shutdown/flags/running")
+      while(!RobotOS.get_param("system/shutdown/flags/initialized"))
+        println("waiting on shudown node to initialize in system ...")
         sleep(5)
       end
     end
   end
 
-  if RobotOS.has_param("system/shutdown/flags/running")
-    if RobotOS.get_param("system/shutdown/flags/running")
-      while(!RobotOS.get_param("system/shutdown/flags/initialized"))
-        println("waiting on shudown node to initialize in system ...")
+  if RobotOS.has_param("system/sim_time/flags/running")
+    if RobotOS.get_param("system/sim_time/flags/running")
+      while(!RobotOS.get_param("system/sim_time/flags/initialized"))
+        println("waiting on sim_time ...")
+        sleep(5)
+      end
+    end
+  end
+
+  if RobotOS.has_param("system/nloptcontrol_planner/flags/running")
+    if RobotOS.get_param("system/nloptcontrol_planner/flags/running")
+      while(!RobotOS.get_param("system/nloptcontrol_planner/flags/initialized"))
+        println("waiting on obstacle_avoidance.jl in nloptcontrol_planner ...")
         sleep(5)
       end
     end

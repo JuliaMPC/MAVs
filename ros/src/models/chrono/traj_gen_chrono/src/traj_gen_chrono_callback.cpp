@@ -2,7 +2,7 @@
 #include <ros/console.h>
 #include "std_msgs/String.h"
 #include <sstream>
-#include "traj_gen_chrono/Control.h"
+#include "traj_gen_chrono/Trajectory.h"
 
 /**
  * This tutorial demonstrates simple sending of messages over the ROS system.
@@ -56,7 +56,7 @@ int main(int argc, char **argv)
    * than we can send them, the number here specifies how many messages to
    * buffer up before throwing some away.
    */
-  ros::Publisher traj_desired_pub =  a.advertise<traj_gen_chrono::Control>("desired_ref", 1);
+  ros::Publisher traj_desired_pub =  a.advertise<traj_gen_chrono::Trajectory>("desired_ref", 1);
 
   ros::Rate loop_rate(1);
 
@@ -69,7 +69,7 @@ int main(int argc, char **argv)
   {
 
 
-    traj_gen_chrono::Control data_out;
+    traj_gen_chrono::Trajectory data_out;
 /*
     std::vector<double> x(2);
     std::vector<double> y(2);

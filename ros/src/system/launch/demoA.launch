@@ -35,10 +35,18 @@
     <arg name="manager" value="$(arg manager)" />
   </include>
 
+  <!--  system_shutdown node -->
+  <node name="system_shutdown" pkg="system" type="system_shutdown" output="screen" required="true">
+     <rosparam file="$(arg system_params_path)" command="load"/>
+  </node>
+  <test test-name="system_shutdown" pkg="system" type="system_shutdown" />
+
   <!-- initialize system -->
   <node name="bootstrap" pkg="system" type="bootstrap.jl" output="screen"/>
+  <test test-name="bootstrap" pkg="system" type="bootstrap.jl" />
 
   <!-- unpause Gazebo -->
   <node name="unpause_gazebo" pkg="vehicle_description" type="unpause.jl" output="screen"/>
+  <test test-name="unpause_gazebo" pkg="vehicle_description" type="unpause.jl" />
 
 </launch>
