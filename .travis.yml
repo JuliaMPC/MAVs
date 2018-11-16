@@ -1,14 +1,32 @@
-sudo: required
-language: ruby
-services:
-  - docker
-before_install:
-  - sh build.sh
+language: julia
+matrix:
+  include:
+    - os: linux
+      sudo: required
+      julia: 0.6
+notifications:
+  email: false
+
+# TMP
+#sudo: required
+#language: ruby
+#services:
+#  - docker
+# TMP
+
+#before_install:
+#  - sh build.sh
 #  - docker build -t mavs/sinatra .
 #  - docker run -d -p 127.0.0.1:80:4567 carlad/sinatra /bin/sh -c "cd /root/sinatra; bundle exec foreman start;"
 #  - docker ps -a
 #  - docker run carlad/sinatra /bin/sh -c "cd /root/sinatra; bundle exec rake test"
-script:
-  - sh run.sh
-  - catkin_make clean
-  - roslaunch system demoA.launch
+
+# TMP
+#script:
+#  - sh run.sh
+#  - catkin_make clean
+#  - roslaunch system demoA.launch
+# TMP
+after_success:
+- julia -e 'Pkg.add("Documenter");'
+- julia -e 'ENV["DOCUMENTER_DEBUG"]=true; include(joinpath("docs", "make.jl"))'
