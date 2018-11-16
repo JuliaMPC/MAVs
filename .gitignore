@@ -1,2 +1,6 @@
 results/
-/docs/build
+*.jl.cov
+*.jl.*.cov
+*.jl.mem
+docs/build/
+docs/site/
