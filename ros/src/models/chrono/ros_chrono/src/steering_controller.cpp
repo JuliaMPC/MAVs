@@ -25,6 +25,7 @@
 #include <vector>
 #include <string>
 #include <unistd.h>
+#include <chrono>
 
 // Computing tool library
 #include "interpolation.h"
@@ -402,7 +403,6 @@ int main(int argc, char* argv[]) {
             app.DrawAll();
         }
         
-        
         // Update modules (process inputs from other modules)
         terrain.Synchronize(time);
         my_hmmwv.Synchronize(time, steering_input, braking_input, throttle_input, terrain);
@@ -419,6 +419,7 @@ int main(int argc, char* argv[]) {
         if(gui) {
             app.Advance(step);
         }
+
 
         // Get vehicle information from Chrono vehicle model
         ChVector<> VehicleCOMPos = my_hmmwv.GetVehicle().GetVehicleCOMPos(); // global vehicle COM location
@@ -454,6 +455,7 @@ int main(int argc, char* argv[]) {
         double long_acceleration = 0;
 
         // Update vehicle state 
+        node.setParam("/state/t", time);
         node.setParam("/state/x", VehicleCOMPos[0]);       // global x position (m)
         node.setParam("/state/y", VehicleCOMPos[1]);       // global y position (m)
         node.setParam("/state/v", VehicleCOMVel[1]);       //// lateral velocity (m/s) 
@@ -465,8 +467,8 @@ int main(int argc, char* argv[]) {
         node.setParam("/control/thr", throttle_input);
         node.setParam("/control/brk", braking_input);
         node.setParam("/control/str", steering_input);
-        //std::cout << "state: (" << pos_global[0] <<" ," << pos_global[1] << "," << yaw_angle << ")" << std::endl;
-         // Update vehicleinfo_data
+        
+        // Update vehicleinfo_data
         vehicleinfo_data.t_chrono = time; // time in chrono simulation
         vehicleinfo_data.x_pos = VehicleCOMPos[0];
         vehicleinfo_data.y_pos = VehicleCOMPos[1];
@@ -486,7 +488,7 @@ int main(int argc, char* argv[]) {
         }
         
         ros::spinOnce();
-        loop_rate.sleep();
+        // loop_rate.sleep();
     }
 
     return 0;
