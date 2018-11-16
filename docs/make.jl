@@ -1,5 +1,5 @@
 using Documenter
-makedocs(modules=[MAVs],
+makedocs(
 doctest=false, clean=true,
 format =:html,
 authors="Huckleberry Febbo",
@@ -53,9 +53,5 @@ pages = [
 )
 
 deploydocs(
-    deps=nothing,
     repo="github.com/JuliaMPC/AVExamples.jl.git",
-    target="build",
-    osname="linux",
-    julia="0.6",
-    make=nothing)
+)
