@@ -10,8 +10,6 @@ using nloptcontrol_planner.msg
 using nav_msgs.msg
 
 import YAML
-
-using VehicleModels
 using NLOptControl
 using MichiganAutonomousVehicles
 using PyCall
