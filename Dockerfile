@@ -17,7 +17,7 @@ RUN mkdir -p /home/$USERNAME/MAVs/results
 
 RUN echo 2
 # update MichiganAutonomousVehicles.jl and remove .cache to avoid errors with PyCall.jl
-RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.checkout("MichiganAutonomousVehicles")' \
+RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.checkout("NLOptControl"); Pkg.checkout("MichiganAutonomousVehicles")' \
     && echo "rm -rf /home/mavs/.julia/.cache" \
     && /opt/julia-d386e40c17/bin/julia -e 'ENV["PYTHON"]="/usr/bin/python2.7"; Pkg.build("PyCall");' \
     && /opt/julia-d386e40c17/bin/julia -e 'Base.compilecache("PyCall")' \
