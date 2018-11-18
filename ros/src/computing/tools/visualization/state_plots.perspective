@@ -142,7 +142,7 @@
                 },
                 "topics": {
                   "type": "repr",
-                  "repr": "[u'/nlopcontrol_planner/opt/X0a[0]', u'/nlopcontrol_planner/opt/X0p[0]']"
+                  "repr": "[u'/chrono/vehicleinfo/x_pos', u'/chrono/vehicleinfo/y_pos']"
                 },
                 "y_limits": {
                   "type": "repr",
@@ -189,7 +189,7 @@
                 },
                 "topics": {
                   "type": "repr",
-                  "repr": "[u'/nlopcontrol_planner/opt/X0a[1]', u'/nlopcontrol_planner/opt/X0p[1]']"
+                  "repr": "[u'/vehicleinfo/vehicleinfo_data.x_v', u'/vehicleinfo/vehicleinfo_data.y_v']"
                 },
                 "y_limits": {
                   "type": "repr",
@@ -236,7 +236,7 @@
                 },
                 "topics": {
                   "type": "repr",
-                  "repr": "[u'/nlopcontrol_planner/opt/X0a[2]', u'/nlopcontrol_planner/opt/X0p[2]']"
+                  "repr": "[u'/nlopcontrol_planner/control/brk', u'/nlopcontrol_planner/control/thr']"
                 },
                 "y_limits": {
                   "type": "repr",

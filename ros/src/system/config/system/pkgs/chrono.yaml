@@ -1,10 +1,12 @@
 system:
  plant: chrono
  params:
-  step_size: 0.01
+  step_size: 0.005
+  tire_step_size: 0.0025
 
  flags:
   system_shutdown: false
+  initialized: true
 
  chrono:
   namespace: chrono
@@ -12,6 +14,10 @@ system:
    initialized: false
    running: false
    gui: true
+  field:
+   h: 0
+   l: 500.0
+   w: 500.0
 
  planner: default
  default:
