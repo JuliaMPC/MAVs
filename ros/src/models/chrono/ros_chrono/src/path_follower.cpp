@@ -246,8 +246,10 @@ int main(int argc, char* argv[]) {
     // ---------------------
     // Set up PID controller
     // ---------------------
-    double Kp = 0.5, Ki = 0.0, Kd = 0.0, Kw = 0.002, time_shift = 3.0;
-    std::string windup_method("clamping");
+    // PID controller
+    double Kp, Ki, Kd, Kw, time_shift, upper_output, lower_output; // PID controller parameter
+    std::string windup_method; // Anti-windup method
+
     node.getParam("vehicle/chrono/controller/Kp",Kp);
     node.getParam("vehicle/chrono/controller/Ki",Ki);
     node.getParam("vehicle/chrono/controller/Kd",Kd);
