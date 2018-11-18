@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Pull Docker base image from docker hub
-docker pull avpg/cain:base_cudagl
+docker pull avpg/cain:middle
 
 # Build Docker Image
 docker build -t mavs -f Dockerfile .

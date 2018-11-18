@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-  <!-- demo of nloptcontrol_planner & ros_chrono with steering_controller.cpp & vehicle_description -->
+  <!-- demo of nloptcontrol_planner & ros_chrono with path_follower.cpp & vehicle_description -->
 
   <!--  ************** load args and parameters ***************  -->
   <!--common args and parameters-->
@@ -47,7 +47,7 @@
   <!--  ************** additional nodes ***************  -->
 
   <!--ros_chrono-->
-  <node name="Chronode" pkg="ros_chrono" type="path_following" cwd="node" />
+  <node name="Chronode" pkg="ros_chrono" type="path_follower" cwd="node" />
   <node name="ros_get_world_time_" pkg="get_world_time_test" type="ros_get_world_time" output="screen" />
   <!--initialize system-->
   <node name="bootstrap" pkg="system" type="bootstrap.jl" output="screen"/>

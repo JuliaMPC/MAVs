@@ -37,14 +37,14 @@ int main(int argc, char **argv)
 
   ros::Publisher pub = a.advertise<nloptcontrol_planner::Trajectory>(planner_namespace + "/control", 10);
   nloptcontrol_planner::Trajectory control_info;
-  int control_num = 10;
+  int control_num = 5;
   std::vector<double> control_t(control_num,0.0);
   std::vector<double> control_sa(control_num,0.0);
   std::vector<double> control_ux(control_num,0.0);
   control_info.x = std::vector<double>(control_num,0.0);
   control_info.y = std::vector<double>(control_num,0.0);
   control_info.psi = std::vector<double>(control_num,0.0);
-
+  control_t[1] = 0.02; control_t[2] = 0.04; control_t[3] = 0.06; control_t[4] = 0.08;
     ros::WallRate loop_rate(2);
 
     long count = 0;
@@ -60,12 +60,12 @@ int main(int argc, char **argv)
       //   std::cout << "The reference steering angle: " << control_sa[1] << std::endl;
       // }
       if(count % 10 < 5) {
-         control_ux[0] = 4;
-         control_sa[0] = 0.0;
+         control_ux[0] = 4; control_ux[1] = 4; control_ux[2] = 4; control_ux[3] = 8; control_ux[4] = 8;
+         control_sa[0] = 0.0; control_sa[1] = 0.0; control_sa[2] = 0.0; control_sa[3] = 0.0; control_sa[4] = 0.0;
        }
        else {
-         control_ux[0] = 4;
-         control_sa[0] = 0.4;
+         control_ux[0] = 8; control_ux[1] = 8; control_ux[2] = 6; control_ux[3] = 6; control_ux[4] = 6;
+         control_sa[0] = 0.4; control_sa[1] = 0.4; control_sa[2] = 0.4; control_sa[3] = 0.4; control_sa[4] = 0.4;
        }
 
       control_info.t = control_t;
