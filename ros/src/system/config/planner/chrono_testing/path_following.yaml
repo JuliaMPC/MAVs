@@ -1,0 +1,14 @@
+ path:
+  test_rate: 2
+
+  path_1:
+   x: [26,50]
+   y: [-122,-122]
+
+  path_2:
+   x: [26,50]
+   y: [-120,-120]
+
+  vel_tol: 5
+  pos_tol: 0.3
+  pos_delay: 3
