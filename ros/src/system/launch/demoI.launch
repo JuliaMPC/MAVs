@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-  <!-- demo of nloptcontrol_planner & ros_chrono with steering_controller.cpp & vehicle_description -->
+  <!-- demo of nloptcontrol_planner & ros_chrono with trajectory_follower.cpp & vehicle_description -->
 
   <!--  ************** load args and parameters ***************  -->
   <!--common args and parameters-->
@@ -51,7 +51,7 @@
   <!--  ************** additional nodes ***************  -->
 
   <!--ros_chrono-->
-  <node name="Chronode" pkg="ros_chrono" type="steering_controller" cwd="node"  output="screen"/>
+  <node name="Chronode" pkg="ros_chrono" type="trajectory_follower" cwd="node"  output="screen"/>
   <node name="sim_time" pkg="sim_time" type="ros_get_world_time" output="screen" />
 
   <!--initialize system-->
