@@ -36,6 +36,8 @@
 #include "std_msgs/Float64.h"
 #include "nloptcontrol_planner/Trajectory.h"
 #include "ros_chrono_msgs/veh_status.h"
+#include "mavs_msgs/state.h"
+#include "mavs_msgs/control.h"
 
 // Chrono include library
 #include "chrono/core/ChFileutils.h"
@@ -151,8 +153,13 @@ int main(int argc, char* argv[]) {
     // Declare ROS publisher to advertise vehicleinfo topic
     std::string chrono_namespace;
     node.getParam("system/chrono/namespace", chrono_namespace);
+    //veh_status message is depricated, use state and control topics and its publishers in future version
     ros::Publisher vehicleinfo_pub = node.advertise<ros_chrono_msgs::veh_status>(chrono_namespace+"/vehicleinfo", 1);
+    ros::Publisher state_pub = node.advertise<mavs_msgs::state>("/state", 1);
+    ros::Publisher control_pub = node.advertise<mavs_msgs::control>("/control", 1);
     ros_chrono_msgs::veh_status vehicleinfo_data;
+    mavs_msgs::state state_data;
+    mavs_msgs::control control_data;
 
     bool gui;
     node.getParam("system/chrono/flags/gui", gui);
@@ -467,6 +474,7 @@ int main(int argc, char* argv[]) {
         node.setParam("/control/str", steering_input);
 
         // Update vehicleinfo_data
+        // This is depricated
         vehicleinfo_data.t_chrono = time; // time in chrono simulation
         vehicleinfo_data.x_pos = VehicleCOMPos[0];
         vehicleinfo_data.y_pos = VehicleCOMPos[1];
@@ -479,8 +487,27 @@ int main(int argc, char* argv[]) {
         vehicleinfo_data.thrt_in = throttle_input; // throttle input in the range [0,+1]
         vehicleinfo_data.brk_in = braking_input; // braking input in the range [0,+1]
         vehicleinfo_data.str_in = steering_input; // steeering input in the range [-1,+1]
+
+        // In future we will shift to state and control variables
+        // Update state and control data
+        state_data.t = time; // time in chrono simulation
+        state_data.x = VehicleCOMPos[0];
+        state_data.y = VehicleCOMPos[1];
+        state_data.ux = VehicleCOMVel[0];
+        state_data.v = VehicleCOMVel[1];
+        state_data.ax = VehicleCOMAcc[0];
+        state_data.psi = yaw_angle; // yaw angle (rad)
+        state_data.r = VehicleRot_dt[2];// yaw rate (rad/s)
+        state_data.sa = steering_angle; // steering angle at the tire (rad)
+        control_data.t = time;
+        control_data.thrt_in = throttle_input; // throttle input in the range [0,+1]
+        control_data.brk_in = braking_input; // braking input in the range [0,+1]
+        control_data.str_in = steering_input; // steeering input in the range [-1,+1]
+
         // Publish current vehicle information
         vehicleinfo_pub.publish(vehicleinfo_data);
+        state_pub.publish(state_data);
+        control_pub.publish(control_data);
         if(gui) {
             app.EndScene();
         }
