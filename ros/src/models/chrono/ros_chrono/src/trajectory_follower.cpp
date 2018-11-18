@@ -35,7 +35,6 @@
 #include "ros/ros.h"
 #include "std_msgs/Float64.h"
 #include "nloptcontrol_planner/Trajectory.h"
-#include "ros_chrono_msgs/veh_status.h"
 #include "mavs_msgs/state.h"
 #include "mavs_msgs/control.h"
 
@@ -150,14 +149,11 @@ int main(int argc, char* argv[]) {
     node.getParam("system/planner",planner_namespace);
     ros::Subscriber planner_sub = node.subscribe(planner_namespace + "/control", 100, plannerCallback);
 
-    // Declare ROS publisher to advertise vehicleinfo topic
     std::string chrono_namespace;
     node.getParam("system/chrono/namespace", chrono_namespace);
     //veh_status message is depricated, use state and control topics and its publishers in future version
-    ros::Publisher vehicleinfo_pub = node.advertise<ros_chrono_msgs::veh_status>(chrono_namespace+"/vehicleinfo", 1);
     ros::Publisher state_pub = node.advertise<mavs_msgs::state>("/state", 1);
     ros::Publisher control_pub = node.advertise<mavs_msgs::control>("/control", 1);
-    ros_chrono_msgs::veh_status vehicleinfo_data;
     mavs_msgs::state state_data;
     mavs_msgs::control control_data;
 
@@ -473,21 +469,6 @@ int main(int argc, char* argv[]) {
         node.setParam("/control/brk", braking_input);
         node.setParam("/control/str", steering_input);
 
-        // Update vehicleinfo_data
-        // This is depricated
-        vehicleinfo_data.t_chrono = time; // time in chrono simulation
-        vehicleinfo_data.x_pos = VehicleCOMPos[0];
-        vehicleinfo_data.y_pos = VehicleCOMPos[1];
-        vehicleinfo_data.x_v = VehicleCOMVel[0];
-        vehicleinfo_data.y_v = VehicleCOMVel[1];
-        vehicleinfo_data.x_a = VehicleCOMAcc[0];
-        vehicleinfo_data.yaw_curr = yaw_angle; // yaw angle (rad)
-        vehicleinfo_data.yaw_rate = VehicleRot_dt[2];// yaw rate (rad/s)
-        vehicleinfo_data.sa = steering_angle; // steering angle at the tire (rad)
-        vehicleinfo_data.thrt_in = throttle_input; // throttle input in the range [0,+1]
-        vehicleinfo_data.brk_in = braking_input; // braking input in the range [0,+1]
-        vehicleinfo_data.str_in = steering_input; // steeering input in the range [-1,+1]
-
         // In future we will shift to state and control variables
         // Update state and control data
         state_data.t = time; // time in chrono simulation
@@ -504,8 +485,6 @@ int main(int argc, char* argv[]) {
         control_data.brk_in = braking_input; // braking input in the range [0,+1]
         control_data.str_in = steering_input; // steeering input in the range [-1,+1]
 
-        // Publish current vehicle information
-        vehicleinfo_pub.publish(vehicleinfo_data);
         state_pub.publish(state_data);
         control_pub.publish(control_data);
         if(gui) {
