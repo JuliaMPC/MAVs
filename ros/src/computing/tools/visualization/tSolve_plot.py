@@ -1,4 +1,4 @@
-#!/usr/bin/env python 
+#!/usr/bin/env python
 import numpy as np
 from matplotlib import pyplot as plt
 import rospy
@@ -14,7 +14,7 @@ def plot_tsolve(msg):
     plt.ylabel("Sove Time [s]")
     plt.ylim(0.3,0.7)
     # if counter % 10 == 0:
-    
+
     plt.plot(solve_num,msg.tSolve,'g*')
 
     # plt.axis("equal")
@@ -36,7 +36,3 @@ if __name__ == '__main__':
  # 		'fontweight' : rcParams['axes.titleweight'],
  # 		'verticalalignment': 'baseline',
  # 		'horizontalalignment': loc}
-
-
-
-    

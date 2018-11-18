@@ -35,6 +35,8 @@
 #include "std_msgs/Float64.h"
 #include "nloptcontrol_planner/Trajectory.h"
 #include "ros_chrono_msgs/veh_status.h"
+#include "mavs_msgs/state.h"
+#include "mavs_msgs/control.h"
 
 // Chrono include library
 #include "chrono/core/ChFileutils.h"
@@ -211,8 +213,14 @@ int main(int argc, char* argv[]) {
     //ros::Subscriber planner_sub = node.subscribe("/control", 100, plannerCallback);
 
     // Declare ROS publisher to advertise vehicleinfo topic
+    // This topic is depricated and kept hee for backward compatibility
     ros::Publisher vehicleinfo_pub = node.advertise<ros_chrono_msgs::veh_status>("/vehicleinfo", 1);
+    //We will use state_pub and control_pub in future
+    ros::Publisher state_pub = node.advertise<mavs_msgs::state>("/state", 1);
+    ros::Publisher control_pub = node.advertise<mavs_msgs::control>("/control", 1);
     ros_chrono_msgs::veh_status vehicleinfo_data;
+    mavs_msgs::state state_data;
+    mavs_msgs::control control_data;
 
 
 
@@ -552,6 +560,7 @@ int main(int argc, char* argv[]) {
         // traj_sa_interp = traj_sa_interp;
 
         // Update vehicleinfo_data
+        // This is depricated, use state and control instead
         vehicleinfo_data.t_chrono = time; // time in chrono simulation
         vehicleinfo_data.x_pos = pos_global[0];
         vehicleinfo_data.y_pos = pos_global[1];
@@ -566,8 +575,26 @@ int main(int argc, char* argv[]) {
         vehicleinfo_data.brk_in = braking_input; // braking input in the range [0,+1]
         vehicleinfo_data.str_in = steering_input; // steeering input in the range [-1,+1]
 
+        // In future we will shift to state and control variables
+        state_data.t= time; // time in chrono simulation
+        state_data.x = pos_global[0];
+        state_data.y = pos_global[1];
+        state_data.ux= spd_global[0];
+        state_data.v = spd_global[1];
+        state_data.ax= acc_global[0];
+        state_data.psi= yaw_val; // in radians
+        state_data.r = -rot_dt[2];// yaw rate
+        //state_data.sa = steering_input*maximum_steering_angle;
+        state_data.sa = slip_angle;
+        control_data.t = time;
+        control_data.thrt_in = throttle_input; // throttle input in the range [0,+1]
+        control_data.brk_in = braking_input; // braking input in the range [0,+1]
+        control_data.str_in = steering_input; // steeering input in the range [-1,+1]
+
         // Publish current vehicle information
         vehicleinfo_pub.publish(vehicleinfo_data);
+        state_pub.publish(state_data);
+        control_pub.publish(control_data);
 
         app.EndScene();
 

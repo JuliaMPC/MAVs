@@ -3,14 +3,14 @@ project(visualization)
 
 find_package(catkin REQUIRED COMPONENTS roscpp)
 find_package(catkin REQUIRED COMPONENTS rospy)
-find_package(catkin REQUIRED COMPONENTS ros_chrono_msgs)
+find_package(catkin REQUIRED COMPONENTS mavs_msgs)
 find_package(catkin REQUIRED COMPONENTS nloptcontrol_planner)
 
 catkin_package(
   LIBRARIES ${PROJECT_NAME}
   CATKIN_DEPENDS roscpp
   CATKIN_DEPENDS rospy
-  CATKIN_DEPENDS ros_chrono_msgs
+  CATKIN_DEPENDS mavs_msgs
   CATKIN_DEPENDS nloptcontrol_planner
 )
 

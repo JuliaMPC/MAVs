@@ -1,8 +1,8 @@
-#!/usr/bin/env python 
+#!/usr/bin/env python
 import numpy as np
 from matplotlib import pyplot as plt
 import rospy
-from ros_chrono_msgs.msg import veh_status
+from mavs_msgs.msg import state, control
 from nloptcontrol_planner.msg import Trajectory
 #from std_msgs.msg import State
 
@@ -20,20 +20,20 @@ def plot_x(msg):
     global t_chrono
     global counter
 
-    x_ = np.append(x_,msg.x_pos)
-    y_ = np.append(y_,msg.y_pos)
-    x_pos = msg.x_pos
-    y_pos = msg.y_pos
+    x_ = np.append(x_,msg.x)
+    y_ = np.append(y_,msg.y)
+    x_pos = msg.x
+    y_pos = msg.y
 
-    x_1 = np.append(x_1,msg.t_chrono)
+    x_1 = np.append(x_1,msg.t)
     y_1 = np.append(y_1,msg.sa)
-    t_chrono = msg.t_chrono
+    t_chrono = msg.t
 
-    x_2 = np.append(x_2,msg.t_chrono)
-    y_2 = np.append(y_2,msg.x_a)
+    x_2 = np.append(x_2,msg.t)
+    y_2 = np.append(y_2,msg.ax)
 
-    x_3 = np.append(x_3,msg.t_chrono)
-    y_3 = np.append(y_3,msg.x_v)
+    x_3 = np.append(x_3,msg.t)
+    y_3 = np.append(y_3,msg.ux)
 
 
 def plot_opt(msg):
@@ -69,7 +69,7 @@ if __name__ == '__main__':
     y_pos = 0
     t_chrono = 0
     rospy.init_node("plotter")
-    rospy.Subscriber("chrono/vehicleinfo", veh_status, plot_x)
+    rospy.Subscriber("state", state, plot_x)
     rospy.Subscriber("nlopcontrol_planner/control", Trajectory, plot_opt)
 
 
@@ -114,7 +114,7 @@ if __name__ == '__main__':
         plt.subplot(224)
         plt.xlabel("Time [s]")
         plt.ylabel("ux [m/s]")
-        plt.title("Predicted and actual longitudinal acceleration")        
+        plt.title("Predicted and actual longitudinal acceleration")
         plt.plot(x_3, y_3,'b')
 
         plt.draw()

@@ -35,6 +35,8 @@
 #include "std_msgs/Float64.h"
 #include "nloptcontrol_planner/Trajectory.h"
 #include "ros_chrono_msgs/veh_status.h"
+#include "mavs_msgs/state.h"
+#include "mavs_msgs/control.h"
 
 // Chrono include library
 #include "chrono/core/ChFileutils.h"
@@ -162,7 +164,11 @@ int main(int argc, char* argv[]) {
     std::string chrono_namespace;
     node.getParam("system/chrono/namespace", chrono_namespace);
     ros::Publisher vehicleinfo_pub = node.advertise<ros_chrono_msgs::veh_status>(chrono_namespace+"/vehicleinfo", 1);
+    ros::Publisher state_pub = node.advertise<mavs_msgs::state>("/state", 1);
+    ros::Publisher control_pub = node.advertise<mavs_msgs::control>("/control", 1);
     ros_chrono_msgs::veh_status vehicleinfo_data;
+    mavs_msgs::state state_data;
+    mavs_msgs::control control_data;
 
 
     // Define variables for ROS parameters server
@@ -445,6 +451,7 @@ int main(int argc, char* argv[]) {
         double phi_val= atan2(2*(q0*q1+q2*q3),1-2*(q1*q1+q2*q2));
 
         // Update vehicleinfo_data
+        // This is depricated
         vehicleinfo_data.t_chrono = time; // time in chrono simulation
         vehicleinfo_data.x_pos = pos_global[0];
         vehicleinfo_data.y_pos = pos_global[1];
@@ -457,6 +464,22 @@ int main(int argc, char* argv[]) {
         vehicleinfo_data.thrt_in = throttle_input; // throttle input in the range [0,+1]
         vehicleinfo_data.brk_in = braking_input; // braking input in the range [0,+1]
         vehicleinfo_data.str_in = steering_input; // steeering input in the range [-1,+1]
+
+        // In future we will shift to state and control variables
+        state_data.t= time; // time in chrono simulation
+        state_data.x = pos_global[0];
+        state_data.y = pos_global[1];
+        state_data.ux= spd_global[0];
+        state_data.v = spd_global[1];
+        state_data.ax= acc_global[0];
+        state_data.psi= yaw_val; // in radians
+        state_data.r = -rot_dt[2];// yaw rate
+        state_data.sa = steering_input*maximum_steering_angle;
+        control_data.t = time;
+        control_data.thrt_in = throttle_input; // throttle input in the range [0,+1]
+        control_data.brk_in = braking_input; // braking input in the range [0,+1]
+        control_data.str_in = steering_input; // steeering input in the range [-1,+1]
+
 
         node.setParam("/state/t", time);
         node.setParam("/state/x", pos_global[0]);
@@ -475,6 +498,8 @@ int main(int argc, char* argv[]) {
 
         // Publish current vehicle information
         vehicleinfo_pub.publish(vehicleinfo_data);
+        state_pub.publish(state_data);
+        control_pub.publish(control_data);
         app.EndScene();
 
         ros::spinOnce();
