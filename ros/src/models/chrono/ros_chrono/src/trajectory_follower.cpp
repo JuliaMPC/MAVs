@@ -129,7 +129,7 @@ void plannerCallback(const nloptcontrol_planner::Trajectory::ConstPtr& control_m
     // Reset time_counter
     time_counter = 0;
     current_index = 0;
-    
+
 }
 
 
@@ -172,9 +172,9 @@ int main(int argc, char* argv[]) {
     node.getParam("system/params/tire_step_size", tire_step_size);
     node.getParam("system/params/goal_tol",goal_tol);
     // Rigid terrain dimensions
-    node.getParam("system/chrono/field/h", terrainHeight); 
-    node.getParam("system/chrono/field/l", terrainLength); 
-    node.getParam("system/chrono/field/w", terrainWidth); 
+    node.getParam("system/chrono/field/h", terrainHeight);
+    node.getParam("system/chrono/field/l", terrainLength);
+    node.getParam("system/chrono/field/w", terrainWidth);
 
 
     node.getParam("case/actual/X0/x", x0); // initial x
@@ -188,7 +188,7 @@ int main(int argc, char* argv[]) {
     node.getParam("case/actual/X0/sa", sa0);
     node.getParam("case/actual/X0/ux", ux0);
     node.getParam("case/actual/X0/ax", ax0);
-    
+
 
     // Load chrono vehicle_params
     double frict_coeff, rest_coeff;
@@ -233,16 +233,14 @@ int main(int argc, char* argv[]) {
     std::string windup_method; // Anti-windup method
     PID controller;
 
-    node.getParam("controller/Kp",Kp);
-    node.getParam("controller/Ki",Ki);
-    node.getParam("controller/Kd",Kd);
-    node.getParam("controller/Kw",Kw);
-    node.getParam("controller/upper_limit", upper_output);
-    node.getParam("controller/lower_limit", lower_output);
-    node.getParam("controller/anti_windup", windup_method);
-    node.getParam("controller/time_shift", time_shift);
-
-    
+    node.getParam("vehicle/chrono/controller/Kp",Kp);
+    node.getParam("vehicle/chrono/controller/Ki",Ki);
+    node.getParam("vehicle/chrono/controller/Kd",Kd);
+    node.getParam("vehicle/chrono/controller/Kw",Kw);
+    node.getParam("vehicle/chrono/controller/upper_limit", upper_output);
+    node.getParam("vehicle/chrono/controller/lower_limit", lower_output);
+    node.getParam("vehicle/chrono/controller/anti_windup", windup_method);
+    node.getParam("vehicle/chrono/controller/time_shift", time_shift);
 
     controller.set_PID(Kp, Ki, Kd, Kw);
     controller.set_step_size(step_size);
@@ -294,7 +292,7 @@ int main(int argc, char* argv[]) {
     my_hmmwv.SetSteeringVisualizationType(steering_vis_type);
     my_hmmwv.SetWheelVisualizationType(wheel_vis_type);
     my_hmmwv.SetTireVisualizationType(tire_vis_type);
-    
+
     // read maximum_steering_angle
     double maximum_steering_angle = my_hmmwv.GetVehicle().GetMaxSteeringAngle();
 
@@ -343,7 +341,7 @@ int main(int argc, char* argv[]) {
     bool is_init;
     node.setParam("system/chrono/flags/initialized", true);
     node.getParam("system/flags/initialized", is_init);
-    
+
     while (!is_init) {
         node.getParam("system/flags/initialized", is_init);
     }
@@ -384,7 +382,7 @@ int main(int argc, char* argv[]) {
         else if(steering_input > 1.0){
             steering_input = 1.0;
         }
-        
+
         // PID controller output for throttle or brake
 	    double ux_err = traj_ux_interp - long_velocity;
         double controller_output = controller.control(ux_err);
@@ -396,17 +394,17 @@ int main(int argc, char* argv[]) {
             throttle_input = 0;
             braking_input = -controller_output;
         }
-        
-        
+
+
         if(gui) {
             app.BeginScene(true, true, irr::video::SColor(255, 140, 161, 192));
             app.DrawAll();
         }
-        
+
         // Update modules (process inputs from other modules)
         terrain.Synchronize(time);
         my_hmmwv.Synchronize(time, steering_input, braking_input, throttle_input, terrain);
-        
+
         if(gui) {
             app.Synchronize("", steering_input, throttle_input, braking_input);
         }
@@ -415,7 +413,7 @@ int main(int argc, char* argv[]) {
         double step = realtime_timer.SuggestSimulationStep(step_size);
         terrain.Advance(step);
         my_hmmwv.Advance(step);
-        
+
         if(gui) {
             app.Advance(step);
         }
@@ -426,10 +424,10 @@ int main(int argc, char* argv[]) {
         ChQuaternion<> VehicleRot = my_hmmwv.GetVehicle().GetVehicleRot(); // global orientation as quaternion
         ChVector<> rot_dt = my_hmmwv.GetChassisBody()->GetWvel_loc(); // actual angular speed (expressed in local coords)
         ChVector<> VehiclePos = my_hmmwv.GetVehicle().GetVehiclePos(); // gloabal vehicle frame origin location
-        
+
         // Compute steering angle
         double steering_angle = steering_input * maximum_steering_angle; // steering angle (rad)
-        
+
         // Compute yaw angle
         double q0 = VehicleRot[0];
         double q1 = VehicleRot[1];
@@ -454,20 +452,20 @@ int main(int argc, char* argv[]) {
         // Compute longitudinal acceleration
         double long_acceleration = 0;
 
-        // Update vehicle state 
+        // Update vehicle state
         node.setParam("/state/t", time);
         node.setParam("/state/x", VehicleCOMPos[0]);       // global x position (m)
         node.setParam("/state/y", VehicleCOMPos[1]);       // global y position (m)
-        node.setParam("/state/v", VehicleCOMVel[1]);       //// lateral velocity (m/s) 
-        node.setParam("/state/r", VehicleRot_dt[2]);       //// yaw rate (rad/s) 
+        node.setParam("/state/v", VehicleCOMVel[1]);       //// lateral velocity (m/s)
+        node.setParam("/state/r", VehicleRot_dt[2]);       //// yaw rate (rad/s)
         node.setParam("/state/psi", yaw_angle);            // global heading angle (yaw angle) (rad)
         node.setParam("/state/sa", steering_angle);        // steering angle at the tire (rad)
-        node.setParam("/state/ux", VehicleCOMVel[0]);      //// longitudinal velocity  (vehicle frame) (m/s) 
-        node.setParam("/state/ax", VehicleCOMAcc[0]);      //// longitudinal acceleration (vehicle frame) (m/s^2) 
+        node.setParam("/state/ux", VehicleCOMVel[0]);      //// longitudinal velocity  (vehicle frame) (m/s)
+        node.setParam("/state/ax", VehicleCOMAcc[0]);      //// longitudinal acceleration (vehicle frame) (m/s^2)
         node.setParam("/control/thr", throttle_input);
         node.setParam("/control/brk", braking_input);
         node.setParam("/control/str", steering_input);
-        
+
         // Update vehicleinfo_data
         vehicleinfo_data.t_chrono = time; // time in chrono simulation
         vehicleinfo_data.x_pos = VehicleCOMPos[0];
@@ -486,7 +484,7 @@ int main(int argc, char* argv[]) {
         if(gui) {
             app.EndScene();
         }
-        
+
         ros::spinOnce();
         // loop_rate.sleep();
     }
