@@ -35,8 +35,8 @@ planner:
       xFslackVariables: true
       movingObstacles: true
       onlyOptimal: false
-      evalConstraints: false
-      ocpSave: false
+      evalConstraints: true
+      ocpSave: true
 
     weights:
       ic: 100.0
@@ -63,16 +63,16 @@ planner:
       driver: 1.0
 
     tolerances:
-      ix: 0.5 #0.05
-      iy: 0.5 #0.05
-      iv: 0.5 #0.05
-      ir: 0.05 #0.15
-      ipsi: 0.5 #0.07
-      isa: 0.025 #0.0025
-      iu: 0.5 #0.25
-      iax: 0.5 # 0.05
-      fx: 5.0 # 5.0
-      fy: 5.0 # 5.0
+      ix: 10.0 # 0.5 #0.05
+      iy: 10.0 #0.5 #0.05
+      iv: 10.0 # 0.5 #0.05
+      ir: 10.0 # 0.05 #0.15
+      ipsi: 10.0 #0.5 #0.07
+      isa: 10.0 #0.025 #0.0025
+      iu: 10.0 #0.5 #0.25
+      iax: 10.0 #0.5 # 0.05
+      fx: 10.0 #5.0 # 5.0
+      fy: 10.0 #5.0 # 5.0
       fv: NaN # NOTE YAML file turns these into strings
       fr: NaN
       fpsi: NaN
@@ -83,7 +83,7 @@ planner:
     solver:
       # settings for both KNITRO and IPOPT
       outlev: 0 # (c.m.solver==:Ipopt) ? :print_level : :outlev # print level
-      feastol_abs: 7e-2 # (c.m.solver==:Ipopt) ? :constr_viol_tol : :feastol_abs
+      feastol_abs: 7e-1 #7e-2 # (c.m.solver==:Ipopt) ? :constr_viol_tol : :feastol_abs
       maxit: 500 # (c.m.solver==:Ipopt) ? :max_iter : :maxit
       maxtime_cpu: 30. # (c.m.solver==:Ipopt) ? :max_cpu_time : :maxtime_cpu
 
