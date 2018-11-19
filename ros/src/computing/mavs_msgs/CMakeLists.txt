@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(ros_chrono)
+project(mavs_msgs)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -7,28 +7,12 @@ project(ros_chrono)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-SET(Chrono_DIR "/opt/chrono/chrono_build/cmake")
-
-LIST(APPEND CMAKE_PREFIX_PATH "${CMAKE_INSTALL_PREFIX}/opt/chrono/chrono_build/lib64")
-
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
-  ros_chrono_msgs
-  mavs_msgs
-  nloptcontrol_planner
+  message_generation
 )
-
-find_package(
-  Chrono
-  COMPONENTS Irrlicht
-  CONFIG
-)
-
-find_package(interpolation REQUIRED)
-
-find_package(controller REQUIRED)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -64,10 +48,12 @@ find_package(controller REQUIRED)
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-#add_message_files(
-#   FILES
-#
-#)
+ add_message_files(
+   FILES
+   state.msg
+   control.msg
+#   Message2.msg
+)
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -84,10 +70,10 @@ find_package(controller REQUIRED)
 # )
 
 ## Generate added messages and services with any dependencies listed here
-#generate_messages(
-#   DEPENDENCIES
-#   std_msgs
-#)
+generate_messages(
+   DEPENDENCIES
+   std_msgs
+)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -119,10 +105,10 @@ find_package(controller REQUIRED)
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-   LIBRARIES ros_chrono
-   CATKIN_DEPENDS roscpp rospy std_msgs message_runtime ros_chrono_msgs mavs_msgs
-   DEPENDS system_lib Chrono interpolation controller
+  # INCLUDE_DIRS include
+ # LIBRARIES mavs_msgs
+   CATKIN_DEPENDS roscpp rospy std_msgs message_runtime
+   DEPENDS system_lib
 )
 
 ###########
@@ -131,32 +117,14 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-#SET(Irrlicht_INCLUDE_DIRS "/home/shreyas/Downloads/irrlicht-1.8.4/include")
-#LIST(APPEND CHRONO_INCLUDE_DIRS "${CHRONO_INCLUDE_DIRS}/home/shreyas/Downloads/irrlicht-1.8.4/include")
 include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
-  ${CHRONO_INCLUDE_DIRS}
-  ${CH_IRRLICHTINC}
-  ${Irrlicht_INCLUDE_DIRS}
-  ${interpolation_INCLUDE_DIRS}
-  ${controller_INCLUDE_DIRS}
 )
-
-#--------------------------------------------------------------
-# Tweaks to disable some warnings with MSVC
-#--------------------------------------------------------------
-if(MSVC)
-    add_definitions("-D_CRT_SECURE_NO_DEPRECATE")  # avoids deprecation warnings
-    add_definitions("-D_SCL_SECURE_NO_DEPRECATE")  # avoids deprecation warnings
-    set(EXTRA_COMPILE_FLAGS "/wd4275")             # disable warnings triggered by Irrlicht
-else()
-    set(EXTRA_COMPILE_FLAGS "")
-endif()
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/ros_chrono.cpp
+#   src/${PROJECT_NAME}/mavs_msgs.cpp
 # )
 
 ## Add cmake target dependencies of the library
@@ -164,31 +132,10 @@ endif()
 ## either from message generation or dynamic reconfigure
 # add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
-
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-add_executable(path_follower src/path_follower.cpp)
-add_executable(trajectory_follower src/trajectory_follower.cpp)
-
-#--------------------------------------------------------------
-# Set properties for your executable target
-#
-# Note that here we define a macro CHRONO_DATA_DIR which will
-# contain the path to the Chrono data directory, either in its
-# source tree (if using a build version of Chrono), or in its
-# install tree (if using an installed version of Chrono).
-#--------------------------------------------------------------
-
-set_target_properties(path_follower PROPERTIES
-	    COMPILE_FLAGS "${CHRONO_CXX_FLAGS} ${CH_CXX_FLAGS} ${CH_IRRLICHT_CXX_FLAGS} ${EXTRA_COMPILE_FLAGS}"
-      COMPILE_DEFINITIONS "CHRONO_DATA_DIR=\"${CHRONO_DATA_DIR}\""
-	    LINK_FLAGS "${CHRONO_LINKER_FLAGS} ${LINKERFLAG_EXE}")
-
-set_target_properties(trajectory_follower PROPERTIES
-	    COMPILE_FLAGS "${CHRONO_CXX_FLAGS} ${CH_CXX_FLAGS} ${CH_IRRLICHT_CXX_FLAGS} ${EXTRA_COMPILE_FLAGS}"
-      COMPILE_DEFINITIONS "CHRONO_DATA_DIR=\"${CHRONO_DATA_DIR}\""
-	    LINK_FLAGS "${CHRONO_LINKER_FLAGS} ${LINKERFLAG_EXE}")
+# add_executable(${PROJECT_NAME}_node src/mavs_msgs_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -198,44 +145,12 @@ set_target_properties(trajectory_follower PROPERTIES
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-add_dependencies(path_follower ${catkin_EXPORTED_TARGETS})
-add_dependencies(trajectory_follower ${catkin_EXPORTED_TARGETS})
+# add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
 # target_link_libraries(${PROJECT_NAME}_node
 #   ${catkin_LIBRARIES}
 # )
-
-target_link_libraries(path_follower
-  ChronoEngine
-  ChronoEngine_irrlicht
-  ChronoEngine_vehicle
-  ChronoModels_vehicle
-  ${catkin_LIBRARIES}
-  ${CHRONO_LIBRARIES}
-  interpolation
-  controller)
-
-target_link_libraries(trajectory_follower
-  ChronoEngine
-  ChronoEngine_irrlicht
-  ChronoEngine_vehicle
-  ChronoModels_vehicle
-  ${catkin_LIBRARIES}
-  ${CHRONO_LIBRARIES}
-  interpolation
-  controller)
-
-
-# target_link_libraries(test_1
-#   ChronoEngine
-#   ChronoEngine_irrlicht
-#   ChronoEngine_vehicle
-#   ChronoModels_vehicle
-#   ${catkin_LIBRARIES}
-#   ${CHRONO_LIBRARIES}
-#   interpolation
-#   controller)
 
 #############
 ## Install ##
@@ -277,23 +192,10 @@ target_link_libraries(trajectory_follower
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_ros_chrono.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/mavs_msgs.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
-
-#####################
-# g Tests and rostest
-#####################
-# New added for rostest
-if(CATKIN_ENABLE_TESTING)
-  message("\n\nGoing to build the ros_chrono tests!\n\n")
-  find_package(rostest REQUIRED)
-  # You can add arbitrary new test files in the end of add_rostest_gtest
-  add_rostest(launch/steering.launch) #perhaps
-
-endif()
-# End rostest
