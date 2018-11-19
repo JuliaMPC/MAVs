@@ -476,6 +476,12 @@ int main(int argc, char* argv[]) {
         state_data.y = VehicleCOMPos[1];
         state_data.ux = VehicleCOMVel[0];
         state_data.v = VehicleCOMVel[1];
+        if (VehicleCOMAcc[0] >= 1.5) {
+          VehicleCOMAcc[0] = 1.5;
+        }
+        else if (VehicleCOMAcc[0] <= -1.5) {
+          VehicleCOMAcc[0] = -1.5;
+        }
         state_data.ax = VehicleCOMAcc[0];
         state_data.psi = yaw_angle; // yaw angle (rad)
         state_data.r = VehicleRot_dt[2];// yaw rate (rad/s)
