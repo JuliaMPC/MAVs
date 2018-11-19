@@ -43,6 +43,16 @@ nvidia-docker run
 
 ## Docker examples:
 
+### Stopping a running container:
+First look the containers:
+```
+docker container ls
+```
+then stop the container that is running for instance:
+```
+docker rm -f mavs_container
+```
+
 ### Save changes made in docker container:
 1. Find the container ID  
 ```
@@ -65,7 +75,7 @@ $docker push [DockerUserName/Repository[:tag]]
 ```
 
 ### Open up new terminals to access Container (example):
-1. Look at the current containers available with 
+1. Look at the current containers available with
 ```
 $docker container ls
 ```
