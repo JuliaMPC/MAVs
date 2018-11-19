@@ -31,5 +31,5 @@
   <node pkg="vehicle_description" type="frame_tf_broadcaster" name="frame_tf_broadcaster" />
   <!-- TODO remove this and use odom and gps-->
   <node pkg="vehicle_description" type="position_broadcaster" name="postion_broadcaster"/>
-
+  
 </launch>
