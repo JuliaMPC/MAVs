@@ -223,6 +223,10 @@ int main(int argc, char* argv[]) {
     node.getParam("vehicle/chrono/vehicle_params/pinionMaxAngle", pinionMaxAngle);
     node.getParam("vehicle/chrono/vehicle_params/maxBrakeTorque", maxBrakeTorque);
 
+    // Load interpolation parameter
+    double time_shift;
+    node.getParam("planner/nloptcontrol_planner/misc/tex", time_shift);
+
     // ---------------------
     // Set up PID controller
     // ---------------------
@@ -344,21 +348,24 @@ int main(int argc, char* argv[]) {
         // --------------------------
         // interpolation using ALGLIB
         // --------------------------
-        // Shift time to zero
-        if(traj_t.size() > 1) {
-            while(current_index < (traj_t.size()-1) && chrono_time > traj_t[current_index+1]){
-                current_index++;
-            }
-            if(current_index < (traj_t.size()-1)){
-                traj_ux_interp = (traj_ux[current_index+1]-traj_ux[current_index])/(traj_t[current_index+1]-traj_t[current_index])*(chrono_time - traj_t[current_index]) + traj_ux[current_index];
-                traj_sa_interp = (traj_sa[current_index+1]-traj_sa[current_index])/(traj_t[current_index+1]-traj_t[current_index])*(chrono_time - traj_t[current_index]) + traj_sa[current_index];
-            }
+        if (traj_t.size() > 1) {
+            real_1d_array t_arr, sa_arr, ux_arr;
+
+            t_arr.setcontent(traj_t.size(), &(traj_t[0]));
+            sa_arr.setcontent(traj_sa.size(), &(traj_sa[0]));
+            ux_arr.setcontent(traj_ux.size(), &(traj_ux[0]));
+            spline1dinterpolant s_ux;
+            spline1dinterpolant s_sa;
+            spline1dbuildlinear(t_arr, ux_arr, s_ux);
+            traj_ux_interp = spline1dcalc(s_ux, chrono_time+time_shift);
+            spline1dbuildcubic(t_arr, sa_arr, s_sa);
+            traj_sa_interp = spline1dcalc(s_sa, chrono_time+time_shift);
         }
-        else if(traj_t.size() == 1){
+        else if (traj_t.size() == 1) {
             traj_ux_interp = traj_ux[0];
             traj_sa_interp = traj_sa[0];
         }
-
+        
         // steering input with [-1,1] saturation constraint 
         steering_input = std::max(-1.0, std::min(1.0, traj_sa_interp/maximum_steering_angle));
 

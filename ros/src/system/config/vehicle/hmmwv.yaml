@@ -119,11 +119,11 @@ vehicle:
    pinionMaxAngle: "0.87"
    maxBrakeTorque: "4000"
   controller:
-   Kp: 0.5
-   Ki: 0.1
+   Kp: 1.2
+   Ki: 0.002
    Kd: 0.0
-   Kw: 0.0
+   Kw: 0.00
    upper_limit: 1.0
    lower_limit: -1.0
    anti_windup: clamping
-   time_shift: 3.0
+   time_shift: 0.5
