@@ -200,28 +200,6 @@ double get_AnglError(double yaw_angle,
     return yaw_err;
 }
 
-/*double get_PosError(ChVector<> pos_global,
-                    std::vector<double> traj_x,
-                    std::vector<double> traj_y) {
-   
-    double traj_dir_x = traj_x[2] - traj_x[0];
-    double traj_dir_y = traj_y[2] - traj_y[0];
-    double traj_len = std::sqrt(traj_dir_x * traj_dir_x + traj_dir_y * traj_dir_y);
-
-    if (traj_len < 0.01) return 0;
-
-    traj_dir_x /= traj_len;
-    traj_dir_y /= traj_len;
-
-    
-    double car2traj_x = traj_x[1] - pos_global[0];
-    double car2traj_y = traj_y[1] - pos_global[1];
-    double PosError = car2traj_y * traj_dir_x - car2traj_x * traj_dir_y;
-
-    return PosError;
-}*/
-
-
 // =============================================================================
 
 int main(int argc, char* argv[]) {
