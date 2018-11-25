@@ -127,3 +127,31 @@ vehicle:
    lower_limit: -1.0
    anti_windup: clamping
    time_shift: 0.5
+
+   velocity:
+    Kp: 0.5
+    Ki: 0.1
+    Kd: 0.0
+    Kw: 0.0
+    upper_limit: 1.0
+    lower_limit: -1.0
+    anti_windup: clamping
+
+   steering:
+    dist_error:
+     Kp: 0.02
+     Ki: 0.0
+     Kd: 0.0
+     Kw: 0.002
+     upper_limit: 0.5
+     lower_limit: -0.5
+     anti_windup: clamping
+
+    angle_error:
+     Kp: 0.5
+     Ki: 0.0
+     Kd: 0.0
+     Kw: 0.0
+     upper_limit: 0.5
+     lower_limit: -0.5
+     anti_windup: clamping

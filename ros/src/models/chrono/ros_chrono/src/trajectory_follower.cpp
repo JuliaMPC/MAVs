@@ -66,7 +66,6 @@ std::vector<double> traj_ux;
 // Interpolator
 double traj_sa_interp = 0.0;
 double traj_ux_interp = 0.0;
-int current_index = 0;
 
 // ------
 // Chrono
@@ -125,9 +124,6 @@ void plannerCallback(const nloptcontrol_planner::Trajectory::ConstPtr& control_m
     traj_psi = control_msgs->psi;
     traj_sa = control_msgs->sa;
     traj_ux = control_msgs->ux;
-
-    // Reset current index
-    current_index = 0;
 }
 
 
@@ -311,6 +307,7 @@ int main(int argc, char* argv[]) {
     // ---------------------------------------
     // Create the vehicle Irrlicht application
     // ---------------------------------------
+
     ChVehicleIrrApp app(&my_hmmwv.GetVehicle(), &my_hmmwv.GetPowertrain(), L"Steering PID Controller Demo",
                     irr::core::dimension2d<irr::u32>(800, 640));
 
