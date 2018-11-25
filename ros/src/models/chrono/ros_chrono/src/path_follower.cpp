@@ -488,8 +488,6 @@ int main(int argc, char* argv[]) {
         double chrono_time = my_hmmwv.GetSystem()->GetChTime();
         
          // steering control
-        
-
         if (traj_x.empty() || traj_x.size() == 1) {
             steering_angle = 0;
             steering_input = 0;
@@ -508,93 +506,29 @@ int main(int argc, char* argv[]) {
         }
         
         // Speed control
-        // double traj_ux_interp;
-
-        // if (traj_ux.empty()) {
-        //     throttle_input = 0;
-        //     braking_input = 0;
-        // }
-        // else {
-        //     if (traj_ux.size() == 1) {
-        //         traj_ux_interp = traj_ux[0];
-        //     }
-        //     else {
-        //         // Shift time to zero
-        //         for (int i = 0; i < traj_t.size(); i++) {
-        //             traj_t[i] = traj_t[i] - traj_t[0];
-        //         }
-        //         while(time_index < (traj_t.size() - 2) && time_counter > traj_t[time_index + 1]){
-        //             time_index++;
-        //         }
-        //         traj_ux_interp = (traj_ux[time_index + 1] - traj_ux[time_index])
-        //                          /(traj_t[time_index + 1] - traj_t[time_index])*(time_counter - traj_t[time_index])
-        //                           + traj_ux[time_index];
-        //     }
-
-        //     time_counter += step_size;
-
-        //     double ux_err = traj_ux_interp - VehicleCOMVel[0];
-        //     double controller_output = vel_controller.control(ux_err);
-
-        //     if(controller_output > 0) {
-        //         throttle_input = controller_output;
-        //         braking_input = 0;
-        //     }
-        //     else {
-        //         throttle_input = 0;
-        //         braking_input = -controller_output;
-        //     }
-        // }
-
         // --------------------------
         // interpolation using ALGLIB
         // --------------------------
         if (traj_t.size() > 1) {
-            real_1d_array t_arr, sa_arr, ux_arr, x_arr, y_arr;
+            real_1d_array t_arr, sa_arr, ux_arr;
 
             t_arr.setcontent(traj_t.size(), &(traj_t[0]));
             sa_arr.setcontent(traj_sa.size(), &(traj_sa[0]));
             ux_arr.setcontent(traj_ux.size(), &(traj_ux[0]));
-            x_arr.setcontent(traj_x.size(), &(traj_x[0]));
-            y_arr.setcontent(traj_y.size(), &(traj_y[0]));
 
             spline1dinterpolant s_ux;
             spline1dinterpolant s_sa;
-            spline1dinterpolant s_x;
-            spline1dinterpolant s_y;
 
             spline1dbuildlinear(t_arr, ux_arr, s_ux);
-            //traj_ux_interp = spline1dcalc(s_ux, chrono_time+time_shift);
             traj_ux_interp = spline1dcalc(s_ux, chrono_time+time_shift);
             spline1dbuildcubic(t_arr, sa_arr, s_sa);
             traj_sa_interp = spline1dcalc(s_sa, chrono_time+time_shift);
-            /*
-            spline1dbuildlinear(t_arr, x_arr, s_x);
-            traj_x_interp = spline1dcalc(s_x, chrono_time+time_shift);
-            spline1dbuildlinear(t_arr, y_arr, s_y);
-            traj_y_interp = spline1dcalc(s_y, chrono_time+time_shift);
-            */
-            spline1dbuildlinear(t_arr, x_arr, s_x);
-            x_cal[0] = spline1dcalc(s_x, chrono_time+0.9*time_shift);
-            x_cal[1] = spline1dcalc(s_x, chrono_time+time_shift);
-            x_cal[2] = spline1dcalc(s_x, chrono_time+1.1*time_shift);
-            /*x_cal[0] = spline1dcalc(s_x, chrono_time-0.1*time_shift);
-            x_cal[1] = spline1dcalc(s_x, chrono_time);
-            x_cal[2] = spline1dcalc(s_x, chrono_time+0.1*time_shift);*/
-            spline1dbuildlinear(t_arr, y_arr, s_y);
-            y_cal[0] = spline1dcalc(s_y, chrono_time+0.9*time_shift);
-            y_cal[1] = spline1dcalc(s_y, chrono_time+time_shift);
-            y_cal[2] = spline1dcalc(s_y, chrono_time+1.1*time_shift);
-            /*y_cal[0] = spline1dcalc(s_y, chrono_time-0.1*time_shift);
-            y_cal[1] = spline1dcalc(s_y, chrono_time+time_shift);
-            y_cal[2] = spline1dcalc(s_y, chrono_time+0.1*time_shift);*/
         }
         else if (traj_t.size() == 1) {
             std::cout << "traj_size = 0" << std::endl;
             traj_ux_interp = traj_ux[0];
             traj_sa_interp = traj_sa[0];
-            /*traj_x_interp = traj_x[0];
-            traj_y_interp = traj_y[0];*/
+
         }
 
         
@@ -612,15 +546,7 @@ int main(int argc, char* argv[]) {
         }
         
 
-        // // Control angle
-        // double pos_err = get_PosError(VehicleCOMPos, x_cal, y_cal);
-        // double yaw_err = atan2(y_cal[2] - y_cal[0],x_cal[2] - x_cal[0]) - yaw_angle;
         
-        // yaw_err = std::fmod(yaw_err + M_PI, 2*M_PI) - M_PI;
-        // steering_input = str_controller_dist.control(pos_err) +
-        //                     str_controller_angl.control(yaw_err);
-        // steering_input = std::max(-1.0, std::min(1.0, steering_input));
-
 
         if(gui) {
             app.BeginScene(true, true, irr::video::SColor(255, 140, 161, 192));
