@@ -575,11 +575,6 @@ int main(int argc, char* argv[]) {
         ChVector<> rot_dt = my_hmmwv.GetChassisBody()->GetWvel_loc(); // actual angular speed (expressed in local coords)
         ChVector<> VehiclePos = my_hmmwv.GetVehicle().GetVehiclePos(); // gloabal vehicle frame origin location
         
-        // Compute steering angle
-        //double steering_angle = steering_input * maximum_steering_angle; // steering angle (rad)
-       //std::cout << "pos :" << pos_err << " yaw: " << yaw_err <<" steering = "
-       // << steering_angle/M_PI*180 << "ref ="<< traj_sa_interp/M_PI*180 << std::endl;
-
         // Compute yaw angle
         double q0 = VehicleRot[0];
         double q1 = VehicleRot[1];
