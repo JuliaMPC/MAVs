@@ -4,6 +4,8 @@ system:
 
  params:
   step_size: 0.01
+  goal_tol: 0.1
+  tire_step_size: 0.005
 
  flags:
   goal_attained: false
@@ -29,8 +31,12 @@ system:
   namespace: chrono
   flags:
    initialized: false
-   running: false
+   running: true
    gui: true
+  field:
+   h: 0
+   l: 500.0
+   w: 500.0
 
  vehicle_description:
   flags:
@@ -39,10 +45,10 @@ system:
    obstacles_initialized: false
    postion_update_external: true
 
- terrain:
-  terrainWidth: 0
-  terrainLength: 700.0
-  terrainWidth: 700.0
+ sim_time:
+   flags:
+    initialized: false
+    running: true
 
  control_initial_size: 2
  receive_flag: false
