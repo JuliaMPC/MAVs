@@ -63,9 +63,7 @@
      <rosparam file="$(arg system_params_path)" command="load"/>
   </node>
 
-  <!-- Run the visualization node, this node starts only after system/flags/initialized becomes True
-  So make sure to initilize this parameter in your code -->
-  <node name="visualization" pkg="visualization" type="start.sh" />
+  <node name="visualization" pkg="visualization" type="data_plotter.py" />
   <!--  ************** additional nodes ***************  -->
 
 </launch>

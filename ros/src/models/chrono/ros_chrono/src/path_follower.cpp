@@ -417,7 +417,7 @@ int main(int argc, char* argv[]) {
     // Create the vehicle Irrlicht application
     // ---------------------------------------
 
-    ChVehicleIrrApp app(&my_hmmwv.GetVehicle(), &my_hmmwv.GetPowertrain(), L"Steering PID Controller Demo",
+    ChVehicleIrrApp app(&my_hmmwv.GetVehicle(), &my_hmmwv.GetPowertrain(), L"Path Follower",
                     irr::core::dimension2d<irr::u32>(800, 640));
 
     app.SetHUDLocation(500, 20);
