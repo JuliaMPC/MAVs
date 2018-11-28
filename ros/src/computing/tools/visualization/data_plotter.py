@@ -205,3 +205,4 @@ if __name__ == '__main__':
     while not rospy.is_shutdown():
         data_plotter.draw_frame()
         rate.sleep()
+        
