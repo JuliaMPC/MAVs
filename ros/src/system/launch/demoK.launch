@@ -17,9 +17,8 @@
 
   <!--vehicle_description args and parameters-->
   <arg name="gui" default="true"/>
-  <arg name="paused" default="true"/> <!-- NOTE this pause overrides system/flags/pause -->
-
-  <!-- sim time setting -->
+  <arg name="paused" default="true"/> <!--pause Gazebo at the start until Chrono is ready: NOTE this pause overrides system/flags/pause -->
+  <!-- use Gazebo's simulation time -->
   <param name="use_sim_time" value="true"/>
 
   <!--  ************** load args and parameters ***************  -->
@@ -47,13 +46,14 @@
   <!--  ************** additional nodes ***************  -->
 
   <!--ros_chrono-->
-  <node name="Chronode" pkg="ros_chrono" type="path_follower" cwd="node" />
-  <node name="ros_get_world_time_" pkg="get_world_time_test" type="ros_get_world_time" output="screen" />
+  <node name="Chronode" pkg="ros_chrono" type="path_follower" cwd="node"  output="screen"/>
+  <node name="sim_time" pkg="sim_time" type="ros_get_world_time" output="screen" />
+
   <!--initialize system-->
   <node name="bootstrap" pkg="system" type="bootstrap.jl" output="screen"/>
 
   <!--unpause Gazebo-->
-  <node name="unpause_gazebo" pkg="vehicle_description" type="unpause.jl" output="screen"/>
+  <node name="unpause_gazebo" pkg="vehicle_description" type="unpause.jl"/>
 
   <!--display trajectory-->
   <node name="rviz" pkg="rviz" type="rviz" output="screen" args="-d $(find obstacle_detector)/resources/display.rviz"/>
@@ -63,6 +63,7 @@
      <rosparam file="$(arg system_params_path)" command="load"/>
   </node>
 
+  <node name="visualization" pkg="visualization" type="data_plotter.py" />
   <!--  ************** additional nodes ***************  -->
 
 </launch>

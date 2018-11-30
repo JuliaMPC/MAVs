@@ -27,7 +27,6 @@
 
   <include file="$(find nloptcontrol_planner)/launch/main.launch">
     <arg name="case_params_path" value="$(arg case_params_path)"/>
-    <!--arg name="pid_params_path" value="$(arg pid_params_path)"/-->
     <arg name="planner_params_path" value="$(arg planner_params_path)"/>
     <arg name="system_params_path" value="$(arg system_params_path)"/>
     <arg name="vehicle_params_path" value="$(arg vehicle_params_path)"/>
@@ -37,7 +36,6 @@
     <arg name="system_params_path" value="$(arg system_params_path)"/>
     <arg name="vehicle_params_path" value="$(arg vehicle_params_path)"/>
     <arg name="case_params_path" value="$(arg case_params_path)"/>
-    <!--arg name="pid_params_path" value="$(arg pid_params_path)"/-->
     <arg name="gui" value="$(arg gui)"/>
     <arg name="paused" value="$(arg paused)"/>
   </include>
@@ -65,9 +63,7 @@
      <rosparam file="$(arg system_params_path)" command="load"/>
   </node>
 
-  <!-- Run the visualization node, this node starts only after system/flags/initialized becomes True
-  So make sure to initilize this parameter in your code -->
-  <node name="visualization" pkg="visualization" type="start.sh" />
+  <node name="visualization" pkg="visualization" type="data_plotter.py" />
 
   <!--  ************** additional nodes ***************  -->
 
