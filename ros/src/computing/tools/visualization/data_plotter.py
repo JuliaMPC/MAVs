@@ -13,7 +13,7 @@ class DataPlotter():
         # time data
         self.t_actual = np.array([], dtype=np.float64)
         self.t_traj = np.array([], dtype=np.float64)
-        
+
         # position data
         self.x_actual = np.array([], dtype=np.float64)
         self.y_actual = np.array([], dtype=np.float64)
@@ -54,7 +54,7 @@ class DataPlotter():
         self.t_band = 10
         self.x_band = 20
         self.y_band = 50
-        self.sa_band = 0.2
+        self.sa_band = 1.2
         self.ux_band = 20
         self.ax_band = 5
         self.solve_num_band = 20
@@ -74,9 +74,13 @@ class DataPlotter():
 
         self.line_sa_actual = Line2D([], [], color='green', linewidth=2, linestyle='-')
         self.line_sa_traj = Line2D([], [], color='red', linewidth=1.5, linestyle='--')
+        self.line_sa_upper_limit = Line2D([], [], color='black', linestyle='-')
+        self.line_sa_lower_limit = Line2D([], [], color='black', linestyle='-')
         self.sa_subplot.add_line(self.line_sa_actual)
         self.sa_subplot.add_line(self.line_sa_traj)
-        self.sa_subplot.legend(['actual sa', 'planned sa'], fontsize='x-small')
+        self.sa_subplot.add_line(self.line_sa_upper_limit)
+        self.sa_subplot.add_line(self.line_sa_lower_limit)
+        self.sa_subplot.legend(['actual sa', 'planned sa', 'upper limit', 'lower limit'], fontsize='x-small')
         self.sa_subplot.set_xlabel('time (s)', fontsize='small', verticalalignment='center')
         self.sa_subplot.set_ylabel('steering angle (rad)', fontsize='small')
         self.sa_subplot.tick_params('both', labelsize='x-small')
@@ -100,7 +104,11 @@ class DataPlotter():
         self.line_ax_traj = Line2D([], [], color='red', linewidth=1.5, linestyle='--')
         self.ax_subplot.add_line(self.line_ax_actual)
         self.ax_subplot.add_line(self.line_ax_traj)
-        self.ax_subplot.legend(['actual ax', 'planned ax'], fontsize='x-small')
+        self.line_ax_upper_limit = Line2D([], [], color='black', linestyle='-')
+        self.line_ax_lower_limit = Line2D([], [], color='black', linestyle='-')
+        self.ax_subplot.add_line(self.line_ax_upper_limit)
+        self.ax_subplot.add_line(self.line_ax_lower_limit)
+        self.ax_subplot.legend(['actual ax', 'planned ax', 'upper limit', 'lower limit'], fontsize='x-small')
         self.ax_subplot.set_xlabel('time (s)', fontsize='small', verticalalignment='center')
         self.ax_subplot.set_ylabel('longitudinal acceleration (m/s)', fontsize='small')
         self.ax_subplot.tick_params('both', labelsize='x-small')
@@ -130,6 +138,8 @@ class DataPlotter():
 
             self.line_sa_actual.set_data(self.t_actual, self.sa_actual)
             self.line_sa_traj.set_data(self.t_traj, self.sa_traj)
+            self.line_sa_upper_limit.set_data(self.t_actual, self.sa_upper_limit)
+            self.line_sa_lower_limit.set_data(self.t_actual, self.sa_lower_limit)
 
             self.line_ux_actual.set_data(self.t_actual, self.ux_actual)
             self.line_ux_traj.set_data(self.t_traj, self.ux_traj)
@@ -138,6 +148,8 @@ class DataPlotter():
 
             self.line_ax_actual.set_data(self.t_actual, self.ax_actual)
             self.line_ax_traj.set_data(self.t_traj, self.ax_traj)
+            self.line_ax_upper_limit.set_data(self.t_actual, self.ax_upper_limit)
+            self.line_ax_lower_limit.set_data(self.t_actual, self.ax_lower_limit)
 
             self.line_solve_time.set_data(self.solve_num, self.solve_time)
             self.line_solve_time_limit.set_data(self.solve_num, self.solve_time_limit)
@@ -147,11 +159,11 @@ class DataPlotter():
                 self.sa_subplot.set_xlim(self.t_actual[-1]-self.t_band*3/4, self.t_actual[-1]+self.t_band/4)
                 self.ux_subplot.set_xlim(self.t_actual[-1]-self.t_band*3/4, self.t_actual[-1]+self.t_band/4)
                 self.ax_subplot.set_xlim(self.t_actual[-1]-self.t_band*3/4, self.t_actual[-1]+self.t_band/4)
-                
+
             if (len(self.solve_num) > 0 and self.solve_num[-1] > 20):
                 self.tSolve_subplot.set_xlim(self.t_actual[-1]-10, self.t_actual[-1]+10)
 
-            
+
             plt.draw()
             plt.pause(0.001)
         except:
@@ -164,8 +176,12 @@ def stateCallback(msg):
     data_plotter.x_actual = np.append(data_plotter.x_actual, msg.x)
     data_plotter.y_actual = np.append(data_plotter.y_actual, msg.y)
     data_plotter.sa_actual = np.append(data_plotter.sa_actual, msg.sa)
+    data_plotter.sa_upper_limit = np.append(data_plotter.sa_upper_limit, rospy.get_param('/vehicle/nloptcontrol_planner/sa_max'))
+    data_plotter.sa_lower_limit = np.append(data_plotter.sa_lower_limit, rospy.get_param('/vehicle/nloptcontrol_planner/sa_min'))
     data_plotter.ux_actual = np.append(data_plotter.ux_actual, msg.ux)
     data_plotter.ax_actual = np.append(data_plotter.ax_actual, msg.ax)
+    data_plotter.ax_upper_limit = np.append(data_plotter.ax_upper_limit, rospy.get_param('/vehicle/nloptcontrol_planner/ax_max'))
+    data_plotter.ax_lower_limit = np.append(data_plotter.ax_lower_limit, rospy.get_param('/vehicle/nloptcontrol_planner/ax_min'))
 
 def trajectoryCallback(msg):
     global data_plotter
@@ -189,7 +205,7 @@ if __name__ == '__main__':
 
     # initialize node
     rospy.init_node("visualization_plotter")
-    
+
     # create a data plotter instance
     data_plotter = DataPlotter()
 
@@ -205,4 +221,3 @@ if __name__ == '__main__':
     while not rospy.is_shutdown():
         data_plotter.draw_frame()
         rate.sleep()
-        
