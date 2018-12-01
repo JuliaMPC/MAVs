@@ -1,10 +1,10 @@
 case:
-  goal:
-   x: 200.
-   yVal: 125.
-   psi: 1.5701
-   tol: 15.
-   
+ goal:
+  x: 200.
+  yVal: 125.
+  psi: 1.5701
+  tol: 15.
+
  actual:
   X0:
    x: 200.0
