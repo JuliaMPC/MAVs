@@ -427,12 +427,12 @@ int main(int argc, char* argv[]) {
 
         ChVector<> VehicleCOMVel = global2veh(yaw_angle, VehicleCOMVel_global);
 
-        // Compute longitudinal speed and lateral speed
-        long_velocity = my_hmmwv.GetVehicle().GetVehicleSpeedCOM(); // longitudinal velocity (m/s)
-        double lat_velocity = 0; // lateral velocity (m/s)
-
-        // Compute longitudinal acceleration
-        double long_acceleration = 0;
+        // Get vertical tire force
+        std::vector<double> TireForceVertical;
+        for (int i = 0; i < 4; i++) {
+            ChVector<> TireForce = my_hmmwv.GetTire(i)->ReportTireForce(&terrain).force;
+            TireForceVertical.push_back(TireForce[2]);
+        }
 
         // Update vehicle state
         node.setParam("/state/t", chrono_time);
@@ -442,8 +442,8 @@ int main(int argc, char* argv[]) {
         node.setParam("/state/r", VehicleRot_dt[2]);       //// yaw rate (rad/s)
         node.setParam("/state/psi", yaw_angle);            // global heading angle (yaw angle) (rad)
         node.setParam("/state/sa", steering_angle);        // steering angle at the tire (rad)
-        node.setParam("/state/ux", VehicleCOMVel[0]);      //// longitudinal velocity  (vehicle frame) (m/s)
-        node.setParam("/state/ax", VehicleCOMAcc[0]);      //// longitudinal acceleration (vehicle frame) (m/s^2)
+        node.setParam("/state/ux", VehicleCOMVel[0]);      // longitudinal velocity  (vehicle frame) (m/s)
+        node.setParam("/state/ax", VehicleCOMAcc[0]);      // longitudinal acceleration (vehicle frame) (m/s^2)
         node.setParam("/control/thr", throttle_input);
         node.setParam("/control/brk", braking_input);
         node.setParam("/control/str", steering_input);
@@ -457,8 +457,9 @@ int main(int argc, char* argv[]) {
         state_data.v = VehicleCOMVel[1];
         state_data.ax = VehicleCOMAcc[0];
         state_data.psi = yaw_angle; // yaw angle (rad)
-        state_data.r = VehicleRot_dt[2];// yaw rate (rad/s)
+        state_data.r = VehicleRot_dt[2]; // yaw rate (rad/s)
         state_data.sa = steering_angle; // steering angle at the tire (rad)
+        state_data.tire_f = TireForceVertical; // vertical tire force 
         control_data.t = chrono_time;
         control_data.thrt_in = throttle_input; // throttle input in the range [0,+1]
         control_data.brk_in = braking_input; // braking input in the range [0,+1]
