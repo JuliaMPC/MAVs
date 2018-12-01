@@ -1,11 +1,11 @@
 case:
-  goal:
-   x: 200.
-   yVal: 125.
-   psi: 1.5701
-   tol: 15.
-
-actual:
+ goal:
+  x: 200.
+  yVal: 125.
+  psi: 1.5701
+  tol: 15.
+  
+ actual:
   X0:
    x: 200.0
    yVal: 0.0
@@ -15,7 +15,6 @@ actual:
    sa: 0.0
    ux: 17.0
    ax: 0.0
-
   obstacle:
    num: 3
    radius: [5.,10.,2.]

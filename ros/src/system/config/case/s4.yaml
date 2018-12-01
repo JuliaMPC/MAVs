@@ -4,8 +4,8 @@ case:
    yVal: 125.
    psi: 1.5701
    tol: 15.
-
-actual:
+   
+ actual:
   X0:
    x: 200.0
    yVal: 0.0
@@ -15,7 +15,6 @@ actual:
    sa: 0.0
    ux: 17.0
    ax: 0.0
-
   obstacle:
    num: 3
    radius: [5.,4.,2.]
