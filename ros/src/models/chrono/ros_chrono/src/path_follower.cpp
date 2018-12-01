@@ -569,12 +569,12 @@ int main(int argc, char* argv[]) {
 
         ChVector<> VehicleCOMVel = global2veh(yaw_angle, VehicleCOMVel_global);
 
-        // Compute longitudinal speed and lateral speed
-        long_velocity = my_hmmwv.GetVehicle().GetVehicleSpeedCOM(); // longitudinal velocity (m/s)
-        double lat_velocity = 0; // lateral velocity (m/s)
-
-        // Compute longitudinal acceleration
-        double long_acceleration = 0;
+        // Get vertical tire force
+        std::vector<double> TireForceVertical;
+        for (int i = 0; i < 4; i++) {
+            ChVector<> TireForce = my_hmmwv.GetTire(i)->ReportTireForce(&terrain).force;
+            TireForceVertical.push_back(TireForce[2]);
+        }
 
         // Update vehicle state
         node.setParam("/state/t", chrono_time);

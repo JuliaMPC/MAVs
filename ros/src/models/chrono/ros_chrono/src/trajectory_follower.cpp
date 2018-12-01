@@ -363,8 +363,22 @@ int main(int argc, char* argv[]) {
             traj_sa_interp = traj_sa[0];
         }
         
-        // steering input with [-1,1] saturation constraint 
-        steering_input = std::max(-1.0, std::min(1.0, traj_sa_interp/maximum_steering_angle));
+        // steering input with [-1,1] saturation constraint
+        double alpha = 0.3;
+        
+        if (((traj_sa_interp - steering_input*maximum_steering_angle) / step_size) > 1.0) {
+            traj_sa_interp = (traj_sa_interp - 1.0*step_size);
+            ROS_INFO("exceed maximum rate +"); 
+        }
+        else if (((steering_input*maximum_steering_angle - traj_sa_interp) / step_size) < -1.0) {
+            traj_sa_interp = (traj_sa_interp + 1.0*step_size); 
+            ROS_INFO("exceed maximum rate -"); 
+        }
+
+        steering_input = (1.0 - alpha) * steering_input + alpha * traj_sa_interp / maximum_steering_angle; 
+
+
+        steering_input = std::max(-1.0, std::min(1.0, steering_input));
 
         // PID controller output for throttle or brake
 	    double ux_err = traj_ux_interp - long_velocity;

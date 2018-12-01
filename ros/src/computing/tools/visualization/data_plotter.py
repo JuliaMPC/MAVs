@@ -25,6 +25,7 @@ class DataPlotter():
 
         # steering angle data
         self.sa_actual = np.array([], dtype=np.float64)
+	self.sa_actual_real = np.array([], dtype=np.float64)
         self.sa_traj = np.array([], dtype=np.float64)
         self.sa_traj_last = np.array([], dtype=np.float64)
         self.sa_upper_limit = np.array([], dtype=np.float64)
@@ -37,6 +38,7 @@ class DataPlotter():
 
         # longitudinal acceleration data
         self.ax_actual = np.array([], dtype=np.float64)
+        self.ax_actual_real = np.array([], dtype=np.float64)
         self.ax_traj = np.array([], dtype=np.float64)
         self.ax_traj_last = np.array([], dtype=np.float64)
         self.ax_upper_limit = np.array([], dtype=np.float64)
@@ -181,19 +183,34 @@ class DataPlotter():
 
             
             plt.draw()
-            plt.pause(0.001)
+            plt.pause(0.001) #0.001
         except:
             rospy.loginfo("weird exception")
 
 def stateCallback(msg):
     global data_plotter
-
+    num_avg = 30
     data_plotter.t_actual = np.append(data_plotter.t_actual, msg.t)
     data_plotter.x_actual = np.append(data_plotter.x_actual, msg.x)
     data_plotter.y_actual = np.append(data_plotter.y_actual, msg.y)
-    data_plotter.sa_actual = np.append(data_plotter.sa_actual, msg.sa)
     data_plotter.ux_actual = np.append(data_plotter.ux_actual, msg.ux)
-    data_plotter.ax_actual = np.append(data_plotter.ax_actual, msg.ax)
+    data_plotter.sa_actual_real = np.append(data_plotter.sa_actual_real, msg.sa)
+    data_plotter.ax_actual_real = np.append(data_plotter.ax_actual_real, msg.ax)
+    if(len(data_plotter.ax_actual_real) > num_avg):
+   	temp = sum(data_plotter.ax_actual_real[(len(data_plotter.ax_actual_real)-num_avg-1):(len(data_plotter.ax_actual_real)-1)])/num_avg
+	data_plotter.ax_actual = np.append(data_plotter.ax_actual, temp)
+    else:
+	temp = sum(data_plotter.ax_actual_real[0:(len(data_plotter.ax_actual_real)-1)])/len(data_plotter.ax_actual_real)
+	data_plotter.ax_actual = np.append(data_plotter.ax_actual, temp)
+	#data_plotter.ax_actual = np.append(data_plotter.ax_actual, msg.ax)
+    
+    if(len(data_plotter.sa_actual_real) > num_avg):
+   	temp = sum(data_plotter.sa_actual_real[(len(data_plotter.sa_actual_real)-num_avg-1):(len(data_plotter.sa_actual_real)-1)])/num_avg
+	data_plotter.sa_actual = np.append(data_plotter.sa_actual, temp)
+    else:
+	temp = sum(data_plotter.sa_actual_real[0:(len(data_plotter.sa_actual_real)-1)])/len(data_plotter.sa_actual_real)
+	data_plotter.sa_actual = np.append(data_plotter.sa_actual, temp)
+    
 
 def trajectoryCallback(msg):
     global data_plotter
