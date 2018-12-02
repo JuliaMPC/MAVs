@@ -269,7 +269,9 @@ int main(int argc, char* argv[]) {
     // ------------------------------
     // Create the vehicle and terrain
     // ------------------------------
-
+    // wait system loaded
+    waitForLoaded(node);
+    
     // Create the HMMWV vehicle, set parameters, and initialize
     HMMWV_Full my_hmmwv;
     my_hmmwv.SetContactMethod(contact_method);
@@ -336,8 +338,7 @@ int main(int argc, char* argv[]) {
     double steering_input = 0;
     double braking_input = 0;
 
-    // wait system loaded
-    waitForLoaded(node);
+    
     while (ros::ok()) {
         // Get chrono time
         double chrono_time = my_hmmwv.GetSystem()->GetChTime();

@@ -26,6 +26,7 @@ class DataPlotter():
         # steering angle data
         self.sa_actual = np.array([], dtype=np.float64)
 	self.sa_actual_real = np.array([], dtype=np.float64)
+	self.sa_cumsum = 0
         self.sa_traj = np.array([], dtype=np.float64)
         self.sa_traj_last = np.array([], dtype=np.float64)
         self.sa_upper_limit = np.array([], dtype=np.float64)
@@ -39,6 +40,7 @@ class DataPlotter():
         # longitudinal acceleration data
         self.ax_actual = np.array([], dtype=np.float64)
         self.ax_actual_real = np.array([], dtype=np.float64)
+	self.ax_cumsum = 0
         self.ax_traj = np.array([], dtype=np.float64)
         self.ax_traj_last = np.array([], dtype=np.float64)
         self.ax_upper_limit = np.array([], dtype=np.float64)
@@ -196,19 +198,24 @@ def stateCallback(msg):
     data_plotter.ux_actual = np.append(data_plotter.ux_actual, msg.ux)
     data_plotter.sa_actual_real = np.append(data_plotter.sa_actual_real, msg.sa)
     data_plotter.ax_actual_real = np.append(data_plotter.ax_actual_real, msg.ax)
+
     if(len(data_plotter.ax_actual_real) > num_avg):
-   	temp = sum(data_plotter.ax_actual_real[(len(data_plotter.ax_actual_real)-num_avg-1):(len(data_plotter.ax_actual_real)-1)])/num_avg
+	data_plotter.ax_cumsum = data_plotter.ax_cumsum + data_plotter.ax_actual_real[(len(data_plotter.ax_actual_real)-1)]-data_plotter.ax_actual_real[(len(data_plotter.ax_actual_real)-num_avg-1)]
+   	temp = data_plotter.ax_cumsum/num_avg
 	data_plotter.ax_actual = np.append(data_plotter.ax_actual, temp)
     else:
-	temp = sum(data_plotter.ax_actual_real[0:(len(data_plotter.ax_actual_real)-1)])/len(data_plotter.ax_actual_real)
+	data_plotter.ax_cumsum = data_plotter.ax_cumsum + data_plotter.ax_actual_real[len(data_plotter.ax_actual_real)-1]
+	temp = data_plotter.ax_cumsum/len(data_plotter.ax_actual_real)
 	data_plotter.ax_actual = np.append(data_plotter.ax_actual, temp)
-	#data_plotter.ax_actual = np.append(data_plotter.ax_actual, msg.ax)
+	
     
     if(len(data_plotter.sa_actual_real) > num_avg):
+	data_plotter.sa_cumsum = data_plotter.sa_cumsum + data_plotter.sa_actual_real[(len(data_plotter.sa_actual_real)-1)]-data_plotter.sa_actual_real[(len(data_plotter.sa_actual_real)-num_avg-1)]
    	temp = sum(data_plotter.sa_actual_real[(len(data_plotter.sa_actual_real)-num_avg-1):(len(data_plotter.sa_actual_real)-1)])/num_avg
 	data_plotter.sa_actual = np.append(data_plotter.sa_actual, temp)
     else:
-	temp = sum(data_plotter.sa_actual_real[0:(len(data_plotter.sa_actual_real)-1)])/len(data_plotter.sa_actual_real)
+	data_plotter.sa_cumsum = data_plotter.sa_cumsum + data_plotter.sa_actual_real[len(data_plotter.sa_actual_real)-1]
+	temp = data_plotter.sa_cumsum/len(data_plotter.sa_actual_real)
 	data_plotter.sa_actual = np.append(data_plotter.sa_actual, temp)
     
 
