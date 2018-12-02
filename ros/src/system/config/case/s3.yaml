@@ -16,7 +16,7 @@ case:
    theta: 0.0
    psi: 1.57079632679
    sa: 0.0
-   ux: 17.0
+   ux: 0.0
    ax: 0.0
   obstacle:
    num: 3
