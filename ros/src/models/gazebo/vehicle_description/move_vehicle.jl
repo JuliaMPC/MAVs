@@ -116,9 +116,9 @@ function loop(set_state,get_state)
         # TODO check system/plant here
         #if isequal(RobotOS.get_param("system/plant"),"3DOF") &&
          #RobotOS.get_param("system/nloptcontrol_planner/flags/running")
-         ms.pose.position.x = RobotOS.get_param("state/x")
-         ms.pose.position.y = RobotOS.get_param("state/y")
-         Q = tf.quaternion_from_euler(0, 0, RobotOS.get_param("state/psi"))
+        ms.pose.position.x = RobotOS.get_param("state/x")
+        ms.pose.position.y = RobotOS.get_param("state/y")
+        Q = tf.quaternion_from_euler(0, 0, RobotOS.get_param("state/psi"))
         #else # TODO remove this, should only be one state!
         # ms.pose.position.x = RobotOS.get_param("state/chrono/x")
         # ms.pose.position.y = RobotOS.get_param("state/chrono/yVal")
