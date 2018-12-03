@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- demo of nloptcontrol_planner & ros_chrono with trajectory_follower.cpp & vehicle_description & obstacle_detector-->
+
+  <!--  ************** load args and parameters ***************  -->
+  <!--common args and parameters-->
+  <arg name="system_params_path" default="$(find system)/config/system/demos/demoM.yaml"/>
+  <arg name="vehicle_params_path" default="$(find system)/config/vehicle/hmmwv.yaml"/>
+  <arg name="case_params_path" default="$(find system)/config/case/s3.yaml"/>
+  <rosparam command="load" file="$(arg case_params_path)" />
+  <rosparam command="load" file="$(arg system_params_path)" />
+  <rosparam command="load" file="$(arg vehicle_params_path)" />
+
+  <!--obstacle_detector args and parameters-->
+  <arg name="frame_id" default="velodyne_top_link" />
+  <arg name="manager" default="$(arg frame_id)_nodelet_manager" />
+
+  <!--nloptcontrol_planner args and parameters-->
+  <arg name="planner_params_path" default="$(find system)/config/planner/nloptcontrol_planner/plannerD.yaml"/>
+  <rosparam command="load" file="$(arg planner_params_path)" />
+
+  <!--vehicle_description args and parameters-->
+  <arg name="gui" default="true"/>
+  <arg name="paused" default="true"/> <!--pause Gazebo at the start until Chrono is ready: NOTE this pause overrides system/flags/pause -->
+  <!-- use Gazebo's simulation time -->
+  <param name="use_sim_time" value="true"/>
+
+  <!--  ************** load args and parameters ***************  -->
+
+  <!--  ************** launch scripts ***************  -->
+
+  <include file="$(find nloptcontrol_planner)/launch/main.launch">
+    <arg name="case_params_path" value="$(arg case_params_path)"/>
+    <arg name="planner_params_path" value="$(arg planner_params_path)"/>
+    <arg name="system_params_path" value="$(arg system_params_path)"/>
+    <arg name="vehicle_params_path" value="$(arg vehicle_params_path)"/>
+  </include>
+
+  <include file="$(find vehicle_description)/launch/main.launch">
+    <arg name="system_params_path" value="$(arg system_params_path)"/>
+    <arg name="vehicle_params_path" value="$(arg vehicle_params_path)"/>
+    <arg name="case_params_path" value="$(arg case_params_path)"/>
+    <arg name="gui" value="$(arg gui)"/>
+    <arg name="paused" value="$(arg paused)"/>
+  </include>
+
+  <include file="$(find obstacle_detector)/launch/obstacle_detector.launch">
+    <arg name="frame_id" value="$(arg frame_id)" />
+    <arg name="manager" value="$(arg manager)" />
+  </include>
+
+  <!--  ************** launch scripts ***************  -->
+
+
+  <!--  ************** additional nodes ***************  -->
+
+  <!--ros_chrono-->
+  <node name="Chronode" pkg="ros_chrono" type="trajectory_follower" cwd="node"  output="screen"/>
+  <node name="sim_time" pkg="sim_time" type="ros_get_world_time" output="screen" />
+
+  <!--initialize system-->
+  <node name="bootstrap" pkg="system" type="bootstrap.jl" output="screen"/>
+
+  <!--unpause Gazebo-->
+  <node name="unpause_gazebo" pkg="vehicle_description" type="unpause.jl"/>
+
+  <!--display trajectory-->
+  <!--node name="rviz" pkg="rviz" type="rviz" output="screen" args="-d $(find obstacle_detector)/resources/display.rviz"/-->
+
+  <!--system_shutdown node-->
+  <node name="system_shutdown" pkg="system" type="system_shutdown" output="screen" required="true">
+     <rosparam file="$(arg system_params_path)" command="load"/>
+  </node>
+
+  <node name="visualization" pkg="visualization" type="data_plotter.py" />
+
+  <!--  ************** additional nodes ***************  -->
+
+</launch>
