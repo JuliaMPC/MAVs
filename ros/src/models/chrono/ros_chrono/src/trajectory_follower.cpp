@@ -276,8 +276,6 @@ int main(int argc, char* argv[]) {
     HMMWV_Full my_hmmwv;
     my_hmmwv.SetContactMethod(contact_method);
     my_hmmwv.SetChassisFixed(false);
-    my_hmmwv.SetInitPosition(ChCoordsys<>(initLoc, initRot));
-    my_hmmwv.SetInitFwdVel(ux0);
     my_hmmwv.SetPowertrainType(powertrain_model);
     my_hmmwv.SetDriveType(drive_type);
     my_hmmwv.SetSteeringType(steering_type);
@@ -366,21 +364,18 @@ int main(int argc, char* argv[]) {
             traj_sa_interp = traj_sa[0];
         }
         
-        // steering input with [-1,1] saturation constraint
-        double alpha = 0.3;
-        
-        if (((traj_sa_interp - steering_input*maximum_steering_angle) / step_size) > 1.0) {
-            traj_sa_interp = (traj_sa_interp - 1.0*step_size);
-            ROS_INFO("exceed maximum rate +"); 
+        // steering input
+        // steering rate saturation
+        if (((traj_sa_interp - steering_input*maximum_steering_angle) / step_size) > 1.5) {
+            traj_sa_interp = (traj_sa_interp - 1.5*step_size);
         }
-        else if (((steering_input*maximum_steering_angle - traj_sa_interp) / step_size) < -1.0) {
-            traj_sa_interp = (traj_sa_interp + 1.0*step_size); 
-            ROS_INFO("exceed maximum rate -"); 
+        else if (((steering_input*maximum_steering_angle - traj_sa_interp) / step_size) < -1.5) {
+            traj_sa_interp = (traj_sa_interp + 1.5*step_size); 
         }
-
+        // simple low pass filter 
+        double alpha = 0.4;
         steering_input = (1.0 - alpha) * steering_input + alpha * traj_sa_interp / maximum_steering_angle; 
-
-
+        // steering angle saturation
         steering_input = std::max(-1.0, std::min(1.0, steering_input));
 
         // PID controller output for throttle or brake

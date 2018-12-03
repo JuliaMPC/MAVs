@@ -25,8 +25,8 @@ class DataPlotter():
 
         # steering angle data
         self.sa_actual = np.array([], dtype=np.float64)
-	self.sa_actual_real = np.array([], dtype=np.float64)
-	self.sa_cumsum = 0
+        self.sa_actual_real = np.array([], dtype=np.float64)
+        self.sa_cumsum = 0
         self.sa_traj = np.array([], dtype=np.float64)
         self.sa_traj_last = np.array([], dtype=np.float64)
         self.sa_upper_limit = np.array([], dtype=np.float64)
@@ -40,7 +40,7 @@ class DataPlotter():
         # longitudinal acceleration data
         self.ax_actual = np.array([], dtype=np.float64)
         self.ax_actual_real = np.array([], dtype=np.float64)
-	self.ax_cumsum = 0
+        self.ax_cumsum = 0
         self.ax_traj = np.array([], dtype=np.float64)
         self.ax_traj_last = np.array([], dtype=np.float64)
         self.ax_upper_limit = np.array([], dtype=np.float64)
@@ -116,7 +116,7 @@ class DataPlotter():
         self.ux_subplot.set_xlim(0,self.t_band)
         self.ux_subplot.set_ylim(-self.ux_band/2.0,self.ux_band/2.0)
 
-        self.line_ax_actual = Line2D([], [], color='green', linestyle='-')
+        self.line_ax_actual = Line2D([], [], linewidth=1.8, color='green', linestyle='-')
         self.line_ax_traj = Line2D([], [], color='red', linewidth=1.5, linestyle='--')
         self.line_ax_traj_last = Line2D([], [], color='orange', linewidth=1.5, linestyle='--')
         self.ax_subplot.add_line(self.line_ax_actual)
@@ -134,12 +134,11 @@ class DataPlotter():
         self.line_solve_time_pass = Line2D([], [], marker='*', color='green', linestyle='')
         self.line_solve_time_fail = Line2D([], [], marker='*', color='red', linestyle='')
         self.line_solve_time_limit = Line2D([], [], color='red', linewidth=1.5, linestyle='--')
-        # self.tSolve_subplot.add_line(self.line_solve_time)
         self.tSolve_subplot.add_line(self.line_solve_time_pass)
         self.tSolve_subplot.add_line(self.line_solve_time_fail)
         self.tSolve_subplot.add_line(self.line_solve_time_limit)
-	self.tSolve_subplot.legend(['optimal', 'non-optimal', 'solve time limit'], fontsize='x-small')
-        self.tSolve_subplot.set_xlabel('number of optimization calculations', fontsize='larger', verticalalignment='center')
+        self.tSolve_subplot.legend(['optimal', 'non-optimal', 'solve time limit'], fontsize='x-small')
+        self.tSolve_subplot.set_xlabel('number of iterations', fontsize='larger', verticalalignment='center')
         self.tSolve_subplot.set_ylabel('solve time (s)', fontsize='larger')
         self.tSolve_subplot.tick_params('both', labelsize='x-small')
         self.tSolve_subplot.grid(True)
@@ -182,7 +181,7 @@ class DataPlotter():
                 self.ax_subplot.set_xlim(self.t_actual[-1]-self.t_band*3/4, self.t_actual[-1]+self.t_band/4)
                 
             if (len(self.solve_num) > 0 and self.solve_num[-1] > 20):
-                self.tSolve_subplot.set_xlim(self.t_actual[-1]-10, self.t_actual[-1]+10)
+                self.tSolve_subplot.set_xlim(self.t_actual[-1], self.t_actual[-1]+self.solve_num_band)
 
             
             plt.draw()
@@ -201,34 +200,35 @@ def stateCallback(msg):
     data_plotter.ax_actual_real = np.append(data_plotter.ax_actual_real, msg.ax)
 
     if(len(data_plotter.ax_actual_real) > num_avg):
-	data_plotter.ax_cumsum = data_plotter.ax_cumsum + data_plotter.ax_actual_real[(len(data_plotter.ax_actual_real)-1)]-data_plotter.ax_actual_real[(len(data_plotter.ax_actual_real)-num_avg-1)]
-   	temp = data_plotter.ax_cumsum/num_avg
-	data_plotter.ax_actual = np.append(data_plotter.ax_actual, temp)
+        data_plotter.ax_cumsum = data_plotter.ax_cumsum + data_plotter.ax_actual_real[(len(data_plotter.ax_actual_real)-1)]-data_plotter.ax_actual_real[(len(data_plotter.ax_actual_real)-num_avg-1)]
+        temp = data_plotter.ax_cumsum/num_avg
+        data_plotter.ax_actual = np.append(data_plotter.ax_actual, temp)
     else:
-	data_plotter.ax_cumsum = data_plotter.ax_cumsum + data_plotter.ax_actual_real[len(data_plotter.ax_actual_real)-1]
-	temp = data_plotter.ax_cumsum/len(data_plotter.ax_actual_real)
-	data_plotter.ax_actual = np.append(data_plotter.ax_actual, temp)
+        data_plotter.ax_cumsum = data_plotter.ax_cumsum + data_plotter.ax_actual_real[len(data_plotter.ax_actual_real)-1]
+        temp = data_plotter.ax_cumsum/len(data_plotter.ax_actual_real)
+        data_plotter.ax_actual = np.append(data_plotter.ax_actual, temp)
 	
     
     if(len(data_plotter.sa_actual_real) > num_avg):
-	data_plotter.sa_cumsum = data_plotter.sa_cumsum + data_plotter.sa_actual_real[(len(data_plotter.sa_actual_real)-1)]-data_plotter.sa_actual_real[(len(data_plotter.sa_actual_real)-num_avg-1)]
-   	temp = sum(data_plotter.sa_actual_real[(len(data_plotter.sa_actual_real)-num_avg-1):(len(data_plotter.sa_actual_real)-1)])/num_avg
-	data_plotter.sa_actual = np.append(data_plotter.sa_actual, temp)
+        data_plotter.sa_cumsum = data_plotter.sa_cumsum + data_plotter.sa_actual_real[(len(data_plotter.sa_actual_real)-1)]-data_plotter.sa_actual_real[(len(data_plotter.sa_actual_real)-num_avg-1)]
+        temp = sum(data_plotter.sa_actual_real[(len(data_plotter.sa_actual_real)-num_avg-1):(len(data_plotter.sa_actual_real)-1)])/num_avg
+        data_plotter.sa_actual = np.append(data_plotter.sa_actual, temp)
     else:
-	data_plotter.sa_cumsum = data_plotter.sa_cumsum + data_plotter.sa_actual_real[len(data_plotter.sa_actual_real)-1]
-	temp = data_plotter.sa_cumsum/len(data_plotter.sa_actual_real)
-	data_plotter.sa_actual = np.append(data_plotter.sa_actual, temp)
+        data_plotter.sa_cumsum = data_plotter.sa_cumsum + data_plotter.sa_actual_real[len(data_plotter.sa_actual_real)-1]
+        temp = data_plotter.sa_cumsum/len(data_plotter.sa_actual_real)
+        data_plotter.sa_actual = np.append(data_plotter.sa_actual, temp)
     
 
 def trajectoryCallback(msg):
     global data_plotter
 
-    data_plotter.t_traj_last = data_plotter.t_traj
-    data_plotter.x_traj_last = data_plotter.x_traj
-    data_plotter.y_traj_last = data_plotter.y_traj
-    data_plotter.sa_traj_last = data_plotter.sa_traj
-    data_plotter.ux_traj_last = data_plotter.ux_traj
-    data_plotter.ax_traj_last = data_plotter.ax_traj
+    # # truncate the current message and append it to the old trajectory
+    data_plotter.t_traj_last = np.append(data_plotter.t_traj_last, data_plotter.t_traj[1:2])
+    data_plotter.x_traj_last = np.append(data_plotter.x_traj_last, data_plotter.x_traj[1:2]) 
+    data_plotter.y_traj_last = np.append(data_plotter.y_traj_last, data_plotter.y_traj[1:2])
+    data_plotter.sa_traj_last = np.append(data_plotter.sa_traj_last, data_plotter.sa_traj[1:2])
+    data_plotter.ux_traj_last = np.append(data_plotter.ux_traj_last, data_plotter.ux_traj[1:2]) 
+    data_plotter.ax_traj_last = np.append(data_plotter.ax_traj_last, data_plotter.ax_traj[1:2])
 
     data_plotter.t_traj = msg.t
     data_plotter.x_traj = msg.x
@@ -240,12 +240,13 @@ def trajectoryCallback(msg):
 def optCallback(msg):
     global data_plotter
 
-    if (msg.tSolve < 0.5) & (msg.status == 'Optimal') :
+    if (msg.status == 'Optimal') :
         data_plotter.solve_time_pass = np.append(data_plotter.solve_time_pass, msg.tSolve)
         data_plotter.solve_num_pass = np.append(data_plotter.solve_num_pass, len(data_plotter.solve_num))
     else:
         data_plotter.solve_time_fail = np.append(data_plotter.solve_time_fail, msg.tSolve)
         data_plotter.solve_num_fail = np.append(data_plotter.solve_num_fail, len(data_plotter.solve_num))
+
     data_plotter.solve_time = np.append(data_plotter.solve_time, msg.tSolve)
     data_plotter.solve_time_limit = np.append(data_plotter.solve_time_limit, 0.5)
     data_plotter.solve_num = np.append(data_plotter.solve_num, len(data_plotter.solve_time))
