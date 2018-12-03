@@ -26,6 +26,7 @@ class DataPlotter():
         # steering angle data
         self.sa_actual = np.array([], dtype=np.float64)
 	self.sa_actual_real = np.array([], dtype=np.float64)
+	self.sa_cumsum = 0
         self.sa_traj = np.array([], dtype=np.float64)
         self.sa_traj_last = np.array([], dtype=np.float64)
         self.sa_upper_limit = np.array([], dtype=np.float64)
@@ -39,6 +40,7 @@ class DataPlotter():
         # longitudinal acceleration data
         self.ax_actual = np.array([], dtype=np.float64)
         self.ax_actual_real = np.array([], dtype=np.float64)
+	self.ax_cumsum = 0
         self.ax_traj = np.array([], dtype=np.float64)
         self.ax_traj_last = np.array([], dtype=np.float64)
         self.ax_upper_limit = np.array([], dtype=np.float64)
@@ -78,8 +80,8 @@ class DataPlotter():
         self.pos_subplot.add_line(self.line_pos_traj)
         self.pos_subplot.add_line(self.line_pos_traj_last)
         self.pos_subplot.legend(['actual path', 'planned path', 'last planned path'], fontsize='x-small')
-        self.pos_subplot.set_xlabel('x (m)')
-        self.pos_subplot.set_ylabel('y (m)')
+        self.pos_subplot.set_xlabel('x (m)', fontsize='larger')
+        self.pos_subplot.set_ylabel('y (m)', fontsize='larger')
         self.pos_subplot.tick_params('both', labelsize='small')
         self.pos_subplot.grid(True)
         self.pos_subplot.axis('equal')
@@ -92,9 +94,9 @@ class DataPlotter():
         self.sa_subplot.add_line(self.line_sa_actual)
         self.sa_subplot.add_line(self.line_sa_traj)
         self.sa_subplot.add_line(self.line_sa_traj_last)
-        self.sa_subplot.legend(['actual sa', 'planned sa', 'last planned sa'], fontsize='x-small')
-        self.sa_subplot.set_xlabel('time (s)', fontsize='small', verticalalignment='center')
-        self.sa_subplot.set_ylabel('steering angle (rad)', fontsize='small')
+        self.sa_subplot.legend(['actual', 'planned', 'last planned'], fontsize='x-small')
+        self.sa_subplot.set_xlabel('time (s)', fontsize='larger', verticalalignment='center')
+        self.sa_subplot.set_ylabel('sa (rad)', fontsize='larger')
         self.sa_subplot.tick_params('both', labelsize='x-small')
         self.sa_subplot.grid(True)
         self.sa_subplot.set_xlim(0,self.t_band)
@@ -106,9 +108,9 @@ class DataPlotter():
         self.ux_subplot.add_line(self.line_ux_actual)
         self.ux_subplot.add_line(self.line_ux_traj)
         self.ux_subplot.add_line(self.line_ux_traj_last)
-        self.ux_subplot.legend(['actual ux', 'planned ux', 'last planned ux'], fontsize='x-small')
-        self.ux_subplot.set_xlabel('time (s)', fontsize='small', verticalalignment='center')
-        self.ux_subplot.set_ylabel('longitudinal velocity (m/s)', fontsize='small')
+        self.ux_subplot.legend(['actual', 'planned', 'last planned'], fontsize='x-small')
+        self.ux_subplot.set_xlabel('time (s)', fontsize='larger', verticalalignment='center')
+        self.ux_subplot.set_ylabel('ux (m/s)', fontsize='larger')
         self.ux_subplot.tick_params('both', labelsize='x-small')
         self.ux_subplot.grid(True)
         self.ux_subplot.set_xlim(0,self.t_band)
@@ -120,9 +122,9 @@ class DataPlotter():
         self.ax_subplot.add_line(self.line_ax_actual)
         self.ax_subplot.add_line(self.line_ax_traj)
         self.ax_subplot.add_line(self.line_ax_traj_last)
-        self.ax_subplot.legend(['actual ax', 'planned ax', 'last planned ax'], fontsize='x-small')
-        self.ax_subplot.set_xlabel('time (s)', fontsize='small', verticalalignment='center')
-        self.ax_subplot.set_ylabel('longitudinal acceleration (m/s)', fontsize='small')
+        self.ax_subplot.legend(['actual', 'planned', 'last planned'], fontsize='x-small')
+        self.ax_subplot.set_xlabel('time (s)', fontsize='larger', verticalalignment='center')
+        self.ax_subplot.set_ylabel('ax (m/s)', fontsize='larger')
         self.ax_subplot.tick_params('both', labelsize='x-small')
         self.ax_subplot.grid(True)
         self.ax_subplot.set_xlim(0,self.t_band)
@@ -136,8 +138,9 @@ class DataPlotter():
         self.tSolve_subplot.add_line(self.line_solve_time_pass)
         self.tSolve_subplot.add_line(self.line_solve_time_fail)
         self.tSolve_subplot.add_line(self.line_solve_time_limit)
-        self.tSolve_subplot.set_xlabel('number of optimization calculations', fontsize='small', verticalalignment='center')
-        self.tSolve_subplot.set_ylabel('solve time (s)', fontsize='small')
+	self.tSolve_subplot.legend(['optimal', 'non-optimal', 'solve time limit'], fontsize='x-small')
+        self.tSolve_subplot.set_xlabel('number of optimization calculations', fontsize='larger', verticalalignment='center')
+        self.tSolve_subplot.set_ylabel('solve time (s)', fontsize='larger')
         self.tSolve_subplot.tick_params('both', labelsize='x-small')
         self.tSolve_subplot.grid(True)
         self.tSolve_subplot.set_xlim(0,self.solve_num_band)
@@ -196,19 +199,24 @@ def stateCallback(msg):
     data_plotter.ux_actual = np.append(data_plotter.ux_actual, msg.ux)
     data_plotter.sa_actual_real = np.append(data_plotter.sa_actual_real, msg.sa)
     data_plotter.ax_actual_real = np.append(data_plotter.ax_actual_real, msg.ax)
+
     if(len(data_plotter.ax_actual_real) > num_avg):
-   	temp = sum(data_plotter.ax_actual_real[(len(data_plotter.ax_actual_real)-num_avg-1):(len(data_plotter.ax_actual_real)-1)])/num_avg
+	data_plotter.ax_cumsum = data_plotter.ax_cumsum + data_plotter.ax_actual_real[(len(data_plotter.ax_actual_real)-1)]-data_plotter.ax_actual_real[(len(data_plotter.ax_actual_real)-num_avg-1)]
+   	temp = data_plotter.ax_cumsum/num_avg
 	data_plotter.ax_actual = np.append(data_plotter.ax_actual, temp)
     else:
-	temp = sum(data_plotter.ax_actual_real[0:(len(data_plotter.ax_actual_real)-1)])/len(data_plotter.ax_actual_real)
+	data_plotter.ax_cumsum = data_plotter.ax_cumsum + data_plotter.ax_actual_real[len(data_plotter.ax_actual_real)-1]
+	temp = data_plotter.ax_cumsum/len(data_plotter.ax_actual_real)
 	data_plotter.ax_actual = np.append(data_plotter.ax_actual, temp)
-	#data_plotter.ax_actual = np.append(data_plotter.ax_actual, msg.ax)
+	
     
     if(len(data_plotter.sa_actual_real) > num_avg):
+	data_plotter.sa_cumsum = data_plotter.sa_cumsum + data_plotter.sa_actual_real[(len(data_plotter.sa_actual_real)-1)]-data_plotter.sa_actual_real[(len(data_plotter.sa_actual_real)-num_avg-1)]
    	temp = sum(data_plotter.sa_actual_real[(len(data_plotter.sa_actual_real)-num_avg-1):(len(data_plotter.sa_actual_real)-1)])/num_avg
 	data_plotter.sa_actual = np.append(data_plotter.sa_actual, temp)
     else:
-	temp = sum(data_plotter.sa_actual_real[0:(len(data_plotter.sa_actual_real)-1)])/len(data_plotter.sa_actual_real)
+	data_plotter.sa_cumsum = data_plotter.sa_cumsum + data_plotter.sa_actual_real[len(data_plotter.sa_actual_real)-1]
+	temp = data_plotter.sa_cumsum/len(data_plotter.sa_actual_real)
 	data_plotter.sa_actual = np.append(data_plotter.sa_actual, temp)
     
 

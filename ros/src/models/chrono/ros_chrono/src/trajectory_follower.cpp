@@ -269,6 +269,8 @@ int main(int argc, char* argv[]) {
     // ------------------------------
     // Create the vehicle and terrain
     // ------------------------------
+    // wait system loaded
+    waitForLoaded(node);
 
     // Create the HMMWV vehicle, set parameters, and initialize
     HMMWV_Full my_hmmwv;
@@ -330,14 +332,15 @@ int main(int argc, char* argv[]) {
     ChRealtimeStepTimer realtime_timer;
 
     // Vehicle steering angle
-    double long_velocity = 0.0;
+    double long_velocity = ux0;
     // Collect controller output data from modules (for inter-module communication)
     double throttle_input = 0;
     double steering_input = 0;
     double braking_input = 0;
 
-    // wait system loaded
-    waitForLoaded(node);
+
+    
+
     while (ros::ok()) {
         // Get chrono time
         double chrono_time = my_hmmwv.GetSystem()->GetChTime();
@@ -415,7 +418,6 @@ int main(int argc, char* argv[]) {
             app.Advance(step);
         }
 
-
         // Get vehicle information from Chrono vehicle model
         ChVector<> VehicleCOMPos = my_hmmwv.GetVehicle().GetVehicleCOMPos(); // global vehicle COM location
         ChQuaternion<> VehicleRot = my_hmmwv.GetVehicle().GetVehicleRot(); // global orientation as quaternion
@@ -440,7 +442,8 @@ int main(int argc, char* argv[]) {
         VehicleCOMAcc[0] = std::max(-1.5, std::min(1.5, VehicleCOMAcc[0])); // let vehicle acceleration bounded in [-1.5, 1.5] (temporary solution) 
 
         ChVector<> VehicleCOMVel = global2veh(yaw_angle, VehicleCOMVel_global);
-
+        long_velocity = VehicleCOMVel[0];
+    
         // Get vertical tire force
         std::vector<double> TireForceVertical;
         for (int i = 0; i < 4; i++) {
