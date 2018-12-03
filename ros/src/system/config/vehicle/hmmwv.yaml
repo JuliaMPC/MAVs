@@ -148,7 +148,7 @@ vehicle:
      anti_windup: clamping
 
     angle_error:
-     Kp: 0.5
+     Kp: 0.05
      Ki: 0.0
      Kd: 0.0
      Kw: 0.0
