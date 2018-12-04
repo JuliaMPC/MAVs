@@ -68,8 +68,8 @@ class DataPlotter():
         self.t_band = 10
         self.x_band = 20
         self.y_band = 50
-        self.sa_band = 0.2
-        self.ux_band = 20
+        self.sa_band = 0.4
+        self.ux_band = 24
         self.ax_band = 5
         self.solve_num_band = 20
 
@@ -137,12 +137,12 @@ class DataPlotter():
         self.tSolve_subplot.add_line(self.line_solve_time_pass)
         self.tSolve_subplot.add_line(self.line_solve_time_fail)
         self.tSolve_subplot.add_line(self.line_solve_time_limit)
-        self.tSolve_subplot.legend(['optimal', 'non-optimal', 'solve time limit'], fontsize='x-small')
-        self.tSolve_subplot.set_xlabel('number of iterations', fontsize='larger', verticalalignment='center')
+        self.tSolve_subplot.legend(['optimal', 'non-optimal', 'target maximum solve time'], fontsize='x-small')
+        self.tSolve_subplot.set_xlabel('iterations', fontsize='larger', verticalalignment='center')
         self.tSolve_subplot.set_ylabel('solve time (s)', fontsize='larger')
         self.tSolve_subplot.tick_params('both', labelsize='x-small')
         self.tSolve_subplot.grid(True)
-        self.tSolve_subplot.set_xlim(0,self.solve_num_band)
+        self.tSolve_subplot.set_xlim(1,self.solve_num_band)
         self.tSolve_subplot.set_ylim(0,1.0)
 
     def draw_frame(self):
@@ -163,7 +163,7 @@ class DataPlotter():
             self.line_ux_traj.set_data(self.t_traj, self.ux_traj)
             self.line_ux_traj_last.set_data(self.t_traj_last, self.ux_traj_last)
             if (len(self.ux_actual)):
-                self.ux_subplot.set_ylim(self.ux_actual[-1]-self.ux_band/2, self.ux_actual[-1]+self.ux_band/2)
+                self.ux_subplot.set_ylim(self.ux_actual[-1]-self.ux_band*3/4, self.ux_actual[-1]+self.ux_band*1/4)
 
             self.line_ax_actual.set_data(self.t_actual, self.ax_actual)
             self.line_ax_traj.set_data(self.t_traj, self.ax_traj)
@@ -176,12 +176,12 @@ class DataPlotter():
 
             # moving time axis
             if (len(self.t_actual) > 0 and self.t_actual[-1] > 10):
-                self.sa_subplot.set_xlim(self.t_actual[-1]-self.t_band*3/4, self.t_actual[-1]+self.t_band/4)
-                self.ux_subplot.set_xlim(self.t_actual[-1]-self.t_band*3/4, self.t_actual[-1]+self.t_band/4)
-                self.ax_subplot.set_xlim(self.t_actual[-1]-self.t_band*3/4, self.t_actual[-1]+self.t_band/4)
+                self.sa_subplot.set_xlim(self.t_actual[-1]-self.t_band, self.t_actual[-1])
+                self.ux_subplot.set_xlim(self.t_actual[-1]-self.t_band, self.t_actual[-1])
+                self.ax_subplot.set_xlim(self.t_actual[-1]-self.t_band, self.t_actual[-1])
                 
-            if (len(self.solve_num) > 0 and self.solve_num[-1] > 20):
-                self.tSolve_subplot.set_xlim(self.t_actual[-1], self.t_actual[-1]+self.solve_num_band)
+            if (len(self.solve_num) > 0 and self.solve_num[-1] > self.solve_num_band):
+                self.tSolve_subplot.set_xlim(self.solve_num[0], self.solve_num[-1])
 
             
             plt.draw()

@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
-
 <launch>
+  <arg name="ros_bag_name" default="demoI"/>
 
   <node name="visualization" pkg="visualization" type="data_plotter.py" />
-  <node pkg="rosbag" type="play" name="record" args="/home/mavs/MAVs/results/demoI.bag"/>
+  <node pkg="rosbag" type="play" name="record" args="/home/mavs/MAVs/results/$(arg ros_bag_name).bag"/>
 
 </launch>
