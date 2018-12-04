@@ -4,7 +4,7 @@
   <!-- demo of obstacle_detector with vehicle_description-->
 
   <!-- sim time setting -->
-  <node name="ros_get_world_time_" pkg="get_world_time_test" type="ros_get_world_time" output="screen" />
+  <node name="sim_time" pkg="sim_time" type="ros_get_world_time" output="screen" />
   <param name="use_sim_time" value="true"/>
 
   <!--  ************* vehicle_description args and parameters ***************  -->

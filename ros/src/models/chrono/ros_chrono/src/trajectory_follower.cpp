@@ -276,6 +276,8 @@ int main(int argc, char* argv[]) {
     HMMWV_Full my_hmmwv;
     my_hmmwv.SetContactMethod(contact_method);
     my_hmmwv.SetChassisFixed(false);
+    my_hmmwv.SetInitPosition(ChCoordsys<>(initLoc, initRot));
+    my_hmmwv.SetInitFwdVel(ux0);
     my_hmmwv.SetPowertrainType(powertrain_model);
     my_hmmwv.SetDriveType(drive_type);
     my_hmmwv.SetSteeringType(steering_type);
