@@ -1,8 +1,12 @@
 <?xml version="1.0"?>
-
 <launch>
+  <!--common args and parameters-->
+  <arg name="vehicle_params_path" default="$(find system)/config/vehicle/hmmwv.yaml"/>
+  <rosparam command="load" file="$(arg vehicle_params_path)" />
+
+  <arg name="ros_bag_name" default="demoI"/>
 
   <node name="visualization" pkg="visualization" type="data_plotter.py" />
-  <node pkg="rosbag" type="play" name="record" args="/home/mavs/MAVs/results/demoI.bag"/>
+  <node pkg="rosbag" type="play" name="record" args="/home/mavs/MAVs/results/$(arg ros_bag_name).bag"/>
 
 </launch>

@@ -269,6 +269,8 @@ int main(int argc, char* argv[]) {
     // ------------------------------
     // Create the vehicle and terrain
     // ------------------------------
+    // wait system loaded
+    waitForLoaded(node);
 
     // Create the HMMWV vehicle, set parameters, and initialize
     HMMWV_Full my_hmmwv;
@@ -330,14 +332,15 @@ int main(int argc, char* argv[]) {
     ChRealtimeStepTimer realtime_timer;
 
     // Vehicle steering angle
-    double long_velocity = 0.0;
+    double long_velocity = ux0;
     // Collect controller output data from modules (for inter-module communication)
     double throttle_input = 0;
     double steering_input = 0;
     double braking_input = 0;
 
-    // wait system loaded
-    waitForLoaded(node);
+
+    
+
     while (ros::ok()) {
         // Get chrono time
         double chrono_time = my_hmmwv.GetSystem()->GetChTime();
@@ -363,8 +366,19 @@ int main(int argc, char* argv[]) {
             traj_sa_interp = traj_sa[0];
         }
         
-        // steering input with [-1,1] saturation constraint 
-        steering_input = std::max(-1.0, std::min(1.0, traj_sa_interp/maximum_steering_angle));
+        // steering input
+        // steering rate saturation
+        if (((traj_sa_interp - steering_input*maximum_steering_angle) / step_size) > 1.5) {
+            traj_sa_interp = (traj_sa_interp - 1.5*step_size);
+        }
+        else if (((steering_input*maximum_steering_angle - traj_sa_interp) / step_size) < -1.5) {
+            traj_sa_interp = (traj_sa_interp + 1.5*step_size); 
+        }
+        // simple low pass filter 
+        double alpha = 0.4;
+        steering_input = (1.0 - alpha) * steering_input + alpha * traj_sa_interp / maximum_steering_angle; 
+        // steering angle saturation
+        steering_input = std::max(-1.0, std::min(1.0, steering_input));
 
         // PID controller output for throttle or brake
 	    double ux_err = traj_ux_interp - long_velocity;
@@ -401,7 +415,6 @@ int main(int argc, char* argv[]) {
             app.Advance(step);
         }
 
-
         // Get vehicle information from Chrono vehicle model
         ChVector<> VehicleCOMPos = my_hmmwv.GetVehicle().GetVehicleCOMPos(); // global vehicle COM location
         ChQuaternion<> VehicleRot = my_hmmwv.GetVehicle().GetVehicleRot(); // global orientation as quaternion
@@ -426,13 +439,14 @@ int main(int argc, char* argv[]) {
         VehicleCOMAcc[0] = std::max(-1.5, std::min(1.5, VehicleCOMAcc[0])); // let vehicle acceleration bounded in [-1.5, 1.5] (temporary solution) 
 
         ChVector<> VehicleCOMVel = global2veh(yaw_angle, VehicleCOMVel_global);
-
-        // Compute longitudinal speed and lateral speed
-        long_velocity = my_hmmwv.GetVehicle().GetVehicleSpeedCOM(); // longitudinal velocity (m/s)
-        double lat_velocity = 0; // lateral velocity (m/s)
-
-        // Compute longitudinal acceleration
-        double long_acceleration = 0;
+        long_velocity = VehicleCOMVel[0];
+    
+        // Get vertical tire force
+        std::vector<double> TireForceVertical;
+        for (int i = 0; i < 4; i++) {
+            ChVector<> TireForce = my_hmmwv.GetTire(i)->ReportTireForce(&terrain).force;
+            TireForceVertical.push_back(TireForce[2]);
+        }
 
         // Update vehicle state
         node.setParam("/state/t", chrono_time);
@@ -442,8 +456,8 @@ int main(int argc, char* argv[]) {
         node.setParam("/state/r", VehicleRot_dt[2]);       //// yaw rate (rad/s)
         node.setParam("/state/psi", yaw_angle);            // global heading angle (yaw angle) (rad)
         node.setParam("/state/sa", steering_angle);        // steering angle at the tire (rad)
-        node.setParam("/state/ux", VehicleCOMVel[0]);      //// longitudinal velocity  (vehicle frame) (m/s)
-        node.setParam("/state/ax", VehicleCOMAcc[0]);      //// longitudinal acceleration (vehicle frame) (m/s^2)
+        node.setParam("/state/ux", VehicleCOMVel[0]);      // longitudinal velocity  (vehicle frame) (m/s)
+        node.setParam("/state/ax", VehicleCOMAcc[0]);      // longitudinal acceleration (vehicle frame) (m/s^2)
         node.setParam("/control/thr", throttle_input);
         node.setParam("/control/brk", braking_input);
         node.setParam("/control/str", steering_input);
@@ -457,8 +471,9 @@ int main(int argc, char* argv[]) {
         state_data.v = VehicleCOMVel[1];
         state_data.ax = VehicleCOMAcc[0];
         state_data.psi = yaw_angle; // yaw angle (rad)
-        state_data.r = VehicleRot_dt[2];// yaw rate (rad/s)
+        state_data.r = VehicleRot_dt[2]; // yaw rate (rad/s)
         state_data.sa = steering_angle; // steering angle at the tire (rad)
+        state_data.tire_f = TireForceVertical; // vertical tire force 
         control_data.t = chrono_time;
         control_data.thrt_in = throttle_input; // throttle input in the range [0,+1]
         control_data.brk_in = braking_input; // braking input in the range [0,+1]

@@ -68,7 +68,6 @@ double traj_sa_interp = 0.0;
 double traj_ux_interp = 0.0;
 double traj_x_interp = 0.0;
 double traj_y_interp = 0.0;
-int current_index = 0;
 
 // ------
 // Chrono
@@ -374,6 +373,9 @@ int main(int argc, char* argv[]) {
 
     ChQuaternion<> initRot(q0_0,q0_1,q0_2,q0_3);
 
+    // wait system loaded
+    waitForLoaded(node);
+
     // ------------------------------
     // Create the vehicle and terrain
     // ------------------------------
@@ -442,13 +444,13 @@ int main(int argc, char* argv[]) {
     double long_velocity = 0.0;
     ChVector<> VehicleCOMPos = my_hmmwv.GetVehicle().GetVehicleCOMPos();
     ChQuaternion<> VehicleRot = my_hmmwv.GetVehicle().GetVehicleRot();//global orientation as quaternion
-    long_velocity = my_hmmwv.GetVehicle().GetVehicleSpeedCOM();
+    
     double q0 = VehicleRot[0];
     double q1 = VehicleRot[1];
     double q2 = VehicleRot[2];
     double q3 = VehicleRot[3];
     double yaw_angle = atan2(2*(q0*q3+q1*q2),1-2*(q2*q2+q3*q3));
-
+    long_velocity = ux0;
     // Collect controller output data from modules (for inter-module communication)
     double throttle_input = 0;
     double steering_input = 0;
@@ -459,8 +461,7 @@ int main(int argc, char* argv[]) {
     std::vector<double> y_cal(3, VehicleCOMPos[1]);
     double steering_angle;
 
-    // wait system loaded
-    waitForLoaded(node);
+    
     while (ros::ok()) {
         // Get chrono time
         double chrono_time = my_hmmwv.GetSystem()->GetChTime();
@@ -569,13 +570,13 @@ int main(int argc, char* argv[]) {
 
         ChVector<> VehicleCOMVel = global2veh(yaw_angle, VehicleCOMVel_global);
 
-        // Compute longitudinal speed and lateral speed
-        long_velocity = my_hmmwv.GetVehicle().GetVehicleSpeedCOM(); // longitudinal velocity (m/s)
-        double lat_velocity = 0; // lateral velocity (m/s)
-
-        // Compute longitudinal acceleration
-        double long_acceleration = 0;
-
+        // Get vertical tire force
+        std::vector<double> TireForceVertical;
+        for (int i = 0; i < 4; i++) {
+            ChVector<> TireForce = my_hmmwv.GetTire(i)->ReportTireForce(&terrain).force;
+            TireForceVertical.push_back(TireForce[2]);
+        }
+        long_velocity = VehicleCOMVel[0];
         // Update vehicle state
         node.setParam("/state/t", chrono_time);
         node.setParam("/state/x", VehicleCOMPos[0]);       // global x position (m)
