@@ -16,10 +16,10 @@ obstacle_detector:
     max_circle_radius: 4
     radius_enlargement: 0.3
     frame_id: 'map'
-    p_min_x_limit: -10.
-    p_max_x_limit: 10.
-    p_min_y_limit: -10.
-    p_max_y_limit: 10.
+    p_min_x_limit: -1000.
+    p_max_x_limit: 1000.
+    p_min_y_limit: -1000.
+    p_max_y_limit: 1000.
 
   obstacle_tracker:
     active: 'true'
