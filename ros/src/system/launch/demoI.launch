@@ -21,6 +21,9 @@
   <!-- use Gazebo's simulation time -->
   <param name="use_sim_time" value="true"/>
 
+  <!-- rosbag arg -->
+  <arg name="ros_bag_name" default="demoI"/>
+
   <!--  ************** load args and parameters ***************  -->
 
   <!--  ************** launch scripts ***************  -->
@@ -57,6 +60,12 @@
 
   <!--display trajectory-->
   <node name="rviz" pkg="rviz" type="rviz" output="screen" args="-d $(find obstacle_detector)/resources/display.rviz"/>
+
+  <!-- save data using rosbag -->
+  <node pkg="rosbag" type="record" name="record" args="record -O /home/mavs/MAVs/results/$(arg ros_bag_name).bag 
+                                                                 /nlopcontrol_planner/opt
+                                                                 /nlopcontrol_planner/control
+                                                                 /state"/>
 
   <!--system_shutdown node-->
   <node name="system_shutdown" pkg="system" type="system_shutdown" output="screen" required="true">

@@ -98,10 +98,10 @@ bool ObstacleExtractor::updateParams(std_srvs::Empty::Request &req, std_srvs::Em
   nh_local_.param<double>("/obstacle_detector/obstacle_extractor/max_circle_radius", p_max_circle_radius_, 0.6);
   nh_local_.param<double>("/obstacle_detector/obstacle_extractor/radius_enlargement", p_radius_enlargement_, 0.25);
 
-  // nh_local_.param<double>("min_x_limit", p_min_x_limit_, -10.0);
-  // nh_local_.param<double>("max_x_limit", p_max_x_limit_,  10.0);
-  // nh_local_.param<double>("min_y_limit", p_min_y_limit_, -10.0);
-  // nh_local_.param<double>("max_y_limit", p_max_y_limit_,  10.0);
+  nh_local_.param<double>("/obstacle_detector/obstacle_extractor/p_min_x_limit", p_min_x_limit_, -10.0);
+  nh_local_.param<double>("/obstacle_detector/obstacle_extractor/p_max_x_limit", p_max_x_limit_,  10.0);
+  nh_local_.param<double>("/obstacle_detector/obstacle_extractor/p_min_y_limit", p_min_y_limit_, -10.0);
+  nh_local_.param<double>("/obstacle_detector/obstacle_extractor/p_max_y_limit", p_max_y_limit_,  10.0);
 
   nh_local_.param<string>("/obstacle_detector/obstacle_extractor/frame_id", p_frame_id_, "map");
 

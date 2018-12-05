@@ -7,3 +7,4 @@ float64 v
 float64 psi
 float64 r
 float64 sa
+float64[] tire_f

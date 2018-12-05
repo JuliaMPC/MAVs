@@ -10,6 +10,9 @@ vehicle:
   robotName: hmmwv  # NOTE cannot change, will break vehicle.launch because this is hardcoded in
   frameName: map
   ground_truth_topic: base_pose_ground_truth
+  lidar_model: 2 # 1: velodyne VLP16; 2: hokuyo_laser
+  lidar_frame: lidar_frame # NOTE cannot change until frame_tf_broadcaster.cpp does not hardcode in the lidar_frame!!
+  lidar_topic: scan
 
   # mesh parameters
   scale_factor: 0.2
@@ -148,7 +151,7 @@ vehicle:
      anti_windup: clamping
 
     angle_error:
-     Kp: 0.5
+     Kp: 0.05
      Ki: 0.0
      Kd: 0.0
      Kw: 0.0

@@ -7,7 +7,7 @@ system:
  flags:
   initialized: false
   paused: true
-  
+
  shutdown:
   flags:
    running: true
@@ -24,7 +24,7 @@ system:
    obstacles_initialized: false
    postion_update_external: false
   params:
-   step_distance: 0.5
+   step_distance: 0.0
 
  obstacle_detector:
   flags:
