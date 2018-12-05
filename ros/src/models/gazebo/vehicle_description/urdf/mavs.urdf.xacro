@@ -19,6 +19,7 @@
 
   <xacro:property name="scale_factor" value="${vehicle['vehicle']['vehicle_description']['scale_factor']}" />
   <xacro:property name="mesh_mode" value="${vehicle['vehicle']['vehicle_description']['mesh_mode']}"/>
+  <xacro:property name="lidar_model" value="${vehicle['vehicle']['vehicle_description']['lidar_model']}"/>
 
   <!-- Vehicle geometry -->
   <xacro:property name="base_link" value="${vehicle['vehicle']['vehicle_description']['base_link']}" />
@@ -50,14 +51,21 @@
   <!-- LiDAR properties -->
   <xacro:property name="lidar_z" value="${vehicle['vehicle']['vehicle_description']['lidar_z']}"/>
   <xacro:property name="lidar_x" value="${vehicle['vehicle']['vehicle_description']['lidar_x']}"/>
-  <xacro:property name="topic" value="${vehicle['vehicle']['vehicle_description']['topic']}"/>
+  <xacro:property name="lidar_frame" value="${vehicle['vehicle']['vehicle_description']['lidar_frame']}"/>
+  <xacro:property name="lidar_topic" value="${vehicle['vehicle']['vehicle_description']['lidar_topic']}"/>
+  <!--NOTE lidar_topic not currently being used -->
 
   <!-- Necessary includes -->
   <xacro:include filename="$(find vehicle_description)/urdf/hmmwv.xacro" />
   <xacro:include filename="$(find vehicle_description)/urdf/vehicle_gazebo.urdf.xacro" />
 
   <!-- Bolt-on sensors go here -->
-  <xacro:include filename="$(find vehicle_description)/urdf/velodyne_16.xacro"/>
-  <velodyne_16 parent="${base_link}" lidar_x="${lidar_x}" lidar_z="${lidar_z}"/>
-
+  <xacro:if value="${lidar_model == 1}">
+    <xacro:include filename="$(find vehicle_description)/urdf/velodyne_16.xacro"/>
+    <velodyne_16 parent="${base_link}" lidar_x="${lidar_x}" lidar_z="${lidar_z}" lidar_frame="${lidar_frame}" lidar_topic="${lidar_topic}" />
+  </xacro:if>
+  <xacro:if value="${lidar_model == 2}">
+    <xacro:include filename="$(find vehicle_description)/urdf/hokuyo_laser.xacro"/>
+    <hokuyo_laser parent="${base_link}" lidar_x="${lidar_x}" lidar_z="${lidar_z}" lidar_frame="${lidar_frame}" lidar_topic="${lidar_topic}" robotNamespace="robotNamespace"/>
+  </xacro:if>
 </robot>
