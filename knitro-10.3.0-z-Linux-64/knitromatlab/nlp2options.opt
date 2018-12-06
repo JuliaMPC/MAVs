@@ -1,8 +1,0 @@
-algorithm direct    # Equivalent to setting 'Algorithm' to 'interior-point'
-outlev iter_verbose # Equivalent to setting 'Display' to 'iter'
-gradopt exact       # Equivalent to setting 'GradObj' to 'on' and 'GradConstr' to 'on'
-hessopt exact       # Equivalent to setting 'Hessian' to 'on'
-maxit 1000          # Equivalent to setting 'MaxIter' to 1000
-xtol 1e-15          # Equivalent to setting 'TolX' to 1e-15
-opttol 1e-8         # Equivalent to setting 'TolFun' to 1e-8
-feastol 1e-8        # Equivalent to setting 'TolCon' to 1e-8

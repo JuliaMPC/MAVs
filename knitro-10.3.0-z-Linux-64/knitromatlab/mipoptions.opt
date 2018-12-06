@@ -1,2 +1,0 @@
-mip_outinterval  1 # Output at every node
-mip_heuristic    2 # Apply heuristic to find feasible pt.
