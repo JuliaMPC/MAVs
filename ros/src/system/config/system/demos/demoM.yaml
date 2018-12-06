@@ -43,13 +43,14 @@ system:
    running: true
    lidar_initialized: false
    obstacles_initialized: false
+   obstacles_spawned: false
    postion_update_external: true
 
  obstacle_detector:
   flags:
    running: true
    initialized: false
-   
+
  sim_time:
    flags:
     initialized: false
