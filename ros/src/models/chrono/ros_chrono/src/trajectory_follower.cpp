@@ -369,10 +369,10 @@ int main(int argc, char* argv[]) {
         // steering input
         // steering rate saturation
         if (((traj_sa_interp - steering_input*maximum_steering_angle) / step_size) > 1.5) {
-            traj_sa_interp = (traj_sa_interp - 1.5*step_size);
+            traj_sa_interp = (steering_input*maximum_steering_angle + 1.5*step_size);
         }
         else if (((steering_input*maximum_steering_angle - traj_sa_interp) / step_size) < -1.5) {
-            traj_sa_interp = (traj_sa_interp + 1.5*step_size); 
+            traj_sa_interp = (steering_input*maximum_steering_angle - 1.5*step_size); 
         }
         // simple low pass filter 
         double alpha = 0.4;
