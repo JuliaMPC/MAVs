@@ -115,7 +115,6 @@ generate_messages(
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES ros_chrono_msgs
    CATKIN_DEPENDS roscpp rospy std_msgs
 #  DEPENDS system_lib
 )
@@ -145,7 +144,6 @@ endif()
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/ros_chrono_msgs.cpp
 # )
 
 ## Add cmake target dependencies of the library
@@ -156,7 +154,6 @@ endif()
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-# add_executable(${PROJECT_NAME}_node src/ros_chrono_msgs_node.cpp)
 add_executable(traj_gen_chrono src/traj_gen_chrono.cpp)
 add_executable(path_gen_chrono src/path_gen_chrono.cpp)
 add_executable(vel_gen_chrono src/vel_gen_chrono.cpp)
@@ -235,7 +232,6 @@ target_link_libraries(vel_gen_chrono
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_ros_chrono_msgs.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()

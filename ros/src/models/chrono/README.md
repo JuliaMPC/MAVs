@@ -8,7 +8,6 @@ the initial desired path. The vehicle's states are published in a ROS msg and al
 
  - traj_gen_chrono
  - ros_chrono
- - ros_chrono_msgs
 
 ## How to Build
 ```
