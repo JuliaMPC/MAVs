@@ -15,7 +15,6 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
-  ros_chrono_msgs
   mavs_msgs
   nloptcontrol_planner
 )
@@ -121,13 +120,14 @@ find_package(controller REQUIRED)
 catkin_package(
 #  INCLUDE_DIRS include
    LIBRARIES ros_chrono
-   CATKIN_DEPENDS roscpp rospy std_msgs message_runtime ros_chrono_msgs mavs_msgs
-   DEPENDS system_lib Chrono interpolation controller
+   CATKIN_DEPENDS roscpp rospy std_msgs message_runtime mavs_msgs
+   DEPENDS Chrono interpolation controller
 )
 
 ###########
 ## Build ##
 ###########
+
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
