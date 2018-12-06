@@ -1,3 +1,5 @@
 results/
+!/results/postProcess.py
+!/results/README.md
 /docs/build
 /docs/Manifest.toml
