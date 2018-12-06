@@ -44,10 +44,7 @@
     <arg name="paused" value="$(arg paused)"/>
   </include>
 
-  <include file="$(find obstacle_detector)/launch/obstacle_detector.launch">
-    <arg name="frame_id" value="$(arg frame_id)" />
-    <arg name="manager" value="$(arg manager)" />
-  </include>
+  <include file="$(find obstacle_detector)/launch/main_scan.launch"/>
 
   <!-- rosbag arg -->
   <arg name="ros_bag_name" default="demoM"/>
@@ -76,7 +73,7 @@
   </node>
 
   <!-- save data using rosbag -->
-  <node pkg="rosbag" type="record" name="record" args="record -O /home/mavs/MAVs/results/$(arg ros_bag_name).bag 
+  <node pkg="rosbag" type="record" name="record" args="record -O /home/mavs/MAVs/results/$(arg ros_bag_name).bag
                                                                  /nlopcontrol_planner/opt
                                                                  /nlopcontrol_planner/control
                                                                  /state"/>
