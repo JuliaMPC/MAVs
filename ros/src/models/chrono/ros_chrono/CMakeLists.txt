@@ -136,7 +136,7 @@ catkin_package(
 include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
-#  ${CHRONO_INCLUDE_DIRS}
+  ${CHRONO_INCLUDE_DIRS}
   ${CH_IRRLICHTINC}
   ${Irrlicht_INCLUDE_DIRS}
   ${interpolation_INCLUDE_DIRS}
