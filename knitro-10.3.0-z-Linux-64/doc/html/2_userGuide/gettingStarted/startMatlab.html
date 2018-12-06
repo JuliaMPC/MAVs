@@ -1,0 +1,389 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head><div class = "head"> </div>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Getting started with MATLAB &mdash; Artelys Knitro 10.3 User&#39;s Manual</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/Artelys_theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="Artelys Knitro 10.3 User&#39;s Manual" href="../../index.html"/>
+        <link rel="up" title="Getting started" href="../gettingStarted.html"/>
+        <link rel="next" title="Getting started with the callable library" href="startCallableLibrary.html"/>
+        <link rel="prev" title="Getting started with AMPL" href="startAmpl.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Artelys Knitro User's Manual
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                10.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../1_introduction.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../2_userGuide.html">User guide</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../gettingStarted.html">Getting started</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="startAmpl.html">Getting started with AMPL</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Getting started with MATLAB</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#the-knitromatlab-interface">The <em>knitromatlab</em> interface</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#first-matlab-example">First MATLAB example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#additional-examples">Additional examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="startCallableLibrary.html">Getting started with the callable library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="startCPP.html">Getting started with the object-oriented interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="startR.html">Getting started with R</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../knitroOptions.html">Setting options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../derivatives.html">Derivatives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../multistart.html">Multistart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../minlp.html">Mixed-integer nonlinear programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../complementarity.html">Complementarity constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ktrlsq.html">Nonlinear Least-Squares</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../algorithms.html">Algorithms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../feasibility.html">Feasibility and infeasibility</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../parallelism.html">Parallelism</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tuner.html">The Knitro-Tuner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../termination.html">Termination criteria</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../obtainingInformation.html">Obtaining information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../callbacks.html">Callbacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../otherProgInterfaces.html">Other programmatic interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../specialProblems.html">Special problem classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tips.html">Tips and tricks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../3_referenceManual.html">Reference manual</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">Artelys Knitro User's Manual</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../2_userGuide.html">User guide</a> &raquo;</li>
+      
+          <li><a href="../gettingStarted.html">Getting started</a> &raquo;</li>
+      
+    <li>Getting started with MATLAB</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="getting-started-with-matlab">
+<span id="startmatlab"></span><h1>Getting started with MATLAB</h1>
+<p>The Knitro interface for MATLAB, called <em>knitromatlab</em>, is provided
+with your Knitro distribution. To test whether your installation
+is correct, type in the expression:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">x</span> <span class="n">fval</span><span class="p">]</span> <span class="o">=</span> <span class="n">knitromatlab</span><span class="p">(</span><span class="o">@</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">),</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>at the MATLAB command prompt. If your installation was successful, <em>knitromatlab</em>
+returns:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="mf">3.1416</span><span class="p">,</span> <span class="n">fval</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.</span>
+</pre></div>
+</div>
+<p>If you do not get this output but an error stating that <em>knitromatlab</em> was
+not found, it probably means that the path has not been added to MATLAB.
+If Knitro is found and called but returns an error, it probably means that no
+license was found. In any of these situations, please see <a class="reference internal" href="../../1_introduction/troubleshooting.html#sec-troubleshooting"><span class="std std-ref">Troubleshooting</span></a>.</p>
+<div class="section" id="the-knitromatlab-interface">
+<h2>The <em>knitromatlab</em> interface</h2>
+<p>The Knitro/MATLAB interface function is very similar to
+MATLAB&#8217;s built-in <em>fmincon</em> function; the most elaborate
+form is:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">x</span><span class="p">,</span><span class="n">fval</span><span class="p">,</span><span class="n">exitflag</span><span class="p">,</span><span class="n">output</span><span class="p">,</span><span class="k">lambda</span><span class="p">,</span><span class="n">grad</span><span class="p">,</span><span class="n">hessian</span><span class="p">]</span> <span class="o">=</span> <span class="o">...</span>
+        <span class="n">knitromatlab</span><span class="p">(</span><span class="n">fun</span><span class="p">,</span><span class="n">x0</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">Aeq</span><span class="p">,</span><span class="n">beq</span><span class="p">,</span><span class="n">lb</span><span class="p">,</span><span class="n">ub</span><span class="p">,</span><span class="n">nonlcon</span><span class="p">,</span> <span class="o">...</span>
+        <span class="n">extendedFeatures</span><span class="p">,</span><span class="n">options</span><span class="p">,</span><span class="n">KnitroOptions</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>but the simplest function call reduces to:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">knitromatlab</span><span class="p">(</span><span class="n">fun</span><span class="p">,</span><span class="n">x0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <em>knitromatlab</em> function was designed to provide a similar user experience to MATLAB&#8217;s
+<em>fmincon</em> optimization function. See <a class="reference internal" href="../../3_referenceManual/knitromatlabReference.html#knitromatlabreference"><span class="std std-ref">Knitro / MATLAB reference</span></a> for a more extensive
+description of <em>knitromatlab</em> interface.</p>
+<p>The <em>ktrlink</em> interface previously provided with the MATLAB Optimization Toolbox is
+no longer supported. See the reference manual on using <em>knitrolink</em> instead.</p>
+</div>
+<div class="section" id="first-matlab-example">
+<h2>First MATLAB example</h2>
+<p>Let&#8217;s consider the same example as before (in section <a class="reference internal" href="startAmpl.html#getstartampl"><span class="std std-ref">Getting started with AMPL</span></a>),
+converted into MATLAB.</p>
+<div class="highlight-matlab"><div class="highlight"><pre><span></span><span class="c">% objective to minimize</span>
+<span class="n">obj</span> <span class="p">=</span> <span class="p">@(</span><span class="n">x</span><span class="p">)</span> <span class="mi">1000</span> <span class="o">-</span> <span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>^<span class="mi">2</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>^<span class="mi">2</span> <span class="o">-</span> <span class="n">x</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>^<span class="mi">2</span> <span class="o">-</span> <span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">x</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">x</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+
+<span class="c">% No nonlinear equality constraints.</span>
+<span class="n">ceq</span>  <span class="p">=</span> <span class="p">[];</span>
+
+<span class="c">% Specify nonlinear inequality constraint to be nonnegative</span>
+<span class="n">c2</span> <span class="p">=</span>  <span class="p">@(</span><span class="n">x</span><span class="p">)</span> <span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>^<span class="mi">2</span> <span class="o">+</span> <span class="n">x</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>^<span class="mi">2</span> <span class="o">+</span> <span class="n">x</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>^<span class="mi">2</span> <span class="o">-</span> <span class="mi">25</span><span class="p">;</span>
+
+<span class="c">% &quot;nlcon&quot; should return [c, ceq] with c(x) &lt;= 0 and ceq(x) = 0</span>
+<span class="c">% so we need to negate the inequality constraint above</span>
+<span class="n">nlcon</span> <span class="p">=</span> <span class="p">@(</span><span class="n">x</span><span class="p">)</span><span class="n">deal</span><span class="p">(</span><span class="o">-</span><span class="n">c2</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">ceq</span><span class="p">);</span>
+
+<span class="c">% Initial point</span>
+<span class="n">x0</span>  <span class="p">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">;</span> <span class="mi">2</span><span class="p">;</span> <span class="mi">2</span><span class="p">];</span>
+
+<span class="c">% No linear inequality contraint (&quot;A*x &lt;= b&quot;)</span>
+<span class="n">A</span> <span class="p">=</span> <span class="p">[];</span>
+<span class="n">b</span> <span class="p">=</span> <span class="p">[];</span>
+
+<span class="c">% Since the equality constraint &quot;c1&quot; is linear, specify it here  (&quot;Aeq*x = beq&quot;)</span>
+<span class="n">Aeq</span> <span class="p">=</span> <span class="p">[</span><span class="mi">8</span> <span class="mi">14</span> <span class="mi">7</span><span class="p">];</span>
+<span class="n">beq</span> <span class="p">=</span> <span class="p">[</span><span class="mi">56</span><span class="p">];</span>
+
+<span class="c">% lower and upper bounds</span>
+<span class="n">lb</span> <span class="p">=</span> <span class="nb">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+<span class="n">ub</span> <span class="p">=</span> <span class="p">[];</span>
+
+<span class="c">% solver call</span>
+<span class="n">x</span> <span class="p">=</span> <span class="n">knitromatlab</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">Aeq</span><span class="p">,</span> <span class="n">beq</span><span class="p">,</span> <span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">,</span> <span class="n">nlcon</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Saving this code in a file <em>example.m</em> in the current folder and
+issuing <em>example</em> at the MATLAB prompt produces the following output.</p>
+<div class="highlight-none"><div class="highlight"><pre><span></span>=======================================
+          Commercial License
+         Artelys Knitro 10.0.0
+=======================================
+
+Knitro presolve eliminated 0 variables and 0 constraints.
+
+algorithm:            1
+gradopt:              4
+hessopt:              2
+honorbnds:            1
+maxit:                10000
+outlev:               1
+par_concurrent_evals: 0
+Knitro changing bar_initpt from AUTO to 3.
+Knitro changing bar_murule from AUTO to 4.
+Knitro changing bar_penaltycons from AUTO to 1.
+Knitro changing bar_penaltyrule from AUTO to 2.
+Knitro changing bar_switchrule from AUTO to 2.
+Knitro changing linsolver from AUTO to 2.
+
+Problem Characteristics                    ( Presolved)
+-----------------------
+Objective goal:  Minimize
+Number of variables:                     3 (         3)
+    bounded below:                       3 (         3)
+    bounded above:                       0 (         0)
+    bounded below and above:             0 (         0)
+    fixed:                               0 (         0)
+    free:                                0 (         0)
+Number of constraints:                   2 (         2)
+    linear equalities:                   1 (         1)
+    nonlinear equalities:                0 (         0)
+    linear inequalities:                 0 (         0)
+    nonlinear inequalities:              1 (         1)
+    range:                               0 (         0)
+Number of nonzeros in Jacobian:          6 (         6)
+Number of nonzeros in Hessian:           6 (         6)
+
+EXIT: Locally optimal solution found.
+
+Final Statistics
+----------------
+Final objective value               =   9.36000000000340e+02
+Final feasibility error (abs / rel) =   7.11e-15 / 5.47e-16
+Final optimality error  (abs / rel) =   2.25e-09 / 1.41e-10
+# of iterations                     =          9
+# of CG iterations                  =          0
+# of function evaluations           =         44
+# of gradient evaluations           =          0
+Total program time (secs)           =       0.04114 (     0.082 CPU time)
+Time spent in evaluations (secs)    =       0.03381
+
+===============================================================================
+</pre></div>
+</div>
+<p>The objective function value is the same (about 936.0) as in the AMPL example.
+However, even though we solved the same problem, things went quite
+differently behind the scenes in these two examples;
+as we will see in Section <a class="reference internal" href="../derivatives.html#sec-derivatives"><span class="std std-ref">Derivatives</span></a>, AMPL provides
+derivatives to Knitro automatically, whereas in MATLAB the user must
+do it manually. Since we did not provide these derivatives, Knitro had
+to approximate them. Note that with AMPL, only 9 function evaluations
+took place, whereas there were 44 in the MATLAB example (extra function
+evaluations were needed to approximate the first derivatives).
+On a large problem, this could have made a very
+significant difference in performance.</p>
+</div>
+<div class="section" id="additional-examples">
+<h2>Additional examples</h2>
+<p>More examples are provided in the <code class="file docutils literal"><span class="pre">knitromatlab</span></code> directory of the
+Knitro distribution.</p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="startCallableLibrary.html" class="btn btn-neutral float-right" title="Getting started with the callable library" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="startAmpl.html" class="btn btn-neutral" title="Getting started with AMPL" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Artelys.
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'10.3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  false
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

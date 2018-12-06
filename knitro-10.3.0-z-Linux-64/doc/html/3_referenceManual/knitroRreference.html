@@ -1,0 +1,636 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head><div class = "head"> </div>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Knitro / R reference &mdash; Artelys Knitro 10.3 User&#39;s Manual</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/Artelys_theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="Artelys Knitro 10.3 User&#39;s Manual" href="../index.html"/>
+        <link rel="up" title="Reference manual" href="../3_referenceManual.html"/>
+        <link rel="next" title="Object-oriented interface reference" href="ooInterfaceReference.html"/>
+        <link rel="prev" title="Knitro / MATLAB reference" href="knitromatlabReference.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Artelys Knitro User's Manual
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                10.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../1_introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../2_userGuide.html">User guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../3_referenceManual.html">Reference manual</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="knitroamplReference.html">Knitro / AMPL reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="knitromatlabReference.html">Knitro / MATLAB reference</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Knitro / R reference</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#what-is-knitror">What is <em>KnitroR</em>?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#syntax">Syntax</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#input-arguments-of-knitro">Input Arguments of <em>knitro</em></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#input-arguments-for-mpecs-in-knitro">Input Arguments for MPECS in <em>knitro</em></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#input-arguments-for-knitromip">Input Arguments for <em>knitromip</em></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#input-arguments-for-knitrolsq">Input Arguments for <em>knitrolsq</em></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#output-arguments-of-knitro-and-knitromip">Output Arguments of <em>knitro</em> and <em>knitromip</em></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#output-arguments-of-knitrolsq">Output Arguments of <em>knitrolsq</em></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ooInterfaceReference.html">Object-oriented interface reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="callableLibraryReference.html">Callable library reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="userOptions.html">Knitro user options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="outputFiles.html">List of output files</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">Artelys Knitro User's Manual</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../3_referenceManual.html">Reference manual</a> &raquo;</li>
+      
+    <li>Knitro / R reference</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="knitro-r-reference">
+<span id="knitrorreference"></span><h1>Knitro / R reference</h1>
+<p id="index-0">Usage of <em>KnitroR</em> is described here.</p>
+<div class="section" id="what-is-knitror">
+<h2>What is <em>KnitroR</em>?</h2>
+<p><em>KnitroR</em> is the interface used to call Knitro from the R environment (requires R 3.0 or later).</p>
+<p><em>KnitroR</em> offers several routines to call Knitro from R:</p>
+<ul>
+<li><p class="first"><em>knitro</em>, which is an interface for the standard Knitro nonlinear optimizer</p>
+</li>
+<li><p class="first"><em>knitrolsq</em>, which solves bound constrained nonlinear least-squares problems in vectorial format, that is</p>
+<blockquote>
+<div><div class="math">
+<p><span class="math">\min_p \; 0.5\cdot\|F(X, p) - Y\|_2^2 \\
+ p_L \leq p \leq p_U.</span></p>
+</div></div></blockquote>
+<p>This type of fitting problems is ubiquitous in statistics and data analytics. This function is based on the internal Knitro implementation of nonlinear least-squares.</p>
+</li>
+<li><p class="first"><em>knitromip</em>, which is tailored to solve mixed-integer nonlinear programs</p>
+</li>
+<li><p class="first">An important point when passing sparse matrices (jacobian of the nonlinear constraints or hessian of Lagrangian) to Knitro is that indices of the sparse matrix vectors must start from 0.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="syntax">
+<h2>Syntax</h2>
+<p>The most elaborate form for general nonlinear programs is</p>
+<div class="highlight-none"><div class="highlight"><pre><span></span>sol &lt;- knitro(nvar=..., ncon=..., x0=...,
+              objective=..., gradient=..., constraints=...,
+              jacobian=..., jacIndexCons=..., jacIndexVars=...,
+              hessianLag=..., hessIndexRows=..., hessIndexCols=...,
+              xL=..., xU=..., cL=..., cU=...,
+              options=...)
+</pre></div>
+</div>
+<p>but the simplest function calls reduce to:</p>
+<div class="highlight-none"><div class="highlight"><pre><span></span>sol &lt;- knitro(objective=..., x0=...)
+sol &lt;- knitro(objective=..., xL=...)
+sol &lt;- knitro(objective=..., xU=...)
+sol &lt;- knitro(nvar=..., objective=...)
+</pre></div>
+</div>
+<p>You must provide an objective function and the number of variables or a vector that is used to compute the number of variables.
+All other parameters are optional. For instance any of the following other forms may be used (note that this list is not exhaustive):</p>
+<div class="highlight-R"><div class="highlight"><pre><span></span>sol <span class="o">&lt;-</span> knitro<span class="p">(</span>nvar<span class="o">=</span><span class="kc">...</span><span class="p">,</span> objective<span class="o">=</span><span class="kc">...</span><span class="p">)</span>
+sol <span class="o">&lt;-</span> knitro<span class="p">(</span>nvar<span class="o">=</span><span class="kc">...</span><span class="p">,</span> ncon<span class="o">=</span><span class="kc">...</span><span class="p">,</span> objective<span class="o">=</span><span class="kc">...</span><span class="p">,</span> constraints<span class="o">=</span><span class="kc">...</span><span class="p">)</span>
+sol <span class="o">&lt;-</span> knitro<span class="p">(</span>x0<span class="o">=</span><span class="kc">...</span><span class="p">,</span> objective<span class="o">=</span><span class="kc">...</span><span class="p">,</span> constraints<span class="o">=</span><span class="kc">...</span><span class="p">)</span>
+sol <span class="o">&lt;-</span> knitro<span class="p">(</span>x0<span class="o">=</span><span class="kc">...</span><span class="p">,</span> objective<span class="o">=</span><span class="kc">...</span><span class="p">,</span> gradient<span class="o">=</span><span class="kc">...</span><span class="p">,</span> constraints<span class="o">=</span><span class="kc">...</span><span class="p">,</span>
+              jacobian<span class="o">=</span><span class="kc">...</span><span class="p">,</span> jacIndexCons<span class="o">=</span><span class="kc">...</span><span class="p">,</span> jacIndexVars<span class="o">=</span><span class="kc">...</span><span class="p">)</span>
+sol <span class="o">&lt;-</span> knitro<span class="p">(</span>x0<span class="o">=</span><span class="kc">...</span><span class="p">,</span> objective<span class="o">=</span><span class="kc">...</span><span class="p">,</span> gradient<span class="o">=</span><span class="kc">...</span><span class="p">,</span> constraints<span class="o">=</span><span class="kc">...</span><span class="p">,</span>
+              jacobian<span class="o">=</span><span class="kc">...</span><span class="p">,</span> hessianLag<span class="o">=</span><span class="kc">...</span><span class="p">)</span>
+sol <span class="o">&lt;-</span> knitro<span class="p">(</span>x0<span class="o">=</span><span class="kc">...</span><span class="p">,</span> objective<span class="o">=</span><span class="kc">...</span><span class="p">,</span> gradient<span class="o">=</span><span class="kc">...</span><span class="p">,</span> constraints<span class="o">=</span><span class="kc">...</span><span class="p">,</span>
+              jacobian<span class="o">=</span><span class="kc">...</span><span class="p">,</span> jacBitMap<span class="o">=</span><span class="kc">...</span><span class="p">)</span>
+sol <span class="o">&lt;-</span> knitro<span class="p">(</span>x0<span class="o">=</span><span class="kc">...</span><span class="p">,</span> objective<span class="o">=</span><span class="kc">...</span><span class="p">,</span> gradient<span class="o">=</span><span class="kc">...</span><span class="p">,</span> constraints<span class="o">=</span><span class="kc">...</span><span class="p">,</span>
+              jacobian<span class="o">=</span><span class="kc">...</span><span class="p">,</span> jacIndexCons<span class="o">=</span><span class="kc">...</span><span class="p">,</span> jacIndexVars<span class="o">=</span><span class="kc">...</span><span class="p">,</span>
+              hessianLag<span class="o">=</span><span class="kc">...</span><span class="p">,</span> hessIndexRows<span class="o">=</span><span class="kc">...</span><span class="p">,</span> hessIndexCols<span class="o">=</span><span class="kc">...</span><span class="p">)</span>
+sol <span class="o">&lt;-</span> knitro<span class="p">(</span>x0<span class="o">=</span><span class="kc">...</span><span class="p">,</span> objective<span class="o">=</span><span class="kc">...</span><span class="p">,</span> gradient<span class="o">=</span><span class="kc">...</span><span class="p">,</span> constraints<span class="o">=</span><span class="kc">...</span><span class="p">,</span>
+              jacobian<span class="o">=</span><span class="kc">...</span><span class="p">,</span> jacBitMap<span class="o">=</span><span class="kc">...</span><span class="p">,</span>
+              hessianLag<span class="o">=</span><span class="kc">...</span><span class="p">,</span> hessBitMap<span class="o">=</span><span class="kc">...</span><span class="p">)</span>
+sol <span class="o">&lt;-</span> knitro<span class="p">(</span>x0<span class="o">=</span><span class="kc">...</span><span class="p">,</span> objective<span class="o">=</span><span class="kc">...</span><span class="p">,</span> xL<span class="o">=</span><span class="kc">...</span><span class="p">)</span>
+sol <span class="o">&lt;-</span> knitro<span class="p">(</span>x0<span class="o">=</span><span class="kc">...</span><span class="p">,</span> objective<span class="o">=</span><span class="kc">...</span><span class="p">,</span> xL<span class="o">=</span><span class="kc">...</span><span class="p">,</span> xU<span class="o">=</span><span class="kc">...</span><span class="p">)</span>
+sol <span class="o">&lt;-</span> knitro<span class="p">(</span>x0<span class="o">=</span><span class="kc">...</span><span class="p">,</span> objective<span class="o">=</span><span class="kc">...</span><span class="p">,</span> constraints<span class="o">=</span><span class="kc">...</span><span class="p">,</span> cL<span class="o">=</span><span class="kc">...</span><span class="p">)</span>
+sol <span class="o">&lt;-</span> knitro<span class="p">(</span>x0<span class="o">=</span><span class="kc">...</span><span class="p">,</span> objective<span class="o">=</span><span class="kc">...</span><span class="p">,</span> constraints<span class="o">=</span><span class="kc">...</span><span class="p">,</span> cU<span class="o">=</span><span class="kc">...</span><span class="p">)</span>
+sol <span class="o">&lt;-</span> knitro<span class="p">(</span>x0<span class="o">=</span><span class="kc">...</span><span class="p">,</span> objective<span class="o">=</span><span class="kc">...</span><span class="p">,</span> constraints<span class="o">=</span><span class="kc">...</span><span class="p">,</span> cL<span class="o">=</span><span class="kc">...</span><span class="p">,</span> cU<span class="o">=</span><span class="kc">...</span><span class="p">)</span>
+sol <span class="o">&lt;-</span> knitro<span class="p">(</span>x0<span class="o">=</span><span class="kc">...</span><span class="p">,</span> objective<span class="o">=</span><span class="kc">...</span><span class="p">,</span> xL<span class="o">=</span><span class="kc">...</span><span class="p">,</span> xU<span class="o">=</span><span class="kc">...</span><span class="p">,</span> constraints<span class="o">=</span><span class="kc">...</span><span class="p">)</span>
+sol <span class="o">&lt;-</span> knitro<span class="p">(</span>x0<span class="o">=</span><span class="kc">...</span><span class="p">,</span> objective<span class="o">=</span><span class="kc">...</span><span class="p">,</span> gradient<span class="o">=</span><span class="kc">...</span><span class="p">,</span> constraints<span class="o">=</span><span class="kc">...</span><span class="p">,</span>
+              jacobian<span class="o">=</span><span class="kc">...</span><span class="p">,</span> jacIndexCons<span class="o">=</span><span class="kc">...</span><span class="p">,</span> jacIndexVars<span class="o">=</span><span class="kc">...</span><span class="p">,</span>
+              hessianLag<span class="o">=</span><span class="kc">...</span><span class="p">,</span> hessIndexRows<span class="o">=</span><span class="kc">...</span><span class="p">,</span> hessIndexCols<span class="o">=</span><span class="kc">...</span><span class="p">,</span> options<span class="o">=</span><span class="kc">...</span><span class="p">)</span>
+sol <span class="o">&lt;-</span> knitro<span class="p">(</span>nvar<span class="o">=</span><span class="kc">...</span><span class="p">,</span> objective<span class="o">=</span><span class="kc">...</span><span class="p">,</span> options<span class="o">=</span><span class="kc">...</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>When the functions <em>jacobian</em> or <em>hessianLag</em> are provided but the corresponding sparsity vectors <em>jacIndexCons</em>, <em>jacIndexVars</em>, <em>jacBitMap</em>, <em>hessIndexRows</em>, <em>hessIndexCols</em> or <em>hessBitMap</em> are not, <em>KnitroR</em> computes dense sparsity patterns internally.</p>
+<p>An API for MPECs is also available via the R function <em>Knitro</em>. It takes the following form :</p>
+<div class="highlight-R"><div class="highlight"><pre><span></span>sol <span class="o">&lt;-</span> knitro<span class="p">(</span>nvar<span class="o">=</span><span class="kc">...</span><span class="p">,</span> ncon<span class="o">=</span><span class="kc">...</span><span class="p">,</span> x0<span class="o">=</span><span class="kc">...</span><span class="p">,</span> objective<span class="o">=</span><span class="kc">...</span><span class="p">,</span> gradient<span class="o">=</span><span class="kc">...</span><span class="p">,</span> constraints<span class="o">=</span><span class="kc">...</span><span class="p">,</span>
+              jacobian<span class="o">=</span><span class="kc">...</span><span class="p">,</span> jacIndexCons<span class="o">=</span><span class="kc">...</span><span class="p">,</span> jacIndexVars<span class="o">=</span><span class="kc">...</span><span class="p">,</span>
+              hessianLag<span class="o">=</span><span class="kc">...</span><span class="p">,</span> hessIndexRows<span class="o">=</span><span class="kc">...</span><span class="p">,</span> hessIndexCols<span class="o">=</span><span class="kc">...</span><span class="p">,</span>
+              xL<span class="o">=</span><span class="kc">...</span><span class="p">,</span> xU<span class="o">=</span><span class="kc">...</span><span class="p">,</span> cL<span class="o">=</span><span class="kc">...</span><span class="p">,</span> cU<span class="o">=</span><span class="kc">...</span><span class="p">,</span>
+              numCompConstraints<span class="o">=</span><span class="kc">...</span><span class="p">,</span> ccIdxList1<span class="o">=</span><span class="kc">...</span><span class="p">,</span> ccIdxList2<span class="o">=</span><span class="kc">...</span><span class="p">,</span>
+              options<span class="o">=</span><span class="kc">...</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The API for bound constrained nonlinear least-squares problems has the following form :</p>
+<div class="highlight-R"><div class="highlight"><pre><span></span>sol <span class="o">&lt;-</span> knitrolsq<span class="p">(</span>dimp<span class="o">=</span><span class="kc">...</span><span class="p">,</span> par0<span class="o">=</span><span class="kc">...</span><span class="p">,</span> dataFrameX<span class="o">=</span><span class="kc">...</span><span class="p">,</span> dataFrameY<span class="o">=</span><span class="kc">...</span><span class="p">,</span>
+             residual<span class="o">=</span><span class="kc">...</span><span class="p">,</span> jacobian<span class="o">=</span><span class="kc">...</span><span class="p">,</span>
+             parL<span class="o">=</span><span class="kc">...</span><span class="p">,</span> parU<span class="o">=</span><span class="kc">...</span><span class="p">,</span>
+             xScaleFactors<span class="o">=</span><span class="kc">...</span><span class="p">,</span> xScaleCenters<span class="o">=</span><span class="kc">...</span><span class="p">,</span>
+             objScaleFactor<span class="o">=</span><span class="m">.</span><span class="kc">...</span><span class="p">,</span>
+             jacIndexRows<span class="o">=</span><span class="kc">...</span><span class="p">,</span> jacIndexCols<span class="o">=</span><span class="kc">...</span><span class="p">,</span>
+             options<span class="o">=</span><span class="kc">...</span><span class="p">,</span> optionsFile<span class="o">=</span><span class="kc">...</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The API for mixed-integer NLPs is</p>
+<div class="highlight-R"><div class="highlight"><pre><span></span>sol <span class="o">&lt;-</span> knitromip<span class="p">(</span>nvar<span class="o">=</span><span class="kc">...</span><span class="p">,</span> ncon<span class="o">=</span><span class="kc">...</span><span class="p">,</span> x0<span class="o">=</span><span class="kc">...</span><span class="p">,</span>
+                 objective<span class="o">=</span><span class="kc">...</span><span class="p">,</span> gradient<span class="o">=</span><span class="kc">...</span><span class="p">,</span> constraints<span class="o">=</span><span class="kc">...</span><span class="p">,</span>
+                 jacobian<span class="o">=</span><span class="kc">...</span><span class="p">,</span> jacIndexCons<span class="o">=</span><span class="kc">...</span><span class="p">,</span> jacIndexVars<span class="o">=</span><span class="kc">...</span><span class="p">,</span>
+                 hessianLag<span class="o">=</span><span class="kc">...</span><span class="p">,</span> hessIndexRows<span class="o">=</span><span class="kc">...</span><span class="p">,</span> hessIndexCols<span class="o">=</span><span class="kc">...</span><span class="p">,</span>
+                 xL<span class="o">=</span><span class="kc">...</span><span class="p">,</span> xU<span class="o">=</span><span class="kc">...</span><span class="p">,</span> cL<span class="o">=</span><span class="kc">...</span><span class="p">,</span> cU<span class="o">=</span><span class="kc">...</span><span class="p">,</span>
+                 xType<span class="o">=</span><span class="kc">...</span><span class="p">,</span> cFnType<span class="o">=</span><span class="kc">...</span><span class="p">,</span> objfntype<span class="o">=</span><span class="kc">...</span><span class="p">,</span>
+                 options<span class="o">=</span><span class="kc">...</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The following other forms may be used:</p>
+<div class="highlight-R"><div class="highlight"><pre><span></span>sol <span class="o">&lt;-</span> knitromip<span class="p">(</span>nvar<span class="o">=</span><span class="kc">...</span><span class="p">,</span> ncon<span class="o">=</span><span class="kc">...</span><span class="p">,</span> x0<span class="o">=</span><span class="kc">...</span><span class="p">,</span>
+                 objective<span class="o">=</span><span class="kc">...</span><span class="p">,</span> gradient<span class="o">=</span><span class="kc">...</span><span class="p">,</span> constraints<span class="o">=</span><span class="kc">...</span><span class="p">,</span>
+                 jacobian<span class="o">=</span><span class="kc">...</span><span class="p">,</span> jacBitMap<span class="o">=</span><span class="kc">...</span><span class="p">,</span>
+                 hessianLag<span class="o">=</span><span class="kc">...</span><span class="p">,</span> hessBitMap<span class="o">=</span><span class="kc">...</span><span class="p">,</span>
+                 xL<span class="o">=</span><span class="kc">...</span><span class="p">,</span> xU<span class="o">=</span><span class="kc">...</span><span class="p">,</span> cL<span class="o">=</span><span class="kc">...</span><span class="p">,</span> cU<span class="o">=</span><span class="kc">...</span><span class="p">,</span>
+                 xType<span class="o">=</span><span class="kc">...</span><span class="p">,</span> cFnType<span class="o">=</span><span class="kc">...</span><span class="p">,</span> objfntype<span class="o">=</span><span class="kc">...</span><span class="p">,</span>
+                 options<span class="o">=</span><span class="kc">...</span><span class="p">)</span>
+sol <span class="o">&lt;-</span> knitromip<span class="p">(</span>nvar<span class="o">=</span><span class="kc">...</span><span class="p">,</span> ncon<span class="o">=</span><span class="kc">...</span><span class="p">,</span> x0<span class="o">=</span><span class="kc">...</span><span class="p">,</span>
+                 objective<span class="o">=</span><span class="kc">...</span><span class="p">,</span> gradient<span class="o">=</span><span class="kc">...</span><span class="p">,</span> constraints<span class="o">=</span><span class="kc">...</span><span class="p">,</span>
+                 jacobian<span class="o">=</span><span class="kc">...</span><span class="p">,</span> hessianLag<span class="o">=</span><span class="kc">...</span><span class="p">,</span>
+                 xL<span class="o">=</span><span class="kc">...</span><span class="p">,</span> xU<span class="o">=</span><span class="kc">...</span><span class="p">,</span> cL<span class="o">=</span><span class="kc">...</span><span class="p">,</span> cU<span class="o">=</span><span class="kc">...</span><span class="p">,</span>
+                 xType<span class="o">=</span><span class="kc">...</span><span class="p">,</span> cFnType<span class="o">=</span><span class="kc">...</span><span class="p">,</span> objfntype<span class="o">=</span><span class="kc">...</span><span class="p">,</span>
+                 options<span class="o">=</span><span class="kc">...</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="input-arguments-of-knitro">
+<h2>Input Arguments of <em>knitro</em></h2>
+<p>Below is a description of the input arguments of the <em>knitro</em> function of <em>KnitroR</em>.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="82%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Input Argument</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><em>objective</em></td>
+<td><p class="first">Objective function to be minimized or maximized.</p>
+<p class="last"><em>objective</em> accepts a vector <em>x</em> and returns a scalar <em>f</em>,
+the objective function evaluated at <em>x</em>.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><em>gradient</em></td>
+<td><p class="first">Gradient of the objective function.</p>
+<p class="last"><em>gradient</em> accepts a vector <em>x</em> and returns a vector <em>g</em> (using the R function c(...))</p>
+</td>
+</tr>
+<tr class="row-even"><td><em>constraints</em></td>
+<td><p class="first">Nonlinear constraints function.</p>
+<p class="last"><em>constraints</em> accepts a vector <em>x</em> and returns a vector <em>c</em> (using the R function c(...))</p>
+</td>
+</tr>
+<tr class="row-odd"><td><em>jacobian</em></td>
+<td><p class="first">Jacobian of nonlinear constraints function, as a sparse matrix.</p>
+<p class="last"><em>jacobian</em> accepts a vector <em>x</em> and returns a vector containing the nonzero elements
+of the jacobian.
+Via R function c(...)</p>
+</td>
+</tr>
+<tr class="row-even"><td><em>jacIndexCons</em></td>
+<td>Vector containing the row indices of the nonzero elements of the jacobian
+Via R function c(...)</td>
+</tr>
+<tr class="row-odd"><td><em>jacIndexVars</em></td>
+<td>Vector containing the column indices of the nonzero elements of the jacobian
+Via R function c(...)</td>
+</tr>
+<tr class="row-even"><td><em>jacBitMap</em></td>
+<td>Vector containing 1 or 0 depending on whether jacobian element is non-zero or not.
+Vector elements are supposed to be given in row major.
+Via R function c(...)</td>
+</tr>
+<tr class="row-odd"><td><em>hessianLag</em></td>
+<td>Hessian of Lagrangian, as a sparse matrix.
+Vector of nonzero elements, via R function c(...)</td>
+</tr>
+<tr class="row-even"><td><em>hessIndexRows</em></td>
+<td>Row indices of nonzero elements of hessian of Lagrangian.
+Via R function c(...)</td>
+</tr>
+<tr class="row-odd"><td><em>hessIndexCols</em></td>
+<td>Column indices of nonzero elements of hessian of Lagrangian.
+Via R function c(...)</td>
+</tr>
+<tr class="row-even"><td><em>hessBitMap</em></td>
+<td>Vector containing 1 or 0 depending on whether hessian element is non-zero or not.
+Vector elements are supposed to be given in row major.
+Via R function c(...)</td>
+</tr>
+<tr class="row-odd"><td><em>xL</em></td>
+<td>Vector of lower bounds on variables.</td>
+</tr>
+<tr class="row-even"><td><em>xU</em></td>
+<td>Vector of upper bounds on variables.</td>
+</tr>
+<tr class="row-odd"><td><em>cL</em></td>
+<td>Vector of lower bounds on constraints.</td>
+</tr>
+<tr class="row-even"><td><em>cU</em></td>
+<td>Vector of upper bounds on constraints.</td>
+</tr>
+<tr class="row-odd"><td><em>xScaleFactors</em></td>
+<td>Vector of scaling factors on variables.</td>
+</tr>
+<tr class="row-even"><td><em>xScaleCenters</em></td>
+<td>Vector of scaling centers on variables.</td>
+</tr>
+<tr class="row-odd"><td><em>cScaleFactors</em></td>
+<td>Vector of scaling factors on nonlinear constraints.</td>
+</tr>
+<tr class="row-even"><td><em>ccScaleFactors</em></td>
+<td>Vector of scaling factors on complementarity constraints.</td>
+</tr>
+<tr class="row-odd"><td><em>objScaleFactor</em></td>
+<td>Scaling factor on objective function.</td>
+</tr>
+<tr class="row-even"><td><em>constraintTypes</em></td>
+<td>Constraint types (general, linear or quadratic).</td>
+</tr>
+<tr class="row-odd"><td><em>options</em></td>
+<td>Options stored as an R list. They can also be set in a file named ktrOptions.opt via
+the field optionsFile.</td>
+</tr>
+<tr class="row-even"><td><em>optionsFile</em></td>
+<td>Options file. The user can specify all basic KNITRO options via a file with extension
+.opt.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="input-arguments-for-mpecs-in-knitro">
+<h2>Input Arguments for MPECS in <em>knitro</em></h2>
+<p>Below is a description of the input arguments, which are specific to MPECs in the <em>knitro</em> function of <em>KnitroR</em>.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Input Argument</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><em>numCompConstraints</em></td>
+<td>Number of complementarity constraints among nonlinear constraints.</td>
+</tr>
+<tr class="row-odd"><td><em>ccIdxList1</em></td>
+<td>List of indices of first variables in complementarity constraints.
+Via R function c(...)</td>
+</tr>
+<tr class="row-even"><td><em>ccIdxList2</em></td>
+<td>List of indices of second variables in complementarity constraints.
+Via R function c(...)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="input-arguments-for-knitromip">
+<h2>Input Arguments for <em>knitromip</em></h2>
+<p>Below is a description of the input arguments, which are specific to MINLPs in the <em>knitromip</em> function of <em>KnitroR</em>.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Input Argument</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><em>xType</em></td>
+<td>R vector indicating variable types: 0 (continuous), 1 (integer) or 2 (binary).</td>
+</tr>
+<tr class="row-odd"><td><em>cFnType</em></td>
+<td>R vector indicating constraint types: 0 (convex), 1 (nonconvex) or 2 (uncertain)</td>
+</tr>
+<tr class="row-even"><td><em>objFnType</em></td>
+<td>Type of objective function: 0 (convex), 1 (nonconvex) or 2 (uncertain)</td>
+</tr>
+<tr class="row-odd"><td><em>options</em></td>
+<td>List of options which are specific to MINLPs.
+xPriorities: branching priorities for integer variables
+mipBranchRule: branching rule in Branch-and-Bound algorithm
+mipHeuristic: heuristic to find initial integer feasible solution
+mipMethod: 0 (automatic choice), 1 (Branch-and-Bound), 2 (Quesada-Grossmann)
+mipLPalg: algorithm for LP subproblem.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="input-arguments-for-knitrolsq">
+<h2>Input Arguments for <em>knitrolsq</em></h2>
+<p>Below is a descriptions of the API of the R function <em>knitrolsq</em> in KnitroR. The function <em>knitrolsq</em> is based on
+Knitro&#8217;s internal implementation of bound-constrained nonlinear least-squares.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="82%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Input Argument</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><em>dimp</em></td>
+<td>Dimension of fitting parameter.</td>
+</tr>
+<tr class="row-odd"><td><em>par0</em></td>
+<td>Initial guess on fitting parameter.</td>
+</tr>
+<tr class="row-even"><td><em>dataFrameX</em></td>
+<td>Data frame containing samples x_i.</td>
+</tr>
+<tr class="row-odd"><td><em>dataFrameY</em></td>
+<td>Data frame containing samples y_i.</td>
+</tr>
+<tr class="row-even"><td><em>residual</em></td>
+<td>Vector of nonlinear least-squares residuals (R function returning c(...)).</td>
+</tr>
+<tr class="row-odd"><td><em>jacobian</em></td>
+<td>Jacobian of nonlinear least-squares residuals <em>residual</em> (R function returning c(...)).</td>
+</tr>
+<tr class="row-even"><td><em>parL</em></td>
+<td>Vector of lower bounds on fitting parameter (R vector).</td>
+</tr>
+<tr class="row-odd"><td><em>parU</em></td>
+<td>Vector of upper bounds on fitting parameter (R vector).</td>
+</tr>
+<tr class="row-even"><td><em>xScaleCenters</em></td>
+<td>Vector of scaling centers on fitting parameter. (R vector).</td>
+</tr>
+<tr class="row-odd"><td><em>xScaleFactors</em></td>
+<td>Vector of scaling factors on fitting parameter. (R vector).</td>
+</tr>
+<tr class="row-even"><td><em>objScaleFactor</em></td>
+<td>Scaling factor on nonlienar least-squares objective function.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="output-arguments-of-knitro-and-knitromip">
+<h2>Output Arguments of <em>knitro</em> and <em>knitromip</em></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="82%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Output Argument</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><em>statusMessage</em></td>
+<td>Knitro&#8217;s status message.</td>
+</tr>
+<tr class="row-odd"><td><em>x</em></td>
+<td>Locally optimal primal solution.</td>
+</tr>
+<tr class="row-even"><td><em>lambda</em></td>
+<td>Locally optimal dual solution.</td>
+</tr>
+<tr class="row-odd"><td><em>objective</em></td>
+<td>Objective value at the optimal solution <em>x</em>.</td>
+</tr>
+<tr class="row-even"><td><em>constraints</em></td>
+<td>Constraints value at the optimal solution <em>x</em>.</td>
+</tr>
+<tr class="row-odd"><td><em>objEval</em></td>
+<td>Number of objective evaluations.</td>
+</tr>
+<tr class="row-even"><td><em>gradEval</em></td>
+<td>Number of gradient evaluations.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="output-arguments-of-knitrolsq">
+<h2>Output Arguments of <em>knitrolsq</em></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="82%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Output Argument</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><em>statusMessage</em></td>
+<td>Knitro&#8217;s status message.</td>
+</tr>
+<tr class="row-odd"><td><em>paramFit</em></td>
+<td>Locally optimal solution for fitting parameter.</td>
+</tr>
+<tr class="row-even"><td><em>objective</em></td>
+<td>Least-squares objective value at the optimal solution <em>paramFit</em>.</td>
+</tr>
+<tr class="row-odd"><td><em>iter</em></td>
+<td>Number of iterations.</td>
+</tr>
+<tr class="row-even"><td><em>objEval</em></td>
+<td>Number of objective evaluations.</td>
+</tr>
+<tr class="row-odd"><td><em>gradEval</em></td>
+<td>Number of gradient evaluations.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="ooInterfaceReference.html" class="btn btn-neutral float-right" title="Object-oriented interface reference" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="knitromatlabReference.html" class="btn btn-neutral" title="Knitro / MATLAB reference" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Artelys.
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'10.3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  false
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

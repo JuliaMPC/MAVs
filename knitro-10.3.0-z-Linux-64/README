@@ -1,0 +1,46 @@
+-------------------
+Artelys Knitro 10.3
+-------------------
+
+If you have not yet installed a valid license to activate your
+Knitro product please view the "INSTALL" file provided with this
+distribution. 
+
+Knitro is a software package for solving smooth optimization
+problems, with or without constraints.
+
+This Knitro distribution offers the following interfaces:
+
+- AMPL
+- C/C++/C#
+- Fortran
+- Java
+- MATLAB(R)
+- Python
+- R
+
+To use Knitro with the AMPL modeling language, you must have a valid
+AMPL license.  A "knitroampl" executable file, an example AMPL model
+and instructions for using Knitro with AMPL are provided in the
+"knitroampl" directory.      
+
+To use the Knitro callable library API with a programming language
+(e.g., C/C++, Fortran, Java, Python), go inside the "examples" directory
+and view the "README" file and examples provided under the particular
+interface language you intend to use.  These examples include all the
+key features necessary to use the Knitro callable library API.
+
+To use Knitro with the MATLAB language, you must have a valid
+recent MATLAB installation.  Example MATLAB models and instructions for 
+using Knitro with MATLAB are provided in the "knitromatlab" directory.
+
+For further guidance and detail please see the Knitro User's Manual
+which is contained in the "doc" directory.
+
+For problems or bug reports please contact your local distributor
+or Artelys at:
+
+  info-knitro@artelys.com
+  http://www.artelys.com/knitro
+
+Copyright © 2017 Artelys.  All rights reserved.

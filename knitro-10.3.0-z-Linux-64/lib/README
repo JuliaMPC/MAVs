@@ -1,0 +1,21 @@
+----------------------------------------------
+Linking KNITRO 10.3 Libraries for 64-bit Linux
+----------------------------------------------
+
+This directory contains the 64-bit Linux Artelys Knitro libraries.
+The Knitro 10.3 libraries for 64-bit Linux implement parallel features 
+using OpenMP.  These libraries are built so that they are compatible 
+with gcc 4.4 and glibc 2.5. In order to use these libraries, you must
+have a newer installation of Linux that is compatible for linking
+against these libraries.
+
+If you have an older installation of Linux that is not compatible
+with these libraries, then you can use the older libraries provided
+in the "sequential" subdirectory.  These libraries DO NOT use OpenMP
+and thus do not implement any of the parallel features in Knitro. The
+"sequential" libraries are built so that they are compatible with gcc 4.1.
+
+If you are unable to link against both of these libraries, then
+please contact your Knitro distributor to see if they can provide a
+version of Knitro for 64-bit Linux that is compatible with your
+system.

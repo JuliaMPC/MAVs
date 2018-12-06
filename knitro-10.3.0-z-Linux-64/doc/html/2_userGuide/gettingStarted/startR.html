@@ -1,0 +1,398 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head><div class = "head"> </div>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Getting started with R &mdash; Artelys Knitro 10.3 User&#39;s Manual</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/Artelys_theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="Artelys Knitro 10.3 User&#39;s Manual" href="../../index.html"/>
+        <link rel="up" title="Getting started" href="../gettingStarted.html"/>
+        <link rel="next" title="Setting options" href="../knitroOptions.html"/>
+        <link rel="prev" title="Getting started with the object-oriented interface" href="startCPP.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Artelys Knitro User's Manual
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                10.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../1_introduction.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../2_userGuide.html">User guide</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../gettingStarted.html">Getting started</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="startAmpl.html">Getting started with AMPL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="startMatlab.html">Getting started with MATLAB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="startCallableLibrary.html">Getting started with the callable library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="startCPP.html">Getting started with the object-oriented interface</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Getting started with R</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#the-knitror-interface">The <em>KnitroR</em> interface</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#first-r-example">First R example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#further-information">Further information</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#additional-examples">Additional examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../knitroOptions.html">Setting options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../derivatives.html">Derivatives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../multistart.html">Multistart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../minlp.html">Mixed-integer nonlinear programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../complementarity.html">Complementarity constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ktrlsq.html">Nonlinear Least-Squares</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../algorithms.html">Algorithms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../feasibility.html">Feasibility and infeasibility</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../parallelism.html">Parallelism</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tuner.html">The Knitro-Tuner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../termination.html">Termination criteria</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../obtainingInformation.html">Obtaining information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../callbacks.html">Callbacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../otherProgInterfaces.html">Other programmatic interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../specialProblems.html">Special problem classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tips.html">Tips and tricks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../3_referenceManual.html">Reference manual</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">Artelys Knitro User's Manual</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../2_userGuide.html">User guide</a> &raquo;</li>
+      
+          <li><a href="../gettingStarted.html">Getting started</a> &raquo;</li>
+      
+    <li>Getting started with R</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="getting-started-with-r">
+<span id="startr"></span><h1>Getting started with R</h1>
+<p>The Knitro interface for R, called <em>KnitroR</em>, is provided
+with your Knitro distribution. In order to install it, you need R 3.0 or
+later and run the following command in the R prompt:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">install</span><span class="o">.</span><span class="n">packages</span><span class="p">(</span><span class="s1">&#39;KnitroR&#39;</span><span class="p">,</span> <span class="n">repos</span><span class="o">=</span> <span class="n">NULL</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Do not forget to define an environment variable KNITRODIR pointing to your local installation directory of Knitro.</p>
+<p>To test whether your installation is correct, type in the expression:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">knitro</span><span class="p">(</span><span class="n">objective</span><span class="o">=</span><span class="n">function</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">x0</span><span class="o">=</span><span class="n">c</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>at the R command prompt. If your installation was successful, <em>KnitroR</em>
+returns the following message:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$statusMessage
+[1] &quot;Optimal solution found !&quot;
+$x
+[1] 0 0
+$lambda
+[1] 0 0
+$objective
+[1] 0
+$constraints
+numeric(0)
+$iter
+[1] 1
+$objEval
+[1] 9
+$gradEval
+[1] 0
+</pre></div>
+</div>
+<p>If Knitro is found and called but returns an error, it probably means that no
+license was found. In any of these situations, please see <a class="reference internal" href="../../1_introduction/troubleshooting.html#sec-troubleshooting"><span class="std std-ref">Troubleshooting</span></a>.</p>
+<div class="section" id="the-knitror-interface">
+<h2>The <em>KnitroR</em> interface</h2>
+<p>The Knitro solver can be called via the following optimization function:</p>
+<div class="highlight-R"><div class="highlight"><pre><span></span>sol <span class="o">&lt;-</span> knitro<span class="p">(</span>nvar<span class="o">=</span><span class="kc">...</span><span class="p">,</span> ncon<span class="o">=</span><span class="kc">...</span><span class="p">,</span> x0<span class="o">=</span><span class="kc">...</span><span class="p">,</span>
+              objective<span class="o">=</span><span class="kc">...</span><span class="p">,</span> gradient<span class="o">=</span><span class="kc">...</span><span class="p">,</span> constraints<span class="o">=</span><span class="kc">...</span><span class="p">,</span>
+              jacobian<span class="o">=</span><span class="kc">...</span><span class="p">,</span> jacIndexCons<span class="o">=</span><span class="kc">...</span><span class="p">,</span> jacIndexVars<span class="o">=</span><span class="kc">...</span><span class="p">,</span>
+              hessianLag<span class="o">=</span><span class="kc">...</span><span class="p">,</span> hessIndexRows<span class="o">=</span><span class="kc">...</span><span class="p">,</span> hessIndexCols<span class="o">=</span><span class="kc">...</span><span class="p">,</span>
+              xL<span class="o">=</span><span class="kc">...</span><span class="p">,</span> xU<span class="o">=</span><span class="kc">...</span><span class="p">,</span> cL<span class="o">=</span><span class="kc">...</span><span class="p">,</span> cU<span class="o">=</span><span class="kc">...</span><span class="p">,</span>
+              options<span class="o">=</span><span class="kc">...</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>but the simplest function call reduces to:</p>
+<div class="highlight-R"><div class="highlight"><pre><span></span>sol <span class="o">&lt;-</span> knitro<span class="p">(</span>objective<span class="o">=</span><span class="kc">...</span><span class="p">,</span> x0<span class="o">=</span><span class="kc">...</span><span class="p">)</span>
+sol <span class="o">&lt;-</span> knitro<span class="p">(</span>objective<span class="o">=</span><span class="kc">...</span><span class="p">,</span> xL<span class="o">=</span><span class="kc">...</span><span class="p">)</span>
+sol <span class="o">&lt;-</span> knitro<span class="p">(</span>objective<span class="o">=</span><span class="kc">...</span><span class="p">,</span> xU<span class="o">=</span><span class="kc">...</span><span class="p">)</span>
+sol <span class="o">&lt;-</span> knitro<span class="p">(</span>nvar<span class="o">=</span><span class="kc">...</span><span class="p">,</span> objective<span class="o">=</span><span class="kc">...</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="first-r-example">
+<h2>First R example</h2>
+<p>The following introductory examples shows how to solve the Rosenbrock banana function.</p>
+<div class="highlight-R"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span><span class="s">&#39;KnitroR&#39;</span><span class="p">)</span>
+
+<span class="c1"># Rosenbrock Banana function</span>
+eval_f <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>x<span class="p">)</span> <span class="p">{</span>
+    <span class="kr">return</span><span class="p">(</span> <span class="m">100</span> <span class="o">*</span> <span class="p">(</span>x<span class="p">[</span><span class="m">2</span><span class="p">]</span> <span class="o">-</span> x<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="o">*</span> x<span class="p">[</span><span class="m">1</span><span class="p">])</span><span class="o">^</span><span class="m">2</span> <span class="o">+</span> <span class="p">(</span><span class="m">1</span> <span class="o">-</span> x<span class="p">[</span><span class="m">1</span><span class="p">])</span><span class="o">^</span><span class="m">2</span> <span class="p">)</span>
+<span class="p">}</span>
+
+eval_grad_f <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>x<span class="p">)</span> <span class="p">{</span>
+    grad_f <span class="o">&lt;-</span><span class="kp">rep</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="kp">length</span><span class="p">(</span>x<span class="p">))</span>
+
+    grad_f<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="o">&lt;-</span> <span class="m">2</span><span class="o">*</span>x<span class="p">[</span><span class="m">1</span><span class="p">]</span><span class="m">-2+400</span><span class="o">*</span>x<span class="p">[</span><span class="m">1</span><span class="p">]</span><span class="o">^</span><span class="m">3-400</span><span class="o">*</span>x<span class="p">[</span><span class="m">1</span><span class="p">]</span><span class="o">*</span>x<span class="p">[</span><span class="m">2</span><span class="p">]</span>
+    grad_f<span class="p">[</span><span class="m">2</span><span class="p">]</span> <span class="o">&lt;-</span> <span class="m">200</span><span class="o">*</span><span class="p">(</span>x<span class="p">[</span><span class="m">2</span><span class="p">]</span><span class="o">-</span>x<span class="p">[</span><span class="m">1</span><span class="p">]</span><span class="o">^</span><span class="m">2</span><span class="p">)</span>
+
+    <span class="kr">return</span><span class="p">(</span> grad_f <span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1"># initial values</span>
+x0 <span class="o">&lt;-</span> <span class="kt">c</span><span class="p">(</span> <span class="m">-1.2</span><span class="p">,</span> <span class="m">1</span> <span class="p">)</span>
+
+sol <span class="o">&lt;-</span> knitro<span class="p">(</span>x0 <span class="o">=</span> x0<span class="p">,</span> objective <span class="o">=</span> eval_f<span class="p">)</span>
+</pre></div>
+</div>
+<p>We can save this code in a file &#8216;example.R&#8217; and run it from the R command prompt via the following command:</p>
+<div class="highlight-R"><div class="highlight"><pre><span></span><span class="kn">source</span><span class="p">(</span><span class="s">&#39;example.R&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><em>KnitroR</em> returns the following output:</p>
+<div class="highlight-none"><div class="highlight"><pre><span></span>=======================================
+          Commercial License
+         Artelys Knitro 10.0.1
+=======================================
+
+Knitro performing finite-difference gradient computation with 1 thread.
+Knitro presolve eliminated 0 variables and 0 constraints.
+
+gradopt:              2
+hessopt:              2
+outlev:               1
+par_concurrent_evals: 0
+The problem is identified as unconstrained.
+Knitro changing algorithm from AUTO to 1.
+Knitro changing bar_initpt from AUTO to 3.
+Knitro changing bar_murule from AUTO to 4.
+Knitro changing bar_penaltycons from AUTO to 1.
+Knitro changing bar_penaltyrule from AUTO to 2.
+Knitro changing bar_switchrule from AUTO to 1.
+Knitro changing linsolver from AUTO to 2.
+Knitro performing finite-difference gradient computation with 1 thread.
+
+Problem Characteristics                    ( Presolved)
+-----------------------
+Objective goal:  Minimize
+Number of variables:                     2 (         2)
+    bounded below:                       0 (         0)
+    bounded above:                       0 (         0)
+    bounded below and above:             0 (         0)
+    fixed:                               0 (         0)
+    free:                                2 (         2)
+Number of constraints:                   0 (         0)
+    linear equalities:                   0 (         0)
+    nonlinear equalities:                0 (         0)
+    linear inequalities:                 0 (         0)
+    nonlinear inequalities:              0 (         0)
+    range:                               0 (         0)
+Number of nonzeros in Jacobian:          0 (         0)
+Number of nonzeros in Hessian:           3 (         3)
+
+EXIT: Locally optimal solution found.
+
+Final Statistics
+----------------
+Final objective value               =  2.00430825877435e-011
+Final feasibility error (abs / rel) =   0.00e+000 / 0.00e+000
+Final optimality error  (abs / rel) =   1.66e-007 / 1.66e-007
+# of iterations                     =         36
+# of CG iterations                  =          5
+# of function evaluations           =        134
+# of gradient evaluations           =          0
+Total program time (secs)           =       0.069 (     0.000 CPU time)
+Time spent in evaluations (secs)    =       0.001
+
+===============================================================================
+</pre></div>
+</div>
+</div>
+<div class="section" id="further-information">
+<h2>Further information</h2>
+<p>More functions are availables and R interface can be used to solve MINLP and least
+squares problems as well.
+Another chapter of this documentation is dedicated to the R interface (<a class="reference internal" href="../../3_referenceManual/knitroRreference.html#knitrorreference"><span class="std std-ref">Knitro / R reference</span></a>)
+and provides exhaustive references.</p>
+<p>Any Knitro option can also be provided to the R interface. A comprehensive
+documentation of Knitro options is available in the section <a class="reference internal" href="../../3_referenceManual/userOptions.html#useroptions"><span class="std std-ref">Knitro user options</span></a>.</p>
+</div>
+<div class="section" id="additional-examples">
+<h2>Additional examples</h2>
+<p>More examples using the R interface are provided in
+the <code class="file docutils literal"><span class="pre">examples/R</span></code> directory of the Knitro distribution.</p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../knitroOptions.html" class="btn btn-neutral float-right" title="Setting options" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="startCPP.html" class="btn btn-neutral" title="Getting started with the object-oriented interface" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Artelys.
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'10.3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  false
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

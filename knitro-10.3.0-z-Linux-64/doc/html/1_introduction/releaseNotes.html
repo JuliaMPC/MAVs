@@ -1,0 +1,314 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head><div class = "head"> </div>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Release notes &mdash; Artelys Knitro 10.3 User&#39;s Manual</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/Artelys_theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="Artelys Knitro 10.3 User&#39;s Manual" href="../index.html"/>
+        <link rel="up" title="Introduction" href="../1_introduction.html"/>
+        <link rel="next" title="User guide" href="../2_userGuide.html"/>
+        <link rel="prev" title="Troubleshooting" href="troubleshooting.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Artelys Knitro User's Manual
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                10.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../1_introduction.html">Introduction</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="productOverview.html">Product overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gettingKnitro.html">Getting Knitro</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Release notes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../2_userGuide.html">User guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../3_referenceManual.html">Reference manual</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">Artelys Knitro User's Manual</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../1_introduction.html">Introduction</a> &raquo;</li>
+      
+    <li>Release notes</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="release-notes">
+<h1>Release notes</h1>
+<p id="index-0"><strong>What&#8217;s new in release 10.3 ?</strong></p>
+<ul class="simple">
+<li>NOTE: Knitro 10.3 DOES NOT support the reverse communication
+interface. If you are currently using this interface, please migrate
+to the callback interface.</li>
+<li>NOTE: Knitro 10.3 DOES NOT offer the MATLAB interface for 32-bit Windows.
+Impacted users are advised to migrate to 64-bit Windows.</li>
+<li>Knitro 10.3 offers a new incomplete Cholesky preconditioning option that
+can be applied to the conjugate gradient (CG) subproblem solves in the
+Knitro interior-point/barrier algorithms.  Use of the preconditioner may
+offer large speedups on ill-conditioned models that take a lot of CG
+iterations, particularly when using the Interior/CG algorithm. It is
+currently only active on models without equality constraints.  The
+preconditioner can be enabled using the new <a class="reference internal" href="../3_referenceManual/userOptions.html#cg_precond" title="cg_precond"><code class="xref c c-type docutils literal"><span class="pre">cg_precond</span></code></a> user option and
+the memory in the incomplete Cholesky is controlled via the new <a class="reference internal" href="../3_referenceManual/userOptions.html#cg_pmem" title="cg_pmem"><code class="xref c c-type docutils literal"><span class="pre">cg_pmem</span></code></a>
+user option.</li>
+<li>Knitro 10.3 offers several improvements to the internal linear algebra and
+linear solvers used in Knitro, including:<ul>
+<li>improvements to prevent large growth in memory use (and solve time) by
+the MA57 linear solver;</li>
+<li>improved efficiency of the MKLPARDISO linear solver in Knitro;</li>
+<li>the MKLPARDISO linear solver is now available as an option for all Knitro
+algorithms;</li>
+<li>improved efficiency of some matrix-vector product computations in Knitro.</li>
+</ul>
+</li>
+<li>Knitro 10.3 offers a new user option to enable an automatic &#8220;restart&#8221; of
+the Knitro algorithms when they seem to be converging slowly (or not at
+all).  The restart procedure is disabled by default, but can be enabled by
+setting the new <a class="reference internal" href="../3_referenceManual/userOptions.html#restarts" title="restarts"><code class="xref c c-type docutils literal"><span class="pre">restarts</span></code></a> user option to a positive value (indicating the
+maximum number of restarts allowed).  The new option <a class="reference internal" href="../3_referenceManual/userOptions.html#restarts_maxit" title="restarts_maxit"><code class="xref c c-type docutils literal"><span class="pre">restarts_maxit</span></code></a>
+specifies a maximum number of iterations before enforcing a restart when
+<a class="reference internal" href="../3_referenceManual/userOptions.html#restarts" title="restarts"><code class="xref c c-type docutils literal"><span class="pre">restarts</span></code></a> &gt; 0.</li>
+<li>Knitro 10.3 offers significant improvements in large-scale least-squares
+models by avoiding computing or storing the Gauss-Newton
+Hessian when using the Interior/CG algorithm.  This and other linear
+algebra improvements can dramatically speedup the solution of very large
+least-squares models.</li>
+<li>Knitro 10.3 offers improvements in the &#8220;feasibility phase&#8221; used when Knitro
+is struggling to get feasible.  This can allow faster detection of
+infeasible models with better final objective values.  The objective used
+for the feasibility phase is controlled by the new user option
+<a class="reference internal" href="../3_referenceManual/userOptions.html#bar_switchobj" title="bar_switchobj"><code class="xref c c-type docutils literal"><span class="pre">bar_switchobj</span></code></a>.</li>
+<li>Knitro 10.3 offers the following new user options, in addition to those
+mentioned above:<ul>
+<li><a class="reference internal" href="../3_referenceManual/userOptions.html#act_lpfeastol" title="act_lpfeastol"><code class="xref c c-type docutils literal"><span class="pre">act_lpfeastol</span></code></a>: controls the feasibility tolerance in LP subproblems for
+the active-set or SQP algorithms</li>
+<li><a class="reference internal" href="../3_referenceManual/userOptions.html#bar_slackboundpush" title="bar_slackboundpush"><code class="xref c c-type docutils literal"><span class="pre">bar_slackboundpush</span></code></a>: controls how far the initial slack variables are
+pushed inside the bounds (a smaller value may be preferable for
+warm-starts)</li>
+<li><a class="reference internal" href="../3_referenceManual/userOptions.html#cg_stoptol" title="cg_stoptol"><code class="xref c c-type docutils literal"><span class="pre">cg_stoptol</span></code></a>: controls the termination tolerance for the conjugate gradient
+(CG) subproblems used in Knitro</li>
+<li><a class="reference internal" href="../3_referenceManual/userOptions.html#initpenalty" title="initpenalty"><code class="xref c c-type docutils literal"><span class="pre">initpenalty</span></code></a>: sets the initial penalty parameter used in the Knitro merit
+functions</li>
+</ul>
+</li>
+<li>Knitro 10.3 offers several enhancements to the KnitroR &#8220;R&#8221; interface:<ul>
+<li>KnitroR offers a new feature to set the sparsity patterns of the Jacobian
+and Hessian of the Lagrangian matrices. They can now be provided in the R
+vectors &#8220;jacBitMap&#8221; and &#8220;hessBitMap&#8221;, which are assumed to be in row
+major order and contain &#8220;1&#8221; when the corresponding matrix element is
+non-zero and &#8220;0&#8221; otherwise.</li>
+<li>KnitroR&#8217;s nonlinear least-squares implementation is now fully based on
+Knitro&#8217;s internal least-squares algorithms. The function &#8220;knitrovlsq&#8221; has
+been renamed into &#8220;knitrolsq&#8221; and the previous &#8220;knitrolsq&#8221; method has
+been removed from the package.</li>
+<li>In KnitroR, infinite bounds on variables and constraints can now be set
+using the R keyword &#8220;Inf&#8221;.</li>
+<li>KnitroR now loads the Knitro dynamic library at runtime. Therefore, the
+user needs to have an environment variable KNITRODIR set and pointing to
+its local installation directory of Knitro.</li>
+</ul>
+</li>
+<li>Two user options were renamed.  The option &#8220;maxcgit&#8221; was renamed
+<a class="reference internal" href="../3_referenceManual/userOptions.html#cg_maxit" title="cg_maxit"><code class="xref c c-type docutils literal"><span class="pre">cg_maxit</span></code></a>, and the option &#8220;pivot&#8221; was renamed <a class="reference internal" href="../3_referenceManual/userOptions.html#linsolver_pivottol" title="linsolver_pivottol"><code class="xref c c-type docutils literal"><span class="pre">linsolver_pivottol</span></code></a>.</li>
+<li>The API function &#8220;KTR_addcompcons&#8221; was renamed <a class="reference internal" href="../3_referenceManual/callableLibrary/API.html#KTR_set_compcons" title="KTR_set_compcons"><code class="xref c c-func docutils literal"><span class="pre">KTR_set_compcons()</span></code></a>. In the
+C++, Java and C# interfaces, the method &#8220;addCompCons&#8221; was deprecated and
+renamed into &#8220;setCompCons&#8221;.</li>
+<li>Knitro 10.3 offers overall efficiency and robustness improvements on
+general nonlinear models as well as significant improvements in efficiency
+on models with integer variables.</li>
+</ul>
+<p><strong>Bug Fixes in release 10.3</strong></p>
+<ul class="simple">
+<li>Fixed bug that could cause segfaults when there were some input errors
+using a Knitro options file.</li>
+<li>Fixed a bug using <a class="reference internal" href="../3_referenceManual/userOptions.html#par_msnumthreads" title="par_msnumthreads"><code class="xref c c-type docutils literal"><span class="pre">par_msnumthreads</span></code></a> &gt; 1 with the Knitro-AMPL interface.</li>
+<li>Fixed a bug in the Knitro-MATLAB interface where memory issues could occur
+when the objective function, objective gradient, or constraints were
+computed as sparse MATLAB arrays, rather than full MATLAB arrays.</li>
+<li>In KnitroR, the user can now provide the Jacobian and Hessian of the
+Lagrangian matrices without having to specify their sparsity patterns.
+KnitroR will internally compute the sparsity patterns as dense if none is
+provided.</li>
+<li>In KnitroR, all Knitro options are now available (integer, double and
+string). They can be set via the &#8220;options&#8221; list in the functions &#8220;knitro&#8221;,
+&#8220;knitromip&#8221; and &#8220;knitrolsq&#8221;.</li>
+</ul>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../2_userGuide.html" class="btn btn-neutral float-right" title="User guide" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="troubleshooting.html" class="btn btn-neutral" title="Troubleshooting" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Artelys.
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'10.3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  false
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

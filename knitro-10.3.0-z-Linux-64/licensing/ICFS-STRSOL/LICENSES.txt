@@ -1,0 +1,16 @@
+﻿ICFS and STRTSOL are used in Knitro for conjugate gradient preconditioning.
+
+These codes have been implemented by Chih-Jen Lin and Jorge J. Moré and is their
+own property.
+Permission to use has been kindly granted to Artelys by the authors.
+
+The following paper details their work:
+
+@Article{      cjl97a,
+  author    = "Chih-Jen Lin and Jorge J. Mor\'e",
+  journal    = "SIAM J. Sci. Comput.",
+  pages        = "24--45",
+  title        = "Incomplete {C}holesky factorizations with limited memory",
+  volume    = "21",
+  year        = "1999"
+}

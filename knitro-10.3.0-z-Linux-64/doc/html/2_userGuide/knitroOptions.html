@@ -1,0 +1,390 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head><div class = "head"> </div>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Setting options &mdash; Artelys Knitro 10.3 User&#39;s Manual</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/Artelys_theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="Artelys Knitro 10.3 User&#39;s Manual" href="../index.html"/>
+        <link rel="up" title="User guide" href="../2_userGuide.html"/>
+        <link rel="next" title="Derivatives" href="derivatives.html"/>
+        <link rel="prev" title="Getting started with R" href="gettingStarted/startR.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Artelys Knitro User's Manual
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                10.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../1_introduction.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../2_userGuide.html">User guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="gettingStarted.html">Getting started</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Setting options</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#setting-knitro-options-within-ampl">Setting Knitro options within AMPL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#setting-knitro-options-with-matlab">Setting Knitro options with MATLAB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#setting-knitro-options-with-the-callable-library">Setting Knitro options with the callable library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#setting-knitro-options-with-the-object-oriented-interface">Setting KNITRO options with the object-oriented interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-knitro-options-file">The Knitro options file</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="derivatives.html">Derivatives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multistart.html">Multistart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="minlp.html">Mixed-integer nonlinear programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="complementarity.html">Complementarity constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ktrlsq.html">Nonlinear Least-Squares</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms.html">Algorithms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feasibility.html">Feasibility and infeasibility</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parallelism.html">Parallelism</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tuner.html">The Knitro-Tuner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="termination.html">Termination criteria</a></li>
+<li class="toctree-l2"><a class="reference internal" href="obtainingInformation.html">Obtaining information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="callbacks.html">Callbacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="otherProgInterfaces.html">Other programmatic interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="specialProblems.html">Special problem classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tips.html">Tips and tricks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bibliography.html">Bibliography</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../3_referenceManual.html">Reference manual</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">Artelys Knitro User's Manual</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../2_userGuide.html">User guide</a> &raquo;</li>
+      
+    <li>Setting options</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="setting-options">
+<span id="sec-knitrooptions"></span><h1>Setting options</h1>
+<p id="index-0">Knitro offers a number of user options for modifying behavior of
+the solver.     Each option takes a value that may be an integer, double precision
+number, or character string.
+Options are usually identified by a string name
+(for example, <a class="reference internal" href="../3_referenceManual/userOptions.html#algorithm" title="algorithm"><code class="xref c c-type docutils literal"><span class="pre">algorithm</span></code></a>), but programmatic interfaces
+also identify options by an integer value associated with a C language macro
+defined in the file <code class="file docutils literal"><span class="pre">knitro.h</span></code>.
+(for example, <a class="reference internal" href="../3_referenceManual/userOptions.html#KTR_PARAM_ALG" title="KTR_PARAM_ALG"><code class="xref c c-type docutils literal"><span class="pre">KTR_PARAM_ALG</span></code></a>).
+Most user options can be specified with either a numeric value or a
+string value.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The naming convention is that user options beginning with
+<code class="file docutils literal"><span class="pre">bar_</span></code> apply only to the barrier/interior-point algorithms;
+options beginning with
+<code class="file docutils literal"><span class="pre">act_</span></code> apply only to the active-set/SQP algorithms;
+options beginning with
+<code class="file docutils literal"><span class="pre">mip_</span></code> apply only to the mixed integer programming (MIP)
+solvers; options beginning with <code class="file docutils literal"><span class="pre">ms_</span></code> apply only to the multi-start
+procedure; and options specific to the multi-algorithm procedure begin with
+<code class="file docutils literal"><span class="pre">ma_</span></code>.  Options specific to parallel features begin with <code class="file docutils literal"><span class="pre">par_</span></code>.</p>
+</div>
+<div class="section" id="setting-knitro-options-within-ampl">
+<h2>Setting Knitro options within AMPL</h2>
+<p>We have seen how to specify user options, for example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ampl</span><span class="p">:</span> <span class="n">option</span> <span class="n">knitro_options</span> <span class="s2">&quot;alg=2 bar_maxcrossit=2 outlev=1&quot;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>A complete list of Knitro options that are available in AMPL
+can be shown by typing:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">knitroampl</span> <span class="o">-=</span>
+</pre></div>
+</div>
+<p>The output produced by this command, along with a description of
+each option, is provided in Section <a class="reference internal" href="../3_referenceManual/knitroamplReference.html#knitroamplreference"><span class="std std-ref">Knitro / AMPL reference</span></a>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">When specifying multiple options, all options must be set
+with one <code class="docutils literal"><span class="pre">knitro_options</span></code> command as shown in the example above.
+If multiple <code class="docutils literal"><span class="pre">knitro_options</span></code> commands are specified in an AMPL session, only the last one will be read.</p>
+</div>
+<p>When running <em>knitroampl</em> directly with an AMPL file, user options can be set
+on the command line as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">knitroampl</span> <span class="n">testproblem</span><span class="o">.</span><span class="n">nl</span> <span class="n">maxit</span><span class="o">=</span><span class="mi">100</span> <span class="n">opttol</span><span class="o">=</span><span class="mf">1.0e-5</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="setting-knitro-options-with-matlab">
+<h2>Setting Knitro options with MATLAB</h2>
+<p>There are two ways <em>knitromatlab</em> can read user options: either using the <em>fmincon</em> format
+(explained in the MATLAB documentation), or using the <em>Knitro options file</em> (explained below).
+If both types of options are used, Knitro options override <em>fmincon</em> format options.</p>
+<p>The Knitro option file is a simple text file that contains, on each line, the name of a Knitro
+option and its value. For instance, the content of the file could be:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">algorithm</span>    <span class="n">auto</span>
+<span class="n">bar_directinterval</span>  <span class="mi">10</span>
+<span class="n">bar_feasible</span> <span class="n">no</span>
+</pre></div>
+</div>
+<p>Assuming that the Knitro options file is named <code class="file docutils literal"><span class="pre">knitro.opt</span></code> and is stored
+in the current directory, and that the fmincon-format options structure is named
+<em>KnitroOptions</em>, the call to <em>knitromatlab</em> would be:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">x</span> <span class="n">fval</span><span class="p">]</span> <span class="o">=</span> <span class="o">...</span>
+    <span class="n">knitromatlab</span><span class="p">(</span><span class="n">fun</span><span class="p">,</span><span class="n">x0</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">Aeq</span><span class="p">,</span><span class="n">beq</span><span class="p">,</span><span class="n">lb</span><span class="p">,</span><span class="n">ub</span><span class="p">,</span><span class="n">nonlcon</span><span class="p">,</span><span class="n">extendedFeatures</span><span class="p">,</span><span class="n">KnitroOptions</span><span class="p">,</span> <span class="o">...</span>
+                 <span class="s1">&#39;knitro.opt&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="#knitrooptionsfile"><span class="std std-ref">The Knitro options file</span></a> is a general mechanism to pass options to Knitro.
+It can also be used with the callable library interface, but is most useful with
+the Knitro/MATLAB interface for which it is the only way to set many of the available options.</p>
+</div>
+<div class="section" id="setting-knitro-options-with-the-callable-library">
+<h2>Setting Knitro options with the callable library</h2>
+<p>The functions for setting user options have the form:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nb">int</span> <span class="n">KTR_set_int_param</span> <span class="p">(</span><span class="n">KTR_context</span> <span class="o">*</span><span class="n">kc</span><span class="p">,</span> <span class="nb">int</span> <span class="n">param_id</span><span class="p">,</span> <span class="nb">int</span> <span class="n">value</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>for setting integer valued parameters, or:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nb">int</span> <span class="n">KTR_set_double_param</span> <span class="p">(</span><span class="n">KTR_context</span> <span class="o">*</span><span class="n">kc</span><span class="p">,</span> <span class="nb">int</span> <span class="n">param_id</span><span class="p">,</span> <span class="n">double</span> <span class="n">value</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>for setting double precision valued parameters.</p>
+<p>For example, to specify the <em>Interior/CG</em> algorithm and a
+tight optimality stop tolerance:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">status</span> <span class="o">=</span> <span class="n">KTR_set_int_param</span> <span class="p">(</span><span class="n">kc</span><span class="p">,</span> <span class="n">KTR_PARAM_ALG</span><span class="p">,</span> <span class="n">KTR_ALG_BAR_CG</span><span class="p">);</span>
+<span class="n">status</span> <span class="o">=</span> <span class="n">KTR_set_double_param</span> <span class="p">(</span><span class="n">kc</span><span class="p">,</span> <span class="n">KTR_PARAM_OPTTOL</span><span class="p">,</span> <span class="mf">1.0e-8</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Refer to the Callable Library Reference Manual (<a class="reference internal" href="../3_referenceManual/callableLibrary/API.html#refmanparameters"><span class="std std-ref">Changing and reading solver parameters</span></a>)
+for a comprehensive list.</p>
+</div>
+<div class="section" id="setting-knitro-options-with-the-object-oriented-interface">
+<h2>Setting KNITRO options with the object-oriented interface</h2>
+<p>User options are set with a single overloaded KTRSolver function that has the form:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">solver</span><span class="o">.</span><span class="n">setParam</span><span class="p">(</span><span class="n">param_identifier</span><span class="p">,</span> <span class="n">param_value</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The argument <code class="docutils literal"><span class="pre">param_identifier</span></code> is either a string with the parameter&#8217;s name or
+an integer with the parameter&#8217;s identifier number (enumerated object with all options have
+been defined to simplify this step).
+The argument <code class="docutils literal"><span class="pre">param_value</span></code> is an integer, double, or string, depending on the type of parameter that is set.</p>
+<p>For example, to specify the <em>Interior/CG</em> algorithm and a tight optimality stop tolerance:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">solver</span><span class="o">.</span><span class="n">setParam</span><span class="p">(</span><span class="n">KTR_PARAM_ALG</span><span class="p">,</span> <span class="n">KTR_ALG_BAR_CG</span><span class="p">);</span>
+<span class="n">solver</span><span class="o">.</span><span class="n">setParam</span><span class="p">(</span><span class="n">KTR_PARAM_OPTTOL</span><span class="p">,</span> <span class="mf">1.0e-8</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Refer to the Callable Library Reference Manual (<a class="reference internal" href="../3_referenceManual/callableLibrary/API.html#refmanparameters"><span class="std std-ref">Changing and reading solver parameters</span></a>) for a comprehensive list of parameters.
+The object-oriented interface uses the same parameters as the callable library.</p>
+</div>
+<div class="section" id="the-knitro-options-file">
+<span id="knitrooptionsfile"></span><h2>The Knitro options file</h2>
+<p>The Knitro options file allows the user to easily change user options
+by editing a text file, instead of modifying application code.</p>
+<p>Options are set by specifying a keyword and a corresponding value on a
+line in the options file.       Lines that begin with a
+&#8220;#&#8221; character are treated as comments and blank lines are
+ignored.        For example, to set the maximum allowable number of
+iterations to 500, you could create the following options file:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># Knitro Options file</span>
+<span class="n">maxit</span>            <span class="mi">500</span>
+</pre></div>
+</div>
+<p>MATLAB users may simply pass the name of the Knitro options
+file to <em>knitromatlab</em> as demonstrated in <a class="reference internal" href="gettingStarted/startMatlab.html#startmatlab"><span class="std std-ref">Getting started with MATLAB</span></a>.
+When using the callable library, the options file is
+read into Knitro by calling the following
+function before invoking <a class="reference internal" href="../3_referenceManual/callableLibrary/API.html#KTR_init_problem" title="KTR_init_problem"><code class="xref c c-func docutils literal"><span class="pre">KTR_init_problem()</span></code></a> or <a class="reference internal" href="../3_referenceManual/callableLibrary/API.html#KTR_mip_init_problem" title="KTR_mip_init_problem"><code class="xref c c-func docutils literal"><span class="pre">KTR_mip_init_problem()</span></code></a>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nb">int</span> <span class="n">KTR_load_param_file</span> <span class="p">(</span><span class="n">KTR_context</span> <span class="o">*</span><span class="n">kc</span><span class="p">,</span> <span class="n">char</span> <span class="n">const</span> <span class="o">*</span><span class="n">filename</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For example, if the options file is named <code class="file docutils literal"><span class="pre">myoptions.opt</span></code>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">status</span> <span class="o">=</span> <span class="n">KTR_load_param_file</span> <span class="p">(</span><span class="n">kc</span><span class="p">,</span> <span class="s2">&quot;myoptions.opt&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The full set of options used by Knitro in a given solve may be written
+to a text file through the function call:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nb">int</span> <span class="n">KTR_save_param_file</span> <span class="p">(</span><span class="n">KTR_context</span> <span class="o">*</span><span class="n">kc</span><span class="p">,</span> <span class="n">char</span> <span class="n">const</span> <span class="o">*</span><span class="n">filename</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">status</span> <span class="o">=</span> <span class="n">KTR_save_param_file</span> <span class="p">(</span><span class="n">kc</span><span class="p">,</span> <span class="s2">&quot;knitro.opt&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>A sample options file <code class="file docutils literal"><span class="pre">knitro.opt</span></code> is provided for convenience
+and can be found in the <code class="file docutils literal"><span class="pre">examples/C</span></code> directory.
+Note that this file is only read by application drivers that call
+<a class="reference internal" href="../3_referenceManual/callableLibrary/API.html#KTR_load_param_file" title="KTR_load_param_file"><code class="xref c c-func docutils literal"><span class="pre">KTR_load_param_file()</span></code></a>, such as <code class="file docutils literal"><span class="pre">examples/C/callbackExample2.c</span></code>.</p>
+<p>In the object oriented interface, the equivalent functions for loading and
+saving parameter files are the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">KTRSolver</span><span class="p">::</span><span class="n">loadParamFile</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">string</span> <span class="n">filename</span><span class="p">);</span>
+<span class="n">void</span> <span class="n">KTRSolver</span><span class="p">::</span><span class="n">saveParamFile</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">string</span> <span class="n">filename</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="derivatives.html" class="btn btn-neutral float-right" title="Derivatives" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gettingStarted/startR.html" class="btn btn-neutral" title="Getting started with R" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Artelys.
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'10.3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  false
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

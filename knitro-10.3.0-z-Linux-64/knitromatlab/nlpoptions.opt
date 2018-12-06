@@ -1,0 +1,3 @@
+outlev 4          # Iteration output
+bar_maxcrossit 5  # This option will "clean-up" the interior-point solution
+                  # (but may be expensive on large problems)

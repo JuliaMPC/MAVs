@@ -1,0 +1,822 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head><div class = "head"> </div>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Complementarity constraints &mdash; Artelys Knitro 10.3 User&#39;s Manual</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/Artelys_theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="Artelys Knitro 10.3 User&#39;s Manual" href="../index.html"/>
+        <link rel="up" title="User guide" href="../2_userGuide.html"/>
+        <link rel="next" title="Nonlinear Least-Squares" href="ktrlsq.html"/>
+        <link rel="prev" title="Mixed-integer nonlinear programming" href="minlp.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Artelys Knitro User's Manual
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                10.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../1_introduction.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../2_userGuide.html">User guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="gettingStarted.html">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="knitroOptions.html">Setting options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="derivatives.html">Derivatives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multistart.html">Multistart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="minlp.html">Mixed-integer nonlinear programming</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Complementarity constraints</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#example">Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#complementarity-constraints-in-ampl">Complementarity constraints in AMPL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#complementarity-constraints-in-matlab">Complementarity constraints in MATLAB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#complementarity-constraints-with-the-callable-library">Complementarity constraints with the callable library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#complementarity-constraints-with-the-object-oriented-interface">Complementarity constraints with the object-oriented interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ampl-example">AMPL example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#matlab-example">MATLAB example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c-example">C example</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ktrlsq.html">Nonlinear Least-Squares</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms.html">Algorithms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feasibility.html">Feasibility and infeasibility</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parallelism.html">Parallelism</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tuner.html">The Knitro-Tuner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="termination.html">Termination criteria</a></li>
+<li class="toctree-l2"><a class="reference internal" href="obtainingInformation.html">Obtaining information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="callbacks.html">Callbacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="otherProgInterfaces.html">Other programmatic interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="specialProblems.html">Special problem classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tips.html">Tips and tricks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bibliography.html">Bibliography</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../3_referenceManual.html">Reference manual</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">Artelys Knitro User's Manual</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../2_userGuide.html">User guide</a> &raquo;</li>
+      
+    <li>Complementarity constraints</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="complementarity-constraints">
+<span id="sec-complementarity"></span><h1>Complementarity constraints</h1>
+<p id="index-0">A complementarity constraint enforces that two variables are
+<em>complementary</em> to each other; i.e., that the following conditions hold
+for scalar variables <em>x</em> and <em>y</em>:</p>
+<div class="math">
+<p><span class="math">x \cdot y = 0, \quad x \ge 0, \quad y \ge 0.</span></p>
+</div><p>The condition above is sometimes expressed more compactly as</p>
+<div class="math">
+<p><span class="math">0 \le x \perp y \ge 0.</span></p>
+</div><p>Intuitively, a complementarity constraint is a way to model a
+constraint that is combinatorial in nature since, for example, the
+complementary conditions imply that either <em>x</em> or <em>y</em> must be 0
+(both may be 0 as well).</p>
+<p>Without special care, these types of constraints may cause problems
+for nonlinear optimization solvers because problems that contain
+these types of constraints fail to satisfy constraint qualifications
+that are often assumed in the theory and design of algorithms for
+nonlinear optimization.  For this reason, we provide a special interface
+in Knitro for specifying complementarity constraints.  In this
+way, Knitro can recognize these constraints and handle them with special
+care internally.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>The complementarity features of Knitro are not available through
+all interfaces. Currently, they are accessible only to users of
+the callable library, the MATLAB interface, and some modeling environments such as AMPL.</p>
+<p class="last">If a modeling language does not allow you to
+specifically identify and express complementarity constraints, then these
+constraints must be formulated as regular constraints and Knitro will not perform
+any specializations.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">There are various ways to express complementarity conditions, but
+the complementarity features in the Knitro callable library API
+and MATLAB API require you to specify the complementarity condition as two
+non-negative variables complementary to each other as shown above.
+Any complementarity condition can be written in this form.</p>
+</div>
+<div class="section" id="example">
+<h2>Example</h2>
+<p>This problem is taken from J.F. Bard, <em>Convex two-level optimization</em>,
+<em>Mathematical Programming</em> 40(1), 15-27, 1988.</p>
+<p>Assume we want to solve the following MPEC with Knitro.</p>
+<div class="math">
+<p><span class="math">\min \quad               &amp; f(x) = (x_0 - 5)^2 + (2 x_1 + 1)^2 \\
+\mbox{subject to:} &amp; \\
+                                        &amp; c_0(x) = 2(x_1 - 1) - 1.5 x_0 + x_2 - 0.5 x_3 + x_4 = 0 \\
+                                        &amp; c_1(x) = 3 x_0 - x_1 - 3 \ge 0 \\
+                                        &amp; c_2(x) = -x_0 + 0.5 x_1 + 4 \ge 0 \\
+                                        &amp; c_3(x) = -x_0 - x_1 + 7 \ge 0 \\
+                                        &amp; c_1(x) \cdot x_2 = 0 \\
+                                        &amp; c_2(x) \cdot x_3 = 0 \\
+                                        &amp; c_3(x) \cdot x_4 = 0 \\
+                                        &amp; x_i \ge 0 \quad \forall i = 0, \dots 4.</span></p>
+</div><p>Observe that complementarity constraints appear.
+Expressing this in compact notation, we have:</p>
+<div class="math">
+<p><span class="math">\min \quad               &amp; f(x) = (x_0 - 5)^2 + (2 x_1 + 1)^2 \\
+\mbox{subject to:} &amp; \\
+                                        &amp; 2(x_1 - 1) - 1.5 x_0 + x_2 - 0.5 x_3 + x_4 = 0 \quad (c_0) \\
+                                        &amp; c_1(x) = 3 x_0 - x_1 - 3 \\
+                                        &amp; c_2(x) = -x_0 + 0.5 x_1 + 4 \\
+                                        &amp; c_3(x) = -x_0 - x_1 + 7 \\
+                                        &amp; 0 \leq c_1(x) \perp x_2 \geq 0 \\
+                                        &amp; 0 \leq c_2(x) \perp x_3 \geq 0 \\
+                                        &amp; 0 \leq c_3(x) \perp x_4 \geq 0 \\
+                                        &amp; x_0, x_1 \ge 0.</span></p>
+</div><p>Since Knitro requires that complementarity constraints be
+written as two variables complementary to each other, we must
+introduce slack variables <span class="math">(x_5, x_6, x_7)</span> and re-write
+the problem as follows:</p>
+<div class="math">
+<p><span class="math">\min \quad               &amp; f(x) = (x_0 - 5)^2 + (2 x_1 + 1)^2 \\
+\mbox{subject to:} &amp; \\
+                                        &amp; 2(x_1 - 1) - 1.5 x_0 + x_2 - 0.5 x_3 + x_4 = 0 \quad (c_0) \\
+                                        &amp; 3 x_0 - x_1 - 3 - x_5 = 0 \quad(c_1) \\
+                                        &amp; -x_0 + 0.5 x_1 + 4 - x_6 = 0 \quad (c_2) \\
+                                        &amp; -x_0 - x_1 + 7 - x_7 = 0 \quad (c_3) \\
+                                        &amp; 0 \leq x_5 \perp x_2 \geq 0 \\
+                                        &amp; 0 \leq x_6 \perp x_3 \geq 0 \\
+                                        &amp; 0 \leq x_7 \perp x_4 \geq 0 \\
+                                        &amp; x_i \ge 0, \quad \forall i = 0, \dots 7..</span></p>
+</div><p>The problem is now in a form suitable for Knitro.</p>
+</div>
+<div class="section" id="complementarity-constraints-in-ampl">
+<h2>Complementarity constraints in AMPL</h2>
+<p>Complementarity constraints should be modeled using the AMPL
+<em>complements</em> command; e.g.,:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">x</span> <span class="n">complements</span> <span class="n">y</span> <span class="o">=&gt;</span> <span class="mi">0</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The Knitro callable library API and MATLAB API require that complementarity
+constraints be formulated as one variable complementary to
+another variable (both non-negative).   However, in AMPL (beginning with Knitro 8.0),
+you can express the complementarity constraints
+in any form allowed by AMPL.  AMPL will then translate the complementarity
+constraints automatically to the form required by Knitro.</p>
+<p>Be aware that the AMPL presolver sometimes removes complementarity constraints.
+Check carefully that the problem definition reported by
+Knitro includes all complementarity constraints, or switch off the
+AMPL presolver by setting option <em>presolve</em> to 0,
+if you don&#8217;t want the AMPL presolver to modify the problem.</p>
+</div>
+<div class="section" id="complementarity-constraints-in-matlab">
+<h2>Complementarity constraints in MATLAB</h2>
+<p>Complementarity constraints can be specified through two fields of the <em>extendedFeatures</em>
+structure. The fields <em>ccIndexList1</em> and <em>ccIndexList2</em> contain the pairs of indices of variables
+that are complementary to each other.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Variables which are specified as complementary should be
+specified to have a lower bound of 0 through the variable lower
+bound array <em>lb</em>.</p>
+</div>
+</div>
+<div class="section" id="complementarity-constraints-with-the-callable-library">
+<h2>Complementarity constraints with the callable library</h2>
+<p>Complementarity constraints can be specified in Knitro through a call to the
+function <a class="reference internal" href="../3_referenceManual/callableLibrary/API.html#KTR_set_compcons" title="KTR_set_compcons"><code class="xref c c-func docutils literal"><span class="pre">KTR_set_compcons()</span></code></a> which has the following prototype:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nb">int</span>  <span class="n">KNITRO_API</span> <span class="n">KTR_set_compcons</span> <span class="p">(</span><span class="n">KTR_context_ptr</span>    <span class="n">kc</span><span class="p">,</span>
+                                  <span class="n">const</span> <span class="nb">int</span>          <span class="n">numCompConstraints</span><span class="p">,</span>
+                                  <span class="n">const</span> <span class="nb">int</span> <span class="o">*</span> <span class="n">const</span>  <span class="n">indexList1</span><span class="p">,</span>
+                                  <span class="n">const</span> <span class="nb">int</span> <span class="o">*</span> <span class="n">const</span>  <span class="n">indexList2</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>In addition to <em>kc</em>, which is a pointer to a structure that holds all
+the relevant information about a particular problem instance,
+the arguments are:</p>
+<ul class="simple">
+<li><em>numCompConstraints</em>, the number of complementarity
+constraints to be added to the problem (i.e., the number of pairs of variables
+that are complementary to each other).</li>
+<li><em>*indexList1</em> and <em>*indexList2</em>, two arrays of length
+<em>numCompConstraints</em> specifying the variable indices for
+the first and second sets of variables in the pairs of
+complementary variables.</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The call to <a class="reference internal" href="../3_referenceManual/callableLibrary/API.html#KTR_set_compcons" title="KTR_set_compcons"><code class="xref c c-func docutils literal"><span class="pre">KTR_set_compcons()</span></code></a> must occur after the call to
+<a class="reference internal" href="../3_referenceManual/callableLibrary/API.html#KTR_init_problem" title="KTR_init_problem"><code class="xref c c-func docutils literal"><span class="pre">KTR_init_problem()</span></code></a>, but before the first call to <a class="reference internal" href="../3_referenceManual/callableLibrary/API.html#KTR_solve" title="KTR_solve"><code class="xref c c-func docutils literal"><span class="pre">KTR_solve()</span></code></a>.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Variables which are specified as complementary
+through the special <a class="reference internal" href="../3_referenceManual/callableLibrary/API.html#KTR_set_compcons" title="KTR_set_compcons"><code class="xref c c-func docutils literal"><span class="pre">KTR_set_compcons()</span></code></a> functions should be
+specified to have a lower bound of 0 through the Knitro lower
+bound array <em>xLoBnds</em>.</p>
+</div>
+</div>
+<div class="section" id="complementarity-constraints-with-the-object-oriented-interface">
+<h2>Complementarity constraints with the object-oriented interface</h2>
+<p>Complementarity constraints can be specified in the object-oriented interface
+by defining the constraints in a class inheriting
+from <code class="docutils literal"><span class="pre">KTRIProblem</span></code>.</p>
+<p>The <code class="docutils literal"><span class="pre">KTRIProblem</span></code> should implement the functions:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">std</span><span class="p">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="nb">int</span><span class="o">&gt;</span> <span class="n">complementarityIndexList1</span><span class="p">();</span>
+<span class="n">std</span><span class="p">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="nb">int</span><span class="o">&gt;</span> <span class="n">complementarityIndexList2</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>to return the lists of complementary variables. Parameter
+<code class="docutils literal"><span class="pre">indexList1</span></code> and <code class="docutils literal"><span class="pre">indexList2</span></code>, of the same length,
+specifying the variable indices for the first and second sets of variables
+in the pairs of complementary variables.</p>
+<p>When using the <code class="docutils literal"><span class="pre">KTRProblem</span></code> class, the values can be passed to the function:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">KTRIProblem</span><span class="p">::</span><span class="n">setComplementarity</span><span class="p">(</span><span class="n">const</span> <span class="n">std</span><span class="p">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="nb">int</span><span class="o">&gt;&amp;</span> <span class="n">indexList1</span><span class="p">,</span>
+                          <span class="n">const</span> <span class="n">std</span><span class="p">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="nb">int</span><span class="o">&gt;&amp;</span> <span class="n">indexList2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>to set the values returned by the <code class="docutils literal"><span class="pre">complementarityIndexList</span></code> functions.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Variables which are specified as complementary
+through <code class="docutils literal"><span class="pre">KTRIProblem::setComplementarity()</span></code>
+functions should have a lower bound of 0.
+This can be set using <code class="docutils literal"><span class="pre">KTRProblem::setVarLoBnds()</span></code>.</p>
+</div>
+</div>
+<div class="section" id="ampl-example">
+<h2>AMPL example</h2>
+<p>The AMPL model for our toy problem above is the following.</p>
+<div class="highlight-none"><div class="highlight"><pre><span></span># Variables
+var x{j in 0..7} &gt;= 0;
+
+# Objective function
+minimize obj:
+                (x[0]-5)^2 + (2*x[1]+1)^2;
+
+# Constraints
+s.t. c0: 2*(x[1]-1) - 1.5*x[0] + x[2] - 0.5*x[3] + x[4] = 0;
+s.t. c1: 3*x[0] - x[1] - 3 - x[5] = 0;
+s.t. c2: -x[0] + 0.5*x[1] + 4 - x[6] = 0;
+s.t. c3: -x[0] - x[1] + 7 - x[7] = 0;
+s.t. c4: 0 &lt;= x[5] complements x[2] &gt;= 0;
+s.t. c5: 0 &lt;= x[6] complements x[3] &gt;= 0;
+s.t. c6: 0 &lt;= x[7] complements x[4] &gt;= 0;
+</pre></div>
+</div>
+<p>Running it through AMPL, we get the following output.</p>
+<div class="highlight-none"><div class="highlight"><pre><span></span>=======================================
+          Commercial License
+         Artelys Knitro 10.0.0
+=======================================
+
+No start point provided -- Knitro computing one.
+
+Knitro presolve eliminated 0 variables and 0 constraints.
+
+datacheck:            0
+hessian_no_f:         1
+par_concurrent_evals: 0
+The problem is identified as an MPEC.
+Knitro changing algorithm from AUTO to 1.
+Knitro changing bar_initpt from AUTO to 3.
+Knitro changing bar_murule from AUTO to 4.
+Knitro changing bar_penaltycons from AUTO to 1.
+Knitro changing bar_penaltyrule from AUTO to 2.
+Knitro changing bar_switchrule from AUTO to 1.
+Knitro changing linsolver from AUTO to 2.
+
+Problem Characteristics                    ( Presolved)
+-----------------------
+Objective goal:  Minimize
+Number of variables:                    11 (        11)
+    bounded below:                      11 (        11)
+    bounded above:                       0 (         0)
+    bounded below and above:             0 (         0)
+    fixed:                               0 (         0)
+    free:                                0 (         0)
+Number of constraints:                   7 (         7)
+    linear equalities:                   7 (         7)
+    nonlinear equalities:                0 (         0)
+    linear inequalities:                 0 (         0)
+    nonlinear inequalities:              0 (         0)
+    range:                               0 (         0)
+Number of complementarities:             3 (         3)
+Number of nonzeros in Jacobian:         20 (        20)
+Number of nonzeros in Hessian:           2 (         2)
+
+  Iter      Objective      FeasError   OptError    ||Step||    CGits
+--------  --------------  ----------  ----------  ----------  -------
+       0    2.811162e+01   1.548e+00
+      10    1.700009e+01   2.169e-07   6.513e-05   1.068e-03        0
+      11    1.700000e+01   1.413e-11   4.264e-09   1.774e-04        0
+
+EXIT: Locally optimal solution found.
+
+Final Statistics
+----------------
+Final objective value               =   1.70000000056682e+01
+Final feasibility error (abs / rel) =   1.41e-11 / 9.13e-12
+Final optimality error  (abs / rel) =   4.26e-09 / 5.33e-10
+# of iterations                     =         11
+# of CG iterations                  =          1
+# of function evaluations           =         16
+# of gradient evaluations           =         13
+# of Hessian evaluations            =         11
+Total program time (secs)           =       0.00246 (     0.002 CPU time)
+Time spent in evaluations (secs)    =       0.00005
+
+===============================================================================
+
+Knitro 10.0.0: Locally optimal or satisfactory solution.
+objective 17.000000005668205; feasibility error 1.41e-11
+11 iterations; 16 function evaluations
+</pre></div>
+</div>
+<p>Knitro received our three complementarity constraints correctly
+(<em>&#8220;Number of complementarities: 3&#8221;</em>) and converged successfully
+(<em>&#8220;Locally optimal solution found&#8221;</em>).</p>
+</div>
+<div class="section" id="matlab-example">
+<h2>MATLAB example</h2>
+<p>The following functions can be used in MATLAB to solve the same example as is shown for AMPL.</p>
+<div class="highlight-matlab"><div class="highlight"><pre><span></span><span class="k">function</span> <span class="nf">exampleMPEC1</span>
+
+<span class="n">Jpattern</span> <span class="p">=</span> <span class="p">[];</span>
+
+<span class="n">Hpattern</span> <span class="p">=</span> <span class="n">sparse</span><span class="p">(</span><span class="nb">zeros</span><span class="p">(</span><span class="mi">8</span><span class="p">));</span>
+<span class="n">Hpattern</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="p">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="n">Hpattern</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="p">=</span> <span class="mi">1</span><span class="p">;</span>
+
+<span class="n">options</span> <span class="p">=</span> <span class="n">optimset</span><span class="p">(</span><span class="s">&#39;Algorithm&#39;</span><span class="p">,</span> <span class="s">&#39;interior-point&#39;</span><span class="p">,</span> <span class="s">&#39;Display&#39;</span><span class="p">,</span><span class="s">&#39;iter&#39;</span><span class="p">,</span> <span class="c">...</span>
+ <span class="s">&#39;GradObj&#39;</span><span class="p">,</span><span class="s">&#39;on&#39;</span><span class="p">,</span><span class="s">&#39;GradConstr&#39;</span><span class="p">,</span><span class="s">&#39;on&#39;</span><span class="p">,</span> <span class="c">...</span>
+ <span class="s">&#39;JacobPattern&#39;</span><span class="p">,</span><span class="n">Jpattern</span><span class="p">,</span><span class="s">&#39;Hessian&#39;</span><span class="p">,</span><span class="s">&#39;user-supplied&#39;</span><span class="p">,</span><span class="s">&#39;HessPattern&#39;</span><span class="p">,</span><span class="n">Hpattern</span><span class="p">,</span> <span class="c">...</span>
+ <span class="s">&#39;HessFcn&#39;</span><span class="p">,@</span><span class="n">hessfun</span><span class="p">,</span><span class="s">&#39;MaxIter&#39;</span><span class="p">,</span><span class="mi">1000</span><span class="p">,</span> <span class="c">...</span>
+ <span class="s">&#39;TolX&#39;</span><span class="p">,</span> <span class="mf">1e-15</span><span class="p">,</span> <span class="s">&#39;TolFun&#39;</span><span class="p">,</span> <span class="mf">1e-8</span><span class="p">,</span> <span class="s">&#39;TolCon&#39;</span><span class="p">,</span> <span class="mf">1e-8</span><span class="p">);</span>
+
+<span class="n">A</span> <span class="p">=</span> <span class="p">[];</span> <span class="n">b</span> <span class="p">=</span> <span class="p">[];</span>
+<span class="n">Aeq</span> <span class="p">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.5</span>  <span class="mi">2</span>   <span class="mi">1</span> <span class="o">-</span><span class="mf">0.5</span> <span class="mi">1</span>  <span class="mi">0</span>  <span class="mi">0</span>  <span class="mi">0</span><span class="p">;</span>
+        <span class="mi">3</span>   <span class="o">-</span><span class="mi">1</span>   <span class="mi">0</span>  <span class="mi">0</span>   <span class="mi">0</span> <span class="o">-</span><span class="mi">1</span>  <span class="mi">0</span>  <span class="mi">0</span><span class="p">;</span>
+       <span class="o">-</span><span class="mi">1</span>    <span class="mf">0.5</span> <span class="mi">0</span>  <span class="mi">0</span>   <span class="mi">0</span>  <span class="mi">0</span> <span class="o">-</span><span class="mi">1</span>  <span class="mi">0</span><span class="p">;</span>
+       <span class="o">-</span><span class="mi">1</span>   <span class="o">-</span><span class="mi">1</span>   <span class="mi">0</span>  <span class="mi">0</span>   <span class="mi">0</span>  <span class="mi">0</span>  <span class="mi">0</span> <span class="o">-</span><span class="mi">1</span><span class="p">];</span>
+<span class="n">beq</span> <span class="p">=</span> <span class="p">[</span><span class="mi">2</span> <span class="mi">3</span> <span class="o">-</span><span class="mi">4</span> <span class="o">-</span><span class="mi">7</span><span class="p">];</span>
+<span class="n">lb</span> <span class="p">=</span> <span class="nb">zeros</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+<span class="n">ub</span> <span class="p">=</span> <span class="n">Inf</span><span class="o">*</span><span class="nb">ones</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+<span class="n">x0</span> <span class="p">=</span> <span class="nb">zeros</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+
+<span class="n">extendedFeatures</span><span class="p">.</span><span class="n">ccIndexList1</span> <span class="p">=</span> <span class="p">[</span><span class="mi">6</span> <span class="mi">7</span> <span class="mi">8</span><span class="p">];</span>
+<span class="n">extendedFeatures</span><span class="p">.</span><span class="n">ccIndexList2</span> <span class="p">=</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">];</span>
+
+<span class="p">[</span><span class="n">x</span><span class="p">,</span><span class="n">fval</span><span class="p">,</span><span class="n">exitflag</span><span class="p">,</span><span class="n">output</span><span class="p">,</span><span class="n">lambda</span><span class="p">]</span> <span class="p">=</span> <span class="c">...</span>
+    <span class="n">knitromatlab</span><span class="p">(@</span><span class="n">objfun</span><span class="p">,</span><span class="n">x0</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">Aeq</span><span class="p">,</span><span class="n">beq</span><span class="p">,</span><span class="n">lb</span><span class="p">,</span><span class="n">ub</span><span class="p">,@</span><span class="n">constfun</span><span class="p">,</span><span class="n">extendedFeatures</span><span class="p">,</span><span class="n">options</span><span class="p">);</span>
+
+<span class="c">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+
+<span class="k">function</span><span class="w"> </span>[f,g] <span class="p">=</span><span class="w"> </span><span class="nf">objfun</span><span class="p">(</span>x<span class="p">)</span><span class="w"></span>
+
+<span class="n">f</span> <span class="p">=</span> <span class="p">(</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">-</span><span class="mi">5</span><span class="p">)</span>^<span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>^<span class="mi">2</span><span class="p">;</span>
+
+<span class="k">if</span> <span class="n">nargout</span> <span class="o">&gt;</span> <span class="mi">1</span>
+ <span class="n">g</span> <span class="p">=</span> <span class="nb">zeros</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+ <span class="n">g</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="p">=</span> <span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">-</span><span class="mi">5</span><span class="p">);</span>
+ <span class="n">g</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="p">=</span> <span class="mi">4</span><span class="o">*</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+<span class="k">end</span>
+
+<span class="c">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+
+<span class="k">function</span><span class="w"> </span>[c,ceq,Gc,Gceq]<span class="p">=</span><span class="w"> </span><span class="nf">constfun</span><span class="p">(</span>x<span class="p">)</span><span class="w"></span>
+
+<span class="n">c</span> <span class="p">=</span> <span class="p">[];</span>
+<span class="n">ceq</span><span class="p">=[];</span>
+<span class="n">Gc</span> <span class="p">=</span> <span class="p">[];</span>
+<span class="n">Gceq</span><span class="p">=[];</span>
+
+<span class="c">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+
+<span class="k">function</span><span class="w"> </span>[H]<span class="p">=</span><span class="w"> </span><span class="nf">hessfun</span><span class="p">(</span>x,lambda<span class="p">)</span><span class="w"></span>
+
+<span class="n">H</span><span class="p">=</span><span class="n">sparse</span><span class="p">(</span><span class="nb">zeros</span><span class="p">(</span><span class="mi">8</span><span class="p">));</span>
+
+<span class="n">H</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="p">=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="n">H</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="p">=</span> <span class="mi">4</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Running this file will produce the following output from Knitro.</p>
+<div class="highlight-none"><div class="highlight"><pre><span></span>=======================================
+          Commercial License
+         Artelys Knitro 10.0.0
+=======================================
+
+Knitro presolve eliminated 0 variables and 0 constraints.
+
+algorithm:            1
+feastol:              1e-08
+honorbnds:            1
+maxit:                1000
+opttol:               1e-08
+outlev:               4
+par_concurrent_evals: 0
+The problem is identified as an MPEC.
+Knitro changing bar_initpt from AUTO to 3.
+Knitro changing bar_murule from AUTO to 4.
+Knitro changing bar_penaltycons from AUTO to 1.
+Knitro changing bar_penaltyrule from AUTO to 2.
+Knitro changing bar_switchrule from AUTO to 1.
+Knitro changing linsolver from AUTO to 2.
+Knitro shifted start point to satisfy presolved bounds (8 variables).
+
+Problem Characteristics                    ( Presolved)
+-----------------------
+Objective goal:  Minimize
+Number of variables:                     8 (         8)
+    bounded below:                       8 (         8)
+    bounded above:                       0 (         0)
+    bounded below and above:             0 (         0)
+    fixed:                               0 (         0)
+    free:                                0 (         0)
+Number of constraints:                   4 (         4)
+    linear equalities:                   4 (         4)
+    nonlinear equalities:                0 (         0)
+    linear inequalities:                 0 (         0)
+    nonlinear inequalities:              0 (         0)
+    range:                               0 (         0)
+Number of complementarities:             3 (         3)
+Number of nonzeros in Jacobian:         14 (        14)
+Number of nonzeros in Hessian:           2 (         2)
+
+  Iter     fCount     Objective      FeasError   OptError    ||Step||    CGits
+--------  --------  --------------  ----------  ----------  ----------  -------
+       0         2    2.496050e+01   4.030e+00
+       1         3    2.847389e+01   1.748e+00   2.160e+00   1.990e+00        1
+       2         4    4.226663e+01   3.832e-01   4.643e+00   1.442e+00        0
+       3         5    4.667799e+01   1.126e-02   3.638e+00   5.993e-01        0
+       4         6    4.213217e+01   4.179e-03   1.258e+01   1.185e+00        0
+       5         7    4.074018e+01   3.072e-03   1.265e+01   1.580e-01        1
+       6         8    3.810894e+01   1.133e-04   1.259e+01   3.113e-01        0
+       7         9    1.701407e+01   1.682e-04   1.542e+00   4.771e+00        0
+       8        10    1.699966e+01   1.522e-04   6.416e-02   2.385e-02        0
+       9        11    1.700003e+01   1.799e-06   3.532e-05   2.154e-04        0
+      10        12    1.700000e+01   6.354e-11   1.530e-09   5.298e-05        0
+
+EXIT: Locally optimal solution found.
+
+Final Statistics
+----------------
+Final objective value               =   1.70000000010379e+01
+Final feasibility error (abs / rel) =   6.35e-11 / 1.58e-11
+Final optimality error  (abs / rel) =   1.53e-09 / 1.91e-10
+# of iterations                     =         10
+# of CG iterations                  =          2
+# of function evaluations           =         12
+# of gradient evaluations           =         12
+# of Hessian evaluations            =         10
+Total program time (secs)           =       0.00827 (     0.019 CPU time)
+Time spent in evaluations (secs)    =       0.00464
+
+===============================================================================
+</pre></div>
+</div>
+</div>
+<div class="section" id="c-example">
+<h2>C example</h2>
+<p>The same example can be implemented using the callable library.
+Arrays <em>indexList1</em> and <em>indexList2</em> are used to specify the list of
+complementarities and the <a class="reference internal" href="../3_referenceManual/callableLibrary/API.html#KTR_set_compcons" title="KTR_set_compcons"><code class="xref c c-func docutils literal"><span class="pre">KTR_set_compcons()</span></code></a> function is called to
+register the list.</p>
+<div class="highlight-c"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;knitro.h&quot;</span><span class="cp"></span>
+
+
+<span class="cm">/* callback function that evaluates the objective</span>
+<span class="cm">   and constraints */</span>
+<span class="kt">int</span>  <span class="nf">callback</span> <span class="p">(</span><span class="k">const</span> <span class="kt">int</span>             <span class="n">evalRequestCode</span><span class="p">,</span>
+                     <span class="k">const</span> <span class="kt">int</span>             <span class="n">n</span><span class="p">,</span>
+                     <span class="k">const</span> <span class="kt">int</span>             <span class="n">m</span><span class="p">,</span>
+                     <span class="k">const</span> <span class="kt">int</span>             <span class="n">nnzJ</span><span class="p">,</span>
+                     <span class="k">const</span> <span class="kt">int</span>             <span class="n">nnzH</span><span class="p">,</span>
+                     <span class="k">const</span> <span class="kt">double</span> <span class="o">*</span> <span class="k">const</span>  <span class="n">x</span><span class="p">,</span>
+                     <span class="k">const</span> <span class="kt">double</span> <span class="o">*</span> <span class="k">const</span>  <span class="n">lambda</span><span class="p">,</span>
+                           <span class="kt">double</span> <span class="o">*</span> <span class="k">const</span>  <span class="n">obj</span><span class="p">,</span>
+                           <span class="kt">double</span> <span class="o">*</span> <span class="k">const</span>  <span class="n">c</span><span class="p">,</span>
+                           <span class="kt">double</span> <span class="o">*</span> <span class="k">const</span>  <span class="n">objGrad</span><span class="p">,</span>
+                           <span class="kt">double</span> <span class="o">*</span> <span class="k">const</span>  <span class="n">jac</span><span class="p">,</span>
+                           <span class="kt">double</span> <span class="o">*</span> <span class="k">const</span>  <span class="n">hessian</span><span class="p">,</span>
+                           <span class="kt">double</span> <span class="o">*</span> <span class="k">const</span>  <span class="n">hessVector</span><span class="p">,</span>
+                           <span class="kt">void</span>   <span class="o">*</span>        <span class="n">userParams</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">evalRequestCode</span> <span class="o">==</span> <span class="n">KTR_RC_EVALFC</span><span class="p">)</span> <span class="p">{</span>
+        <span class="cm">/* objective function */</span>
+        <span class="o">*</span><span class="n">obj</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="mi">5</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="mi">5</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+
+        <span class="cm">/* constraints */</span>
+        <span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1.5</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="mi">4</span><span class="p">];</span>
+        <span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="mi">5</span><span class="p">];</span>
+        <span class="n">c</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="mi">6</span><span class="p">];</span>
+        <span class="n">c</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">7</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">7</span><span class="p">];</span>
+
+        <span class="k">return</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">printf</span> <span class="p">(</span><span class="s">&quot;Wrong evalRequestCode in callback function.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+        <span class="k">return</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="cm">/* main */</span>
+<span class="kt">int</span>  <span class="nf">main</span> <span class="p">(</span><span class="kt">int</span>  <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span>  <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+    <span class="kt">int</span>  <span class="n">nStatus</span><span class="p">;</span>
+
+    <span class="cm">/* variables that are passed to Knitro */</span>
+    <span class="n">KTR_context</span>    <span class="o">*</span><span class="n">kc</span><span class="p">;</span>
+    <span class="kt">int</span>            <span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">numCompConstraints</span><span class="p">,</span> <span class="n">nnzJ</span><span class="p">,</span> <span class="n">nnzH</span><span class="p">,</span> <span class="n">objGoal</span><span class="p">,</span> <span class="n">objType</span><span class="p">;</span>
+    <span class="kt">int</span>            <span class="o">*</span><span class="n">cType</span><span class="p">,</span> <span class="o">*</span><span class="n">indexList1</span><span class="p">,</span> <span class="o">*</span><span class="n">indexList2</span><span class="p">;</span>
+    <span class="kt">int</span>            <span class="o">*</span><span class="n">jacIndexVars</span><span class="p">,</span> <span class="o">*</span><span class="n">jacIndexCons</span><span class="p">;</span>
+    <span class="kt">double</span>        <span class="n">obj</span><span class="p">,</span> <span class="o">*</span><span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="n">lambda</span><span class="p">;</span>
+    <span class="kt">double</span>        <span class="o">*</span><span class="n">xLoBnds</span><span class="p">,</span> <span class="o">*</span><span class="n">xUpBnds</span><span class="p">,</span> <span class="o">*</span><span class="n">xInitial</span><span class="p">,</span> <span class="o">*</span><span class="n">cLoBnds</span><span class="p">,</span> <span class="o">*</span><span class="n">cUpBnds</span><span class="p">;</span>
+    <span class="kt">int</span>            <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">;</span> <span class="c1">// convenience variables</span>
+
+    <span class="cm">/*problem size and mem allocation */</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>                  <span class="cm">/* number of variables */</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>                  <span class="cm">/* number of regular constraints */</span>
+    <span class="n">numCompConstraints</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span> <span class="cm">/* number of complementarity constraints */</span>
+    <span class="n">nnzJ</span> <span class="o">=</span> <span class="n">n</span><span class="o">*</span><span class="n">m</span><span class="p">;</span>
+    <span class="n">nnzH</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">x</span>      <span class="o">=</span> <span class="p">(</span><span class="kt">double</span> <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span> <span class="p">(</span><span class="n">n</span>     <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
+    <span class="n">lambda</span> <span class="o">=</span> <span class="p">(</span><span class="kt">double</span> <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span> <span class="p">((</span><span class="n">m</span><span class="o">+</span><span class="n">n</span><span class="p">)</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
+    <span class="n">xLoBnds</span>      <span class="o">=</span> <span class="p">(</span><span class="kt">double</span> <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span> <span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
+    <span class="n">xUpBnds</span>      <span class="o">=</span> <span class="p">(</span><span class="kt">double</span> <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span> <span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
+    <span class="n">xInitial</span>     <span class="o">=</span> <span class="p">(</span><span class="kt">double</span> <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span> <span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
+    <span class="n">cType</span>        <span class="o">=</span> <span class="p">(</span><span class="kt">int</span>    <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span> <span class="p">(</span><span class="n">m</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>
+    <span class="n">cLoBnds</span>      <span class="o">=</span> <span class="p">(</span><span class="kt">double</span> <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span> <span class="p">(</span><span class="n">m</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
+    <span class="n">cUpBnds</span>      <span class="o">=</span> <span class="p">(</span><span class="kt">double</span> <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span> <span class="p">(</span><span class="n">m</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
+    <span class="n">jacIndexVars</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span>    <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span> <span class="p">(</span><span class="n">nnzJ</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>
+    <span class="n">jacIndexCons</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span>    <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span> <span class="p">(</span><span class="n">nnzJ</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>
+    <span class="n">indexList1</span>   <span class="o">=</span> <span class="p">(</span><span class="kt">int</span>    <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span> <span class="p">(</span><span class="n">numCompConstraints</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>
+    <span class="n">indexList2</span>   <span class="o">=</span> <span class="p">(</span><span class="kt">int</span>    <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span> <span class="p">(</span><span class="n">numCompConstraints</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>
+
+    <span class="cm">/* objective type */</span>
+    <span class="n">objType</span> <span class="o">=</span> <span class="n">KTR_OBJTYPE_GENERAL</span><span class="p">;</span>
+    <span class="n">objGoal</span> <span class="o">=</span> <span class="n">KTR_OBJGOAL_MINIMIZE</span><span class="p">;</span>
+
+    <span class="cm">/* bounds and constraints type */</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">xLoBnds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">;</span>
+        <span class="n">xUpBnds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">KTR_INFBOUND</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">m</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">cType</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">KTR_CONTYPE_GENERAL</span><span class="p">;</span>
+        <span class="n">cLoBnds</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">;</span>
+        <span class="n">cUpBnds</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="cm">/* complementarities */</span>
+    <span class="n">indexList1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>   <span class="n">indexList2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+    <span class="n">indexList1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>   <span class="n">indexList2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
+    <span class="n">indexList1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>   <span class="n">indexList2</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span>
+
+    <span class="cm">/* sparsity pattern (here, of a full matrix) */</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">m</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">jacIndexCons</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span><span class="p">;</span>
+            <span class="n">jacIndexVars</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+            <span class="n">k</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+
+    <span class="cm">/* create a Knitro instance */</span>
+    <span class="n">kc</span> <span class="o">=</span> <span class="n">KTR_new</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">kc</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
+        <span class="n">exit</span><span class="p">(</span> <span class="o">-</span><span class="mi">1</span> <span class="p">);</span> <span class="c1">// probably a license issue</span>
+
+    <span class="cm">/* set options: automatic gradient and hessian matrix */</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">KTR_set_int_param_by_name</span> <span class="p">(</span><span class="n">kc</span><span class="p">,</span> <span class="s">&quot;gradopt&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">exit</span><span class="p">(</span> <span class="o">-</span><span class="mi">1</span> <span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">KTR_set_int_param_by_name</span> <span class="p">(</span><span class="n">kc</span><span class="p">,</span> <span class="s">&quot;hessopt&quot;</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">exit</span><span class="p">(</span> <span class="o">-</span><span class="mi">1</span> <span class="p">);</span>
+
+    <span class="cm">/* register the callback function */</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">KTR_set_func_callback</span> <span class="p">(</span><span class="n">kc</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">callback</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">exit</span><span class="p">(</span> <span class="o">-</span><span class="mi">1</span> <span class="p">);</span>
+
+    <span class="cm">/* pass the problem definition to Knitro */</span>
+    <span class="n">nStatus</span> <span class="o">=</span> <span class="n">KTR_init_problem</span> <span class="p">(</span><span class="n">kc</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">objGoal</span><span class="p">,</span> <span class="n">objType</span><span class="p">,</span>
+                                <span class="n">xLoBnds</span><span class="p">,</span> <span class="n">xUpBnds</span><span class="p">,</span>
+                                <span class="n">m</span><span class="p">,</span> <span class="n">cType</span><span class="p">,</span> <span class="n">cLoBnds</span><span class="p">,</span> <span class="n">cUpBnds</span><span class="p">,</span>
+                                <span class="n">nnzJ</span><span class="p">,</span> <span class="n">jacIndexVars</span><span class="p">,</span> <span class="n">jacIndexCons</span><span class="p">,</span>
+                                <span class="n">nnzH</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">xInitial</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+
+    <span class="cm">/* declare complementarities */</span>
+    <span class="n">KTR_set_compcons</span> <span class="p">(</span><span class="n">kc</span><span class="p">,</span> <span class="n">numCompConstraints</span><span class="p">,</span> <span class="n">indexList1</span><span class="p">,</span> <span class="n">indexList2</span><span class="p">);</span>
+
+    <span class="cm">/* free memory (Knitro maintains its own copy) */</span>
+    <span class="n">free</span> <span class="p">(</span><span class="n">xLoBnds</span><span class="p">);</span>
+    <span class="n">free</span> <span class="p">(</span><span class="n">xUpBnds</span><span class="p">);</span>
+    <span class="n">free</span> <span class="p">(</span><span class="n">xInitial</span><span class="p">);</span>
+    <span class="n">free</span> <span class="p">(</span><span class="n">cType</span><span class="p">);</span>
+    <span class="n">free</span> <span class="p">(</span><span class="n">cLoBnds</span><span class="p">);</span>
+    <span class="n">free</span> <span class="p">(</span><span class="n">cUpBnds</span><span class="p">);</span>
+    <span class="n">free</span> <span class="p">(</span><span class="n">jacIndexVars</span><span class="p">);</span>
+    <span class="n">free</span> <span class="p">(</span><span class="n">jacIndexCons</span><span class="p">);</span>
+    <span class="n">free</span> <span class="p">(</span><span class="n">indexList1</span><span class="p">);</span>
+    <span class="n">free</span> <span class="p">(</span><span class="n">indexList2</span><span class="p">);</span>
+
+    <span class="cm">/* solver call */</span>
+    <span class="n">nStatus</span> <span class="o">=</span> <span class="n">KTR_solve</span> <span class="p">(</span><span class="n">kc</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">lambda</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">obj</span><span class="p">,</span>
+        <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">nStatus</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">printf</span> <span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">Knitro failed to solve the problem, final status = %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+                <span class="n">nStatus</span><span class="p">);</span>
+    <span class="k">else</span>
+        <span class="n">printf</span> <span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">Knitro successful, objective is = %e</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">obj</span><span class="p">);</span>
+
+    <span class="cm">/* delete the Knitro instance and primal/dual solution */</span>
+    <span class="n">KTR_free</span> <span class="p">(</span><span class="o">&amp;</span><span class="n">kc</span><span class="p">);</span>
+    <span class="n">free</span> <span class="p">(</span><span class="n">x</span><span class="p">);</span>
+    <span class="n">free</span> <span class="p">(</span><span class="n">lambda</span><span class="p">);</span>
+
+    <span class="n">getchar</span><span class="p">();</span>
+    <span class="k">return</span><span class="p">(</span> <span class="mi">0</span> <span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Running this code produces an output similar to what we obtained with AMPL
+for the same problem. More function evaluations are made since, for
+simplicity, we did not provide first derivatives and failed to notify
+Knitro that the constraints are linear. The final objective value is
+however the same:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Knitro</span> <span class="n">successful</span><span class="p">,</span> <span class="n">objective</span> <span class="ow">is</span> <span class="o">=</span> <span class="mf">1.700000e+001</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="ktrlsq.html" class="btn btn-neutral float-right" title="Nonlinear Least-Squares" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="minlp.html" class="btn btn-neutral" title="Mixed-integer nonlinear programming" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Artelys.
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'10.3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  false
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

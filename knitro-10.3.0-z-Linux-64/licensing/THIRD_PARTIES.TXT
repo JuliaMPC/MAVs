@@ -1,0 +1,22 @@
+The Artelys Knitro software incorporates third-party open source components.
+
+Below is the list of third party software and their licenses.
+Each software license, is available in the third-party software subdirectory.
+
+===============================================================
+AMPL Solver Library interface
+License: MIT
+
+COIN-Clp
+License: Eclipse Public License (EPL) 1.0
+EPL-1.0 link: http://opensource.org/licenses/eclipse-1.0
+Source code: http://www.artelys.com/tools/clp
+
+Java Native Access (Java interface only)
+License: dual-licensed under LGPL 2.1 and Apache License 2.0.
+
+NETLIB BLAS, Linpack and Lapack
+License: http://www.netlib.org/blas/#_licensing
+
+ICFS, STRSOL,
+Proprietary software, Jorge J. Moré and Chih-Jen Lin

@@ -1,0 +1,488 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head><div class = "head"> </div>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Algorithms &mdash; Artelys Knitro 10.3 User&#39;s Manual</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/Artelys_theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="Artelys Knitro 10.3 User&#39;s Manual" href="../index.html"/>
+        <link rel="up" title="User guide" href="../2_userGuide.html"/>
+        <link rel="next" title="Feasibility and infeasibility" href="feasibility.html"/>
+        <link rel="prev" title="Nonlinear Least-Squares" href="ktrlsq.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Artelys Knitro User's Manual
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                10.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../1_introduction.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../2_userGuide.html">User guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="gettingStarted.html">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="knitroOptions.html">Setting options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="derivatives.html">Derivatives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multistart.html">Multistart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="minlp.html">Mixed-integer nonlinear programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="complementarity.html">Complementarity constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ktrlsq.html">Nonlinear Least-Squares</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Algorithms</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#algorithm-choice">Algorithm choice</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#multiple-algorithms">Multiple algorithms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#crossover">Crossover</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="feasibility.html">Feasibility and infeasibility</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parallelism.html">Parallelism</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tuner.html">The Knitro-Tuner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="termination.html">Termination criteria</a></li>
+<li class="toctree-l2"><a class="reference internal" href="obtainingInformation.html">Obtaining information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="callbacks.html">Callbacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="otherProgInterfaces.html">Other programmatic interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="specialProblems.html">Special problem classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tips.html">Tips and tricks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bibliography.html">Bibliography</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../3_referenceManual.html">Reference manual</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">Artelys Knitro User's Manual</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../2_userGuide.html">User guide</a> &raquo;</li>
+      
+    <li>Algorithms</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="algorithms">
+<span id="sec-algorithms"></span><h1>Algorithms</h1>
+<p id="index-0">Knitro implements four state-of-the-art interior-point and
+active-set methods for solving continuous, nonlinear optimization problems.
+Each algorithm possesses strong convergence properties and is coded for
+maximum efficiency and robustness.  However, the algorithms have fundamental
+differences that lead to different behavior on nonlinear optimization problems.
+Together, the four methods provide a suite of different ways to attack
+difficult problems.</p>
+<p>We encourage the user to try all algorithmic
+options to determine which one is more suitable for the application at
+hand.</p>
+<div class="section" id="overview">
+<h2>Overview</h2>
+<p>This section only describes the four algorithms implemented in Knitro
+in very broad terms. For details, please see the <a class="reference internal" href="bibliography.html#bibliography"><span class="std std-ref">Bibliography</span></a>.</p>
+<ul id="index-1">
+<li><p class="first">Interior/Direct algorithm</p>
+<blockquote>
+<div><p>Interior-point methods (also known as barrier methods) replace the nonlinear
+programming problem by a series of barrier subproblems controlled by a barrier
+parameter.
+Interior-point methods perform one or more
+minimization steps on each barrier subproblem, then decrease the barrier
+parameter and repeat the process until the original problem has
+been solved to the desired accuracy.
+The Interior/Direct method computes new iterates by solving the
+primal-dual KKT matrix using direct linear algebra.  The method may temporarily
+switch to the Interior/CG algorithm, described below, if it encounters difficulties.</p>
+</div></blockquote>
+</li>
+<li><p class="first">Interior/CG algorithm</p>
+<blockquote>
+<div><p>This method is similar to the Interior/Direct algorithm.  It differs mainly
+in the fact that the
+primal-dual KKT system is solved using a projected conjugate gradient
+iteration.  This approach differs from most interior-point methods proposed in
+the literature.  A projection matrix is factorized and the conjugate gradient
+method is
+applied to approximately minimize a quadratic model of the barrier problem.
+The use of conjugate gradients on large-scale problems allows Knitro to
+utilize exact second derivatives without explicitly forming or storing
+the Hessian matrix. For inequality-constrained problems, an incomplete
+Cholesky preconditioner can be computed and applied during the conjugate gradient
+iterations. This generally results in improved performances in terms of number
+of conjugate gradient iterations and CPU time.</p>
+</div></blockquote>
+</li>
+<li><p class="first">Active Set algorithm</p>
+<blockquote>
+<div><p>Active set methods solve a sequence of subproblems based on a quadratic
+model of the original problem.  In contrast with interior-point methods, the
+algorithm seeks active inequalities and follows a more exterior path
+to the solution.
+Knitro implements a sequential linear-quadratic programming (SLQP)
+algorithm, similar in nature to a sequential quadratic programming method but
+using linear programming subproblems to estimate the active set.
+This method may be preferable to interior-point algorithms when a good
+initial point can be provided; for example, when solving a sequence of
+related problems.
+Knitro can also &#8220;crossover&#8221; from an interior-point method and apply
+Active Set to provide highly accurate active set and sensitivity
+information.</p>
+</div></blockquote>
+</li>
+<li><p class="first">Sequential Quadratic Programming (SQP) algorithm</p>
+<blockquote>
+<div><p>The SQP method in Knitro is an active-set method that solves a sequence of
+quadratic programming (QP) subproblems to solve the problem.  This method
+is primarily designed
+for small to medium scale problems with expensive function evaluations &#8211;
+for example, problems where the function evaluations involve performing
+expensive black-box simulations and/or derivatives are computed via
+finite-differencing.  The SQP iteration is expensive since it involves
+solving a QP subproblem.  However, it often converges in the fewest
+number of function/gradient evaluations, which is why this method is often
+preferable for situations where the evaluations are the dominant cost of
+solving the model.</p>
+</div></blockquote>
+</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">For mixed integer programs (MIPs), Knitro provides two variants of the
+branch and bound algorithm that rely on the previous four algorithms to
+solve the continuous (relaxed) subproblems.
+The first is a standard branch and bound implementation,
+while the second is specialized for convex, mixed integer nonlinear problems.</p>
+</div>
+</div>
+<div class="section" id="algorithm-choice">
+<h2>Algorithm choice</h2>
+<ul>
+<li><p class="first">Automatic</p>
+<blockquote>
+<div><p>By default, Knitro automatically tries to choose the best algorithm for
+a given problem based on problem characteristics.</p>
+<p><em>However, we strongly encourage you to experiment with all the algorithms
+as it is difficult to predict which one will work best on any
+particular problem.</em></p>
+</div></blockquote>
+</li>
+<li><p class="first">Interior/Direct</p>
+<blockquote>
+<div><p>This algorithm often works best, and will automatically switch to
+Interior/CG if the direct step is suspected to be of poor quality, or
+if negative curvature is detected.
+Interior/Direct is recommended if the Hessian of the Lagrangian is
+ill-conditioned.
+The Interior/CG method in this case will often take
+an excessive number of conjugate gradient iterations.
+It may also work best when there are dependent or
+degenerate constraints.
+Choose this algorithm by setting user option <a class="reference internal" href="../3_referenceManual/userOptions.html#algorithm" title="algorithm"><code class="xref c c-type docutils literal"><span class="pre">algorithm</span></code></a> = 1.</p>
+<p><em>We encourage you to experiment with different values of the bar_murule
+option when using the Interior/Direct or Interior/CG algorithm.
+It is difficult to predict which update rule will work best on a problem.</em></p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Since the Interior/Direct algorithm in Knitro requires
+the explicit storage of a Hessian matrix, this algorithm only works with
+Hessian options (<a class="reference internal" href="../3_referenceManual/userOptions.html#hessopt" title="hessopt"><code class="xref c c-type docutils literal"><span class="pre">hessopt</span></code></a>) 1, 2, 3, or 6.
+It may not be used with Hessian
+options 4 or 5 (where only Hessian-vector products are performed) since
+they do not supply a full Hessian matrix.</p>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">Interior/CG</p>
+<blockquote>
+<div><p>This algorithm is well-suited to large problems because it avoids forming
+and factorizing the Hessian matrix.  Interior/CG is recommended
+if the Hessian is large and/or dense. It works with all Hessian options.
+Choose this algorithm by setting user option <a class="reference internal" href="../3_referenceManual/userOptions.html#algorithm" title="algorithm"><code class="xref c c-type docutils literal"><span class="pre">algorithm</span></code></a> = 2.</p>
+<p><em>We encourage you to experiment with different values of the</em> <a class="reference internal" href="../3_referenceManual/userOptions.html#bar_murule" title="bar_murule"><code class="xref c c-type docutils literal"><span class="pre">bar_murule</span></code></a>
+<em>option when using the Interior/Direct or Interior/CG algorithm.
+It is difficult to predict which update rule will work best on a problem.</em></p>
+</div></blockquote>
+</li>
+<li><p class="first">Active Set:</p>
+<blockquote>
+<div><p>This algorithm is fundamentally different from interior-point methods.
+The method is efficient and robust for small and medium-scale problems,
+but is typically less efficient than the Interior/Direct and
+Interior/CG algorithms on large-scale problems
+(many thousands of variables and constraints).
+Active Set is recommended when &#8220;warm starting&#8221; (i.e., when the user
+can provide a good initial solution estimate, for example, when solving a
+sequence of closely related problems).  This algorithm is also best at
+rapid detection of infeasible problems.
+Choose this algorithm by setting user option <a class="reference internal" href="../3_referenceManual/userOptions.html#algorithm" title="algorithm"><code class="xref c c-type docutils literal"><span class="pre">algorithm</span></code></a> = 3.</p>
+</div></blockquote>
+</li>
+<li><p class="first">SQP</p>
+<blockquote>
+<div><p>This algorithm is best suited to small problems where the function and
+derivative evaluations are the dominant cost.  Like the active-set method
+above, this method can converge quickly when a good initial solution
+estimate is provided.</p>
+<p>Choose this algorithm by setting user option <a class="reference internal" href="../3_referenceManual/userOptions.html#algorithm" title="algorithm"><code class="xref c c-type docutils literal"><span class="pre">algorithm</span></code></a> = 4.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Since the SQP algorithm in Knitro currently requires
+the explicit storage of a Hessian matrix, this algorithm only works with
+Hessian options (<a class="reference internal" href="../3_referenceManual/userOptions.html#hessopt" title="hessopt"><code class="xref c c-type docutils literal"><span class="pre">hessopt</span></code></a>) 1, 2, 3, or 6.
+It may not be used with Hessian
+options 4 or 5 (where only Hessian-vector products are performed) since
+they do not supply a full Hessian matrix.</p>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">Multi Algorithm:</p>
+<blockquote>
+<div><p>This option runs all four algorithms above either sequentially or in parallel.
+It can be selected  by setting user option <a class="reference internal" href="../3_referenceManual/userOptions.html#algorithm" title="algorithm"><code class="xref c c-type docutils literal"><span class="pre">algorithm</span></code></a> = 5
+and is explained in more detail below.</p>
+</div></blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="multiple-algorithms">
+<h2>Multiple algorithms</h2>
+<p>Setting user option <a class="reference internal" href="../3_referenceManual/userOptions.html#algorithm" title="algorithm"><code class="xref c c-type docutils literal"><span class="pre">algorithm</span></code></a> = 5 (<code class="xref c c-macro docutils literal"><span class="pre">KTR_ALG_MULTI</span></code>), allows you to
+easily run all four
+Knitro algorithms.  The algorithms will run either sequentially or in parallel
+depending on the setting of <a class="reference internal" href="../3_referenceManual/userOptions.html#par_numthreads" title="par_numthreads"><code class="xref c c-type docutils literal"><span class="pre">par_numthreads</span></code></a> (see <a class="reference internal" href="parallelism.html#sec-parallelism"><span class="std std-ref">Parallelism</span></a>).</p>
+<p>The user option <a class="reference internal" href="../3_referenceManual/userOptions.html#ma_terminate" title="ma_terminate"><code class="xref c c-type docutils literal"><span class="pre">ma_terminate</span></code></a> controls how to terminate the multi-algorithm (&#8220;ma&#8221;)
+procedure.  If <a class="reference internal" href="../3_referenceManual/userOptions.html#ma_terminate" title="ma_terminate"><code class="xref c c-type docutils literal"><span class="pre">ma_terminate</span></code></a> = 0, the procedure will run until all four algorithms
+have completed (if multiple optimal solution are found,
+Knitro will return the one with the best objective value).  If <a class="reference internal" href="../3_referenceManual/userOptions.html#ma_terminate" title="ma_terminate"><code class="xref c c-type docutils literal"><span class="pre">ma_terminate</span></code></a> = 1,
+the procedure will terminate as soon
+as the first local optimal solution is found.  If <a class="reference internal" href="../3_referenceManual/userOptions.html#ma_terminate" title="ma_terminate"><code class="xref c c-type docutils literal"><span class="pre">ma_terminate</span></code></a> = 2, the procedure
+will stop at the first feasible solution estimate.  If <a class="reference internal" href="../3_referenceManual/userOptions.html#ma_terminate" title="ma_terminate"><code class="xref c c-type docutils literal"><span class="pre">ma_terminate</span></code></a> = 3, the procedure
+will stop as soon as any of the algorithms terminate for any reason.
+If you are not sure which algorithm works
+best for your application, a recommended strategy is to set <a class="reference internal" href="../3_referenceManual/userOptions.html#algorithm" title="algorithm"><code class="xref c c-type docutils literal"><span class="pre">algorithm</span></code></a> = 5
+with <a class="reference internal" href="../3_referenceManual/userOptions.html#ma_terminate" title="ma_terminate"><code class="xref c c-type docutils literal"><span class="pre">ma_terminate</span></code></a> = 1 (this is particularly advantageous if it can be done
+in parallel).</p>
+<p>The user options <a class="reference internal" href="../3_referenceManual/userOptions.html#ma_maxtime_cpu" title="ma_maxtime_cpu"><code class="xref c c-type docutils literal"><span class="pre">ma_maxtime_cpu</span></code></a> and <a class="reference internal" href="../3_referenceManual/userOptions.html#ma_maxtime_real" title="ma_maxtime_real"><code class="xref c c-type docutils literal"><span class="pre">ma_maxtime_real</span></code></a> place overall
+time limits on the total multi-algorithm procedure while the options
+<a class="reference internal" href="../3_referenceManual/userOptions.html#maxtime_cpu" title="maxtime_cpu"><code class="xref c c-type docutils literal"><span class="pre">maxtime_cpu</span></code></a> and <a class="reference internal" href="../3_referenceManual/userOptions.html#maxtime_real" title="maxtime_real"><code class="xref c c-type docutils literal"><span class="pre">maxtime_real</span></code></a> impose time limits for each algorithm
+solve.</p>
+<p>The output from each algorithm can be written to a file
+named <code class="file docutils literal"><span class="pre">knitro_ma_x.log</span></code> where &#8220;x&#8221; is the algorithm number by setting
+the option <a class="reference internal" href="../3_referenceManual/userOptions.html#ma_outsub" title="ma_outsub"><code class="xref c c-type docutils literal"><span class="pre">ma_outsub</span></code></a> =1.</p>
+</div>
+<div class="section" id="crossover">
+<span id="index-2"></span><h2>Crossover</h2>
+<p>Interior-point (or barrier) methods are a powerful tool for solving
+large-scale optimization problems.  However, one drawback of these
+methods is that they do not always
+provide a clear picture of which constraints are active at the
+solution.  In general they return a less exact solution and less
+exact sensitivity information.  For this reason, Knitro offers a
+<em>crossover</em> feature in which the interior-point method switches
+to the Active Set method at the interior-point solution estimate, in
+order to &#8220;clean up&#8221; the solution and provide more exact
+sensitivity and active set information.</p>
+<p>The crossover procedure is controlled by the
+<a class="reference internal" href="../3_referenceManual/userOptions.html#bar_maxcrossit" title="bar_maxcrossit"><code class="xref c c-type docutils literal"><span class="pre">bar_maxcrossit</span></code></a> user option.  If this parameter is
+greater than 0, then Knitro will attempt to perform
+<a class="reference internal" href="../3_referenceManual/userOptions.html#bar_maxcrossit" title="bar_maxcrossit"><code class="xref c c-type docutils literal"><span class="pre">bar_maxcrossit</span></code></a> Active Set crossover iterations after
+the interior-point method has finished, to see if it can provide a
+more exact solution.  This can be viewed as a form of post-processing.
+If <a class="reference internal" href="../3_referenceManual/userOptions.html#bar_maxcrossit" title="bar_maxcrossit"><code class="xref c c-type docutils literal"><span class="pre">bar_maxcrossit</span></code></a> is not positive, then no crossover iterations
+are attempted.</p>
+<p>The crossover procedure will not always succeed in obtaining a more
+exact solution compared with the interior-point solution.  If
+crossover is unable to improve the solution within
+<a class="reference internal" href="../3_referenceManual/userOptions.html#bar_maxcrossit" title="bar_maxcrossit"><code class="xref c c-type docutils literal"><span class="pre">bar_maxcrossit</span></code></a> crossover iterations, then it will
+restore the interior-point solution estimate and terminate.  If
+<a class="reference internal" href="../3_referenceManual/userOptions.html#outlev" title="outlev"><code class="xref c c-type docutils literal"><span class="pre">outlev</span></code></a> is greater than one, Knitro will print a message
+indicating that it was unable to improve the solution.  For example,
+if <a class="reference internal" href="../3_referenceManual/userOptions.html#bar_maxcrossit" title="bar_maxcrossit"><code class="xref c c-type docutils literal"><span class="pre">bar_maxcrossit</span></code></a> = 3 and the crossover procedure did
+not succeed, the message will read:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Crossover</span> <span class="n">mode</span> <span class="n">unable</span> <span class="n">to</span> <span class="n">improve</span> <span class="n">solution</span> <span class="n">within</span> <span class="mi">3</span> <span class="n">iterations</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>In this case, you may want to increase the value of
+<a class="reference internal" href="../3_referenceManual/userOptions.html#bar_maxcrossit" title="bar_maxcrossit"><code class="xref c c-type docutils literal"><span class="pre">bar_maxcrossit</span></code></a> and try again.  If Knitro determines that the
+crossover procedure will not succeed, no matter how many iterations
+are tried, then a message of the form</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Crossover</span> <span class="n">mode</span> <span class="n">unable</span> <span class="n">to</span> <span class="n">improve</span> <span class="n">solution</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>will be printed.</p>
+<p>The extra cost of performing crossover is problem dependent.  In most
+small or medium scale problems, the crossover cost is a small
+fraction of the total solve cost.  In these cases it may be worth using the
+crossover procedure to obtain a more exact solution.  On some large
+scale or difficult degenerate problems, however, the cost of
+performing crossover may be significant. It is recommended to
+experiment with this option to see whether improvement in the
+exactness of the solution is worth the additional cost.</p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="feasibility.html" class="btn btn-neutral float-right" title="Feasibility and infeasibility" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ktrlsq.html" class="btn btn-neutral" title="Nonlinear Least-Squares" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Artelys.
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'10.3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  false
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

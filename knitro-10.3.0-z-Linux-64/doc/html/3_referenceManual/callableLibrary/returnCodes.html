@@ -1,0 +1,647 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head><div class = "head"> </div>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Return codes &mdash; Artelys Knitro 10.3 User&#39;s Manual</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/Artelys_theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="Artelys Knitro 10.3 User&#39;s Manual" href="../../index.html"/>
+        <link rel="up" title="Callable library reference" href="../callableLibraryReference.html"/>
+        <link rel="next" title="Knitro user options" href="../userOptions.html"/>
+        <link rel="prev" title="Knitro API" href="API.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Artelys Knitro User's Manual
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                10.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../1_introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../2_userGuide.html">User guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../3_referenceManual.html">Reference manual</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../knitroamplReference.html">Knitro / AMPL reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../knitromatlabReference.html">Knitro / MATLAB reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../knitroRreference.html">Knitro / R reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ooInterfaceReference.html">Object-oriented interface reference</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../callableLibraryReference.html">Callable library reference</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="API.html">Knitro API</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Return codes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../userOptions.html">Knitro user options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../outputFiles.html">List of output files</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">Artelys Knitro User's Manual</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../3_referenceManual.html">Reference manual</a> &raquo;</li>
+      
+          <li><a href="../callableLibraryReference.html">Callable library reference</a> &raquo;</li>
+      
+    <li>Return codes</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="return-codes">
+<span id="returncodes"></span><h1>Return codes</h1>
+<p id="index-0">The solution status return codes are organized as follows.</p>
+<ul class="simple">
+<li>0:
+the final solution satisfies the termination conditions for verifying optimality.</li>
+<li>-100 to -199:
+a feasible approximate solution was found.</li>
+<li>-200 to -299:
+Knitro terminated at an infeasible point.</li>
+<li>-300:
+the problem was determined to be unbounded.</li>
+<li>-400 to -499:
+Knitro terminated because it reached a pre-defined limit
+(-40x codes indicate that a feasible point was found before reaching the limit, while
+-41x codes indicate that no feasible point was found before reaching the limit).</li>
+<li>-500 to -599:
+Knitro terminated with an input error or some non-standard error.</li>
+</ul>
+<p>A more detailed description of individual return codes and their
+corresponding termination messages is provided below.</p>
+<dl class="macro">
+<dt id="KTR_RC_OPTIMAL_OR_SATISFACTORY">
+<code class="descname">KTR_RC_OPTIMAL_OR_SATISFACTORY</code></dt>
+<dd><div class="highlight-c"><div class="highlight"><pre><span></span><span class="cp">#define KTR_RC_OPTIMAL_OR_SATISFACTORY   0   </span><span class="cm">/*-- OPTIMAL CODE */</span><span class="cp"></span>
+</pre></div>
+</div>
+<p>Locally optimal solution found.
+Knitro found a locally optimal point which satisfies the stopping
+criterion.  If the problem is convex (for example, a linear
+program), then this point corresponds to a globally optimal solution.</p>
+</dd></dl>
+
+<dl class="macro">
+<dt id="KTR_RC_NEAR_OPT">
+<code class="descname">KTR_RC_NEAR_OPT</code></dt>
+<dd><div class="highlight-c"><div class="highlight"><pre><span></span><span class="cp">#define KTR_RC_NEAR_OPT                 -100 </span><span class="cm">/*-- FEASIBLE CODES */</span><span class="cp"></span>
+</pre></div>
+</div>
+<p>Primal feasible solution estimate cannot be improved. It appears to be
+optimal, but desired accuracy in dual feasibility could not be achieved.
+No more progress can be made, but the stopping tests are close to being
+satisfied (within a factor of 100) and so the current approximate
+solution is believed to be optimal.</p>
+</dd></dl>
+
+<dl class="macro">
+<dt id="KTR_RC_FEAS_XTOL">
+<code class="descname">KTR_RC_FEAS_XTOL</code></dt>
+<dd><div class="highlight-c"><div class="highlight"><pre><span></span><span class="cp">#define KTR_RC_FEAS_XTOL                -101</span>
+</pre></div>
+</div>
+<p>Primal feasible solution; the optimization terminated because the
+relative change in the solution estimate is less
+than that specified by the parameter <a class="reference internal" href="../userOptions.html#xtol" title="xtol"><code class="xref c c-type docutils literal"><span class="pre">xtol</span></code></a>.
+To try to get more accuracy one may decrease <a class="reference internal" href="../userOptions.html#xtol" title="xtol"><code class="xref c c-type docutils literal"><span class="pre">xtol</span></code></a>.
+If <a class="reference internal" href="../userOptions.html#xtol" title="xtol"><code class="xref c c-type docutils literal"><span class="pre">xtol</span></code></a> is very small already, it is an indication
+that no more significant progress
+can be made.  It&#8217;s possible the approximate feasible solution is optimal,
+but perhaps the stopping tests cannot be satisfied because of degeneracy,
+ill-conditioning or bad scaling.</p>
+</dd></dl>
+
+<dl class="macro">
+<dt id="KTR_RC_FEAS_NO_IMPROVE">
+<code class="descname">KTR_RC_FEAS_NO_IMPROVE</code></dt>
+<dd><div class="highlight-c"><div class="highlight"><pre><span></span><span class="cp">#define KTR_RC_FEAS_NO_IMPROVE          -102</span>
+</pre></div>
+</div>
+<p>Primal feasible solution estimate cannot be improved; desired accuracy
+in dual feasibility could not be achieved.      No further progress can be made.
+It&#8217;s possible the approximate feasible solution is optimal,
+but perhaps the stopping tests cannot be satisfied because of degeneracy,
+ill-conditioning or bad scaling.</p>
+</dd></dl>
+
+<dl class="macro">
+<dt id="KTR_RC_FEAS_FTOL">
+<code class="descname">KTR_RC_FEAS_FTOL</code></dt>
+<dd><div class="highlight-c"><div class="highlight"><pre><span></span><span class="cp">#define KTR_RC_FEAS_FTOL                -103</span>
+</pre></div>
+</div>
+<p>Primal feasible solution; the optimization terminated because the
+relative change in the objective function is less
+than that specified by the parameter <a class="reference internal" href="../userOptions.html#ftol" title="ftol"><code class="xref c c-type docutils literal"><span class="pre">ftol</span></code></a>
+for <a class="reference internal" href="../userOptions.html#ftol_iters" title="ftol_iters"><code class="xref c c-type docutils literal"><span class="pre">ftol_iters</span></code></a> consecutive iterations.
+To try to get more accuracy one may decrease <a class="reference internal" href="../userOptions.html#ftol" title="ftol"><code class="xref c c-type docutils literal"><span class="pre">ftol</span></code></a>
+and/or increase <a class="reference internal" href="../userOptions.html#ftol_iters" title="ftol_iters"><code class="xref c c-type docutils literal"><span class="pre">ftol_iters</span></code></a>.
+If <a class="reference internal" href="../userOptions.html#ftol" title="ftol"><code class="xref c c-type docutils literal"><span class="pre">ftol</span></code></a> is very small already, it is an indication
+that no more significant progress
+can be made.  It&#8217;s possible the approximate feasible solution is optimal,
+but perhaps the stopping tests cannot be satisfied because of degeneracy,
+ill-conditioning or bad scaling.</p>
+</dd></dl>
+
+<dl class="macro">
+<dt id="KTR_RC_INFEASIBLE">
+<code class="descname">KTR_RC_INFEASIBLE</code></dt>
+<dd><div class="highlight-c"><div class="highlight"><pre><span></span><span class="cp">#define KTR_RC_INFEASIBLE               -200 </span><span class="cm">/*-- INFEASIBLE CODES */</span><span class="cp"></span>
+</pre></div>
+</div>
+<p>Convergence to an infeasible point. Problem may be locally
+infeasible. If problem is believed to be feasible, try multistart
+to search for feasible points.
+The algorithm has converged to an infeasible point
+from which it cannot further decrease the infeasibility measure.
+This happens when the problem is infeasible, but may also occur
+on occasion for feasible problems with nonlinear constraints or badly
+scaled problems.  It is recommended to try various initial points with
+the multi-start feature.
+If this occurs for a variety of initial points, it is likely the problem
+is infeasible.</p>
+</dd></dl>
+
+<dl class="macro">
+<dt id="KTR_RC_INFEAS_XTOL">
+<code class="descname">KTR_RC_INFEAS_XTOL</code></dt>
+<dd><div class="highlight-c"><div class="highlight"><pre><span></span><span class="cp">#define KTR_RC_INFEAS_XTOL              -201</span>
+</pre></div>
+</div>
+<p>Terminate at infeasible point because the relative change in the solution
+estimate is less than that specified by the parameter <a class="reference internal" href="../userOptions.html#xtol" title="xtol"><code class="xref c c-type docutils literal"><span class="pre">xtol</span></code></a>.
+To try to find a feasible point one may  decrease <a class="reference internal" href="../userOptions.html#xtol" title="xtol"><code class="xref c c-type docutils literal"><span class="pre">xtol</span></code></a>.
+If <a class="reference internal" href="../userOptions.html#xtol" title="xtol"><code class="xref c c-type docutils literal"><span class="pre">xtol</span></code></a> is very small already, it is an indication that no more
+significant progress can be made. It
+is recommended to try various initial points with the multi-start feature.
+If this occurs for a variety of initial points, it is likely the problem
+is infeasible.</p>
+</dd></dl>
+
+<dl class="macro">
+<dt id="KTR_RC_INFEAS_NO_IMPROVE">
+<code class="descname">KTR_RC_INFEAS_NO_IMPROVE</code></dt>
+<dd><div class="highlight-c"><div class="highlight"><pre><span></span><span class="cp">#define KTR_RC_INFEAS_NO_IMPROVE        -202</span>
+</pre></div>
+</div>
+<p>Current infeasible solution estimate cannot be improved. Problem may
+be badly scaled or perhaps infeasible. If problem is believed to be
+feasible, try multistart to search for feasible points.
+If this occurs for a variety of initial points, it is likely the problem is infeasible.</p>
+</dd></dl>
+
+<dl class="macro">
+<dt id="KTR_RC_INFEAS_MULTISTART">
+<code class="descname">KTR_RC_INFEAS_MULTISTART</code></dt>
+<dd><div class="highlight-c"><div class="highlight"><pre><span></span><span class="cp">#define KTR_RC_INFEAS_MULTISTART        -203</span>
+</pre></div>
+</div>
+<p>Multistart: no primal feasible point found.
+The multi-start feature was unable to find a feasible point.  If the
+problem is believed to be feasible, then increase the number of initial points
+tried in the multi-start feature and also perhaps increase the range from
+which random initial points are chosen.</p>
+</dd></dl>
+
+<dl class="macro">
+<dt id="KTR_RC_INFEAS_CON_BOUNDS">
+<code class="descname">KTR_RC_INFEAS_CON_BOUNDS</code></dt>
+<dd><div class="highlight-c"><div class="highlight"><pre><span></span><span class="cp">#define KTR_RC_INFEAS_CON_BOUNDS        -204</span>
+</pre></div>
+</div>
+<p>The constraint bounds have been determined to be infeasible.</p>
+</dd></dl>
+
+<dl class="macro">
+<dt id="KTR_RC_INFEAS_VAR_BOUNDS">
+<code class="descname">KTR_RC_INFEAS_VAR_BOUNDS</code></dt>
+<dd><div class="highlight-c"><div class="highlight"><pre><span></span><span class="cp">#define KTR_RC_INFEAS_VAR_BOUNDS        -205</span>
+</pre></div>
+</div>
+<p>The variable bounds have been determined to be infeasible.</p>
+</dd></dl>
+
+<dl class="macro">
+<dt id="KTR_RC_UNBOUNDED">
+<code class="descname">KTR_RC_UNBOUNDED</code></dt>
+<dd><div class="highlight-c"><div class="highlight"><pre><span></span><span class="cp">#define KTR_RC_UNBOUNDED                -300 </span><span class="cm">/*-- UNBOUNDED CODE */</span><span class="cp"></span>
+</pre></div>
+</div>
+<p>Problem appears to be unbounded. Iterate is feasible and objective
+magnitude is greater than <a class="reference internal" href="../userOptions.html#objrange" title="objrange"><code class="xref c c-type docutils literal"><span class="pre">objrange</span></code></a>.
+The objective function appears to be decreasing without bound, while
+satisfying the constraints.  If the problem really is bounded, increase the size
+of the parameter <a class="reference internal" href="../userOptions.html#objrange" title="objrange"><code class="xref c c-type docutils literal"><span class="pre">objrange</span></code></a> to avoid terminating with this message.</p>
+</dd></dl>
+
+<dl class="macro">
+<dt id="KTR_RC_ITER_LIMIT_FEAS">
+<code class="descname">KTR_RC_ITER_LIMIT_FEAS</code></dt>
+<dd><div class="highlight-c"><div class="highlight"><pre><span></span><span class="cp">#define KTR_RC_ITER_LIMIT_FEAS          -400 </span><span class="cm">/*-- LIMIT EXCEEDED CODES (FEASIBLE) */</span><span class="cp"></span>
+</pre></div>
+</div>
+<p>The iteration limit was reached before being able to satisfy the required
+stopping criteria. A feasible point was found. The iteration limit can be
+increased through the user option <a class="reference internal" href="../userOptions.html#maxit" title="maxit"><code class="xref c c-type docutils literal"><span class="pre">maxit</span></code></a>.</p>
+</dd></dl>
+
+<dl class="macro">
+<dt id="KTR_RC_TIME_LIMIT_FEAS">
+<code class="descname">KTR_RC_TIME_LIMIT_FEAS</code></dt>
+<dd><div class="highlight-c"><div class="highlight"><pre><span></span><span class="cp">#define KTR_RC_TIME_LIMIT_FEAS          -401</span>
+</pre></div>
+</div>
+<p>The time limit was reached before being able to satisfy the required
+stopping criteria. A feasible point was found. The time limit can be increased
+through the user options <a class="reference internal" href="../userOptions.html#maxtime_cpu" title="maxtime_cpu"><code class="xref c c-type docutils literal"><span class="pre">maxtime_cpu</span></code></a> and <a class="reference internal" href="../userOptions.html#maxtime_real" title="maxtime_real"><code class="xref c c-type docutils literal"><span class="pre">maxtime_real</span></code></a>.</p>
+</dd></dl>
+
+<dl class="macro">
+<dt id="KTR_RC_FEVAL_LIMIT_FEAS">
+<code class="descname">KTR_RC_FEVAL_LIMIT_FEAS</code></dt>
+<dd><div class="highlight-c"><div class="highlight"><pre><span></span><span class="cp">#define KTR_RC_FEVAL_LIMIT_FEAS         -402</span>
+</pre></div>
+</div>
+<p>The function evaluation limit was reached before being able to satisfy the required
+stopping criteria. A feasible point was found. The function evaluation limit can be
+increased through the user option <a class="reference internal" href="../userOptions.html#maxfevals" title="maxfevals"><code class="xref c c-type docutils literal"><span class="pre">maxfevals</span></code></a>.</p>
+</dd></dl>
+
+<dl class="macro">
+<dt id="KTR_RC_MIP_EXH_FEAS">
+<code class="descname">KTR_RC_MIP_EXH_FEAS</code></dt>
+<dd><div class="highlight-c"><div class="highlight"><pre><span></span><span class="cp">#define KTR_RC_MIP_EXH_FEAS             -403</span>
+</pre></div>
+</div>
+<p>All nodes have been explored. An integer feasible point was found.
+The MIP optimality gap has not been reduced below the specified threshold, but
+there are no more nodes to explore in the branch and bound tree.  If the problem
+is convex, this could occur if the gap tolerance is difficult to meet because
+of bad scaling or roundoff errors, or there was a failure at one or more of the subproblem
+nodes.  This might also occur if the problem is nonconvex.  In this case,
+Knitro terminates and returns the best integer feasible point found.</p>
+</dd></dl>
+
+<dl class="macro">
+<dt id="KTR_RC_MIP_TERM_FEAS">
+<code class="descname">KTR_RC_MIP_TERM_FEAS</code></dt>
+<dd><div class="highlight-c"><div class="highlight"><pre><span></span><span class="cp">#define KTR_RC_MIP_TERM_FEAS            -404</span>
+</pre></div>
+</div>
+<p>Terminating at first integer feasible point.
+Knitro has found an integer feasible point and is terminating
+because the user option <a class="reference internal" href="../userOptions.html#mip_terminate" title="mip_terminate"><code class="xref c c-type docutils literal"><span class="pre">mip_terminate</span></code></a> is set to &#8220;feasible&#8221;.</p>
+</dd></dl>
+
+<dl class="macro">
+<dt id="KTR_RC_MIP_SOLVE_LIMIT_FEAS">
+<code class="descname">KTR_RC_MIP_SOLVE_LIMIT_FEAS</code></dt>
+<dd><div class="highlight-c"><div class="highlight"><pre><span></span><span class="cp">#define KTR_RC_MIP_SOLVE_LIMIT_FEAS     -405</span>
+</pre></div>
+</div>
+<p>Subproblem solve limit reached. An integer feasible point was found.
+The MIP subproblem solve limit was reached before being able to satisfy the optimality
+gap tolerance. The subproblem solve limit can be increased through the user option
+<a class="reference internal" href="../userOptions.html#mip_maxsolves" title="mip_maxsolves"><code class="xref c c-type docutils literal"><span class="pre">mip_maxsolves</span></code></a>.</p>
+</dd></dl>
+
+<dl class="macro">
+<dt id="KTR_RC_MIP_NODE_LIMIT_FEAS">
+<code class="descname">KTR_RC_MIP_NODE_LIMIT_FEAS</code></dt>
+<dd><div class="highlight-c"><div class="highlight"><pre><span></span><span class="cp">#define KTR_RC_MIP_NODE_LIMIT_FEAS      -406</span>
+</pre></div>
+</div>
+<p>Node limit reached. An integer feasible point was found.
+The MIP node limit was reached before being able to satisfy the optimality
+gap tolerance. The node limit can be increased through the user option
+<a class="reference internal" href="../userOptions.html#mip_maxnodes" title="mip_maxnodes"><code class="xref c c-type docutils literal"><span class="pre">mip_maxnodes</span></code></a>.</p>
+</dd></dl>
+
+<dl class="macro">
+<dt id="KTR_RC_ITER_LIMIT_INFEAS">
+<code class="descname">KTR_RC_ITER_LIMIT_INFEAS</code></dt>
+<dd><div class="highlight-c"><div class="highlight"><pre><span></span><span class="cp">#define KTR_RC_ITER_LIMIT_INFEAS        -410 </span><span class="cm">/*-- LIMIT EXCEEDED CODES (INFEASIBLE) */</span><span class="cp"></span>
+</pre></div>
+</div>
+<p>The iteration limit was reached before being able to satisfy the required
+stopping criteria. No feasible point was found. The iteration limit can be
+increased through the user option <a class="reference internal" href="../userOptions.html#maxit" title="maxit"><code class="xref c c-type docutils literal"><span class="pre">maxit</span></code></a>.</p>
+</dd></dl>
+
+<dl class="macro">
+<dt id="KTR_RC_TIME_LIMIT_INFEAS">
+<code class="descname">KTR_RC_TIME_LIMIT_INFEAS</code></dt>
+<dd><div class="highlight-c"><div class="highlight"><pre><span></span><span class="cp">#define KTR_RC_TIME_LIMIT_INFEAS        -411</span>
+</pre></div>
+</div>
+<p>The time limit was reached before being able to satisfy the required
+stopping criteria. No feasible point was found. The time limit can be increased
+through the user options <a class="reference internal" href="../userOptions.html#maxtime_cpu" title="maxtime_cpu"><code class="xref c c-type docutils literal"><span class="pre">maxtime_cpu</span></code></a> and <a class="reference internal" href="../userOptions.html#maxtime_real" title="maxtime_real"><code class="xref c c-type docutils literal"><span class="pre">maxtime_real</span></code></a>.</p>
+</dd></dl>
+
+<dl class="macro">
+<dt id="KTR_RC_FEVAL_LIMIT_INFEAS">
+<code class="descname">KTR_RC_FEVAL_LIMIT_INFEAS</code></dt>
+<dd><div class="highlight-c"><div class="highlight"><pre><span></span><span class="cp">#define KTR_RC_FEVAL_LIMIT_INFEAS       -412</span>
+</pre></div>
+</div>
+<p>The function evaluation limit was reached before being able to satisfy the required
+stopping criteria. No feasible point was found. The function evaluation limit can be
+increased through the user option <a class="reference internal" href="../userOptions.html#maxfevals" title="maxfevals"><code class="xref c c-type docutils literal"><span class="pre">maxfevals</span></code></a>.</p>
+</dd></dl>
+
+<dl class="macro">
+<dt id="KTR_RC_MIP_EXH_INFEAS">
+<code class="descname">KTR_RC_MIP_EXH_INFEAS</code></dt>
+<dd><div class="highlight-c"><div class="highlight"><pre><span></span><span class="cp">#define KTR_RC_MIP_EXH_INFEAS           -413</span>
+</pre></div>
+</div>
+<p>All nodes have been explored. No integer feasible point was found.
+The MIP optimality gap has not been reduced below the specified threshold, but
+there are no more nodes to explore in the branch and bound tree.  If the problem
+is convex, this could occur if the gap tolerance is difficult to meet because
+of bad scaling or roundoff errors, or there was a failure at one or more of the subproblem
+nodes.  This might also occur if the problem is nonconvex.</p>
+</dd></dl>
+
+<dl class="macro">
+<dt id="KTR_RC_MIP_SOLVE_LIMIT_INFEAS">
+<code class="descname">KTR_RC_MIP_SOLVE_LIMIT_INFEAS</code></dt>
+<dd><div class="highlight-c"><div class="highlight"><pre><span></span><span class="cp">#define KTR_RC_MIP_SOLVE_LIMIT_INFEAS   -415</span>
+</pre></div>
+</div>
+<p>Subproblem solve limit reached. No integer feasible point was found.
+The MIP subproblem solve limit was reached before being able to satisfy the optimality
+gap tolerance. The subproblem solve limit can be increased through the user option
+<a class="reference internal" href="../userOptions.html#mip_maxsolves" title="mip_maxsolves"><code class="xref c c-type docutils literal"><span class="pre">mip_maxsolves</span></code></a>.</p>
+</dd></dl>
+
+<dl class="macro">
+<dt id="KTR_RC_MIP_NODE_LIMIT_INFEAS">
+<code class="descname">KTR_RC_MIP_NODE_LIMIT_INFEAS</code></dt>
+<dd><div class="highlight-c"><div class="highlight"><pre><span></span><span class="cp">#define KTR_RC_MIP_NODE_LIMIT_INFEAS    -416</span>
+</pre></div>
+</div>
+<p>Node limit reached. No integer feasible point was found.
+The MIP node limit was reached before being able to satisfy the optimality
+gap tolerance. The node limit can be increased through the user option
+<a class="reference internal" href="../userOptions.html#mip_maxnodes" title="mip_maxnodes"><code class="xref c c-type docutils literal"><span class="pre">mip_maxnodes</span></code></a>.</p>
+</dd></dl>
+
+<dl class="macro">
+<dt id="KTR_RC_CALLBACK_ERR">
+<code class="descname">KTR_RC_CALLBACK_ERR</code></dt>
+<dd><div class="highlight-c"><div class="highlight"><pre><span></span><span class="cp">#define KTR_RC_CALLBACK_ERR             -500 </span><span class="cm">/*-- OTHER FAILURES */</span><span class="cp"></span>
+</pre></div>
+</div>
+<p>Callback function error.
+This termination value indicates that an error (i.e., negative return
+value) occurred in a user provided callback routine.</p>
+</dd></dl>
+
+<dl class="macro">
+<dt id="KTR_RC_LP_SOLVER_ERR">
+<code class="descname">KTR_RC_LP_SOLVER_ERR</code></dt>
+<dd><div class="highlight-c"><div class="highlight"><pre><span></span><span class="cp">#define KTR_RC_LP_SOLVER_ERR            -501</span>
+</pre></div>
+</div>
+<p>LP solver error.
+This termination value indicates that an unrecoverable error occurred
+in the LP solver used in the active-set algorithm
+preventing the optimization from continuing.</p>
+</dd></dl>
+
+<dl class="macro">
+<dt id="KTR_RC_EVAL_ERR">
+<code class="descname">KTR_RC_EVAL_ERR</code></dt>
+<dd><div class="highlight-c"><div class="highlight"><pre><span></span><span class="cp">#define KTR_RC_EVAL_ERR                 -502</span>
+</pre></div>
+</div>
+<p>Evaluation error.
+This termination value indicates that an evaluation error occurred
+(e.g., divide by 0, taking the square root of a negative number),
+preventing the optimization from continuing.</p>
+</dd></dl>
+
+<dl class="macro">
+<dt id="KTR_RC_OUT_OF_MEMORY">
+<code class="descname">KTR_RC_OUT_OF_MEMORY</code></dt>
+<dd><div class="highlight-c"><div class="highlight"><pre><span></span><span class="cp">#define KTR_RC_OUT_OF_MEMORY            -503</span>
+</pre></div>
+</div>
+<p>Not enough memory available to solve problem.
+This termination value indicates that there was not enough memory
+available to solve the problem.</p>
+</dd></dl>
+
+<dl class="macro">
+<dt id="KTR_RC_USER_TERMINATION">
+<code class="descname">KTR_RC_USER_TERMINATION</code></dt>
+<dd><div class="highlight-c"><div class="highlight"><pre><span></span><span class="cp">#define KTR_RC_USER_TERMINATION         -504</span>
+</pre></div>
+</div>
+<p>Knitro has been terminated by the user.</p>
+</dd></dl>
+
+<p class="rubric">Other codes</p>
+<div class="highlight-c"><div class="highlight"><pre><span></span><span class="cp">#define KTR_RC_OPEN_FILE_ERR          -505</span>
+<span class="cp">#define KTR_RC_BAD_N_OR_F             -506 </span><span class="cm">/*-- PROBLEM DEFINITION ERROR */</span><span class="cp"></span>
+<span class="cp">#define KTR_RC_BAD_CONSTRAINT         -507 </span><span class="cm">/*-- PROBLEM DEFINITION ERROR */</span><span class="cp"></span>
+<span class="cp">#define KTR_RC_BAD_JACOBIAN           -508 </span><span class="cm">/*-- PROBLEM DEFINITION ERROR */</span><span class="cp"></span>
+<span class="cp">#define KTR_RC_BAD_HESSIAN            -509 </span><span class="cm">/*-- PROBLEM DEFINITION ERROR */</span><span class="cp"></span>
+<span class="cp">#define KTR_RC_BAD_CON_INDEX          -510 </span><span class="cm">/*-- PROBLEM DEFINITION ERROR */</span><span class="cp"></span>
+<span class="cp">#define KTR_RC_BAD_JAC_INDEX          -511 </span><span class="cm">/*-- PROBLEM DEFINITION ERROR */</span><span class="cp"></span>
+<span class="cp">#define KTR_RC_BAD_HESS_INDEX         -512 </span><span class="cm">/*-- PROBLEM DEFINITION ERROR */</span><span class="cp"></span>
+<span class="cp">#define KTR_RC_BAD_CON_BOUNDS         -513 </span><span class="cm">/*-- PROBLEM DEFINITION ERROR */</span><span class="cp"></span>
+<span class="cp">#define KTR_RC_BAD_VAR_BOUNDS         -514 </span><span class="cm">/*-- PROBLEM DEFINITION ERROR */</span><span class="cp"></span>
+<span class="cp">#define KTR_RC_ILLEGAL_CALL           -515 </span><span class="cm">/*-- KNITRO CALL IS OUT OF SEQUENCE */</span><span class="cp"></span>
+<span class="cp">#define KTR_RC_BAD_KCPTR              -516 </span><span class="cm">/*-- KNITRO PASSED A BAD KC POINTER */</span><span class="cp"></span>
+<span class="cp">#define KTR_RC_NULL_POINTER           -517 </span><span class="cm">/*-- KNITRO PASSED A NULL ARGUMENT */</span><span class="cp"></span>
+<span class="cp">#define KTR_RC_BAD_INIT_VALUE         -518 </span><span class="cm">/*-- APPLICATION INITIAL POINT IS BAD */</span><span class="cp"></span>
+<span class="cp">#define KTR_RC_NEWPOINT_HALT          -519 </span><span class="cm">/*-- APPLICATION TOLD KNITRO TO HALT */</span><span class="cp"></span>
+<span class="cp">#define KTR_RC_BAD_LICENSE            -520 </span><span class="cm">/*-- LICENSE CHECK FAILED */</span><span class="cp"></span>
+<span class="cp">#define KTR_RC_BAD_PARAMINPUT         -521 </span><span class="cm">/*-- INVALID USER OPTION DETECTED */</span><span class="cp"></span>
+<span class="cp">#define KTR_RC_LINEAR_SOLVER_ERR      -522 </span><span class="cm">/*-- ERROR IN LINEAR SOLVER */</span><span class="cp"></span>
+<span class="cp">#define KTR_RC_DERIV_CHECK_FAILED     -523 </span><span class="cm">/*-- DERIVATIVE CHECK FAILED */</span><span class="cp"></span>
+<span class="cp">#define KTR_RC_DERIV_CHECK_TERMINATE  -524 </span><span class="cm">/*-- DERIVATIVE CHECK TERMINATE */</span><span class="cp"></span>
+<span class="cp">#define KTR_RC_OVERFLOW_ERR           -525 </span><span class="cm">/*-- INTEGER OVERFLOW ERROR */</span><span class="cp"></span>
+<span class="cp">#define KTR_RC_INTERNAL_ERROR         -600 </span><span class="cm">/*-- CONTACT support-knitro@artelys.com */</span><span class="cp"></span>
+</pre></div>
+</div>
+<p>Termination values in the range -505 to -600 imply some input
+error or other non-standard failure.
+If <a class="reference internal" href="../userOptions.html#outlev" title="outlev"><code class="xref c c-type docutils literal"><span class="pre">outlev</span></code></a>&gt;0, details of this error will be printed to
+standard output or the file <code class="file docutils literal"><span class="pre">knitro.log</span></code> depending on
+the value of <a class="reference internal" href="../userOptions.html#outmode" title="outmode"><code class="xref c c-type docutils literal"><span class="pre">outmode</span></code></a>.</p>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../userOptions.html" class="btn btn-neutral float-right" title="Knitro user options" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="API.html" class="btn btn-neutral" title="Knitro API" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Artelys.
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'10.3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  false
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

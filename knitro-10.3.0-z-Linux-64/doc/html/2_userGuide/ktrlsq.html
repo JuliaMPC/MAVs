@@ -1,0 +1,393 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head><div class = "head"> </div>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Nonlinear Least-Squares &mdash; Artelys Knitro 10.3 User&#39;s Manual</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/Artelys_theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="Artelys Knitro 10.3 User&#39;s Manual" href="../index.html"/>
+        <link rel="up" title="User guide" href="../2_userGuide.html"/>
+        <link rel="next" title="Algorithms" href="algorithms.html"/>
+        <link rel="prev" title="Complementarity constraints" href="complementarity.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Artelys Knitro User's Manual
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                10.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../1_introduction.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../2_userGuide.html">User guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="gettingStarted.html">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="knitroOptions.html">Setting options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="derivatives.html">Derivatives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multistart.html">Multistart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="minlp.html">Mixed-integer nonlinear programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="complementarity.html">Complementarity constraints</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Nonlinear Least-Squares</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#c-example">C example</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms.html">Algorithms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feasibility.html">Feasibility and infeasibility</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parallelism.html">Parallelism</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tuner.html">The Knitro-Tuner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="termination.html">Termination criteria</a></li>
+<li class="toctree-l2"><a class="reference internal" href="obtainingInformation.html">Obtaining information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="callbacks.html">Callbacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="otherProgInterfaces.html">Other programmatic interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="specialProblems.html">Special problem classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tips.html">Tips and tricks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bibliography.html">Bibliography</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../3_referenceManual.html">Reference manual</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">Artelys Knitro User's Manual</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../2_userGuide.html">User guide</a> &raquo;</li>
+      
+    <li>Nonlinear Least-Squares</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="nonlinear-least-squares">
+<span id="chap-lsq"></span><h1>Nonlinear Least-Squares</h1>
+<p id="index-0">Knitro provides a specialized API for nonlinear least-squares models of the following form:</p>
+<div class="math">
+<p><span class="math">\min_p \; \frac{1}{2}\|F(p)\|_2^2 \\
+\text{s.t.}~~~p_L \leq p \leq p_U,</span></p>
+</div><p>where <span class="math">p</span> is a parameter to be optimized and <span class="math">F</span> is a differentiable function,
+which is called a residual.
+This type of problem appears very often in statistics, data-mining and machine learning.
+Using the nonlinear least-squares API, you are able to model a nonlinear least-squares
+problem in standard form above and use the Gauss-Newton Hessian option.</p>
+<p>The Gauss-Newton Hessian provides a positive semi-definite Hessian approximation <span class="math">J(p)'J(p)</span>
+(where <span class="math">J(p)</span> is the Jacobian matrix of the residual functions <span class="math">F(p)</span>) at every
+iteration and has good local convergence properties in practice.
+The Gauss-Newton Hessian option <code class="docutils literal"><span class="pre">KTR_HESSOPT_GAUSS_NEWTON</span></code>, is the default Hessian option
+when using the nonlinear least-squares API. The quasi-Newton Hessian options are also available
+through the least-squares API, however, the user-supplied exact Hessian can only be specified
+using the standard API.</p>
+<p>Any of the Knitro algorithms can be used through the least-squares API.
+Knitro will behave like a Gauss-Newton method by using the
+linesearch methods  <a class="reference internal" href="../3_referenceManual/userOptions.html#algorithm" title="algorithm"><code class="xref c c-type docutils literal"><span class="pre">algorithm</span></code></a> = <code class="docutils literal"><span class="pre">KTR_ALG_BAR_DIRECT</span></code> or <code class="docutils literal"><span class="pre">KTR_ALG_ACT_SQP</span></code>,
+and will be very similar to the classical Levenberg-Marquardt method when
+using the trust-region methods <a class="reference internal" href="../3_referenceManual/userOptions.html#algorithm" title="algorithm"><code class="xref c c-type docutils literal"><span class="pre">algorithm</span></code></a> = <code class="docutils literal"><span class="pre">KTR_ALG_BAR_CG</span></code> or <code class="docutils literal"><span class="pre">KTR_ALG_ACT_CG</span></code>.</p>
+<p>The residuals and Jacobian are provided to Knitro using the callback functions described below.
+Each user callback routine should return an <em>int</em> value of 0 if successful, or a negative
+value to indicate that an error occurred during execution of the user-provided function.</p>
+<div class="highlight-c"><div class="highlight"><pre><span></span><span class="cm">/** Set the callback function to evaluate the residuals &quot;res&quot; of a</span>
+<span class="cm"> *  nonlinear least-squares problem.</span>
+<span class="cm"> *  Do not modify &quot;jac&quot; in this function.</span>
+<span class="cm"> */</span>
+<span class="kt">int</span>  <span class="n">KNITRO_API</span> <span class="nf">KTR_lsq_set_res_callback</span><span class="p">(</span><span class="n">KTR_context_ptr</span> <span class="n">kc</span><span class="p">,</span>
+                                         <span class="n">KTR_lsq_callback</span> <span class="o">*</span> <span class="k">const</span> <span class="n">fnPtr</span><span class="p">);</span>
+
+<span class="cm">/** Set the callback function to evaluate the jacobian &quot;jac&quot; of</span>
+<span class="cm"> *  nonlinear least-squares residual function.</span>
+<span class="cm"> *  Do not modify &quot;res&quot; in this function.</span>
+<span class="cm"> */</span>
+<span class="kt">int</span>  <span class="n">KNITRO_API</span> <span class="nf">KTR_lsq_set_jac_callback</span><span class="p">(</span><span class="n">KTR_context_ptr</span> <span class="n">kc</span><span class="p">,</span>
+                                         <span class="n">KTR_lsq_callback</span> <span class="o">*</span> <span class="k">const</span> <span class="n">fnPtr</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">KTR_lsq_callback</span></code> type is defined below and is used by both of the previous functions.
+Note that this callback type is specific to the least squares API and does not
+use evaluation codes.</p>
+<div class="highlight-c"><div class="highlight"><pre><span></span><span class="cm">/** Callback specific to LSQ API */</span>
+<span class="k">typedef</span> <span class="kt">int</span> <span class="nf">KTR_lsq_callback</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span>            <span class="n">n</span><span class="p">,</span>
+                             <span class="k">const</span> <span class="kt">int</span>            <span class="n">m</span><span class="p">,</span>
+                             <span class="k">const</span> <span class="kt">int</span>            <span class="n">nnzJ</span><span class="p">,</span>
+                             <span class="k">const</span> <span class="kt">double</span> <span class="o">*</span> <span class="k">const</span> <span class="n">x</span><span class="p">,</span>
+                                   <span class="kt">double</span> <span class="o">*</span> <span class="k">const</span> <span class="n">res</span><span class="p">,</span>
+                                   <span class="kt">double</span> <span class="o">*</span> <span class="k">const</span> <span class="n">jac</span><span class="p">,</span>
+                                   <span class="kt">void</span> <span class="o">*</span>         <span class="n">userParams</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>There is currently no callback for the exact Hessian in the least-squares API. If you wish
+to provide a callback for the user-supplied exact Hessian, you must use the standard API.</p>
+<p>When using the nonlinear least-squares Knitro API, a problem needs to be
+initialized using <a class="reference internal" href="../3_referenceManual/callableLibrary/API.html#KTR_lsq_init_problem" title="KTR_lsq_init_problem"><code class="xref c c-func docutils literal"><span class="pre">KTR_lsq_init_problem()</span></code></a> instead of <a class="reference internal" href="../3_referenceManual/callableLibrary/API.html#KTR_init_problem" title="KTR_init_problem"><code class="xref c c-func docutils literal"><span class="pre">KTR_init_problem()</span></code></a>.</p>
+<div class="highlight-c"><div class="highlight"><pre><span></span><span class="cm">/** Brief description of the arguments:</span>
+<span class="cm"> *    n             - number of variables</span>
+<span class="cm"> *    xLoBnds       - vector of lower bounds on variables</span>
+<span class="cm"> *    xUpBnds       - vector of upper bounds on variables</span>
+<span class="cm"> *    m             - number of residuals</span>
+<span class="cm"> *    rType         - residuals type (KTR_RESTYPE_GENERAL or KTR_RESTYPE_LINEAR)</span>
+<span class="cm"> *    nnzJ          - number of nonzero elements in jacobian of residuals</span>
+<span class="cm"> *    jacIndexVars  - column indices of nonzero elements of jacobian</span>
+<span class="cm"> *    jacIndexRes   - row indices of nonzero elements of jacobian</span>
+<span class="cm"> *    xInitial      - vector of initial guesses on variables</span>
+<span class="cm"> *    lambdaInitial - vector of initial guesses on duals associated to bound constraints</span>
+<span class="cm"> */</span>
+<span class="kt">int</span> <span class="n">KNITRO_API</span> <span class="nf">KTR_lsq_init_problem</span><span class="p">(</span><span class="n">KTR_context_ptr</span>      <span class="n">kc</span><span class="p">,</span>
+                                    <span class="k">const</span> <span class="kt">int</span>            <span class="n">n</span><span class="p">,</span>
+                                    <span class="k">const</span> <span class="kt">double</span> <span class="o">*</span> <span class="k">const</span> <span class="n">xLoBnds</span><span class="p">,</span>
+                                    <span class="k">const</span> <span class="kt">double</span> <span class="o">*</span> <span class="k">const</span> <span class="n">xUpBnds</span><span class="p">,</span>
+                                    <span class="k">const</span> <span class="kt">int</span>            <span class="n">m</span><span class="p">,</span>
+                                    <span class="k">const</span> <span class="kt">int</span> <span class="o">*</span> <span class="k">const</span>    <span class="n">rType</span><span class="p">,</span>
+                                    <span class="k">const</span> <span class="kt">int</span>            <span class="n">nnzJ</span><span class="p">,</span>
+                                    <span class="k">const</span> <span class="kt">int</span> <span class="o">*</span> <span class="k">const</span>    <span class="n">jacIndexVars</span><span class="p">,</span>
+                                    <span class="k">const</span> <span class="kt">int</span> <span class="o">*</span> <span class="k">const</span>    <span class="n">jacIndexRes</span><span class="p">,</span>
+                                    <span class="k">const</span> <span class="kt">double</span> <span class="o">*</span> <span class="k">const</span> <span class="n">xInitial</span><span class="p">,</span>
+                                    <span class="k">const</span> <span class="kt">double</span> <span class="o">*</span> <span class="k">const</span> <span class="n">lambdaInitial</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>In order to extract values of the residual Jacobian,
+the user should use the function <code class="xref c c-func docutils literal"><span class="pre">KTR_lsq_get_jacobian_values()</span></code>.</p>
+<div class="highlight-c"><div class="highlight"><pre><span></span><span class="cm">/** Return the values of the residual Jacobian in &quot;jac&quot;.</span>
+<span class="cm"> *  The Jacobian values returned correspond to the non-zero sparse</span>
+<span class="cm"> *  Jacobian indices provided by the user in KTR_lsq_init_problem().</span>
+<span class="cm"> *  The array &quot;jac&quot; must be allocated by the user.</span>
+<span class="cm"> *  Returns 0 if call is successful;</span>
+<span class="cm"> *         &lt;0 if there is an error.</span>
+<span class="cm"> */</span>
+<span class="kt">int</span>  <span class="n">KNITRO_API</span> <span class="nf">KTR_lsq_get_jacobian_values</span> <span class="p">(</span><span class="k">const</span> <span class="n">KTR_context_ptr</span> <span class="n">kc</span><span class="p">,</span>
+                                                   <span class="kt">double</span>  <span class="o">*</span> <span class="k">const</span> <span class="n">jac</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="section" id="c-example">
+<h2>C example</h2>
+<p>The following pseudo C example illustrates how to use the Knitro least squares interface.</p>
+<div class="highlight-c"><div class="highlight"><pre><span></span><span class="o">*</span><span class="n">objType</span> <span class="o">=</span> <span class="n">KTR_OBJTYPE_GENERAL</span><span class="p">;</span>
+<span class="o">*</span><span class="n">objGoal</span> <span class="o">=</span> <span class="n">KTR_OBJGOAL_MINIMIZE</span><span class="p">;</span>
+<span class="n">xLoBnds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">KTR_INFBOUND</span><span class="p">;</span>
+<span class="n">xUpBnds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">KTR_INFBOUND</span><span class="p">;</span>
+<span class="n">xLoBnds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span><span class="o">*</span> <span class="n">KTR_INFBOUND</span><span class="p">;</span>
+<span class="n">xUpBnds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">KTR_INFBOUND</span><span class="p">;</span>
+<span class="n">xInitial</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">;</span>
+<span class="n">xInitial</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">5.0</span><span class="p">;</span>
+
+<span class="cm">/*---- PROVIDE FIRST DERIVATIVE STRUCTURAL INFORMATION. */</span>
+<span class="n">jacIndexRes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">jacIndexRes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">jacIndexRes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">jacIndexRes</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="n">jacIndexRes</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">jacIndexRes</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="n">jacIndexRes</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span> <span class="n">jacIndexRes</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+<span class="n">jacIndexRes</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span> <span class="n">jacIndexRes</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+<span class="n">jacIndexRes</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span> <span class="n">jacIndexRes</span><span class="p">[</span><span class="mi">11</span><span class="p">]</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+
+<span class="n">jacIndexVars</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">jacIndexVars</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="n">jacIndexVars</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">jacIndexVars</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="n">jacIndexVars</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">jacIndexVars</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="n">jacIndexVars</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">jacIndexVars</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="n">jacIndexVars</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">jacIndexVars</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="n">jacIndexVars</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">jacIndexVars</span><span class="p">[</span><span class="mi">11</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+<span class="cm">/*---- CREATE A KNITRO CONTEXT. */</span>
+<span class="n">kc</span> <span class="o">=</span> <span class="n">KTR_new</span><span class="p">();</span>
+
+<span class="cm">/*---- REGISTER CALLBACKS. */</span>
+<span class="n">KTR_lsq_set_res_callback</span><span class="p">(</span><span class="n">kc</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">callbackEvalR</span><span class="p">)</span>
+<span class="n">KTR_lsq_set_jac_callback</span><span class="p">(</span><span class="n">kc</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">callbackEvalJ</span><span class="p">)</span>
+
+<span class="cm">/*---- INITIALIZE KNITRO WITH THE NONLINEAR LEAST-SQUARES PROBLEM DEFINITION. */</span>
+<span class="n">nStatus</span> <span class="o">=</span> <span class="n">KTR_lsq_init_problem</span><span class="p">(</span> <span class="n">kc</span><span class="p">,</span>
+                                <span class="n">n</span><span class="p">,</span> <span class="n">objGoal</span><span class="p">,</span>
+                                <span class="n">xLoBnds</span><span class="p">,</span> <span class="n">xUpBnds</span><span class="p">,</span>
+                                <span class="n">m</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">nnzJ</span><span class="p">,</span>
+                                <span class="n">jacIndexVars</span><span class="p">,</span> <span class="n">jacIndexRes</span><span class="p">,</span>
+                                <span class="n">xInitial</span><span class="p">);</span>
+
+<span class="cm">/*---- KNITRO KEEPS ITS OWN COPY OF THE PROBLEM DEFINITION,</span>
+<span class="cm"> *---- SO THE LOCAL MEMORY CAN BE FREED IMMEDIATELY. */</span>
+<span class="n">free</span> <span class="p">(</span><span class="n">xLoBnds</span><span class="p">);</span>
+<span class="n">free</span> <span class="p">(</span><span class="n">xUpBnds</span><span class="p">);</span>
+<span class="n">free</span> <span class="p">(</span><span class="n">xInitial</span><span class="p">);</span>
+<span class="n">free</span> <span class="p">(</span><span class="n">jacIndexVars</span><span class="p">);</span>
+<span class="n">free</span> <span class="p">(</span><span class="n">jacIndexRes</span><span class="p">);</span>
+
+<span class="cm">/*---- SOLVE THE PROBLEM.</span>
+<span class="cm"> *----</span>
+<span class="cm"> *---- RETURN STATUS CODES ARE DEFINED IN &quot;knitro.h&quot; AND DESCRIBED</span>
+<span class="cm"> *---- IN THE KNITRO MANUAL.</span>
+<span class="cm"> */</span>
+<span class="n">nStatus</span> <span class="o">=</span> <span class="n">KTR_solve</span> <span class="p">(</span><span class="n">kc</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">lambda</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">obj</span><span class="p">,</span>
+                     <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+
+<span class="cm">/*---- DELETE THE KNITRO SOLVER INSTANCE. */</span>
+<span class="n">KTR_free</span> <span class="p">(</span><span class="o">&amp;</span><span class="n">kc</span><span class="p">);</span>
+
+<span class="cm">/*---- Free remaining resources. */</span>
+<span class="n">free</span> <span class="p">(</span><span class="n">x</span><span class="p">);</span>
+<span class="n">free</span> <span class="p">(</span><span class="n">lambda</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="algorithms.html" class="btn btn-neutral float-right" title="Algorithms" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="complementarity.html" class="btn btn-neutral" title="Complementarity constraints" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Artelys.
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'10.3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  false
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

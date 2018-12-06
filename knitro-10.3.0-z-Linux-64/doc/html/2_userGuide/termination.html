@@ -1,0 +1,411 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head><div class = "head"> </div>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Termination criteria &mdash; Artelys Knitro 10.3 User&#39;s Manual</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/Artelys_theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="Artelys Knitro 10.3 User&#39;s Manual" href="../index.html"/>
+        <link rel="up" title="User guide" href="../2_userGuide.html"/>
+        <link rel="next" title="Obtaining information" href="obtainingInformation.html"/>
+        <link rel="prev" title="The Knitro-Tuner" href="tuner.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Artelys Knitro User's Manual
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                10.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../1_introduction.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../2_userGuide.html">User guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="gettingStarted.html">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="knitroOptions.html">Setting options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="derivatives.html">Derivatives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multistart.html">Multistart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="minlp.html">Mixed-integer nonlinear programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="complementarity.html">Complementarity constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ktrlsq.html">Nonlinear Least-Squares</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms.html">Algorithms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feasibility.html">Feasibility and infeasibility</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parallelism.html">Parallelism</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tuner.html">The Knitro-Tuner</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Termination criteria</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#continuous-problems">Continuous problems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#discrete-or-mixed-integer-problems">Discrete or mixed integer problems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="obtainingInformation.html">Obtaining information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="callbacks.html">Callbacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="otherProgInterfaces.html">Other programmatic interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="specialProblems.html">Special problem classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tips.html">Tips and tricks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bibliography.html">Bibliography</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../3_referenceManual.html">Reference manual</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">Artelys Knitro User's Manual</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../2_userGuide.html">User guide</a> &raquo;</li>
+      
+    <li>Termination criteria</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="termination-criteria">
+<h1>Termination criteria</h1>
+<p id="index-0">This section describes the stopping tests used by Knitro to declare
+(local) optimality, and the corresponding user options that can be used
+to enforce more or less stringent tolerances in these tests.</p>
+<div class="section" id="continuous-problems">
+<h2>Continuous problems</h2>
+<p>The first-order conditions for identifying a locally optimal solution are:</p>
+<div class="math">
+<p><span class="math">\begin{gather}
+        \nabla_x {\cal L}(x,\lambda) =
+        \nabla f(x) + \sum_{i=0}^{m-1}\lambda^c_i\nabla c_i(x) + \lambda^b =0 \tag{1} \\
+        \lambda^c_i \min[(c_i(x)-c^L_i),(c^U_i-c_i(x))] = 0, \quad i=0,\ldots,m-1 \tag{2} \\
+        \lambda^b_j \min[(x_j-b^L_j),(b^U_j-x_j)] = 0, \quad j=0,\ldots,n-1 \tag{2b} \\
+        c^L_i \; \le \; c_i(x) \le c^U_i, \quad i=0,\ldots,m-1  \tag{3} \\
+        b^L_j \; \le \; x_j    \le b^U_j, \quad j=0,\ldots,n-1  \tag{3b} \\
+        \lambda^c_i \ge 0, \quad i \in {\cal I}, \; c^L_i \mbox{ infinite }, \; c^U_i \mbox{ finite } \tag{4} \\
+        \lambda^c_i \le 0, \quad i \in {\cal I}, \; c^U_i \mbox{ infinite }, \; c^L_i \mbox{ finite } \tag{4b} \\
+        \lambda^b_j \ge 0, \quad j \in {\cal B}, \; b^L_j \mbox{ infinite }, \; b^U_j \mbox{ finite } \tag{5} \\
+        \lambda^b_j \le 0, \quad j \in {\cal B}, \; b^U_j \mbox{ infinite }, \; b^L_j \mbox{ finite }. \tag{5b}
+\end{gather}</span></p>
+</div><p>Here <span class="math">{\cal I}</span> and <span class="math">{\cal B}</span> represent the sets of indices corresponding
+to the general inequality constraints and (non-fixed) variable bound constraints respectively.
+In the conditions above, <span class="math">\lambda^c_i</span> is the Lagrange multiplier
+corresponding to constraint <span class="math">c_i(x)</span>, and <span class="math">\lambda^b_j</span>
+is the Lagrange multiplier corresponding to the simple bounds on the
+variable <span class="math">x_j</span>.  There is exactly one Lagrange multiplier
+for each constraint and variable. The Lagrange multiplier may be
+restricted to take on a particular sign depending on whether the
+corresponding constraint (or variable) is upper bounded or lower
+bounded, as indicated by (4)-(5). If the constraint (or variable)
+has both a finite lower and upper bound, then the appropriate sign
+of the multiplier depends on which bound (if either) is binding
+(active) at the solution.</p>
+<p id="index-1">In Knitro we define the feasibility error <em>FeasErr</em> at a point
+<span class="math">x^k</span> to be the maximum violation of the constraints
+(3), (3b), i.e.,</p>
+<div class="math">
+<p><span class="math">\mbox{FeasErr} = \max_{i=0,\ldots,m-1, j=0,\ldots,n-1} (0, (c^L_i-c_i(x^k)), (c_i(x^k)-c^U_i), (b^L_j-x^k_j), (x^k_j-b^U_j)  ),</span></p>
+</div><p>while the optimality error (<em>OptErr</em>) is defined as the maximum
+violation of the first three conditions (1)-(2b), with a small modification
+to conditions (2) and (2b).  In these complementarity conditions, we really only
+need that either the multiplier or the corresponding constraint is 0, so we change
+the terms on the left side of these conditions to:</p>
+<div class="math">
+<p><span class="math">\min(\lambda^c_i g^c_i(x), \lambda^c_i, g^c_i(x)), \quad i=0,\ldots,m-1, \\
+\min(\lambda^b_j g^x_j(x), \lambda^b_j, g^x_j(x)), \quad j=0,\ldots,n-1,</span></p>
+</div><p>where</p>
+<div class="math">
+<p><span class="math">g^c_i(x) = \min[(c_i(x)-c^L_i),(c^U_i-c_i(x))], \\
+g^x_j(x) = \min[(x_j-b^L_j),(b^U_j-x_j)],</span></p>
+</div><p>to protect against numerical problems that may occur when the Lagrange
+multipliers become very large.
+The remaining conditions on the sign of the multipliers (4)-(5b) are
+enforced explicitly throughout the optimization.</p>
+<p>In order to take into account problem scaling in the termination test,
+the following scaling factors are defined</p>
+<div class="math">
+<p><span class="math">\tau_1 &amp; = \max (1, (c^L_i-c_i(x^0)), (c_i(x^0)-c^U_i),
+                    (b^L_j-x^0_j), (x^0_j-b^U_j)),  \\
+\tau_2 &amp; = \max (1, \|\nabla f(x^k)\|_\infty)</span></p>
+</div><p>where <span class="math">x^0</span> represents the initial point.</p>
+<p>For unconstrained problems, the scaling factor <span class="math">\tau_2</span> is not
+effective since <span class="math">\|\nabla f(x^k)\|_\infty \rightarrow 0</span> as a solution
+is approached.
+Therefore, for unconstrained problems only, the following scaling is
+used in the termination test</p>
+<div class="math">
+<p><span class="math">\hat{\tau}_2 = \max (1, \min(|f(x^k)| , \|\nabla f(x^0)\|_\infty))</span></p>
+</div><p>in place of <span class="math">\tau_2</span>.</p>
+<p>Knitro stops and declares <em>locally optimal solution found</em> if
+the following stopping conditions are satisfied:</p>
+<div class="math">
+<p><span class="math">\begin{align}
+        \mbox{FeasErr}  &amp; \le \min (\tau_1*\mbox{{\tt feastol}},
+        \mbox{{\tt feastol\_abs}}) \tag{stop1} \\
+        \mbox{OptErr}   &amp; \le \min (\tau_2*\mbox{{\tt opttol}},
+        \mbox{{\tt opttol\_abs}}) \tag{stop2}
+\end{align}</span></p>
+</div><p>where <a class="reference internal" href="../3_referenceManual/userOptions.html#feastol" title="feastol"><code class="xref c c-type docutils literal"><span class="pre">feastol</span></code></a>, <a class="reference internal" href="../3_referenceManual/userOptions.html#opttol" title="opttol"><code class="xref c c-type docutils literal"><span class="pre">opttol</span></code></a>, <a class="reference internal" href="../3_referenceManual/userOptions.html#feastol_abs" title="feastol_abs"><code class="xref c c-type docutils literal"><span class="pre">feastol_abs</span></code></a>,
+and <a class="reference internal" href="../3_referenceManual/userOptions.html#opttol_abs" title="opttol_abs"><code class="xref c c-type docutils literal"><span class="pre">opttol_abs</span></code></a> are constants defined by user options.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Please be aware that the <em>min</em> function in <em>(stop1)-(stop2)</em> was a
+<em>max</em> function in versions of Knitro previous to Knitro 9.0, and the
+default values for the user option tolerances were also changed.
+The changes were made to prevent cases where Knitro might declare
+optimality with very large absolute errors (but small relative errors),
+or incorrectly declare optimality on unbounded models.</p>
+</div>
+<p>This stopping test is designed to give the user much flexibility in
+deciding when the solution returned by Knitro is accurate enough.
+By default, Knitro uses a scaled stopping test, while also enforcing
+that some minimum absolute tolerances for feasibility and optimality
+are satisfied.
+One can use a purely absolute stopping test by setting
+<a class="reference internal" href="../3_referenceManual/userOptions.html#feastol_abs" title="feastol_abs"><code class="xref c c-type docutils literal"><span class="pre">feastol_abs</span></code></a> &lt;=  <a class="reference internal" href="../3_referenceManual/userOptions.html#feastol" title="feastol"><code class="xref c c-type docutils literal"><span class="pre">feastol</span></code></a> and
+<a class="reference internal" href="../3_referenceManual/userOptions.html#opttol_abs" title="opttol_abs"><code class="xref c c-type docutils literal"><span class="pre">opttol_abs</span></code></a> &lt;=  <a class="reference internal" href="../3_referenceManual/userOptions.html#opttol" title="opttol"><code class="xref c c-type docutils literal"><span class="pre">opttol</span></code></a>.</p>
+<p class="rubric" id="index-2">Scaling</p>
+<p>Note that the optimality conditions <em>(stop2)</em> apply to the  problem
+being solved internally by Knitro.  If the user option <a class="reference internal" href="../3_referenceManual/userOptions.html#scale" title="scale"><code class="xref c c-type docutils literal"><span class="pre">scale</span></code></a> is enabled to
+perform some scaling of the problem,
+then the problem objective and constraint functions as well as the variables
+may first be scaled
+before the problem is sent to Knitro for the optimization.  In this case,
+the optimality conditions apply to the scaled form of the problem.  If the accuracy
+achieved by Knitro with the default settings is not satisfactory, the user
+may either decrease the tolerances described above, or try setting <a class="reference internal" href="../3_referenceManual/userOptions.html#scale" title="scale"><code class="xref c c-type docutils literal"><span class="pre">scale</span></code></a> = <em>no</em>.</p>
+<p>Note that scaling the variables or constraints
+in the problem via the <a class="reference internal" href="../3_referenceManual/userOptions.html#scale" title="scale"><code class="xref c c-type docutils literal"><span class="pre">scale</span></code></a> user option and scaling/modifying the
+stopping
+tolerances are two different things.  You should use <a class="reference internal" href="../3_referenceManual/userOptions.html#scale" title="scale"><code class="xref c c-type docutils literal"><span class="pre">scale</span></code></a> to try to
+make the variables/constraints in your model all have roughly the same
+magnitude (e.g. close to 1) so that the Knitro algorithms work better.
+Separately you should use the Knitro stopping tolerances to specify how much accuracy
+you require in the solution.</p>
+<p class="rubric">Complementarity constraints</p>
+<p>The feasibility error for a complementarity constraint is
+measured as <span class="math">\min(x_1,x_2)</span> where <span class="math">x_1</span> and <span class="math">x_2</span> are non-negative variables
+that are complementary to each other.  The tolerances defined by <em>(stop1)</em> are used
+for determining feasibility of complementarity constraints.</p>
+<p class="rubric">Constraint specific feasibility tolerances</p>
+<p>By default Knitro applies the same feasibility stopping tolerances
+<a class="reference internal" href="../3_referenceManual/userOptions.html#feastol" title="feastol"><code class="xref c c-type docutils literal"><span class="pre">feastol</span></code></a> / <a class="reference internal" href="../3_referenceManual/userOptions.html#feastol_abs" title="feastol_abs"><code class="xref c c-type docutils literal"><span class="pre">feastol_abs</span></code></a> to all constraints.  However,
+it is possible for you to define an (absolute) feasibility tolerance
+for each individual constraint in case you want to customize how feasible
+the solution needs to be with respect to each individual constraint.</p>
+<p>This can be done using the callable library API function
+<a class="reference internal" href="../3_referenceManual/callableLibrary/API.html#KTR_set_feastols" title="KTR_set_feastols"><code class="xref c c-func docutils literal"><span class="pre">KTR_set_feastols()</span></code></a>, which allows you to define an array of
+tolerances for the general constraints, the variable bounds and
+any complementarity constraints.
+Please see section
+<a class="reference internal" href="../3_referenceManual/callableLibrary/API.html#sec-api"><span class="std std-ref">Knitro API</span></a> for more details on this API function.  When using the
+AMPL modeling language, the same feature can be used by defining the AMPL
+input suffixes <em>cfeastol</em> and <em>xfeastol</em> for each constraint or variable
+in your model.</p>
+</div>
+<div class="section" id="discrete-or-mixed-integer-problems">
+<h2>Discrete or mixed integer problems</h2>
+<p>Algorithms for solving optimization problems where one or more
+of the variables are restricted to take on only discrete values,
+proceed by solving a sequence of continuous relaxations,
+where the discrete variables are <em>relaxed</em> such that they can take
+on any continuous value.</p>
+<p>The best <em>global</em> solution of these relaxed problems, <span class="math">f(x_R)</span>,
+provides a lower bound on the optimal objective value for the original
+problem (upper bound if maximizing).
+If a feasible point is found for the relaxed problem that satisfies
+the discrete restrictions on the variables, then this provides an upper bound on the
+optimal objective value of the original problem (lower bound if maximizing).
+We will refer to these feasible points as <em>incumbent</em> points and denote
+the objective value at an incumbent point by <span class="math">f(x_I)</span>.
+Assuming all the continuous subproblems have been solved to global
+optimality (if the problem is convex, all local solutions are global solutions),
+an optimal solution of the original problem is verified when the lower
+bound and upper bound are equal.</p>
+<p id="index-3">Knitro declares optimality for a discrete problem when the gap between the best
+(i.e., largest) lower bound <span class="math">f^*(x_R)</span> and the best (i.e., smallest)
+upper bound <span class="math">f^*(x_I)</span> is less than a threshold determined by the user options,
+<a class="reference internal" href="../3_referenceManual/userOptions.html#mip_integral_gap_abs" title="mip_integral_gap_abs"><code class="xref c c-type docutils literal"><span class="pre">mip_integral_gap_abs</span></code></a> and <a class="reference internal" href="../3_referenceManual/userOptions.html#mip_integral_gap_rel" title="mip_integral_gap_rel"><code class="xref c c-type docutils literal"><span class="pre">mip_integral_gap_rel</span></code></a>.
+Specifically, Knitro declares optimality when either</p>
+<div class="math">
+<p><span class="math">f^*(x_I) - f^*(x_R) \le \mbox{{\tt mip\_integral\_gap\_abs}},</span></p>
+</div><p>or</p>
+<div class="math">
+<p><span class="math">f^*(x_I) - f^*(x_R) \le \mbox{{\tt mip\_integral\_gap\_rel}} * \max(1, |f^*(x_I)|),</span></p>
+</div><p>where <a class="reference internal" href="../3_referenceManual/userOptions.html#mip_integral_gap_abs" title="mip_integral_gap_abs"><code class="xref c c-type docutils literal"><span class="pre">mip_integral_gap_abs</span></code></a> and <a class="reference internal" href="../3_referenceManual/userOptions.html#mip_integral_gap_rel" title="mip_integral_gap_rel"><code class="xref c c-type docutils literal"><span class="pre">mip_integral_gap_rel</span></code></a> are typically
+small positive numbers.</p>
+<p>Since these termination conditions assume that the continuous subproblems
+are solved to
+global optimality and Knitro only finds local solutions of nonconvex, continuous
+optimization problems, they are only reliable when solving convex,
+mixed integer problems.
+The integrality gap <span class="math">f^*(x_I) - f^*(x_R)</span> should be non-negative although
+it may become slightly negative from roundoff error, or if the continuous subproblems
+are not solved to sufficient accuracy.
+If the integrality gap becomes largely negative, this may be an indication
+that the model is nonconvex, in which case Knitro may not converge to the optimal
+solution, and will be unable to verify optimality (even if it claims otherwise).</p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="obtainingInformation.html" class="btn btn-neutral float-right" title="Obtaining information" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="tuner.html" class="btn btn-neutral" title="The Knitro-Tuner" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Artelys.
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'10.3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  false
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

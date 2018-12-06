@@ -1,0 +1,31 @@
+-------------------
+Artelys Knitro 10.3
+-------------------
+
+For Knitro to be activated and run on your machine, you must first
+obtain and install a valid license file from Artelys or your local
+distributor.  These instructions describe a simple procedure for
+installing stand-alone, single-computer licenses on a Linux or Unix platform.
+For network licensing, or more stand-alone license options, please consult
+the Artelys License Manager user manual.     
+
+Stand-alone/Single Computer Licensing
+-------------------------------------
+
+For a single machine license, execute "get_machine_ID", a program
+supplied with the distribution.  This will generate a machine ID (five
+pairs of hexadecimal digits). Email the machine ID to info-knitro@artelys.com
+if purchased through Artelys. (If Knitro was purchased through a
+distributor, then email the machine ID to your local distributor.)
+Artelys (or your local distributor) will then send a license file of the
+form "artelys_lic_name.txt".  The file name is arbitrary, so long as it
+begins with "artelys_lic".  The license file is made available to Knitro
+on a Linux or Unix platform in any one of the following ways: 
+
+- Put "artelys_lic_name.txt" in your $HOME directory.
+- Put "artelys_lic_name.txt" in the directory in which you run Knitro.
+- Set the environment variable ARTELYS_LICENSE to the location of the file
+    (e.g.,  export ARTELYS_LICENSE=/home/subdirectory/artelys_lic_name.txt).
+
+Copyright © 2017 Artelys.  All rights reserved.
+

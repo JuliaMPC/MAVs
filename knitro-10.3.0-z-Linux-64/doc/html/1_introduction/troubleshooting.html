@@ -1,0 +1,402 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head><div class = "head"> </div>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Troubleshooting &mdash; Artelys Knitro 10.3 User&#39;s Manual</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/Artelys_theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="Artelys Knitro 10.3 User&#39;s Manual" href="../index.html"/>
+        <link rel="up" title="Introduction" href="../1_introduction.html"/>
+        <link rel="next" title="Release notes" href="releaseNotes.html"/>
+        <link rel="prev" title="Unix (Linux, Mac OS X)" href="installation/unix.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Artelys Knitro User's Manual
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                10.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../1_introduction.html">Introduction</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="productOverview.html">Product overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gettingKnitro.html">Getting Knitro</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Troubleshooting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#license-and-path-issues">License and <code class="docutils literal"><span class="pre">PATH</span></code> issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#matlab-issues">MATLAB issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#python-interface-issues">Python interface issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#issues-with-ld-library-path-on-ubuntu">Issues with <code class="docutils literal"><span class="pre">LD_LIBRARY_PATH</span></code> on Ubuntu</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#loading-external-third-party-dynamic-libraries">Loading external third party dynamic libraries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#linux-and-mac-os-x-compatibility-issues">Linux and Mac OS X compatibility issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#windows-compatibility-issues">Windows compatibility issues</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="releaseNotes.html">Release notes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../2_userGuide.html">User guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../3_referenceManual.html">Reference manual</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">Artelys Knitro User's Manual</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../1_introduction.html">Introduction</a> &raquo;</li>
+      
+    <li>Troubleshooting</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="troubleshooting">
+<span id="sec-troubleshooting"></span><h1>Troubleshooting</h1>
+<p id="index-0">Most issues are linked with either the calling program (such as AMPL or MATLAB)
+not finding the Knitro binaries, or with Knitro not finding the license file.
+These are discussed first.</p>
+<div class="section" id="license-and-path-issues">
+<h2>License and <span class="target" id="index-1"></span><code class="xref std std-envvar docutils literal"><span class="pre">PATH</span></code> issues</h2>
+<p id="index-2">Below is a list of steps to take if you have difficulties
+installing Knitro.</p>
+<ul class="simple">
+<li>Create an environment variable <span class="target" id="index-3"></span><code class="xref std std-envvar docutils literal"><span class="pre">ARTELYS_LICENSE_DEBUG</span></code> and set it to 1.
+This will enable some debug output printing that will indicate where the
+license manager is looking for a license file.
+See Section 4.1 of the Artelys License Manager User&#8217;s Manual for more details
+on how to set the <span class="target" id="index-4"></span><code class="xref std std-envvar docutils literal"><span class="pre">ARTELYS_LICENSE_DEBUG</span></code> environment variable
+and generate debugging information.</li>
+<li>Ensure that the user has the correct permissions for read access to all
+libraries and to the license file.</li>
+<li>Ensure that the program calling Knitro is 32-bit (or 64-bit) when Knitro
+is 32-bit (or 64-bit). As an example, you cannot use Knitro 32-bit with
+MATLAB 64-bit or vice versa. This applies to the Java Virtual Machine and Python as well.</li>
+<li>On Windows, make sure that you are setting <em>system</em> environment variables
+rather than <em>user</em> environment variables, when setting environment variables
+for Knitro (or, if using user environment variables, that the correct user is
+logged in).</li>
+<li>Knitro has multiple options for installing license files. If the procedure
+you are trying is not working, please try an alternative procedure.</li>
+<li>If you have multiple Knitro executable files or libraries of the same name
+on your computer, make sure that the one being used is really the one
+you intend to use (by making sure it appears first in the definition of the
+appropriate environment variable).</li>
+</ul>
+<p>Please also refer to the Artelys License Manager User&#8217;s Manual
+provided with your distribution for additional installation and troubleshooting
+information.</p>
+</div>
+<div class="section" id="matlab-issues">
+<h2>MATLAB issues</h2>
+<p>Below are some troubleshooting tips specific to the Knitro/MATLAB interface.</p>
+<ul>
+<li><p class="first">Make sure the Knitro/MATLAB interface files <code class="file docutils literal"><span class="pre">knitromatlab_mex.mex*</span></code>,
+<code class="file docutils literal"><span class="pre">knitromatlab.m</span></code>, <code class="file docutils literal"><span class="pre">knitromatlab_mip.p</span></code>, etc.,
+are located in a folder/directory where they can be found by your MATLAB session.
+See <a class="reference internal" href="installation.html#sec-installation"><span class="std std-ref">Installation</span></a> for more information on adding the Knitro/MATLAB
+interface files to your MATLAB path.</p>
+</li>
+<li><p class="first">On Mac OS X, if Knitro/MATLAB is not finding the license file (or a library),
+try starting MATLAB from the Terminal by typing &#8220;matlab&#8221; from a Terminal window.
+Sometimes environment variables are not inherited properly by a MATLAB session
+on Mac OS X when the session is started by double-clicking on the MATLAB icon.</p>
+</li>
+<li><p class="first">Ensure that the MATLAB installation calling Knitro is 32-bit (or 64-bit) when Knitro
+is 32-bit (or 64-bit). You cannot use Knitro 32-bit with MATLAB 64-bit or vice versa.</p>
+</li>
+<li><p class="first">If you encounter the error message <em>cannot load any more object with static TLS</em>
+this is a MATLAB bug (bug# 961964) on Linux. You may try one of the following workaround,
+if the issue remains, you may contact Mathworks directly.</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>Insert <strong class="program">ones(10)*ones(10);</strong> in the file <code class="file docutils literal"><span class="pre">startup.m</span></code>.</li>
+<li>Preload any library before starting MATLAB using the environment variable <span class="target" id="index-5"></span><code class="xref std std-envvar docutils literal"><span class="pre">LD_PRELOAD</span></code> (ex: <span class="target" id="index-6"></span><code class="xref std std-envvar docutils literal"><span class="pre">export</span> <span class="pre">LD_PRELOAD=/usr/lib64/libgomp.so.1</span></code>).</li>
+<li>Run MATLAB without the GUI by running the following command from a terminal <span class="target" id="index-7"></span><code class="xref std std-envvar docutils literal"><span class="pre">matlab</span> <span class="pre">-nojvm</span></code>.</li>
+</ol>
+</div></blockquote>
+</li>
+</ul>
+<p>Symbolic links, on systems that support them, are an alternative to
+copying / renaming the file.</p>
+</div>
+<div class="section" id="python-interface-issues">
+<h2>Python interface issues</h2>
+<p>If you are using the Python interface on a Linux or Unix platform, you
+may need to use a Python distribution that has been compiled with the <strong class="program">-fopenmp</strong>
+flag of the <strong class="program">gcc/g++</strong> compiler in order to use the <em>standard</em> Knitro libraries.
+Otherwise, you should use the <em>sequential</em> Knitro libraries. See <a class="reference internal" href="#linux-max-issues"><span class="std std-ref">Linux and Mac OS X compatibility issues</span></a>
+for more information.</p>
+</div>
+<div class="section" id="issues-with-ld-library-path-on-ubuntu">
+<h2>Issues with <span class="target" id="index-8"></span><code class="xref std std-envvar docutils literal"><span class="pre">LD_LIBRARY_PATH</span></code> on Ubuntu</h2>
+<p id="index-9">In Ubuntu, setting <span class="target" id="index-10"></span><code class="xref std std-envvar docutils literal"><span class="pre">LD_LIBRARY_PATH</span></code> directly was reported to fail;
+using <strong class="program">ldconfig</strong> solved the problem as follows:</p>
+<ul class="simple">
+<li>Go to <code class="file docutils literal"><span class="pre">/etc/ld.so.conf.d/</span></code> directory;</li>
+<li>Create a new configuration file in this directory;</li>
+<li>Set all your environment variables in this file and save it;</li>
+<li>Execute <strong>sudo ldconfig -v</strong> at the prompt.</li>
+</ul>
+</div>
+<div class="section" id="loading-external-third-party-dynamic-libraries">
+<h2>Loading external third party dynamic libraries</h2>
+<p>Some user options instruct Knitro to load dynamic libraries at runtime.
+This will not work unless the executable can find the desired library using the
+operating system&#8217;s load path. Usually this is done by appending the
+path to the directory that contains the library to an environment variable.
+For example, suppose the library to be loaded is in the Knitro <code class="file docutils literal"><span class="pre">lib</span></code>
+directory. The instructions below will correctly modify the load path.</p>
+<ul>
+<li><p class="first">On Windows, type (assuming Knitro 10.3.0 is installed at its default location):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nb">set</span> <span class="n">PATH</span><span class="o">=%</span><span class="n">PATH</span><span class="o">%</span><span class="p">;</span><span class="n">C</span><span class="p">:</span>\<span class="n">Program</span> <span class="n">Files</span>\<span class="n">Artelys</span>\<span class="n">knitro</span><span class="o">-|</span><span class="n">release</span><span class="o">|-</span><span class="n">z</span>\<span class="n">lib</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">On Mac OS X, type (assuming Knitro 10.3.0 is installed at /tmp):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:/tmp/knitro-|release|-z/lib
+</pre></div>
+</div>
+</li>
+<li><p class="first">If you run a Unix bash shell, then type (assuming Knitro 10.3.0 is installed at /tmp):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/tmp/knitro-|release|-z/lib
+</pre></div>
+</div>
+</li>
+<li><p class="first">If you run a Unix csh or tcsh shell, then type (assuming Knitro 10.3.0
+is installed at /tmp):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>setenv LD_LIBRARY_PATH $LD_LIBRARY_PATH:/tmp/knitro-|release|-z/lib
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="linux-and-mac-os-x-compatibility-issues">
+<span id="linux-max-issues"></span><h2>Linux and Mac OS X compatibility issues</h2>
+<p>Linux platforms sometimes generate link errors when building the programs
+in <code class="file docutils literal"><span class="pre">examples/C</span></code>. Simply type &#8220;gmake&#8221; and see if the
+build is successful. You may see a long list of link errors similar to the
+following:</p>
+<div class="highlight-none"><div class="highlight"><pre><span></span>../lib/libknitro.a(.text+0x28808): In function `ktr_xeb4&#39;:
+: undefined reference to `std::__default_alloc_template&lt;true, 0&gt;::deallo
+cate(void*, unsigned int)&#39;
+../lib/libknitro.a(.text+0x28837): In function `ktr_xeb4&#39;:
+: undefined reference to `std::__default_alloc_template&lt;true, 0&gt;::deallo
+cate(void*, unsigned int)&#39;
+../lib/libknitro.a(.text+0x290b0): more undefined references to `std::__
+default_alloc_template&lt;true, 0&gt;::deallocate(void*, unsigned int)&#39; follow
+../lib/libknitro.a(.text+0x2a0ff): In function `ktr_x1150&#39;:
+: undefined reference to `std::basic_string&lt;char, std::char_traits&lt;char&gt;
+, std::allocator&lt;char&gt; &gt;::_S_empty_rep_storage&#39;
+../lib/libknitro.a(.text+0x2a283): In function `ktr_x1150&#39;:
+: undefined reference to `std::__default_alloc_template&lt;true, 0&gt;::deallo
+cate(void*, unsigned int)&#39;
+</pre></div>
+</div>
+<p>This indicates an incompatibility between the libstdc++ library
+on your Linux distribution and the library that Knitro was built with.
+The incompatibilities may be caused by name-mangling differences between
+versions of the <strong class="program">gcc/g++</strong> compiler, and by differences in the Application
+Binary Interface of the two Linux distributions. The best fix is for
+Artelys to rebuild the Knitro binaries on the same Linux distribution
+of your target machine (matching the Linux brand and release, and the
+<strong class="program">gcc/g++</strong> compiler versions).</p>
+<p>Other link errors may be seen on 64-bit Linux and Mac OS X platforms related to
+undefined references to &#8220;omp&#8221; or &#8220;pthread&#8221; symbols.  For example, the link errors
+may look something like</p>
+<div class="highlight-none"><div class="highlight"><pre><span></span>undefined reference to `pthread_setaffinity_np@GLIBC_2.3.4&#39;
+</pre></div>
+</div>
+<p>on Linux, or</p>
+<div class="highlight-none"><div class="highlight"><pre><span></span>Undefined symbols:
+      &quot;_GOMP_parallel_start&quot;, referenced from:
+</pre></div>
+</div>
+<p>on Mac OS X.
+This implies either that the dynamic libraries needed for OpenMP
+(usually provided in system directories, or in the Knitro <code class="file docutils literal"><span class="pre">lib</span></code>
+directory for the Mac OS X distribution) are not being found,
+or that the version of <strong class="program">gcc/g++</strong> used for linking is not
+compatible with the OpenMP features used in the <em>standard</em> Knitro 10.3 libraries.
+To solve this issue, be sure that the <span class="target" id="index-11"></span><code class="xref std std-envvar docutils literal"><span class="pre">LD_LIBRARY_PATH</span></code> (<span class="target" id="index-12"></span><code class="xref std std-envvar docutils literal"><span class="pre">DYLD_LIBRARY_PATH</span></code> on Mac OS X)
+environment variable includes the Knitro <code class="file docutils literal"><span class="pre">lib</span></code> directory,
+or try linking against the <em>sequential</em> versions of the Knitro libraries
+provided with your platform distribution on Linux. See the <code class="file docutils literal"><span class="pre">README</span></code> file provided
+in the Knitro <code class="file docutils literal"><span class="pre">lib</span></code> directory for more information</p>
+</div>
+<div class="section" id="windows-compatibility-issues">
+<h2>Windows compatibility issues</h2>
+<p>Using the &#8220;dll&#8221; version of the Knitro library on Windows (i.e. linking against <code class="file docutils literal"><span class="pre">knitro1030.lib</span></code>)
+is recommended and should be compatible across multiple versions of the Microsoft Visual C++ (MSVC)
+compiler.</p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="releaseNotes.html" class="btn btn-neutral float-right" title="Release notes" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="installation/unix.html" class="btn btn-neutral" title="Unix (Linux, Mac OS X)" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Artelys.
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'10.3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  false
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

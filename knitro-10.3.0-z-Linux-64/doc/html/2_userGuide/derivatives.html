@@ -1,0 +1,1216 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head><div class = "head"> </div>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Derivatives &mdash; Artelys Knitro 10.3 User&#39;s Manual</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/Artelys_theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="Artelys Knitro 10.3 User&#39;s Manual" href="../index.html"/>
+        <link rel="up" title="User guide" href="../2_userGuide.html"/>
+        <link rel="next" title="Multistart" href="multistart.html"/>
+        <link rel="prev" title="Setting options" href="knitroOptions.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Artelys Knitro User's Manual
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                10.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../1_introduction.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../2_userGuide.html">User guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="gettingStarted.html">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="knitroOptions.html">Setting options</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Derivatives</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#first-derivatives">First derivatives</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#second-derivatives">Second derivatives</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#jacobian-and-hessian-derivative-matrices">Jacobian and Hessian derivative matrices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#inputing-derivatives">Inputing derivatives</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#matlab-example">MATLAB example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c-c-example">C/C++ example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#object-oriented-c-example">Object-oriented C++ example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#checking-derivatives">Checking derivatives</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#derivative-check-options">Derivative Check Options</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="multistart.html">Multistart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="minlp.html">Mixed-integer nonlinear programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="complementarity.html">Complementarity constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ktrlsq.html">Nonlinear Least-Squares</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms.html">Algorithms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feasibility.html">Feasibility and infeasibility</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parallelism.html">Parallelism</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tuner.html">The Knitro-Tuner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="termination.html">Termination criteria</a></li>
+<li class="toctree-l2"><a class="reference internal" href="obtainingInformation.html">Obtaining information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="callbacks.html">Callbacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="otherProgInterfaces.html">Other programmatic interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="specialProblems.html">Special problem classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tips.html">Tips and tricks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bibliography.html">Bibliography</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../3_referenceManual.html">Reference manual</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">Artelys Knitro User's Manual</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../2_userGuide.html">User guide</a> &raquo;</li>
+      
+    <li>Derivatives</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="derivatives">
+<span id="sec-derivatives"></span><h1>Derivatives</h1>
+<p id="index-0">Applications should provide partial first derivatives whenever possible, to
+make Knitro more efficient and more robust.
+If first derivatives cannot be supplied, then the application should
+instruct Knitro to calculate finite-difference approximations.</p>
+<p>First derivatives are represented by the gradient of the objective function
+and the Jacobian matrix of the constraints. Second derivatives are represented
+by the Hessian matrix, a linear combination of the second derivatives of the objective
+function and the constraints.</p>
+<div class="section" id="first-derivatives">
+<h2>First derivatives</h2>
+<p id="index-1">The default version of Knitro assumes that the user can provide exact
+first derivatives to compute the objective function gradient
+and constraint gradients.  It is <em>highly</em> recommended
+that the user provide exact first derivatives if at all
+possible, since using first derivative approximations may seriously degrade
+the performance of the code and the likelihood of converging to a
+solution. However, if this is not possible the following
+first derivative approximation options may be used.</p>
+<ul class="simple" id="index-2">
+<li><em>Forward finite-differences</em>
+This option uses a forward finite-difference approximation of the
+objective and constraint gradients.  The cost of computing this approximation
+is <em>n</em> function evaluations (where <em>n</em> is the number of
+variables).  The option is invoked by choosing user option
+<a class="reference internal" href="../3_referenceManual/userOptions.html#gradopt" title="gradopt"><code class="xref c c-type docutils literal"><span class="pre">gradopt</span></code></a> = 2.</li>
+<li><em>Centered finite-differences</em>
+This option uses a centered finite-difference approximation of the
+objective and constraint gradients.  The cost of computing this approximation
+is <em>2n</em> function evaluations (where <em>n</em> is the number of
+variables).  The option is invoked by choosing user option
+<a class="reference internal" href="../3_referenceManual/userOptions.html#gradopt" title="gradopt"><code class="xref c c-type docutils literal"><span class="pre">gradopt</span></code></a> = 3.
+The centered finite-difference approximation is often more accurate than
+the forward finite-difference approximation; however, it is more expensive
+to compute if the cost of evaluating a function is high.</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">When using finite-difference gradients, the sparsity patten for the
+constraint Jacobian must still be provided.  To tell Knitro to use the full,
+dense pattern (i.e., assume all partial derivatives are nonzero), you can
+simply set <em>nnzJ&lt;0</em> in the call to <a class="reference internal" href="../3_referenceManual/callableLibrary/API.html#KTR_init_problem" title="KTR_init_problem"><code class="xref c c-func docutils literal"><span class="pre">KTR_init_problem()</span></code></a> or
+<a class="reference internal" href="../3_referenceManual/callableLibrary/API.html#KTR_mip_init_problem" title="KTR_mip_init_problem"><code class="xref c c-func docutils literal"><span class="pre">KTR_mip_init_problem()</span></code></a>.</p>
+</div>
+<p>Although these finite-differences approximations should be avoided
+in general, they are useful to track errors: whenever the derivatives
+are provided by the user, it is useful to check that the differentiation
+(and the subsequent implementation of the derivatives) is correct.
+Indeed, providing derivatives that are not coherent with the function
+values is one of the most common errors when solving a nonlinear program.
+This check can be done automatically by comparing finite-differences
+approximations with user-provided derivatives. This is explained
+below (<a class="reference internal" href="#checkingderivatives"><span class="std std-ref">Checking derivatives</span></a>).</p>
+</div>
+<div class="section" id="second-derivatives">
+<h2>Second derivatives</h2>
+<p id="index-3">The default version of Knitro assumes that the application
+can provide exact
+second derivatives to compute the Hessian of the Lagrangian function.
+If the application is able to do so and the cost of computing the
+second derivatives is not overly expensive, it is highly
+recommended to provide exact second derivatives.
+However, Knitro also offers other options
+which are described in detail below.</p>
+<ul id="index-4">
+<li><p class="first"><em>(Dense) Quasi-Newton BFGS</em>:</p>
+<p>The quasi-Newton BFGS option uses gradient
+information to compute a symmetric, positive-definite
+approximation to the Hessian matrix.   Typically this method requires
+more iterations to converge than the exact Hessian version.  However,
+since it is only computing gradients rather than Hessians, this
+approach may be more efficient in some cases.  This option
+stores a <em>dense</em> quasi-Newton Hessian
+approximation so it is only recommended for small to medium
+problems (e.g., <em>n &lt; 1000</em>).
+The quasi-Newton BFGS option is chosen
+by setting user option <a class="reference internal" href="../3_referenceManual/userOptions.html#hessopt" title="hessopt"><code class="xref c c-type docutils literal"><span class="pre">hessopt</span></code></a> = 2.</p>
+</li>
+<li><p class="first"><em>(Dense) Quasi-Newton SR1</em>:</p>
+<p>As with the BFGS approach, the quasi-Newton SR1 approach builds an
+approximate Hessian using gradient information.  However, unlike
+the BFGS approximation,
+the SR1 Hessian approximation is not restricted to be positive-definite.
+Therefore the quasi-Newton SR1 approximation may be a better
+approach, compared to the BFGS method, if there is a lot of negative
+curvature in the problem (i.e., the problem is not convex) since it
+may be able to maintain a better
+approximation to the true Hessian in this
+case.   The quasi-Newton SR1 approximation
+maintains a <em>dense</em> Hessian approximation and so is only
+recommended for small to medium problems (e.g., <em>n &lt; 1000</em>).
+The quasi-Newton SR1 option is chosen
+by setting user option <a class="reference internal" href="../3_referenceManual/userOptions.html#hessopt" title="hessopt"><code class="xref c c-type docutils literal"><span class="pre">hessopt</span></code></a> = 3.</p>
+</li>
+<li><p class="first"><em>Finite-difference Hessian-vector product option</em>:</p>
+<p>If the problem is large and gradient evaluations are not a dominant
+cost, then Knitro can internally compute Hessian-vector products using
+finite-differences.  Each Hessian-vector product in this case
+requires one additional gradient evaluation.
+This option is chosen by setting user option <a class="reference internal" href="../3_referenceManual/userOptions.html#hessopt" title="hessopt"><code class="xref c c-type docutils literal"><span class="pre">hessopt</span></code></a> = 4.
+The option is only recommended if the exact gradients are provided.</p>
+</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This option may not be used when <a class="reference internal" href="../3_referenceManual/userOptions.html#algorithm" title="algorithm"><code class="xref c c-type docutils literal"><span class="pre">algorithm</span></code></a> = 1 or 4 since the Interior/Direct
+and SQP algorithms need the full expression of the Hessian matrix
+(Hessian-vector products are not sufficient).</p>
+</div>
+<ul>
+<li><p class="first"><em>Exact Hessian-vector products</em>:</p>
+<p>In some cases the application may prefer to provide exact Hessian-vector
+products, but not the full Hessian (for instance, if the problem
+has a large, dense Hessian).  The application must provide a routine
+which, given a vector <em>v</em> (stored in <em>hessVector</em>), computes the
+Hessian-vector product, <em>H*v</em>, and returns the result (again in <em>hessVector</em>).
+This option is chosen by setting user option <a class="reference internal" href="../3_referenceManual/userOptions.html#hessopt" title="hessopt"><code class="xref c c-type docutils literal"><span class="pre">hessopt</span></code></a> = 5.</p>
+</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This option may not be used when <a class="reference internal" href="../3_referenceManual/userOptions.html#algorithm" title="algorithm"><code class="xref c c-type docutils literal"><span class="pre">algorithm</span></code></a> = 1 or 4 since,
+as mentioned above, the Interior/Direct and SQP
+algorithms need the full expression of the Hessian matrix
+(Hessian-vector products are not sufficient).</p>
+</div>
+<ul>
+<li><p class="first"><em>Limited-memory Quasi-Newton BFGS</em>:</p>
+<p>The limited-memory quasi-Newton BFGS option is similar to the
+dense quasi-Newton BFGS option described above.  However, it is better
+suited for large-scale problems since, instead of storing a dense
+Hessian approximation, it stores only a limited number of gradient
+vectors used to approximate the Hessian.  The number of gradient
+vectors used to approximate the Hessian is controlled by user option
+<a class="reference internal" href="../3_referenceManual/userOptions.html#lmsize" title="lmsize"><code class="xref c c-type docutils literal"><span class="pre">lmsize</span></code></a>.</p>
+<p>A larger value of <a class="reference internal" href="../3_referenceManual/userOptions.html#lmsize" title="lmsize"><code class="xref c c-type docutils literal"><span class="pre">lmsize</span></code></a> may result in a more
+accurate, but also more expensive, Hessian approximation.  A smaller
+value may give a less accurate, but faster, Hessian approximation. When
+using the limited memory BFGS approach it is recommended to experiment
+with different values of this parameter (e.g. between 5 and 15).</p>
+<p>In general, the limited-memory BFGS option requires
+more iterations to converge than the dense quasi-Newton BFGS approach,
+but will be much more efficient on large-scale problems.
+The limited-memory quasi-Newton option is chosen by
+setting user option <a class="reference internal" href="../3_referenceManual/userOptions.html#hessopt" title="hessopt"><code class="xref c c-type docutils literal"><span class="pre">hessopt</span></code></a> = 6.</p>
+</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">When using a Hessian approximation option (i.e. <a class="reference internal" href="../3_referenceManual/userOptions.html#hessopt" title="hessopt"><code class="xref c c-type docutils literal"><span class="pre">hessopt</span></code></a> &gt; 1),
+you do not need to provide any sparsity pattern for the Hessian matrix.</p>
+</div>
+<p>As with exact first derivatives, exact second derivatives often provide a
+substantial benefit to Knitro and it is advised to provide them whenever
+possible. If the exact second derivative (i.e. the Hessian) matrix is provided
+by the user, it can (and should) be checked against a finite-difference
+approximation for errors using the Knitro derivative checker.
+See (<a class="reference internal" href="#checkingderivatives"><span class="std std-ref">Checking derivatives</span></a>) below.</p>
+</div>
+<div class="section" id="jacobian-and-hessian-derivative-matrices">
+<h2>Jacobian and Hessian derivative matrices</h2>
+<p>The Jacobian matrix of the constraints is defined as</p>
+<div class="math">
+<p><span class="math">J(x) = \begin{bmatrix}
+\nabla c_0(x) &amp;
+\dots &amp;
+\nabla c_{m-1}(x)
+\end{bmatrix}</span></p>
+</div><p>and the Hessian matrix of the Lagrangian is defined as</p>
+<div class="math">
+<p><span class="math">H(x,\lambda) = \sigma \nabla^2 f(x) + \sum_{i=0}^{m-1} \lambda_i \nabla^2 c_i(x)</span></p>
+</div><p>where <span class="math">\lambda</span> is the vector of Lagrange multipliers (dual variables),
+and <span class="math">\sigma</span> is a scalar (either 0 or 1) for the objective component of
+the Hessian that was introduced in Knitro 8.0.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">For backwards compatibility
+with older versions of Knitro, the user can always assume that
+<span class="math">\sigma=1</span> if the user option <code class="xref c c-type docutils literal"><span class="pre">hessian_no_f=0</span></code> (which is the
+default setting).  However, if <code class="xref c c-type docutils literal"><span class="pre">hessian_no_f=1</span></code>, then Knitro will
+provide a status flag to the user when it needs a Hessian evaluation
+indicating whether the Hessian should be evaluated with
+<span class="math">\sigma=0</span> or <span class="math">\sigma=1</span>.  The user must then evaluate the Hessian with
+the proper value of <span class="math">\sigma</span> based on this status flag.
+Setting <code class="xref c c-type docutils literal"><span class="pre">hessian_no_f=1</span></code> and computing the Hessian with the requested
+value of <span class="math">\sigma</span> may improve Knitro efficiency in some cases.
+Examples of how to do this can be found in the <code class="file docutils literal"><span class="pre">examples/C</span></code> directory.</p>
+</div>
+<p class="rubric">Example</p>
+<p>Assume we want to use Knitro to solve the following problem:</p>
+<div class="math">
+<p><span class="math">\min \; x_0 + x_1 x_2^3
+
+\mbox{subject to:}
+
+\cos(x_0) = 0.5 \\
+3  \le x_0^2+x_1^2 \le 8 \\
+x_0 + x_1 + x_2 \le &amp; 10 \\
+x_0, x_1, x_2 \ge 1.</span></p>
+</div><p>Rewriting in the Knitro standard notation, we have</p>
+<div class="math">
+<p><span class="math">f(x)   &amp; = x_0 + x_1 x_2^3  \\
+c_0(x) &amp; = \cos(x_0) \\
+c_1(x) &amp; = x_0^2+x_1^2 \\
+c_2(x) &amp; = x_0 + x_1 + x_2.</span></p>
+</div><p class="rubric">Computing the Sparse Jacobian Matrix</p>
+<p>The gradients (first derivatives) of the objective and constraint
+functions are given by</p>
+<div class="math">
+<p><span class="math">\nabla f(x) = \begin{bmatrix} 1 \\ x_2^3 \\ 3 x_1 x_2^2 \end{bmatrix},
+\nabla c_0(x) = \begin{bmatrix} -\sin(x_0) \\ 0 \\ 0 \end{bmatrix},
+\nabla c_1(x) = \begin{bmatrix} 2 x_0 \\ 2 x_1 \\ 0 \end{bmatrix},
+\nabla c_2(x) = \begin{bmatrix} 1 \\ 1 \\ 1 \end{bmatrix}.</span></p>
+</div><p>The constraint Jacobian matrix <span class="math">J(x)</span> is the matrix whose rows store the
+(transposed) constraint gradients, i.e.,</p>
+<div class="math">
+<p><span class="math">J(x) = \begin{bmatrix} \nabla c_0(x)^T \\ \nabla c_1(x)^T \\ \nabla c_2(x)^T \end{bmatrix} =
+\begin{bmatrix}
+-\sin(x_0)  &amp; 0      &amp; 0 \\
+2 x_0       &amp; 2 x_1  &amp; 0 \\
+1           &amp; 1      &amp; 1
+\end{bmatrix} .</span></p>
+</div><p>The values of <span class="math">J(x)</span> depend on the value of <span class="math">x</span> and change during
+the
+solution process.  The indices specifying the nonzero elements of this matrix
+remain constant and are set in <a class="reference internal" href="../3_referenceManual/callableLibrary/API.html#KTR_init_problem" title="KTR_init_problem"><code class="xref c c-func docutils literal"><span class="pre">KTR_init_problem()</span></code></a> by the values of
+<em>jacIndexCons</em> and <em>jacIndexVars</em>.</p>
+<p class="rubric">Computing the Sparse Hessian Matrix</p>
+<p>For the example above, the Hessians (second derivatives) of the objective
+function is given by</p>
+<div class="math">
+<p><span class="math">\nabla^2 f(x) =
+\begin{bmatrix}
+     0           &amp; 0       &amp; 0 \\
+     0           &amp; 0       &amp; 3 x_2^2 \\
+         0           &amp; 3 x_2^2 &amp; 6 x_1 x_2
+\end{bmatrix},</span></p>
+</div><p>and the Hessians of constraints are given by</p>
+<div class="math">
+<p><span class="math">\nabla^2 c_0(x) =
+\begin{bmatrix}
+     -\cos(x_0)  &amp; 0       &amp; 0 \\
+     0           &amp; 0       &amp; 0 \\
+         0           &amp; 0       &amp; 0
+\end{bmatrix},
+    \nabla^2 c_1(x) =
+\begin{bmatrix}
+     2           &amp; 0       &amp; 0 \\
+     0           &amp; 2       &amp; 0 \\
+         0           &amp; 0       &amp; 0
+\end{bmatrix},
+    \nabla^2 c_2(x) =
+\begin{bmatrix}
+     0           &amp; 0       &amp; 0 \\
+     0           &amp; 0       &amp; 0 \\
+         0           &amp; 0       &amp; 0
+\end{bmatrix}.</span></p>
+</div><p>Scaling the objective matrix by <span class="math">\sigma</span>, and the constraint matrices
+by their corresponding Lagrange
+multipliers and summing, we get</p>
+<div class="math">
+<p><span class="math">H(x,\lambda) =
+\begin{bmatrix}
+  -\lambda_0 \cos(x_0) + 2 \lambda_1  &amp; 0 &amp; 0 \\
+  0 &amp; 2 \lambda_1  &amp; \sigma 3 x_2^2 \\
+      0 &amp; \sigma 3 x_2^2      &amp; \sigma 6 x_1 x_2
+\end{bmatrix} .</span></p>
+</div><p>The values of <span class="math">H(x,\lambda)</span> depend on the value of <span class="math">x</span> and <span class="math">\lambda</span>
+(and <span class="math">\sigma</span>, which is either 0 or 1) and change during the
+solution process.  The indices specifying the nonzero elements of this matrix
+remain constant and are set in <a class="reference internal" href="../3_referenceManual/callableLibrary/API.html#KTR_init_problem" title="KTR_init_problem"><code class="xref c c-func docutils literal"><span class="pre">KTR_init_problem()</span></code></a> by the values of
+<em>hessIndexRows</em> and <em>hessIndexCols</em>.</p>
+</div>
+<div class="section" id="inputing-derivatives">
+<h2>Inputing derivatives</h2>
+<p id="index-5">MATLAB users can provide the Jacobian and Hessian matrices in standard
+MATLAB format, either dense or sparse. See the <em>fmincon</em> documentation,
+<a class="reference external" href="http://www.mathworks.com/help/optim/ug/writing-constraints.html#brhkghv-16">http://www.mathworks.com/help/optim/ug/writing-constraints.html#brhkghv-16</a>, for more information.
+Users of the callable library must provide derivatives to Knitro in sparse
+format. In the above example, the number of nonzero elements <em>nnzJ</em>
+in <em>J(x)</em> is 6, and these arrays would be specified as
+follows (here in column-wise order, but the order is arbitrary)
+using the callable library.</p>
+<div class="highlight-c"><div class="highlight"><pre><span></span><span class="n">jac</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>  <span class="n">jacIndexCons</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">jacIndexVars</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">jac</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>      <span class="n">jacIndexCons</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">jacIndexVars</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">jac</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>           <span class="n">jacIndexCons</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">jacIndexVars</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">jac</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>      <span class="n">jacIndexCons</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">jacIndexVars</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="n">jac</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>           <span class="n">jacIndexCons</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">jacIndexVars</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="n">jac</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>           <span class="n">jacIndexCons</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">jacIndexVars</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>In the object-oriented interface, these values are set in the user-defined problem class by implementing:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">std</span><span class="p">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="nb">int</span><span class="o">&gt;</span> <span class="n">KTRIProblem</span><span class="p">::</span><span class="n">getJacIndexCons</span><span class="p">();</span>
+<span class="n">std</span><span class="p">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="nb">int</span><span class="o">&gt;</span> <span class="n">KTRIProblem</span><span class="p">::</span><span class="n">getJacIndexVars</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>to return vectors with the constraint and variable indices in either column-wise or row-wise order.
+If using the <code class="docutils literal"><span class="pre">KTRProblem</span></code> class, setting the values with:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">KTRProblem</span><span class="p">::</span><span class="n">setJacIndexCons</span><span class="p">(</span><span class="nb">int</span> <span class="nb">id</span><span class="p">,</span> <span class="nb">int</span> <span class="n">val</span><span class="p">);</span>
+<span class="n">KTRProblem</span><span class="p">::</span><span class="n">setJacIndexVars</span><span class="p">(</span><span class="nb">int</span> <span class="nb">id</span><span class="p">,</span> <span class="nb">int</span> <span class="n">val</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>will store the values to be returned by the appropriate <code class="docutils literal"><span class="pre">get</span></code> functions.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Using <code class="docutils literal"><span class="pre">KTRPProblem</span></code> class, by default the Jacobian is assumed to be dense
+and stored row-wise.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Even if the application does not
+evaluate derivatives (i.e. finite-difference first derivatives are used),
+it must still provide a sparsity pattern for the constraint
+Jacobian matrix that specifies which partial derivatives are nonzero.
+Knitro uses the sparsity pattern to speed up linear algebra computations.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">When using finite-difference first derivatives (<a class="reference internal" href="../3_referenceManual/userOptions.html#gradopt" title="gradopt"><code class="xref c c-type docutils literal"><span class="pre">gradopt</span></code></a> &gt; 1),
+if the sparsity pattern is unknown, then the application should specify a
+fully dense pattern (i.e., assume all partial derivatives are nonzero).
+This can easily and automatically be done by setting <em>nnzJ&lt;0</em> in the callable
+library interface beginning with
+Knitro 10.0 (and setting <em>jacIndexCons</em> and <em>jacIndexVars</em> to be NULL).</p>
+</div>
+<p>Since the Hessian matrix will always be a symmetric matrix, Knitro only
+stores the nonzero elements corresponding to the upper triangular part
+(including the diagonal). In the example here, the number of nonzero
+elements in the upper triangular part of the Hessian matrix <em>nnzH</em> is
+4.  The Knitro array <em>hess</em> stores the values of these
+elements, while the arrays <em>hessIndexRows</em> and <em>hessIndexCols</em>
+store the row and
+column indices respectively.  The order in which these nonzero
+elements is stored is not important.  If we store them column-wise,
+the arrays <em>hess</em>, <em>hessIndexRows</em> and <em>hessIndexCols</em> are as
+follows:</p>
+<div class="highlight-c"><div class="highlight"><pre><span></span><span class="n">hess</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">lambda</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">lambda</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+<span class="n">hessIndexRows</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">hessIndexCols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="n">hess</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">lambda</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+<span class="n">hessIndexRows</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="n">hessIndexCols</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+<span class="n">hess</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">sigma</span><span class="o">*</span><span class="mi">3</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+<span class="n">hessIndexRows</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="n">hessIndexCols</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+
+<span class="n">hess</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">sigma</span><span class="o">*</span><span class="mi">6</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+<span class="n">hessIndexRows</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="n">hessIndexCols</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>In the object-oriented interface, the Hessian matrix column indices are set in the user-defined problem class by implementing:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">std</span><span class="p">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="nb">int</span><span class="o">&gt;</span> <span class="n">KTRProblem</span><span class="p">::</span><span class="n">getHessIndexRows</span><span class="p">();</span>
+<span class="n">std</span><span class="p">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="nb">int</span><span class="o">&gt;</span> <span class="n">KTRProblem</span><span class="p">::</span><span class="n">getHessIndexCols</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>and having them return vectors with the Hessian row and column indices, respectively. If using the <code class="docutils literal"><span class="pre">KTRProblem</span></code> class, setting the values with:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">KTRProblem</span><span class="p">::</span><span class="n">setHessIndexRows</span><span class="p">(</span><span class="nb">int</span> <span class="nb">id</span><span class="p">,</span> <span class="nb">int</span> <span class="n">val</span><span class="p">);</span>
+<span class="n">KTRProblem</span><span class="p">::</span><span class="n">setHessIndexCols</span><span class="p">(</span><span class="nb">int</span> <span class="nb">id</span><span class="p">,</span> <span class="nb">int</span> <span class="n">val</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>will store the values to be returned by the appropriate <code class="docutils literal"><span class="pre">get</span></code> functions.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">In Knitro, the array <em>objGrad</em> stores <em>all</em> of the elements of
+<span class="math">\nabla f(x)</span>, while the arrays <em>jac</em>, <em>jacIndexCons</em>, and
+<em>jacIndexVars</em> store information concerning <em>only the nonzero</em>
+elements of <em>J(x)</em>.  The array <em>jac</em> stores the nonzero values in
+<em>J(x)</em> evaluated at the current solution estimate <em>x</em>,
+<em>jacIndexCons</em> stores the constraint function (or row) indices
+corresponding to these values, and <em>jacIndexVars</em> stores the variable
+(or column) indices.  There is no
+restriction on the order in which these elements are stored; however,
+it is common to store the nonzero elements of <em>J(x)</em> in column-wise
+fashion.</p>
+</div>
+</div>
+<div class="section" id="matlab-example">
+<span id="matlabexamplefirstder"></span><h2>MATLAB example</h2>
+<p>Let us modify our example from <a class="reference internal" href="gettingStarted/startMatlab.html#startmatlab"><span class="std std-ref">Getting started with MATLAB</span></a> so that the first
+derivatives are provided as well.  In MATLAB, you only need to provide the
+derivatives for the nonlinear functions, whereas in the callable library API
+you need to provide the derivatives for both linear and nonlinear constraints
+in <span class="math">J(x)</span>.  In the example below, only the inequality constraint is
+nonlinear, so we only provide the derivative for this constraint.</p>
+<div class="highlight-matlab"><div class="highlight"><pre><span></span><span class="k">function</span><span class="w"> </span><span class="nf">firstDer</span><span class="p">()</span><span class="w"></span>
+
+<span class="w">        </span><span class="k">function</span> <span class="p">[</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">]</span> <span class="p">=</span> <span class="n">obj</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+                <span class="n">f</span> <span class="p">=</span> <span class="mi">1000</span> <span class="o">-</span> <span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>^<span class="mi">2</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>^<span class="mi">2</span> <span class="o">-</span> <span class="n">x</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>^<span class="mi">2</span> <span class="o">-</span> <span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">x</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">x</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+                <span class="k">if</span> <span class="n">nargout</span> <span class="o">==</span> <span class="mi">2</span>
+                   <span class="n">g</span> <span class="p">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="n">x</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="n">x</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span> <span class="o">-</span> <span class="mi">4</span><span class="o">*</span><span class="n">x</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span> <span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">-</span> <span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)];</span>
+                <span class="k">end</span>
+        <span class="k">end</span>
+
+        <span class="c">% nlcon should return [c, ceq, GC, GCeq]</span>
+        <span class="c">% with c(x) &lt;= 0 and ceq(x) = 0</span>
+<span class="k">        function</span><span class="w"> </span>[c, ceq, GC, GCeq] <span class="p">=</span><span class="w"> </span><span class="nf">nlcon</span><span class="p">(</span>x<span class="p">)</span><span class="w"></span>
+<span class="w">                </span><span class="n">c</span> <span class="p">=</span> <span class="o">-</span><span class="p">(</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>^<span class="mi">2</span> <span class="o">+</span> <span class="n">x</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>^<span class="mi">2</span> <span class="o">+</span> <span class="n">x</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>^<span class="mi">2</span> <span class="o">-</span> <span class="mi">25</span><span class="p">);</span>
+                <span class="n">ceq</span> <span class="p">=</span> <span class="p">[];</span>
+                <span class="k">if</span> <span class="n">nargout</span><span class="o">==</span><span class="mi">4</span>
+                        <span class="n">GC</span> <span class="p">=</span> <span class="o">-</span><span class="p">([</span><span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span> <span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span> <span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="p">(</span><span class="mi">3</span><span class="p">)]);</span>
+                        <span class="n">GCeq</span> <span class="p">=</span> <span class="p">[];</span>
+                <span class="k">end</span>
+        <span class="k">end</span>
+
+        <span class="n">x0</span>  <span class="p">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">;</span> <span class="mi">2</span><span class="p">;</span> <span class="mi">2</span><span class="p">];</span>
+        <span class="n">A</span> <span class="p">=</span> <span class="p">[];</span> <span class="n">b</span> <span class="p">=</span> <span class="p">[];</span> <span class="c">% no linear inequality constraints (&quot;A*x &lt;= b&quot;)</span>
+        <span class="n">Aeq</span> <span class="p">=</span> <span class="p">[</span><span class="mi">8</span> <span class="mi">14</span> <span class="mi">7</span><span class="p">];</span> <span class="n">beq</span> <span class="p">=</span> <span class="p">[</span><span class="mi">56</span><span class="p">];</span> <span class="c">% linear equality constraints (&quot;Aeq*x = beq&quot;)</span>
+        <span class="n">lb</span> <span class="p">=</span> <span class="nb">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span> <span class="n">ub</span> <span class="p">=</span> <span class="p">[];</span> <span class="c">% lower and upper bounds</span>
+
+        <span class="n">options</span> <span class="p">=</span> <span class="n">optimset</span><span class="p">(</span><span class="s">&#39;GradObj&#39;</span><span class="p">,</span> <span class="s">&#39;on&#39;</span><span class="p">,</span> <span class="s">&#39;GradConstr&#39;</span><span class="p">,</span> <span class="s">&#39;on&#39;</span><span class="p">);</span>
+        <span class="n">knitromatlab</span><span class="p">(@</span><span class="n">obj</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">Aeq</span><span class="p">,</span> <span class="n">beq</span><span class="p">,</span> <span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">,</span> <span class="p">@</span><span class="n">nlcon</span><span class="p">,</span> <span class="p">[],</span> <span class="n">options</span><span class="p">);</span>
+
+<span class="k">end</span>
+</pre></div>
+</div>
+<p>The only difference with the derivative-free case is that the code
+that computes the objective function and the constraints also returns
+the first derivatives along with function values. The output is as follows.</p>
+<div class="highlight-none"><div class="highlight"><pre><span></span>=======================================
+          Commercial License
+         Artelys Knitro 10.0.0
+=======================================
+
+Knitro presolve eliminated 0 variables and 0 constraints.
+
+algorithm:            1
+gradopt:              4
+hessopt:              2
+honorbnds:            1
+maxit:                10000
+outlev:               1
+par_concurrent_evals: 0
+Knitro changing bar_initpt from AUTO to 3.
+Knitro changing bar_murule from AUTO to 4.
+Knitro changing bar_penaltycons from AUTO to 1.
+Knitro changing bar_penaltyrule from AUTO to 2.
+Knitro changing bar_switchrule from AUTO to 2.
+Knitro changing linsolver from AUTO to 2.
+
+Problem Characteristics                    ( Presolved)
+-----------------------
+Objective goal:  Minimize
+Number of variables:                     3 (         3)
+    bounded below:                       3 (         3)
+    bounded above:                       0 (         0)
+    bounded below and above:             0 (         0)
+    fixed:                               0 (         0)
+    free:                                0 (         0)
+Number of constraints:                   2 (         2)
+    linear equalities:                   1 (         1)
+    nonlinear equalities:                0 (         0)
+    linear inequalities:                 0 (         0)
+    nonlinear inequalities:              1 (         1)
+    range:                               0 (         0)
+Number of nonzeros in Jacobian:          6 (         6)
+Number of nonzeros in Hessian:           6 (         6)
+
+EXIT: Locally optimal solution found.
+
+Final Statistics
+----------------
+Final objective value               =   9.36000000000340e+02
+Final feasibility error (abs / rel) =   0.00e+00 / 0.00e+00
+Final optimality error  (abs / rel) =   3.59e-09 / 2.24e-10
+# of iterations                     =          9
+# of CG iterations                  =          0
+# of function evaluations           =         11
+# of gradient evaluations           =         11
+Total program time (secs)           =       0.01467 (     0.025 CPU time)
+Time spent in evaluations (secs)    =       0.01161
+
+===============================================================================
+</pre></div>
+</div>
+<p>The number of function evaluation was reduced to 11, simply by providing exact first derivatives.
+This small example shows the practical importance of being able to provide
+exact derivatives; since (unlike modeling environments like AMPL) MATLAB does not
+provide automatic differentiation, the user must compute these derivatives analytically
+and then code them manually as in the above example.</p>
+</div>
+<div class="section" id="c-c-example">
+<h2>C/C++ example</h2>
+<p>Let us now modify our C example from <a class="reference internal" href="gettingStarted/startCallableLibrary.html#startcallablelib"><span class="std std-ref">Getting started with the callable library</span></a> similarly,
+so as to provide first derivatives.</p>
+<div class="highlight-c"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;knitro.h&quot;</span><span class="cp"></span>
+
+
+<span class="cm">/* callback function that evaluates the objective</span>
+<span class="cm">   and constraints */</span>
+<span class="kt">int</span>  <span class="nf">callback</span> <span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="n">evalRequestCode</span><span class="p">,</span>
+        <span class="k">const</span> <span class="kt">int</span>             <span class="n">n</span><span class="p">,</span>
+        <span class="k">const</span> <span class="kt">int</span>             <span class="n">m</span><span class="p">,</span>
+        <span class="k">const</span> <span class="kt">int</span>             <span class="n">nnzJ</span><span class="p">,</span>
+        <span class="k">const</span> <span class="kt">int</span>             <span class="n">nnzH</span><span class="p">,</span>
+        <span class="k">const</span> <span class="kt">double</span> <span class="o">*</span> <span class="k">const</span>  <span class="n">x</span><span class="p">,</span>
+        <span class="k">const</span> <span class="kt">double</span> <span class="o">*</span> <span class="k">const</span>  <span class="n">lambda</span><span class="p">,</span>
+              <span class="kt">double</span> <span class="o">*</span> <span class="k">const</span>  <span class="n">obj</span><span class="p">,</span>
+              <span class="kt">double</span> <span class="o">*</span> <span class="k">const</span>  <span class="n">c</span><span class="p">,</span>
+              <span class="kt">double</span> <span class="o">*</span> <span class="k">const</span>  <span class="n">objGrad</span><span class="p">,</span>
+              <span class="kt">double</span> <span class="o">*</span> <span class="k">const</span>  <span class="n">jac</span><span class="p">,</span>
+              <span class="kt">double</span> <span class="o">*</span> <span class="k">const</span>  <span class="n">hessian</span><span class="p">,</span>
+              <span class="kt">double</span> <span class="o">*</span> <span class="k">const</span>  <span class="n">hessVector</span><span class="p">,</span>
+              <span class="kt">void</span>   <span class="o">*</span>        <span class="n">userParams</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">evalRequestCode</span> <span class="o">==</span> <span class="n">KTR_RC_EVALFC</span><span class="p">)</span> <span class="p">{</span>
+                <span class="cm">/* objective function */</span>
+                <span class="o">*</span><span class="n">obj</span>    <span class="o">=</span> <span class="mi">1000</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+
+                <span class="cm">/* constraints */</span>
+                <span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>    <span class="o">=</span> <span class="mi">8</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">14</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">7</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="mi">56</span><span class="p">;</span>
+                <span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>    <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span><span class="mi">25</span><span class="p">;</span>
+
+                <span class="k">return</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">evalRequestCode</span> <span class="o">==</span> <span class="n">KTR_RC_EVALGA</span><span class="p">)</span> <span class="p">{</span>
+
+                <span class="cm">/* gradient of objective */</span>
+                <span class="n">objGrad</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+                <span class="n">objGrad</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">4</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+                <span class="n">objGrad</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+
+                <span class="cm">/* Jacobian matrix of constraints */</span>
+                <span class="n">jac</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+                <span class="n">jac</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+                <span class="n">jac</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">14</span><span class="p">;</span>
+                <span class="n">jac</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+                <span class="n">jac</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span>
+                <span class="n">jac</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+
+                <span class="k">return</span><span class="p">(</span> <span class="mi">0</span> <span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="n">printf</span> <span class="p">(</span><span class="s">&quot;Wrong evalRequestCode in callback function.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+                <span class="k">return</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+        <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="cm">/* main */</span>
+<span class="kt">int</span>  <span class="nf">main</span> <span class="p">(</span><span class="kt">int</span>  <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span>  <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+        <span class="kt">int</span>  <span class="n">nStatus</span><span class="p">;</span>
+
+        <span class="cm">/* variables that are passed to Knitro */</span>
+        <span class="n">KTR_context</span>     <span class="o">*</span><span class="n">kc</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">nnzJ</span><span class="p">,</span> <span class="n">nnzH</span><span class="p">,</span> <span class="n">objGoal</span><span class="p">,</span> <span class="n">objType</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="o">*</span><span class="n">cType</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="o">*</span><span class="n">jacIndexVars</span><span class="p">,</span> <span class="o">*</span><span class="n">jacIndexCons</span><span class="p">;</span>
+        <span class="kt">double</span> <span class="n">obj</span><span class="p">,</span> <span class="o">*</span><span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="n">lambda</span><span class="p">;</span>
+        <span class="kt">double</span> <span class="o">*</span><span class="n">xLoBnds</span><span class="p">,</span> <span class="o">*</span><span class="n">xUpBnds</span><span class="p">,</span> <span class="o">*</span><span class="n">xInitial</span><span class="p">,</span> <span class="o">*</span><span class="n">cLoBnds</span><span class="p">,</span> <span class="o">*</span><span class="n">cUpBnds</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">;</span> <span class="c1">// convenience variables</span>
+
+        <span class="cm">/*problem size and mem allocation */</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+        <span class="n">nnzJ</span> <span class="o">=</span> <span class="n">n</span><span class="o">*</span><span class="n">m</span><span class="p">;</span>
+        <span class="n">nnzH</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="n">x</span>      <span class="o">=</span> <span class="p">(</span><span class="kt">double</span> <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span> <span class="p">(</span><span class="n">n</span>     <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
+        <span class="n">lambda</span> <span class="o">=</span> <span class="p">(</span><span class="kt">double</span> <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span> <span class="p">((</span><span class="n">m</span><span class="o">+</span><span class="n">n</span><span class="p">)</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
+        <span class="n">xLoBnds</span>      <span class="o">=</span> <span class="p">(</span><span class="kt">double</span> <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span> <span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
+        <span class="n">xUpBnds</span>      <span class="o">=</span> <span class="p">(</span><span class="kt">double</span> <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span> <span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
+        <span class="n">xInitial</span>     <span class="o">=</span> <span class="p">(</span><span class="kt">double</span> <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span> <span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
+        <span class="n">cType</span>        <span class="o">=</span> <span class="p">(</span><span class="kt">int</span>    <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span> <span class="p">(</span><span class="n">m</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>
+        <span class="n">cLoBnds</span>      <span class="o">=</span> <span class="p">(</span><span class="kt">double</span> <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span> <span class="p">(</span><span class="n">m</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
+        <span class="n">cUpBnds</span>      <span class="o">=</span> <span class="p">(</span><span class="kt">double</span> <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span> <span class="p">(</span><span class="n">m</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
+        <span class="n">jacIndexVars</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span>    <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span> <span class="p">(</span><span class="n">nnzJ</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>
+        <span class="n">jacIndexCons</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span>    <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span> <span class="p">(</span><span class="n">nnzJ</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>
+
+        <span class="cm">/* objective type */</span>
+        <span class="n">objType</span> <span class="o">=</span> <span class="n">KTR_OBJTYPE_GENERAL</span><span class="p">;</span>
+        <span class="n">objGoal</span> <span class="o">=</span> <span class="n">KTR_OBJGOAL_MINIMIZE</span><span class="p">;</span>
+
+        <span class="cm">/* bounds and constraints type */</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">xLoBnds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">;</span>
+                <span class="n">xUpBnds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">KTR_INFBOUND</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">m</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">cType</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">KTR_CONTYPE_GENERAL</span><span class="p">;</span>
+                <span class="n">cLoBnds</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">;</span>
+                <span class="n">cUpBnds</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">j</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">?</span> <span class="mf">0.0</span> <span class="o">:</span> <span class="n">KTR_INFBOUND</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="cm">/* initial point */</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+                <span class="n">xInitial</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">;</span>
+
+        <span class="cm">/* sparsity pattern (here, of a full matrix) */</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+                <span class="k">for</span> <span class="p">(</span><span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">m</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="n">jacIndexCons</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span><span class="p">;</span>
+                        <span class="n">jacIndexVars</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+                        <span class="n">k</span><span class="o">++</span><span class="p">;</span>
+                <span class="p">}</span>
+
+        <span class="cm">/* create a Knitro instance */</span>
+        <span class="n">kc</span> <span class="o">=</span> <span class="n">KTR_new</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">kc</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
+                <span class="n">exit</span><span class="p">(</span> <span class="o">-</span><span class="mi">1</span> <span class="p">);</span> <span class="c1">// probably a license issue</span>
+
+        <span class="cm">/* set options: exact/user-supplied gradient option */</span>
+        <span class="c1">//if (KTR_set_int_param_by_name (kc, &quot;gradopt&quot;, KTR_GRADOPT_FORWARD) != 0)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">KTR_set_int_param_by_name</span> <span class="p">(</span><span class="n">kc</span><span class="p">,</span> <span class="s">&quot;gradopt&quot;</span><span class="p">,</span> <span class="n">KTR_GRADOPT_EXACT</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="n">exit</span><span class="p">(</span> <span class="o">-</span><span class="mi">1</span> <span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">KTR_set_int_param_by_name</span> <span class="p">(</span><span class="n">kc</span><span class="p">,</span> <span class="s">&quot;hessopt&quot;</span><span class="p">,</span> <span class="n">KTR_HESSOPT_BFGS</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="n">exit</span><span class="p">(</span> <span class="o">-</span><span class="mi">1</span> <span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">KTR_set_int_param_by_name</span> <span class="p">(</span><span class="n">kc</span><span class="p">,</span> <span class="s">&quot;outlev&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="n">exit</span><span class="p">(</span> <span class="o">-</span><span class="mi">1</span> <span class="p">);</span>
+
+        <span class="cm">/* register the callback function */</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">KTR_set_func_callback</span> <span class="p">(</span><span class="n">kc</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">callback</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="n">exit</span><span class="p">(</span> <span class="o">-</span><span class="mi">1</span> <span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">KTR_set_grad_callback</span> <span class="p">(</span><span class="n">kc</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">callback</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="n">exit</span><span class="p">(</span> <span class="o">-</span><span class="mi">1</span> <span class="p">);</span>
+
+        <span class="cm">/* pass the problem definition to Knitro */</span>
+        <span class="n">nStatus</span> <span class="o">=</span> <span class="n">KTR_init_problem</span> <span class="p">(</span><span class="n">kc</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">objGoal</span><span class="p">,</span> <span class="n">objType</span><span class="p">,</span>
+                <span class="n">xLoBnds</span><span class="p">,</span> <span class="n">xUpBnds</span><span class="p">,</span>
+                <span class="n">m</span><span class="p">,</span> <span class="n">cType</span><span class="p">,</span> <span class="n">cLoBnds</span><span class="p">,</span> <span class="n">cUpBnds</span><span class="p">,</span>
+                <span class="n">nnzJ</span><span class="p">,</span> <span class="n">jacIndexVars</span><span class="p">,</span> <span class="n">jacIndexCons</span><span class="p">,</span>
+                <span class="n">nnzH</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">xInitial</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+
+        <span class="cm">/* free memory (Knitro maintains its own copy) */</span>
+        <span class="n">free</span> <span class="p">(</span><span class="n">xLoBnds</span><span class="p">);</span>
+        <span class="n">free</span> <span class="p">(</span><span class="n">xUpBnds</span><span class="p">);</span>
+        <span class="n">free</span> <span class="p">(</span><span class="n">xInitial</span><span class="p">);</span>
+        <span class="n">free</span> <span class="p">(</span><span class="n">cType</span><span class="p">);</span>
+        <span class="n">free</span> <span class="p">(</span><span class="n">cLoBnds</span><span class="p">);</span>
+        <span class="n">free</span> <span class="p">(</span><span class="n">cUpBnds</span><span class="p">);</span>
+        <span class="n">free</span> <span class="p">(</span><span class="n">jacIndexVars</span><span class="p">);</span>
+        <span class="n">free</span> <span class="p">(</span><span class="n">jacIndexCons</span><span class="p">);</span>
+
+        <span class="cm">/* solver call */</span>
+        <span class="n">nStatus</span> <span class="o">=</span> <span class="n">KTR_solve</span> <span class="p">(</span><span class="n">kc</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">lambda</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">obj</span><span class="p">,</span>
+                <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">nStatus</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="n">printf</span> <span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">Knitro failed to solve the problem, final status = %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+                                <span class="n">nStatus</span><span class="p">);</span>
+        <span class="k">else</span>
+                <span class="n">printf</span> <span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">Knitro successful, objective is = %e</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">obj</span><span class="p">);</span>
+
+        <span class="cm">/* delete the Knitro instance and primal/dual solution */</span>
+        <span class="n">KTR_free</span> <span class="p">(</span><span class="o">&amp;</span><span class="n">kc</span><span class="p">);</span>
+        <span class="n">free</span> <span class="p">(</span><span class="n">x</span><span class="p">);</span>
+        <span class="n">free</span> <span class="p">(</span><span class="n">lambda</span><span class="p">);</span>
+
+        <span class="n">getchar</span><span class="p">();</span>
+        <span class="k">return</span><span class="p">(</span> <span class="mi">0</span> <span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The callback function was simply updated to provide the derivatives,
+and then registered with:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">KTR_set_grad_callback</span> <span class="p">(</span><span class="n">kc</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">callback</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Last, the <a class="reference internal" href="../3_referenceManual/userOptions.html#gradopt" title="gradopt"><code class="xref c c-type docutils literal"><span class="pre">gradopt</span></code></a> option was set to exact/user-supplied) instead of
+forward finite-differences using:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">KTR_set_int_param_by_name</span> <span class="p">(</span><span class="n">kc</span><span class="p">,</span> <span class="s2">&quot;gradopt&quot;</span><span class="p">,</span> <span class="n">KTR_GRADOPT_EXACT</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Running this code produces the following output.</p>
+<div class="highlight-none"><div class="highlight"><pre><span></span>=======================================
+          Commercial License
+         Artelys Knitro 10.0.0
+=======================================
+
+Knitro presolve eliminated 0 variables and 0 constraints.
+
+hessopt:              2
+outlev:               1
+Knitro changing algorithm from AUTO to 1.
+Knitro changing bar_initpt from AUTO to 3.
+Knitro changing bar_murule from AUTO to 4.
+Knitro changing bar_penaltycons from AUTO to 1.
+Knitro changing bar_penaltyrule from AUTO to 2.
+Knitro changing bar_switchrule from AUTO to 2.
+Knitro changing linsolver from AUTO to 2.
+
+Problem Characteristics                    ( Presolved)
+-----------------------
+Objective goal:  Minimize
+Number of variables:                     3 (         3)
+    bounded below:                       3 (         3)
+    bounded above:                       0 (         0)
+    bounded below and above:             0 (         0)
+    fixed:                               0 (         0)
+    free:                                0 (         0)
+Number of constraints:                   2 (         2)
+    linear equalities:                   0 (         0)
+    nonlinear equalities:                1 (         1)
+    linear inequalities:                 0 (         0)
+    nonlinear inequalities:              1 (         1)
+    range:                               0 (         0)
+Number of nonzeros in Jacobian:          6 (         6)
+Number of nonzeros in Hessian:           6 (         6)
+
+EXIT: Locally optimal solution found.
+
+Final Statistics
+----------------
+Final objective value               =   9.36000000000340e+02
+Final feasibility error (abs / rel) =   0.00e+00 / 0.00e+00
+Final optimality error  (abs / rel) =   3.59e-09 / 2.24e-10
+# of iterations                     =          9
+# of CG iterations                  =          0
+# of function evaluations           =         11
+# of gradient evaluations           =         11
+Total program time (secs)           =       0.00134 (     0.001 CPU time)
+Time spent in evaluations (secs)    =       0.00000
+
+===============================================================================
+
+
+Knitro successful, objective is = 9.360000e+02
+</pre></div>
+</div>
+<p>Again, the number of function calls is reduced with respect to the
+derivative-free case.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Automatic differentiation packages like ADOL-C and ADIFOR
+can help in generating code with derivatives. These codes
+are an alternative to differentiating the functions manually.
+Another option is to use symbolic differentiation software
+to compute an analytical formula for the derivatives.</p>
+</div>
+</div>
+<div class="section" id="object-oriented-c-example">
+<h2>Object-oriented C++ example</h2>
+<p>Let us now modify our C++ example from <a class="reference internal" href="gettingStarted/startCPP.html#startcpp"><span class="std std-ref">Getting started with the object-oriented interface</span></a>,
+so as to provide first derivatives.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&quot;KTRSolver.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;KTRProblem.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+
+<span class="k">class</span> <span class="nc">ProblemExample</span> <span class="o">:</span> <span class="k">public</span> <span class="n">KNITRO</span><span class="o">::</span><span class="n">KTRProblem</span> <span class="p">{</span>
+    <span class="c1">// objective properties</span>
+    <span class="kt">void</span> <span class="n">setObjectiveProperties</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">setObjType</span><span class="p">(</span><span class="n">KTR_OBJTYPE_GENERAL</span><span class="p">);</span>
+        <span class="n">setObjGoal</span><span class="p">(</span><span class="n">KTR_OBJGOAL_MINIMIZE</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="c1">// constraint properties</span>
+    <span class="kt">void</span> <span class="n">setConstraintProperties</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="c1">// set constraint types</span>
+        <span class="n">setConTypes</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">KNITRO</span><span class="o">::</span><span class="n">KTREnums</span><span class="o">::</span><span class="n">ConstraintType</span><span class="o">::</span><span class="n">ConLinear</span><span class="p">);</span>
+        <span class="n">setConTypes</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">KNITRO</span><span class="o">::</span><span class="n">KTREnums</span><span class="o">::</span><span class="n">ConstraintType</span><span class="o">::</span><span class="n">ConQuadratic</span><span class="p">);</span>
+
+        <span class="c1">// set constraint lower bounds</span>
+        <span class="n">setConLoBnds</span><span class="p">(</span><span class="mf">0.0</span><span class="p">);</span>
+
+        <span class="c1">// set constraint upper bounds</span>
+        <span class="n">setConUpBnds</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">);</span>
+        <span class="n">setConUpBnds</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">KTR_INFBOUND</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Variable bounds. All variables 0 &lt;= x.</span>
+    <span class="kt">void</span> <span class="n">setVariableProperties</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">setVarLoBnds</span><span class="p">(</span><span class="mf">0.0</span><span class="p">);</span>
+    <span class="p">}</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="c1">// constructor: pass number of variables and constraints to base class</span>
+    <span class="n">ProblemQCQP</span><span class="p">()</span> <span class="o">:</span> <span class="n">KTRProblem</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// set problem properties</span>
+        <span class="n">setObjectiveProperties</span><span class="p">();</span>
+        <span class="n">setVariableProperties</span><span class="p">();</span>
+        <span class="n">setConstraintProperties</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Objective and constraint evaluation function</span>
+    <span class="c1">// overrides KTRProblem class</span>
+    <span class="kt">double</span> <span class="n">evaluateFC</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">x</span><span class="p">,</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">c</span><span class="p">,</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">objGrad</span><span class="p">,</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">jac</span><span class="p">)</span> <span class="p">{</span>
+
+        <span class="c1">// constraints</span>
+        <span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">8.0e0</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mf">14.0e0</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">7.0e0</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="mf">56.0e0</span><span class="p">;</span>
+        <span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="mf">25.0e0</span><span class="p">;</span>
+
+        <span class="c1">// return objective function value</span>
+        <span class="k">return</span> <span class="mi">1000</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mf">2.0e0</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+            <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Gradient and Jacobian evaluation function</span>
+    <span class="c1">// overrides KTRProblem class</span>
+    <span class="kt">int</span> <span class="n">evaluateGA</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">x</span><span class="p">,</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">objGrad</span><span class="p">,</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">jac</span><span class="p">)</span> <span class="k">override</span> <span class="p">{</span>
+
+        <span class="n">objGrad</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">2.0e0</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+        <span class="n">objGrad</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">4.0e0</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+        <span class="n">objGrad</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">2.0e0</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+
+        <span class="c1">// gradient of the first constraint, c[0].</span>
+        <span class="n">jac</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">8.0e0</span><span class="p">;</span>
+        <span class="n">jac</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">14.0e0</span><span class="p">;</span>
+        <span class="n">jac</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mf">7.0e0</span><span class="p">;</span>
+
+        <span class="c1">// gradient of the second constraint, c[1]. */</span>
+        <span class="n">jac</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mf">2.0e0</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+        <span class="n">jac</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mf">2.0e0</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+        <span class="n">jac</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mf">2.0e0</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">};</span>
+
+  <span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+      <span class="c1">// Create a problem instance.</span>
+      <span class="n">ProblemExample</span> <span class="n">problem</span> <span class="o">=</span> <span class="n">ProblemExample</span><span class="p">();</span>
+
+      <span class="c1">// Create a solver - optional arguments:</span>
+      <span class="c1">// exact first derivatives</span>
+      <span class="c1">// BFGS approximate second derivatives</span>
+      <span class="n">KNITRO</span><span class="o">::</span><span class="n">KTRSolver</span> <span class="n">solver</span><span class="p">(</span><span class="o">&amp;</span><span class="n">instance</span><span class="p">,</span> <span class="n">KTR_GRADOPT_EXACT</span><span class="p">,</span> <span class="n">KTR_HESSOPT_BFGS</span><span class="p">);</span>
+
+      <span class="kt">int</span> <span class="n">solveStatus</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">solve</span><span class="p">();</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="n">solveStatus</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+          <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+          <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;KNITRO failed to solve the problem, final status = &quot;</span><span class="p">;</span>
+          <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">solveStatus</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="k">else</span> <span class="p">{</span>
+          <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;KNITRO successful, objective is = &quot;</span><span class="p">;</span>
+          <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">solver</span><span class="p">.</span><span class="n">getObj</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+      <span class="p">}</span>
+
+      <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="p">}</span>
+</pre></div>
+</div>
+<p>Two changes were made to the previous example. This adds <code class="docutils literal"><span class="pre">evaluateGA()</span></code> function to the problem class, defining the derivatives, and the <code class="docutils literal"><span class="pre">KTRSolver</span></code> constructor is passed <code class="docutils literal"><span class="pre">KTR_GRADOPT_EXACT</span></code> instead of <code class="docutils literal"><span class="pre">KTR_GRADOPT_FORWARD</span></code>, since the exact gradient function is now defined. Running this example produces the same output as the callable library example.</p>
+</div>
+<div class="section" id="checking-derivatives">
+<span id="checkingderivatives"></span><h2>Checking derivatives</h2>
+<p id="index-6">One drawback of user-supplied derivatives is the risk of error in
+computing or implementing the derivatives, which would result in
+providing Knitro with (wrong and) incoherent information: the
+computed function values would not match the computed derivatives.
+Approximate derivatives computed by finite differences are useful to
+check whether user-supplied derivatives match user-supplied function
+evaluations.</p>
+<p>Users of modeling languages such as AMPL need not be worried about this,
+since derivatives are computed automatically by the modeling software.
+However, for users of MATLAB and the callable library it is a good practice
+to check one&#8217;s exact derivatives against finite differences approximations.
+Note that small differences between exact and finite-difference
+approximations are to be expected.</p>
+<p>Knitro offers the following user options to check
+for errors in the user-supplied first derivatives (i.e., the objective
+gradient and the Jacobian matrix) and second derivatives (i.e. the Hessian
+matrix).</p>
+</div>
+<div class="section" id="derivative-check-options">
+<h2>Derivative Check Options</h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="36%" />
+<col width="64%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Option</th>
+<th class="head">Meaning</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference internal" href="../3_referenceManual/userOptions.html#derivcheck" title="derivcheck"><code class="xref c c-type docutils literal"><span class="pre">derivcheck</span></code></a></td>
+<td>Specifies whether or not to enable the derivative
+checker, and which derivatives to check (first,
+second or both)</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="../3_referenceManual/userOptions.html#derivcheck_terminate" title="derivcheck_terminate"><code class="xref c c-type docutils literal"><span class="pre">derivcheck_terminate</span></code></a></td>
+<td>Whether to terminate after the derivative check
+or continue to the optimization if successful</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="../3_referenceManual/userOptions.html#derivcheck_tol" title="derivcheck_tol"><code class="xref c c-type docutils literal"><span class="pre">derivcheck_tol</span></code></a></td>
+<td>Specifies the relative tolerance used for identifying
+potential errors in the derivatives</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="../3_referenceManual/userOptions.html#derivcheck_type" title="derivcheck_type"><code class="xref c c-type docutils literal"><span class="pre">derivcheck_type</span></code></a></td>
+<td>Specifies whether to use forward or central finite
+differences to compute the derivative check</td>
+</tr>
+</tbody>
+</table>
+<p>Note that to use the derivative checker, you must set <a class="reference internal" href="../3_referenceManual/userOptions.html#gradopt" title="gradopt"><code class="xref c c-type docutils literal"><span class="pre">gradopt</span></code></a> = 1
+(to check the first derivatives) and/or
+<cite>hessopt=1</cite> (to check the second derivatives/Hessian).  You must also
+supply callback routines that compute the objective and constraint functions
+and analytic first derivatives (to check the first derivatives), and/or
+analytic second derivatives/Hessian (to check the second derivatives).
+By default, the derivative checker is turned off.  To check first derivatives only,
+simply set <a class="reference internal" href="../3_referenceManual/userOptions.html#derivcheck" title="derivcheck"><code class="xref c c-type docutils literal"><span class="pre">derivcheck</span></code></a> = 1; to check second derivatives/Hessian only
+set <a class="reference internal" href="../3_referenceManual/userOptions.html#derivcheck" title="derivcheck"><code class="xref c c-type docutils literal"><span class="pre">derivcheck</span></code></a> = 2; and to check both first and second derivatives
+set <a class="reference internal" href="../3_referenceManual/userOptions.html#derivcheck" title="derivcheck"><code class="xref c c-type docutils literal"><span class="pre">derivcheck</span></code></a> = 3.
+Additionally you can set <a class="reference internal" href="../3_referenceManual/userOptions.html#derivcheck_type" title="derivcheck_type"><code class="xref c c-type docutils literal"><span class="pre">derivcheck_type</span></code></a> to specify what type
+of finite differencing to use for the derivative check, and <a class="reference internal" href="../3_referenceManual/userOptions.html#derivcheck_tol" title="derivcheck_tol"><code class="xref c c-type docutils literal"><span class="pre">derivcheck_tol</span></code></a>
+to change the default relative tolerance used to detect derivative errors.
+Setting <a class="reference internal" href="../3_referenceManual/userOptions.html#derivcheck_terminate" title="derivcheck_terminate"><code class="xref c c-type docutils literal"><span class="pre">derivcheck_terminate</span></code></a> will determine whether Knitro always stops after
+the derivative check is completed, or continues with the optimization (when the
+derivative check is successful).</p>
+<p>It is best to check the derivatives at different points, and to avoid points where partial
+derivatives happen to equal zero.  If an initial point was provided by the user
+(e.g., via <a class="reference internal" href="../3_referenceManual/callableLibrary/API.html#KTR_init_problem" title="KTR_init_problem"><code class="xref c c-func docutils literal"><span class="pre">KTR_init_problem()</span></code></a>), then Knitro will perform the derivative
+check at this point.  Otherwise, if no initial point is provided, Knitro will perform the
+derivative check at a randomly generated point that satisfies the variable bounds.
+To perform a derivative check at different points, simply feed different initial
+points to Knitro.</p>
+<p>Using the example problem above, if the Knitro derivative checker runs,
+with value <a class="reference internal" href="../3_referenceManual/userOptions.html#derivcheck" title="derivcheck"><code class="xref c c-type docutils literal"><span class="pre">derivcheck</span></code></a> = 1,
+and the relative differences between all the
+user-supplied first derivatives and finite-difference first derivatives satisfy the tolerance
+defined by <a class="reference internal" href="../3_referenceManual/userOptions.html#derivcheck_tol" title="derivcheck_tol"><code class="xref c c-type docutils literal"><span class="pre">derivcheck_tol</span></code></a>, then you will see the following output:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">-------------------------------------------------------------------------</span>
+<span class="n">Knitro</span> <span class="n">Derivative</span> <span class="n">Check</span> <span class="n">Information</span>
+
+<span class="n">Checking</span> <span class="mi">1</span><span class="n">st</span> <span class="n">derivatives</span> <span class="k">with</span> <span class="n">forward</span> <span class="n">finite</span> <span class="n">differences</span><span class="o">.</span>
+<span class="n">Derivative</span> <span class="n">check</span> <span class="n">performed</span> <span class="n">at</span> <span class="n">user</span><span class="o">-</span><span class="n">supplied</span> <span class="n">initial</span> <span class="s1">&#39;x&#39;</span> <span class="n">point</span><span class="o">.</span>
+<span class="n">Printing</span> <span class="n">relative</span> <span class="n">differences</span> <span class="o">&gt;</span>   <span class="mf">1.0000e-06</span><span class="o">.</span>
+
+<span class="n">Maximum</span> <span class="n">relative</span> <span class="n">difference</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">objective</span> <span class="n">gradient</span> <span class="o">=</span>   <span class="mf">0.0000e+00</span><span class="o">.</span>
+<span class="n">Maximum</span> <span class="n">relative</span> <span class="n">difference</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">Jacobian</span>           <span class="o">=</span>   <span class="mf">0.0000e+00</span><span class="o">.</span>
+<span class="n">Derivative</span> <span class="n">check</span> <span class="n">passed</span><span class="o">.</span>
+<span class="o">-------------------------------------------------------------------------</span>
+</pre></div>
+</div>
+<p>before the optimization begins. Since the derivative check passed, Knitro will
+automatically proceed with the optimization using the user-supplied derivatives.</p>
+<p>Now let us modify the objective gradient computation in the example problem above
+as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>/* gradient of objective */
+/* objGrad[0] = -2*x[0] - x[1] - x[2]; */
+objGrad[0] = -2*x[0] - x[1]; /* BUG HERE !!! */
+</pre></div>
+</div>
+<p>Running the code again, we obtain:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">-------------------------------------------------------------------------</span>
+<span class="n">Knitro</span> <span class="n">Derivative</span> <span class="n">Check</span> <span class="n">Information</span>
+
+<span class="n">Checking</span> <span class="mi">1</span><span class="n">st</span> <span class="n">derivatives</span> <span class="k">with</span> <span class="n">forward</span> <span class="n">finite</span> <span class="n">differences</span><span class="o">.</span>
+<span class="n">Derivative</span> <span class="n">check</span> <span class="n">performed</span> <span class="n">at</span> <span class="n">user</span><span class="o">-</span><span class="n">supplied</span> <span class="n">initial</span> <span class="s1">&#39;x&#39;</span> <span class="n">point</span><span class="o">.</span>
+<span class="n">Printing</span> <span class="n">relative</span> <span class="n">differences</span> <span class="o">&gt;</span>   <span class="mf">1.0000e-06</span><span class="o">.</span>
+
+<span class="n">WARNING</span><span class="p">:</span> <span class="n">The</span> <span class="n">discrepancy</span> <span class="k">for</span> <span class="n">objective</span> <span class="n">gradient</span> <span class="n">element</span> <span class="n">objGrad</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+     <span class="n">exceeds</span> <span class="n">the</span> <span class="n">derivative</span> <span class="n">check</span> <span class="n">relative</span> <span class="n">tolerance</span> <span class="n">of</span> <span class="mf">1.000000e-06</span><span class="o">.</span>
+     <span class="n">analytic</span> <span class="p">(</span><span class="n">user</span><span class="o">-</span><span class="n">supplied</span><span class="p">)</span> <span class="n">value</span> <span class="o">=</span>  <span class="o">-</span><span class="mf">6.000000000000e+00</span><span class="p">,</span>
+     <span class="n">finite</span><span class="o">-</span><span class="n">difference</span> <span class="n">value</span>        <span class="o">=</span>  <span class="o">-</span><span class="mf">8.000000000000e+00</span><span class="p">,</span>
+     <span class="o">|</span><span class="n">rel</span> <span class="n">diff</span><span class="o">|</span> <span class="o">=</span>  <span class="mf">3.3333e-01</span><span class="p">,</span> <span class="o">|</span><span class="nb">abs</span> <span class="n">diff</span><span class="o">|</span> <span class="o">=</span>  <span class="mf">2.0000e+00</span>
+
+<span class="n">Maximum</span> <span class="n">relative</span> <span class="n">difference</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">objective</span> <span class="n">gradient</span> <span class="o">=</span>   <span class="mf">3.3333e-01</span><span class="o">.</span>
+<span class="n">Maximum</span> <span class="n">relative</span> <span class="n">difference</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">Jacobian</span>           <span class="o">=</span>   <span class="mf">0.0000e+00</span><span class="o">.</span>
+<span class="n">Derivative</span> <span class="n">check</span> <span class="n">failed</span><span class="o">.</span>
+<span class="o">-------------------------------------------------------------------------</span>
+
+<span class="n">EXIT</span><span class="p">:</span> <span class="n">Derivative</span> <span class="n">check</span> <span class="n">failed</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>Knitro is warning us that the finite difference approximation of
+the first coordinate of the gradient at the initial point is about -8, whereas its
+(supposedly) exact user-supplied value is about -6: there is a
+bug in our implementation of the gradient of the objective.
+Knitro prints a message indicating the derivative discrepancy it found and terminates
+immediately with a failure message.</p>
+<p>Knitro also provides a separate API function <code class="xref c c-func docutils literal"><span class="pre">KTR_check_first_ders()</span></code>
+that can also be used for checking first derivatives. See the <a class="reference internal" href="../3_referenceManual/callableLibrary/API.html#sec-api"><span class="std std-ref">Knitro API</span></a> section in the
+Reference Manual and the Knitro header file for more information about this function.
+This function will be deprecated in the near future, however, so you should use
+the <a class="reference internal" href="../3_referenceManual/userOptions.html#derivcheck" title="derivcheck"><code class="xref c c-type docutils literal"><span class="pre">derivcheck</span></code></a> option described aboveto perform derivative checks.</p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="multistart.html" class="btn btn-neutral float-right" title="Multistart" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="knitroOptions.html" class="btn btn-neutral" title="Setting options" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Artelys.
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'10.3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  false
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

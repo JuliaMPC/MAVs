@@ -1,0 +1,128 @@
+---------------------------------
+Artelys Knitro 10.3 Release Notes
+---------------------------------
+
+What's new in Knitro 10.3?
+--------------------------
+
+NOTE: Knitro 10.3 DOES NOT support the reverse communication interface. If you
+      are currently using this interface, please migrate to the callback 
+      interface.
+
+NOTE: Knitro 10.3 DOES NOT offer the MATLAB interface for 32-bit Windows. 
+      Impacted users are advised to migrate to 64-bit Windows.
+
+1)  Knitro 10.3 offers a new incomplete Cholesky preconditioning option that 
+    can be applied to the conjugate gradient (CG) subproblem solves in the 
+    Knitro interior-point/barrier algorithms.  Use of the preconditioner may 
+    offer large speedups on ill-conditioned models that take a lot of CG 
+    iterations, particularly when using the Interior/CG algorithm. It is 
+    currently only active on models without equality constraints.  The 
+    preconditioner can be enabled using the new "cg_precond" user option and 
+    the memory in the incomplete Cholesky is controlled via the new "cg_pmem" 
+    user option.
+
+2)  Knitro 10.3 offers several improvements to the internal linear algebra and 
+    linear solvers used in Knitro, including:
+
+    - improvements to prevent large growth in memory use (and solve time) by 
+      the MA57 linear solver;
+
+    - improved efficiency of the MKLPARDISO linear solver in Knitro;
+
+    - the MKLPARDISO linear solver is now available as an option for all Knitro 
+      algorithms;
+
+    - improved efficiency of some matrix-vector product computations in Knitro.
+
+3)  Knitro 10.3 offers a new user option to enable an automatic "restart" of 
+    the Knitro algorithms when they seem to be converging slowly (or not at 
+    all).  The restart procedure is disabled by default, but can be enabled by 
+    setting the new "restarts" user option to a positive value (indicating the 
+    maximum number of restarts allowed).  The new option "restarts_maxit" 
+    specifies a maximum number of iterations before enforcing a restart when 
+    "restarts" > 0.
+
+4)  Knitro 10.3 offers significant improvements in large-scale least-squares 
+    models by avoiding computing or storing the Gauss-Newton Hessian when 
+    using the Interior/CG algorithm.  This and other linear algebra 
+    improvements can dramatically speedup the solution of very large 
+    least-squares models.
+
+5)  Knitro 10.3 offers improvements in the "feasibility phase" used when Knitro
+    is struggling to get feasible.  This can allow faster detection of 
+    infeasible models with better final objective values.  The objective used 
+    for the feasibility phase is controlled by the new user option 
+    "bar_switchobj".
+
+6)  Knitro 10.3 offers the following new user options, in addition to those 
+    mentioned above: 
+
+    - act_lpfeastol: controls the feasibility tolerance in LP subproblems for
+      the active-set or SQP algorithms 
+
+    - bar_slackboundpush: controls how far the initial slack variables are 
+      pushed inside the bounds (a smaller value may be preferable for 
+      warm-starts) 
+
+    - cg_stoptol: controls the termination tolerance for the conjugate gradient
+      (CG) subproblems used in Knitro
+
+    - initpenalty: sets the initial penalty parameter used in the Knitro merit
+      functions 
+
+7)  Knitro 10.3 offers several enhancements to the KnitroR "R" interface:
+
+    - KnitroR offers a new feature to set the sparsity patterns of the Jacobian
+      and Hessian of the Lagrangian matrices. They can now be provided in the R
+      vectors "jacBitMap" and "hessBitMap", which are assumed to be in row 
+      major order and contain "1" when the corresponding matrix element is 
+      non-zero and "0" otherwise.
+
+    - KnitroR's nonlinear least-squares implementation is now fully based on 
+      Knitro's internal least-squares algorithms. The function "knitrovlsq" has
+      been renamed into "knitrolsq" and the previous "knitrolsq" method has 
+      been removed from the package.
+   
+    - In KnitroR, infinite bounds on variables and constraints can now be set
+      using the R keyword "Inf".  
+   
+    - KnitroR now loads the Knitro dynamic library at runtime. Therefore, the
+      user needs to have an environment variable KNITRODIR set and pointing to
+      its local installation directory of Knitro.
+
+8)  Two user options were renamed.  The option "maxcgit" was renamed 
+    "cg_maxit", and the option "pivot" was renamed "linsolver_pivottol".
+
+9)  The API function "KTR_addcompcons" was renamed "KTR_set_compcons". In the 
+    C++, Java and C# interfaces, the method "addCompCons" was deprecated and 
+    renamed into "setCompCons".
+
+10) Knitro 10.3 offers overall efficiency and robustness improvements on 
+    general nonlinear models as well as significant improvements in efficiency
+    on models with integer variables.
+
+
+Bug Fixes in Knitro 10.3.0
+--------------------------   
+
+1)  Fixed bug that could cause segfaults when there were some input errors
+    using a Knitro options file.
+
+2)  Fixed a bug using par_msnumthreads > 1 with the Knitro-AMPL interface.
+
+3)  Fixed a bug in the Knitro-MATLAB interface where memory issues could occur
+    when the objective function, objective gradient, or constraints were 
+    computed as sparse MATLAB arrays, rather than full MATLAB arrays.
+
+4)  In KnitroR, the user can now provide the Jacobian and Hessian of the 
+    Lagrangian matrices without having to specify their sparsity patterns. 
+    KnitroR will internally compute the sparsity patterns as dense if none is
+    provided. 
+
+5)  In KnitroR, all Knitro options are now available (integer, double and 
+    string). They can be set via the "options" list in the functions "knitro",
+    "knitromip" and "knitrolsq".
+
+See the Knitro 10.3 User's Manual for more information on the new features and 
+user options.  

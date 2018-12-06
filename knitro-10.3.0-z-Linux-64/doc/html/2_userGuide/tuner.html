@@ -1,0 +1,449 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head><div class = "head"> </div>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>The Knitro-Tuner &mdash; Artelys Knitro 10.3 User&#39;s Manual</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/Artelys_theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="Artelys Knitro 10.3 User&#39;s Manual" href="../index.html"/>
+        <link rel="up" title="User guide" href="../2_userGuide.html"/>
+        <link rel="next" title="Termination criteria" href="termination.html"/>
+        <link rel="prev" title="Parallelism" href="parallelism.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Artelys Knitro User's Manual
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                10.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../1_introduction.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../2_userGuide.html">User guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="gettingStarted.html">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="knitroOptions.html">Setting options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="derivatives.html">Derivatives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multistart.html">Multistart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="minlp.html">Mixed-integer nonlinear programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="complementarity.html">Complementarity constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ktrlsq.html">Nonlinear Least-Squares</a></li>
+<li class="toctree-l2"><a class="reference internal" href="algorithms.html">Algorithms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feasibility.html">Feasibility and infeasibility</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parallelism.html">Parallelism</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">The Knitro-Tuner</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#default-tuning">Default Tuning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#custom-tuning">Custom Tuning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tuner-output">Tuner Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tuner-options">Tuner Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ampl-example">AMPL example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#matlab-example">MATLAB example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c-example">C example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#object-oriented-c-example">Object-oriented C++ example</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="termination.html">Termination criteria</a></li>
+<li class="toctree-l2"><a class="reference internal" href="obtainingInformation.html">Obtaining information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="callbacks.html">Callbacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="otherProgInterfaces.html">Other programmatic interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="specialProblems.html">Special problem classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tips.html">Tips and tricks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bibliography.html">Bibliography</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../3_referenceManual.html">Reference manual</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">Artelys Knitro User's Manual</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../2_userGuide.html">User guide</a> &raquo;</li>
+      
+    <li>The Knitro-Tuner</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="the-knitro-tuner">
+<span id="sec-tuner"></span><h1>The Knitro-Tuner</h1>
+<p id="index-0">The Knitro-Tuner can help you identify some non-default options settings
+that may improve performance on a particular model or set of
+models. This section desribes how to use the Knitro-Tuner.</p>
+<div class="section" id="default-tuning">
+<h2>Default Tuning</h2>
+<p>If you are unsure about what Knitro options should
+be tuned to try to improve performance, then you can simply run the
+default Knitro-Tuner by setting the option <a class="reference internal" href="../3_referenceManual/userOptions.html#tuner" title="tuner"><code class="xref c c-type docutils literal"><span class="pre">tuner</span></code></a> =1, when
+running Knitro on your model.  This will cause Knitro to automatically
+run your model with a variety of automatically determined option settings,
+and report some statistics at the end.  Any Knitro options that have been
+set in the usual way will remain fixed throughout the tuning procedure.</p>
+</div>
+<div class="section" id="custom-tuning">
+<h2>Custom Tuning</h2>
+<p>If you have some ideas about which Knitro options you want to tune,
+then you can tell Knitro which options you want it to tune (as well
+as specify the values for particular options that you want Knitro to
+explore).  This can be done by specifying a Tuner options file.
+A Tuner options file is a simple text file that is similar to a
+standard Knitro options file (see <a class="reference internal" href="knitroOptions.html#sec-knitrooptions"><span class="std std-ref">Setting options</span></a> for details
+on how to define a standard Knitro options file).</p>
+<p>A Tuner options file differs from a standard Knitro options file in a
+few ways:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>You can define multiple values (separated by spaces) for each option.
+This tells Knitro the values you want it to explore.</li>
+<li>You can specify an option name without any values.  This will tell
+Knitro to explore all possible option values for that option.  This only
+works for options that have a finite set of possible option value settings.</li>
+<li>A Tuner options file is loaded through the API function
+<a class="reference internal" href="../3_referenceManual/callableLibrary/API.html#KTR_load_tuner_file" title="KTR_load_tuner_file"><code class="xref c c-func docutils literal"><span class="pre">KTR_load_tuner_file()</span></code></a> if using the callable library API
+(procedures for loading a Tuner options file for other environments
+are demonstrated in the examples below).</li>
+</ol>
+</div></blockquote>
+<p>All possible combinations of options/values specified in a Tuner options
+file will be explored by Knitro, while any Knitro options that have been
+set in the usual way will remain fixed throughout the tuning procedure.</p>
+<p>An example of using the Knitro-Tuner and defining a Tuner options file
+is provided in <code class="file docutils literal"><span class="pre">examples/C</span></code> in the Knitro distribution.  Below is
+the Tuner options file from that example.</p>
+<div class="highlight-none"><div class="highlight"><pre><span></span># This file is used to specify the options and option values
+# that will be systematically explored by the Knitro-Tuner
+# in &quot;tunerExample.c&quot;.  One can specify the specific option
+# values to be explored by a particular option (as with
+# &quot;bar_directinterval&quot; and &quot;linsolver_pivottol&quot; below). If
+# just the option name is listed (as with &quot;algorithm&quot; and
+# &quot;bar_murule&quot;), then all values for that option will be
+# explored (only for options that have a finite number of
+# integer values).
+
+algorithm
+bar_directinterval 0 1 10
+bar_murule
+linsolver_pivottol 1e-8 1e-14
+</pre></div>
+</div>
+<p>This options file tells the Knitro-Tuner to explore all possible
+option values for the <a class="reference internal" href="../3_referenceManual/userOptions.html#algorithm" title="algorithm"><code class="xref c c-type docutils literal"><span class="pre">algorithm</span></code></a> and <a class="reference internal" href="../3_referenceManual/userOptions.html#bar_murule" title="bar_murule"><code class="xref c c-type docutils literal"><span class="pre">bar_murule</span></code></a>
+options, while exploring three values (0, 1 and 10) for the <a class="reference internal" href="../3_referenceManual/userOptions.html#bar_directinterval" title="bar_directinterval"><code class="xref c c-type docutils literal"><span class="pre">bar_directinterval</span></code></a>
+option and two values (1e-8 and 1e-14) for the <a class="reference internal" href="../3_referenceManual/userOptions.html#linsolver_pivottol" title="linsolver_pivottol"><code class="xref c c-type docutils literal"><span class="pre">linsolver_pivottol</span></code></a> option.</p>
+</div>
+<div class="section" id="tuner-output">
+<h2>Tuner Output</h2>
+<p>The Tuner output, by default, provides a summary line of output for each
+solve during the tuning process indicating the results of that particular solve.
+When the Tuner completes all solves, it reports the non-default option settings for
+the fastest solve.  Perhaps more insightful, however, is a summary table of statistics
+provided by the Tuner at the end of the solve.  For example, in the example
+provided in <code class="file docutils literal"><span class="pre">examples/C</span></code>, we may see something like this:</p>
+<div class="highlight-none"><div class="highlight"><pre><span></span>Summary Statistics
+---------------------------------------------------------------------------
+                                            Percent   Average     Average
+    Option Name          Value      #Runs   Optimal  #FuncEvals     Time
+--------------------  ----------  --------  -------  ----------  ----------
+  bar_directinterval           0        24   100.00        12.2       0.001
+  bar_directinterval           1        24   100.00         7.9       0.001
+  bar_directinterval          10        24   100.00         7.9       0.001
+--------------------  ----------  --------  -------  ----------  ----------
+          bar_murule           1        12   100.00         8.7       0.001
+          bar_murule           2        12   100.00         7.5       0.001
+          bar_murule           3        12   100.00         9.7       0.001
+          bar_murule           4        12   100.00         9.5       0.001
+          bar_murule           5        12   100.00        10.3       0.001
+          bar_murule           6        12   100.00        10.5       0.001
+--------------------  ----------  --------  -------  ----------  ----------
+  linsolver_pivottol    1.00e-08        38   100.00         9.1       0.001
+  linsolver_pivottol    1.00e-14        38   100.00         9.1       0.001
+--------------------  ----------  --------  -------  ----------  ----------
+           algorithm           1        36   100.00        12.7       0.002
+           algorithm           2        36   100.00         6.0       0.001
+           algorithm           3         2   100.00         5.0       0.002
+           algorithm           4         2   100.00         3.0       0.011
+---------------------------------------------------------------------------
+</pre></div>
+</div>
+<p>This table indicates the option values explored, the number of
+Tuner runs for each option value, the percentage
+of those runs where it found an optimal solution, the average number of function
+evaluations (in the cases where it found an optimal solution), and the average
+time (in the cases where it found an optimal solution).  In this particular
+example, the model tested is very small, so the solution times are generally near 0.</p>
+<p>This summary table provides some global view of which option settings may be preferable.
+For example, the table above suggests that <a class="reference internal" href="../3_referenceManual/userOptions.html#algorithm" title="algorithm"><code class="xref c c-type docutils literal"><span class="pre">algorithm</span></code></a> =2 may be preferable
+for models of this type since it (on average) requires a little less time to find
+an optimal solution.  Although if function evaluations were the dominant cost, then
+<a class="reference internal" href="../3_referenceManual/userOptions.html#algorithm" title="algorithm"><code class="xref c c-type docutils literal"><span class="pre">algorithm</span></code></a> =4 might be preferable.  The table also suggests that perhaps
+the non-default setting <a class="reference internal" href="../3_referenceManual/userOptions.html#bar_murule" title="bar_murule"><code class="xref c c-type docutils literal"><span class="pre">bar_murule</span></code></a> =2 should be used, since it requires, on
+average, the fewest number of function evaluations to converge, although other values
+are only slightly worse.</p>
+<p>More detailed output can be obtained through non-default settings of <a class="reference internal" href="../3_referenceManual/userOptions.html#tuner_outsub" title="tuner_outsub"><code class="xref c c-type docutils literal"><span class="pre">tuner_outsub</span></code></a>.
+In particular, if <a class="reference internal" href="../3_referenceManual/userOptions.html#tuner_outsub" title="tuner_outsub"><code class="xref c c-type docutils literal"><span class="pre">tuner_outsub</span></code></a> =1, then a summary file called
+<code class="file docutils literal"><span class="pre">knitro_tuner_summary.log</span></code> is created in the current folder/directory.
+Each line of this file shows the option settings used and the summary results
+with these settings.  A corresponding file called <code class="file docutils literal"><span class="pre">knitro_tuner_summary.csv</span></code>
+is also created, which allows easily reading these results into a spreadsheet.
+Additionally, if <a class="reference internal" href="../3_referenceManual/userOptions.html#tuner_outsub" title="tuner_outsub"><code class="xref c c-type docutils literal"><span class="pre">tuner_outsub</span></code></a> =2, the individual
+output file for each tuner solve is created in a file called
+<code class="file docutils literal"><span class="pre">knitro_tuner_*.log</span></code>, where * is the corresponding solve number.</p>
+</div>
+<div class="section" id="tuner-options">
+<h2>Tuner Options</h2>
+<p>The following options may be used to customize the performance of the Knitro-Tuner.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="35%" />
+<col width="65%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Option</th>
+<th class="head">Meaning</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference internal" href="../3_referenceManual/userOptions.html#tuner" title="tuner"><code class="xref c c-type docutils literal"><span class="pre">tuner</span></code></a></td>
+<td>Enable Tuner</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="../3_referenceManual/userOptions.html#tuner_maxtime_cpu" title="tuner_maxtime_cpu"><code class="xref c c-type docutils literal"><span class="pre">tuner_maxtime_cpu</span></code></a></td>
+<td>Maximum CPU time for Tuner, in seconds</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="../3_referenceManual/userOptions.html#tuner_maxtime_real" title="tuner_maxtime_real"><code class="xref c c-type docutils literal"><span class="pre">tuner_maxtime_real</span></code></a></td>
+<td>Maximum real time for Tuner, in seconds</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="../3_referenceManual/userOptions.html#tuner_optionsfile" title="tuner_optionsfile"><code class="xref c c-type docutils literal"><span class="pre">tuner_optionsfile</span></code></a></td>
+<td>Specify location/name of Tuner options file</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="../3_referenceManual/userOptions.html#tuner_outsub" title="tuner_outsub"><code class="xref c c-type docutils literal"><span class="pre">tuner_outsub</span></code></a></td>
+<td>Output additional Tuner subproblem solve information</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="../3_referenceManual/userOptions.html#tuner_terminate" title="tuner_terminate"><code class="xref c c-type docutils literal"><span class="pre">tuner_terminate</span></code></a></td>
+<td>Termination condition for Tuner</td>
+</tr>
+</tbody>
+</table>
+<p>Note that setting  <a class="reference internal" href="../3_referenceManual/userOptions.html#par_numthreads" title="par_numthreads"><code class="xref c c-type docutils literal"><span class="pre">par_numthreads</span></code></a> to use multiple threads allows the tuner
+to be run in parallel.</p>
+<p>The following examples show how to load a Tuner options file in various environments.</p>
+</div>
+<div class="section" id="ampl-example">
+<h2>AMPL example</h2>
+<p>When using Knitro/AMPL, you can specify the location/name of a Tuner options file
+through the <a class="reference internal" href="../3_referenceManual/userOptions.html#tuner_optionsfile" title="tuner_optionsfile"><code class="xref c c-type docutils literal"><span class="pre">tuner_optionsfile</span></code></a> option as shown below.</p>
+<div class="highlight-none"><div class="highlight"><pre><span></span>ampl: option knitro_options &quot;tuner=1 tuner_optionsfile=&#39;tuner-explore.opt&#39;&quot;;
+</pre></div>
+</div>
+</div>
+<div class="section" id="matlab-example">
+<h2>MATLAB example</h2>
+<p>In Knitro/MATLAB, the only way to enable the Knitro-Tuner and specify the location
+of a Tuner options file is through a standard Knitro options file.  For example,
+the following Knitro options file, passed as the last argument to <em>knitromatlab</em>
+would enable the
+Tuner and load the Tuner options file <code class="xref c c-type docutils literal"><span class="pre">tuner-explore.opt</span></code> assumed to
+exist in the current folder/directory.</p>
+<div class="highlight-none"><div class="highlight"><pre><span></span># Example Knitro options file used to enable the Tuner
+# and load a Tuner options file in Knitro/MATLAB.
+
+tuner 1
+tuner_optionsfile  tuner-explore.opt
+</pre></div>
+</div>
+</div>
+<div class="section" id="c-example">
+<h2>C example</h2>
+<p>In the callable library interface, a Tuner options file can be loaded
+through the <a class="reference internal" href="../3_referenceManual/callableLibrary/API.html#KTR_load_tuner_file" title="KTR_load_tuner_file"><code class="xref c c-func docutils literal"><span class="pre">KTR_load_tuner_file()</span></code></a> API function.</p>
+<div class="highlight-c"><div class="highlight"><pre><span></span><span class="cm">/*---- TURN ON THE KNITRO-TUNER */</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">KTR_set_int_param</span> <span class="p">(</span><span class="n">kc</span><span class="p">,</span> <span class="n">KTR_PARAM_TUNER</span><span class="p">,</span> <span class="n">KTR_TUNER_ON</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">exit</span><span class="p">(</span> <span class="o">-</span><span class="mi">1</span> <span class="p">);</span>
+
+<span class="cm">/*---- LOAD TUNER OPTIONS FILE &quot;tuner-explore.opt&quot;. */</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">KTR_load_tuner_file</span> <span class="p">(</span><span class="n">kc</span><span class="p">,</span> <span class="s">&quot;tuner-explore.opt&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">exit</span><span class="p">(</span> <span class="o">-</span><span class="mi">1</span> <span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="object-oriented-c-example">
+<h2>Object-oriented C++ example</h2>
+<p>In the object-oriented interface, a Tuner options file can be loaded
+through the <code class="docutils literal"><span class="pre">KTRSolver::loadTunerFile()</span></code> method.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span></span><span class="c1">// Turn on the KNITRO options file.</span>
+<span class="n">solver</span><span class="p">.</span><span class="n">setParam</span><span class="p">(</span><span class="n">KTR_PARAM_TUNER</span><span class="p">,</span> <span class="n">KTR_TUNER_ON</span><span class="p">);</span>
+
+<span class="c1">// Load tuner options file &quot;tuner-explore.opt&quot;.</span>
+<span class="n">solver</span><span class="p">.</span><span class="n">loadTunerFile</span><span class="p">(</span><span class="s">&quot;tuner-explore.opt&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="termination.html" class="btn btn-neutral float-right" title="Termination criteria" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="parallelism.html" class="btn btn-neutral" title="Parallelism" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Artelys.
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'10.3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  false
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
