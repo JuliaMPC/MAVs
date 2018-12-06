@@ -4,7 +4,7 @@ obstacle_detector:
     use_pcl: false
     use_scan: true
     use_split_and_merge: true
-    circles_from_visibles: true
+    circles_from_visibles: false
     discard_converted_segments: false
     transform_coordinates: true
     min_group_points: 5
