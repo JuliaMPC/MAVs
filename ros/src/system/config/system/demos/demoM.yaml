@@ -35,8 +35,8 @@ system:
    gui: true
   field:
    h: 0
-   l: 500.0
-   w: 500.0
+   l: 1000.0
+   w: 1000.0
 
  vehicle_description:
   flags:

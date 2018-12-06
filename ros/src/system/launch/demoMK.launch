@@ -16,7 +16,7 @@
   <arg name="manager" default="$(arg frame_id)_nodelet_manager" />
 
   <!--nloptcontrol_planner args and parameters-->
-  <arg name="planner_params_path" default="$(find system)/config/planner/nloptcontrol_planner/plannerD.yaml"/>
+  <arg name="planner_params_path" default="$(find system)/config/planner/nloptcontrol_planner/plannerDK.yaml"/>
   <rosparam command="load" file="$(arg planner_params_path)" />
 
   <!--vehicle_description args and parameters-->
