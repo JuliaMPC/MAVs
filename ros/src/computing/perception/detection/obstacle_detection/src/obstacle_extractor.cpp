@@ -448,8 +448,8 @@ void ObstacleExtractor::publishObstacles() {
   }
 
   for (const Circle& c : circles_) {
-    //if (c.center.x > p_min_x_limit_ && c.center.x < p_max_x_limit_ &&
-     //   c.center.y > p_min_y_limit_ && c.center.y < p_max_y_limit_) {
+    if (c.center.x > p_min_x_limit_ && c.center.x < p_max_x_limit_ &&
+        c.center.y > p_min_y_limit_ && c.center.y < p_max_y_limit_) {
         CircleObstacle circle;
 
         circle.center.x = c.center.x;
@@ -460,7 +460,7 @@ void ObstacleExtractor::publishObstacles() {
         circle.true_radius = c.radius - p_radius_enlargement_;
 
         obstacles_msg->circles.push_back(circle);
-    //}
+    }
   }
 
   obstacles_pub_.publish(obstacles_msg);
