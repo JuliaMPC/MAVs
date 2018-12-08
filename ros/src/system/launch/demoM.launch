@@ -11,10 +11,6 @@
   <rosparam command="load" file="$(arg system_params_path)" />
   <rosparam command="load" file="$(arg vehicle_params_path)" />
 
-  <!--obstacle_detector args and parameters-->
-  <arg name="frame_id" default="velodyne_top_link" />
-  <arg name="manager" default="$(arg frame_id)_nodelet_manager" />
-
   <!--nloptcontrol_planner args and parameters-->
   <arg name="planner_params_path" default="$(find system)/config/planner/nloptcontrol_planner/plannerD.yaml"/>
   <rosparam command="load" file="$(arg planner_params_path)" />
