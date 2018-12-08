@@ -20,7 +20,8 @@
   <arg name="paused" default="true"/> <!--pause Gazebo at the start until Chrono is ready: NOTE this pause overrides system/flags/pause -->
   <!-- use Gazebo's simulation time -->
   <param name="use_sim_time" value="true"/>
-
+  <!-- rosbag arg -->
+  <arg name="ros_bag_name" default="demoM"/>
   <!--  ************** load args and parameters ***************  -->
 
   <!--  ************** launch scripts ***************  -->
@@ -41,9 +42,6 @@
   </include>
 
   <include file="$(find obstacle_detector)/launch/main_scan.launch"/>
-
-  <!-- rosbag arg -->
-  <arg name="ros_bag_name" default="demoM"/>
 
   <!--  ************** launch scripts ***************  -->
 

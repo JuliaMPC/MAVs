@@ -23,11 +23,9 @@
 
   <!-- rosbag arg -->
   <arg name="ros_bag_name" default="demoK"/>
-
   <!--  ************** load args and parameters ***************  -->
 
   <!--  ************** launch scripts ***************  -->
-
   <include file="$(find nloptcontrol_planner)/launch/main.launch">
     <arg name="case_params_path" value="$(arg case_params_path)"/>
     <arg name="planner_params_path" value="$(arg planner_params_path)"/>
@@ -42,7 +40,6 @@
     <arg name="gui" value="$(arg gui)"/>
     <arg name="paused" value="$(arg paused)"/>
   </include>
-
   <!--  ************** launch scripts ***************  -->
 
 
@@ -67,7 +64,7 @@
   </node>
 
   <!-- save data using rosbag -->
-  <node pkg="rosbag" type="record" name="record" args="record -O /home/mavs/MAVs/results/$(arg ros_bag_name).bag 
+  <node pkg="rosbag" type="record" name="record" args="record -O /home/mavs/MAVs/results/$(arg ros_bag_name).bag
                                                                  /nlopcontrol_planner/opt
                                                                  /nlopcontrol_planner/control
                                                                  /state"/>
