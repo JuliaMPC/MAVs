@@ -1,3 +1,6 @@
-results/
+/results/*
+!/results/postProcess.py
+!/results/README.md
 /docs/build
-/docs/Manifest.toml
+docs/Manifest.toml
+/knitro-10.3.0-z-Linux-64/*

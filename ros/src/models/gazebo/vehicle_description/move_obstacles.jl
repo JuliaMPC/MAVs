@@ -24,6 +24,7 @@ function loop(pub)
     end
 
     while !is_shutdown()
+
         for i in 1:obs_num
             cmd = Twist()
             cmd.linear.x = RobotOS.get_param("/case/actual/obstacle/vx")[i]
@@ -48,7 +49,7 @@ function main()
     pub = Array{Publisher{Twist}}(obs_num)
 
     for i in 1:obs_num
-        pub[i] = Publisher{Twist}(string("Obstacle",i,"/cmd_vel"), queue_size = 10)
+        pub[i] = Publisher{Twist}(string("Obstacle",i-1,"/cmd_vel"), queue_size = 10)
     end
 
     loop(pub)

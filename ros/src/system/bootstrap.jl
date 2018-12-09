@@ -22,6 +22,12 @@ function main()
         println("waiting on move_obstacles.jl in vehicle_description ...")
         sleep(2)
       end
+      if RobotOS.has_param("system/vehicle_description/flags/obstacles_spawned")
+          while(!RobotOS.get_param("system/vehicle_description/flags/obstacles_spawned"))
+            println("waiting on creating obstacles in vehicle_description ...")
+            sleep(2)
+          end
+      end
     end
   end
 

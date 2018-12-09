@@ -35,21 +35,22 @@ system:
    gui: true
   field:
    h: 0
-   l: 500.0
-   w: 500.0
+   l: 1000.0
+   w: 1000.0
 
  vehicle_description:
   flags:
    running: true
    lidar_initialized: false
    obstacles_initialized: false
+   obstacles_spawned: false
    postion_update_external: true
 
  obstacle_detector:
   flags:
    running: true
    initialized: false
-   
+
  sim_time:
    flags:
     initialized: false

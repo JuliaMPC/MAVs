@@ -1,17 +1,17 @@
 <?xml version="1.0"?>
 <robot  name="hokuyo_laser" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <xacro:macro name="hokuyo_laser" params="parent">
+  <xacro:macro name="hokuyo_laser" params="parent lidar_x lidar_z lidar_frame lidar_topic robotNamespace">
 
       <joint name="hokuyo_joint" type="fixed">
-        <axis xyz="0 0 ${lidar_height}" />
-        <origin xyz="0 0 ${lidar_height}" rpy="0 0 0" />
+        <axis xyz="${lidar_x} 0 ${lidar_z}" />
+        <origin xyz="${lidar_x} 0 ${lidar_z}" rpy="0 0 0" />
         <parent link="${parent}"/>
-        <child link="hokuyo_link"/>
+        <child link="${lidar_frame}"/>
      </joint>
 
     <!-- Hokuyo Laser -->
-    <link name="hokuyo_link">
+    <link name="${lidar_frame}">
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
@@ -22,7 +22,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://rrbot_description/meshes/hokuyo.dae"/>
+          <mesh filename="package://velodyne_description/meshes/hokuyo.dae" />
         </geometry>
       </visual>
 
@@ -37,15 +37,15 @@
     <!-- ros_control plugin -->
     <gazebo>
       <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
-        <robotNamespace>/bot</robotNamespace>
+        <robotNamespace>${robotNamespace}</robotNamespace>
         <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
-        <topicName>/bot/control</topicName>
+        <topicName>/${robotNamespace}/control</topicName>
         <frameName>gazebo_control</frameName>
       </plugin>
     </gazebo>
 
     <!-- hokuyo -->
-    <gazebo reference="hokuyo_link">
+    <gazebo reference="${lidar_frame}">
       <sensor type="gpu_ray" name="head_hokuyo_sensor">
         <pose>0 0 0 0 0 0</pose>
         <visualize>false</visualize>
@@ -53,7 +53,7 @@
         <ray>
           <scan>
             <horizontal>
-              <samples>720</samples>
+              <samples>1875</samples>
               <resolution>1</resolution>
               <min_angle>-1.570796</min_angle>
               <max_angle>1.570796</max_angle>
@@ -61,7 +61,7 @@
           </scan>
           <range>
             <min>0.10</min>
-            <max>30.0</max>
+            <max>100.0</max>
             <resolution>0.01</resolution>
           </range>
           <noise>
@@ -75,8 +75,9 @@
           </noise>
         </ray>
         <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_gpu_laser.so">
-          <topicName>/rrbot/laser/scan</topicName>
-          <frameName>hokuyo_link</frameName>
+          <!--topicName>/rrbot/laser/scan</topicName-->
+          <topicName>${lidar_topic}</topicName>
+          <frameName>${lidar_frame}</frameName>
         </plugin>
       </sensor>
     </gazebo>

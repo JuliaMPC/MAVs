@@ -34,9 +34,10 @@ planner:
       x0slackVariables: true
       xFslackVariables: true
       movingObstacles: false
-      onlyOptimal: false
-      evalConstraints: true
-      ocpSave: true
+      onlyOptimal: true
+      evalConstraints: false
+      ocpSave: false
+
 
     weights:
       ic: 100.0

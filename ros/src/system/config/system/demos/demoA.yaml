@@ -7,7 +7,7 @@ system:
  flags:
   initialized: false
   paused: true
-  
+
  shutdown:
   flags:
    running: true
@@ -22,9 +22,10 @@ system:
    running: true
    lidar_initialized: false
    obstacles_initialized: false
+   obstacles_spawned: false
    postion_update_external: false
   params:
-   step_distance: 0.5
+   step_distance: 0.0
 
  obstacle_detector:
   flags:
