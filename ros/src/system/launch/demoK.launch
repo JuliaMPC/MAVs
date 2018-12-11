@@ -67,7 +67,8 @@
   <node pkg="rosbag" type="record" name="record" args="record -O /home/mavs/MAVs/results/$(arg ros_bag_name).bag
                                                                  /nlopcontrol_planner/opt
                                                                  /nlopcontrol_planner/control
-                                                                 /state"/>
+                                                                 /state
+                                                                 /control"/>
 
   <node name="visualization" pkg="visualization" type="data_plotter.py" />
   <!--  ************** additional nodes ***************  -->
