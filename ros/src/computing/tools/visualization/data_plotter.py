@@ -14,7 +14,7 @@ class DataPlotter():
         self.t_actual = np.array([], dtype=np.float64)
         self.t_traj = np.array([], dtype=np.float64)
         self.t_traj_last = np.array([], dtype=np.float64)
-        
+
         # position data
         self.x_actual = np.array([], dtype=np.float64)
         self.y_actual = np.array([], dtype=np.float64)
@@ -98,7 +98,7 @@ class DataPlotter():
         self.sa_subplot.add_line(self.line_sa_traj_last)
         self.sa_subplot.add_line(self.line_sa_upper_limit)
         self.sa_subplot.add_line(self.line_sa_lower_limit)
-        self.sa_subplot.legend(['actual sa', 'planned sa', 'previous sa', 'upper limit', 'lower limit'], fontsize='x-small')
+        self.sa_subplot.legend(['actual', 'planned', 'previous planned', 'upper limit', 'lower limit'], fontsize='x-small')
         self.sa_subplot.set_xlabel('time (s)', fontsize='larger', verticalalignment='center')
         self.sa_subplot.set_ylabel('sa (rad)', fontsize='larger')
         self.sa_subplot.tick_params('both', labelsize='x-small')
@@ -130,7 +130,7 @@ class DataPlotter():
         self.ax_subplot.add_line(self.line_ax_traj_last)
         self.ax_subplot.add_line(self.line_ax_upper_limit)
         self.ax_subplot.add_line(self.line_ax_lower_limit)
-        self.ax_subplot.legend(['actual ax', 'planned ax', 'previous ax', 'upper limit', 'lower limit'], fontsize='x-small')
+        self.ax_subplot.legend(['actual', 'planned', 'previous planned', 'upper limit', 'lower limit'], fontsize='x-small')
         self.ax_subplot.set_xlabel('time (s)', fontsize='larger', verticalalignment='center')
         self.ax_subplot.set_ylabel('ax (m/s)', fontsize='larger')
         self.ax_subplot.tick_params('both', labelsize='x-small')
@@ -191,7 +191,7 @@ class DataPlotter():
                 self.sa_subplot.set_xlim(self.t_actual[-1]-self.t_band, self.t_actual[-1])
                 self.ux_subplot.set_xlim(self.t_actual[-1]-self.t_band, self.t_actual[-1])
                 self.ax_subplot.set_xlim(self.t_actual[-1]-self.t_band, self.t_actual[-1])
-                
+
             if (len(self.solve_num) > 0 and self.solve_num[-1] > self.solve_num_band):
                 self.tSolve_subplot.set_xlim(self.solve_num[0], self.solve_num[-1])
 
@@ -223,8 +223,8 @@ def stateCallback(msg):
         data_plotter.ax_cumsum = data_plotter.ax_cumsum + data_plotter.ax_actual_real[len(data_plotter.ax_actual_real)-1]
         temp = data_plotter.ax_cumsum/len(data_plotter.ax_actual_real)
         data_plotter.ax_actual = np.append(data_plotter.ax_actual, temp)
-	
-    
+
+
     if(len(data_plotter.sa_actual_real) > num_avg):
         data_plotter.sa_cumsum = data_plotter.sa_cumsum + data_plotter.sa_actual_real[(len(data_plotter.sa_actual_real)-1)]-data_plotter.sa_actual_real[(len(data_plotter.sa_actual_real)-num_avg-1)]
         temp = sum(data_plotter.sa_actual_real[(len(data_plotter.sa_actual_real)-num_avg-1):(len(data_plotter.sa_actual_real)-1)])/num_avg
@@ -233,18 +233,18 @@ def stateCallback(msg):
         data_plotter.sa_cumsum = data_plotter.sa_cumsum + data_plotter.sa_actual_real[len(data_plotter.sa_actual_real)-1]
         temp = data_plotter.sa_cumsum/len(data_plotter.sa_actual_real)
         data_plotter.sa_actual = np.append(data_plotter.sa_actual, temp)
-    
-    
+
+
 
 def trajectoryCallback(msg):
     global data_plotter
 
     # # truncate the current message and append it to the old trajectory
     data_plotter.t_traj_last = np.append(data_plotter.t_traj_last, data_plotter.t_traj[1:2])
-    data_plotter.x_traj_last = np.append(data_plotter.x_traj_last, data_plotter.x_traj[1:2]) 
+    data_plotter.x_traj_last = np.append(data_plotter.x_traj_last, data_plotter.x_traj[1:2])
     data_plotter.y_traj_last = np.append(data_plotter.y_traj_last, data_plotter.y_traj[1:2])
     data_plotter.sa_traj_last = np.append(data_plotter.sa_traj_last, data_plotter.sa_traj[1:2])
-    data_plotter.ux_traj_last = np.append(data_plotter.ux_traj_last, data_plotter.ux_traj[1:2]) 
+    data_plotter.ux_traj_last = np.append(data_plotter.ux_traj_last, data_plotter.ux_traj[1:2])
     data_plotter.ax_traj_last = np.append(data_plotter.ax_traj_last, data_plotter.ax_traj[1:2])
 
     data_plotter.t_traj = msg.t
@@ -289,4 +289,3 @@ if __name__ == '__main__':
     while not rospy.is_shutdown():
         data_plotter.draw_frame()
         rate.sleep()
-        
