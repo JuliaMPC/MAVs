@@ -71,7 +71,7 @@ def update_topic_val(msg, args):
         child_arr = sub_val.split("/")
         for ch in child_arr:
             val=getattr(val, ch)
-    model["model"][key_map[key]]["__VAL__"] = msg
+    model["model"][key_map[key]]["__VAL__"] = val
 
 def subscribe_to_topics_in_model():
     global model
@@ -132,7 +132,7 @@ if __name__ == '__main__':
     rospy.set_param("system/result_store/flags/initialized", True)
     rate = rospy.Rate(2) # 50hz
     while not rospy.is_shutdown() and not shutdown_flag:
-        print "############Yay force=", model["model"][3]["__VAL__"]
+        print "############Yay steer angle=", model["model"][3]["__VAL__"]
         # loop over model for ros parameter updates
         # TODO
 
