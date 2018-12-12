@@ -17,20 +17,23 @@
 
 
   <buildtool_depend>catkin</buildtool_depend>
-  
+
   <depend>roscpp</depend>
   <depend>rospy</depend>
 
   <!-- New added part for rostest, start -->
-  <depend>rostest</depend> 
+  <depend>rostest</depend>
   <depend>genmsg</depend>
   <depend>std_msgs</depend>
+  <depend>mavs_msgs</depend>
+  <depend>nloptcontrol_planner</depend>
   <!-- New added part for rostest, end -->
 
-  <exec_depend>nloptcontrol_planner</exec_depend>
   <exec_depend>vehicle_description</exec_depend>
   <exec_depend>obstacle_detector</exec_depend>
   <exec_depend>ros_base_planner</exec_depend>
+
+
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>

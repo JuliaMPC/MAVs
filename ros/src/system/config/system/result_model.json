@@ -1,0 +1,68 @@
+{
+  "model_id": "model1",
+  "model": [
+    {
+      "key": "Case Id",
+      "val": "/case/id",
+      "ros_msg_type": "parameter",
+      "dataType": "String",
+      "save": true
+    },
+    {
+      "key": "Vehicle Collided",
+      "val": "/vehicle_collided",
+      "ros_msg_type": "parameter",
+      "dataType": "Bool",
+      "save": true,
+      "stopping_criteria": {
+        "logical_op": "OR",
+        "conditions": [
+          {
+            "op": "eq",
+            "val": true
+          }
+        ],
+        "description": "Vehicle has collided."
+      }
+    },
+    {
+      "key": "Goal attained",
+      "val": "/system/flags/goal_attained",
+      "ros_msg_type": "parameter",
+      "dataType": "Bool",
+      "save": true,
+      "stopping_criteria": {
+        "logical_op": "OR",
+        "conditions": [
+          {
+            "op": "eq",
+            "val": true
+          }
+        ],
+        "description": "Goal is attained."
+      }
+    },
+    {
+      "key": "Steering Angle",
+      "val": "/state",
+      "sub_val": "sa",
+      "ros_msg_type": "topic",
+      "dataType": "state",
+      "save": true,
+      "stopping_criteria": {
+        "logical_op": "OR",
+        "conditions": [
+          {
+            "op": "lte",
+            "val": 0.01
+          },
+          {
+            "op": "gte",
+            "val": 1.5
+          }
+        ],
+        "description": "Acceleration limit was violated."
+      }
+    }
+  ]
+}
