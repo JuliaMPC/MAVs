@@ -46,6 +46,7 @@ def close_file():
         pass
 
 def record_data_row():
+    # TODO
     pass
 
 def add_dataval_variable_in_model_objects():
@@ -68,13 +69,8 @@ def update_topic_val(msg, args):
     val = msg
     if sub_val is not None:
         child_arr = sub_val.split("/")
-
-        print "###value = ", val, "\n"
         for ch in child_arr:
-            # TODO debug this
-            #val=val[ch]
-            print "###chil = ", ch, "type = ", type(val) ,"\n"
-    print "updating model at idx =", key_map[key], "at key =", key, "with val", val
+            val=getattr(val, ch)
     model["model"][key_map[key]]["__VAL__"] = msg
 
 def subscribe_to_topics_in_model():
