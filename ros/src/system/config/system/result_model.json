@@ -1,18 +1,19 @@
 {
   "model_id": "model1",
+  "add_description": true,
+  "description_header": "Description",
+  "default_description": "Shutdown was caused by some unmonitored external phenomenon.",
   "model": [
     {
       "key": "Case Id",
       "val": "/case/id",
       "ros_msg_type": "parameter",
-      "dataType": "String",
       "save": true
     },
     {
       "key": "Vehicle Collided",
       "val": "/vehicle_collided",
       "ros_msg_type": "parameter",
-      "dataType": "Bool",
       "save": true,
       "stopping_criteria": {
         "logical_op": "OR",
@@ -29,7 +30,6 @@
       "key": "Goal attained",
       "val": "/system/flags/goal_attained",
       "ros_msg_type": "parameter",
-      "dataType": "Bool",
       "save": true,
       "stopping_criteria": {
         "logical_op": "OR",
@@ -48,21 +48,13 @@
       "sub_val": "sa",
       "ros_msg_type": "topic",
       "dataType": "state",
-      "save": true,
-      "stopping_criteria": {
-        "logical_op": "OR",
-        "conditions": [
-          {
-            "op": "lte",
-            "val": 0.01
-          },
-          {
-            "op": "gte",
-            "val": 1.5
-          }
-        ],
-        "description": "Acceleration limit was violated."
-      }
+      "save": true
+    },
+    {
+      "key": "Asumed obstacle X coord",
+      "val": "/case/assumed/obstacle/x0",
+      "ros_msg_type": "parameter",
+      "save": true
     }
   ]
 }
