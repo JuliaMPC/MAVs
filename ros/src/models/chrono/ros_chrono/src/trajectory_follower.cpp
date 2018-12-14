@@ -222,7 +222,7 @@ int main(int argc, char* argv[]) {
     // Load interpolation parameter
     double time_shift;
     node.getParam("planner/nloptcontrol_planner/misc/tex", time_shift);
-    time_shift = 0.1;
+    //time_shift = 0.1;
     // ---------------------
     // Set up PID controller
     // ---------------------
