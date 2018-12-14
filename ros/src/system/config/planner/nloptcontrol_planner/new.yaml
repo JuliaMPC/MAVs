@@ -11,7 +11,7 @@ planner:
       Ymin: NaN              # min limit for y in OCP
       Ymax: NaN              # max limit for y in OCP
       tp: NaN                # N/A prediction horizon (s)
-      tex: 0.05              # execution horizon (s)
+      tex: 0.5               # execution horizon (s)
       sm: 2.                 # (m) distance to see if obstacle was hit (for crash checking)
       sm1: 2.5               # (m) distance 1 to make sure we don't hit obstacle (for optimization)
       sm2: 4.0               # (m) distance 2 to make sure we don't hit obstacle (for optimization)
@@ -19,7 +19,7 @@ planner:
       L_rd: 10.               # relaxation distance to LiDAR range
       Nck: NaN               # number of points per interval
       N: 20                  # number of points in :tm methods
-      solver: KNITRO         # either Ipopt of KNITRO
+      solver: Ipopt         # either Ipopt of KNITRO
       mpc_max_iter: 1000      # an MPC parameter
       PredictX0: false       # if the state that the vehicle will be at when the optimization is finished is to be predicted
       FixedTp: true          # fixed final time for predicting X0
