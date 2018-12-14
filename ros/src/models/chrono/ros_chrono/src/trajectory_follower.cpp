@@ -222,7 +222,7 @@ int main(int argc, char* argv[]) {
     // Load interpolation parameter
     double time_shift;
     node.getParam("planner/nloptcontrol_planner/misc/tex", time_shift);
-
+    time_shift = 0.1;
     // ---------------------
     // Set up PID controller
     // ---------------------
@@ -425,12 +425,7 @@ int main(int argc, char* argv[]) {
         double steering_angle = steering_input * maximum_steering_angle; // steering angle (rad)
 
         // Compute yaw angle
-        double q0 = VehicleRot[0];
-        double q1 = VehicleRot[1];
-        double q2 = VehicleRot[2];
-        double q3 = VehicleRot[3];
-        double yaw_angle = atan2(2*(q0*q3+q1*q2),1-2*(q2*q2+q3*q3));
-
+        double yaw_angle = VehicleRot.Q_to_Euler123()[2];
         ChVector<> ORI2COM = global2veh(yaw_angle, VehicleCOMPos - VehiclePos);
 
         ChVector<> VehicleRot_dt = my_hmmwv.GetChassisBody()->GetWvel_loc(); // actual angular speed (expressed in local coords)

@@ -41,6 +41,7 @@
 #include "chrono/utils/ChFilters.h"
 #include "chrono_vehicle/ChVehicleModelData.h"
 #include "chrono_vehicle/terrain/RigidTerrain.h"
+#include "chrono_vehicle/terrain/FlatTerrain.h" 
 #include "chrono_vehicle/driver/ChIrrGuiDriver.h"
 #include "chrono_vehicle/driver/ChPathFollowerDriver.h"
 #include "chrono_vehicle/utils/ChVehiclePath.h"
@@ -324,7 +325,8 @@ int main(int argc, char* argv[]) {
 	// Load interpolation parameter
 	double time_shift;
 	node.getParam("planner/nloptcontrol_planner/misc/tex", time_shift);
-
+	time_shift = 0.1;
+	
 	// ---------------------
 	// Set up PID controller
 	// ---------------------
@@ -431,6 +433,7 @@ int main(int argc, char* argv[]) {
 	double maximum_steering_angle = my_hmmwv.GetVehicle().GetMaxSteeringAngle();
 
 	// Create the terrain
+	//RigidTerrain terrain(terrainHeight - 5, frict_coeff);
 	RigidTerrain terrain(my_hmmwv.GetSystem());
 	auto patch = terrain.AddPatch(ChCoordsys<>(ChVector<>(0, 0, terrainHeight - 5), QUNIT),
 		ChVector<>(terrainLength, terrainWidth, 10));

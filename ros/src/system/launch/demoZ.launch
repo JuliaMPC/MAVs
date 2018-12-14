@@ -23,7 +23,7 @@
   <param name="use_sim_time" value="true"/>
 
   <!-- rosbag arg -->
-  <arg name="ros_bag_name" default="demoK"/>
+  <arg name="ros_bag_name" default="demoZ"/>
   <!--  ************** load args and parameters ***************  -->
 
   <!--  ************** launch scripts ***************  -->
