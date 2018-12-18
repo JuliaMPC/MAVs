@@ -282,7 +282,7 @@ if __name__ == '__main__':
     rospy.Subscriber("nlopcontrol_planner/control", Trajectory, trajectoryCallback)
     rospy.Subscriber("nlopcontrol_planner/opt", Optimization, optCallback)
 
-    rate = rospy.Rate(30) # 50hz
+    rate = rospy.Rate(50) # 50hz
     plt.ion()
     plt.show()
 
