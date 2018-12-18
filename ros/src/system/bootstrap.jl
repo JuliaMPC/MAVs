@@ -67,6 +67,15 @@ function main()
     end
   end
 
+  if RobotOS.has_param("system/result_store/flags/running")
+    if RobotOS.get_param("system/result_store/flags/running")
+      while(!RobotOS.get_param("system/result_store/flags/initialized"))
+        println("waiting on result store node to initialize in system ...")
+        sleep(5)
+      end
+    end
+  end
+
   if RobotOS.has_param("system/sim_time/flags/running")
     if RobotOS.get_param("system/sim_time/flags/running")
       while(!RobotOS.get_param("system/sim_time/flags/initialized"))
