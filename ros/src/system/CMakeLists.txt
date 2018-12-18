@@ -4,15 +4,29 @@ project(system)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
+  std_msgs
+  mavs_msgs
+  nloptcontrol_planner
 )
 catkin_metapackage()
 
 include_directories(${catkin_INCLUDE_DIRS})
 
+## Generate added messages and services with any dependencies listed here
+ generate_messages(
+   DEPENDENCIES
+   std_msgs
+   mavs_msgs
+   nloptcontrol_planner
+ )
+
 catkin_package(
   CATKIN_DEPENDS
   roscpp
+  rospy
+  std_msgs
 )
+
 
 add_executable(system_shutdown src/system_shutdown.cpp)
 
