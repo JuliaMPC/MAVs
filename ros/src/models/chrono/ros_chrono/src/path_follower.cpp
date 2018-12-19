@@ -184,8 +184,8 @@ unsigned int getTargetPos(const ChVector<>& pos_global, const std::vector<double
 			double insqrt = tb * tb - 4 * ta*(tc - dist_target * dist_target);
 			if (insqrt < 0) {
 				std::cout << "no solution" << std::endl;
-				x_target = xb + pos_global[0];
-				y_target = yb + pos_global[1];
+				x_target = xb + pos_global[0]; //x_target = xb + pos_global[0];
+				y_target = yb + pos_global[1]; // y_target = yb + pos_global[1];
 				target_speed = traj_ux[i];
 			}
 			else {

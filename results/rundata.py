@@ -6,9 +6,9 @@ import io
 import os
 
 def bag2csv(bag_name):
-
+    
     csv_name = bag_name.rstrip('.bag')
-
+    
     # open bag file for read
     print "Reading " + bag_name
     bag = rosbag.Bag(bag_name)
@@ -40,17 +40,17 @@ def bag2csv(bag_name):
                 if title_flag == 0:
                     title_list.append(msg_title)
                 value_list.append(msg_value)
-
+            
             if title_flag == 0:
                 bag2csv.writerow(title_list)
                 title_flag = 1
-
+            
             bag2csv.writerow(value_list)
-
+        
         # insert a row between to topics
         bag2csv.writerow([])
 
-
+    
     # close files
     csvfile.close()
     bag.close()
@@ -157,13 +157,13 @@ def processcsv(pathname, csvfilename):
 				old = old + temp[i*16] + ', '
 			sce_accum = sce_accum + abs(float(temp[6 * 16]))
 			vce_accum = vce_accum + abs(float(temp[8 * 16]))
-			sce = vce_accum/(float(temp[0]) + 0.5) # Normalize the velocity control effort by time
+			sce = vce_accum/(float(temp[0]) + 0.5) # Normalize the acc control effort by time
 			vce = sce_accum/(float(temp[0]) + 0.5) # Normalize the steering control effort by time
 			old = old + str(sce) + ' , ' # Concatenate the normalized acc control effort
 			old = old + str(vce) + ' , ' # Concatenate the normalized steering control effort
 			old = old + se[cnt] + ' , '
 			old = old + ve[cnt]
-
+			
 		except:
 			pass
 		cnt += 1
@@ -198,9 +198,9 @@ def readcase(demoname, casename, plannername, pathname):
 
 	F_sx = open(sxfile, 'r')
 	F_w = open(casefilename_full, 'w')
-
+	
 	line = F_sx.readline()
-
+	
 	name = ""
 	value = ""
 	while line:
@@ -222,12 +222,12 @@ def readcase(demoname, casename, plannername, pathname):
 				if(len(line) > 1):
 					value2 = line[1]
 					value2 = value2[0:-1]
-
-
+					
+					
 					if(len(value2) > 0):
 						name = name + name1 + name2 + ','
 						value = value + value2 + ','
-
+				
 			elif line[3]!=' ':
 				line = line[3:]
 				line = line.split(": ")
@@ -239,12 +239,12 @@ def readcase(demoname, casename, plannername, pathname):
 				for char3 in name3:
 					if(char3 == '0'):
 						char3 = 'O'
-
+			
 				name = name + name1 + name2 + name3 + ','
 				value3 = value3.replace(",", " ")
 				value = value + value3[0:-1] + ','
-
-
+				
+	
 		line = F_sx.readline()
 	value = name+'\n'+value
 	F_w.truncate(0)
@@ -270,15 +270,17 @@ if __name__ == '__main__':
 		pathname = "test"
 	else:
 		pathname = str(sys.argv[2])
-
+	
 	pathname = "./"+pathname+"/"+casename+plannername
 	print("save files to: " + pathname)
 
 	# make dir
 	#dirname = os.path.dirname(filename)
 	if not os.path.exists(pathname):
-    		os.makedirs(pathname)
+    		os.makedirs(pathname)	
 
 	filename = bag2csv(bag_name)
 	processcsv(pathname, filename)
-	readcase(demoname, casename, plannername, pathname)
+	readcase(demoname, casename, plannername, pathname)				
+			
+
