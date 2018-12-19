@@ -146,7 +146,7 @@ def processcsv(csvfilename):
 			for i in xrange(0,11):
 				old = old + temp[i*16] + '; '
 			sce_accum = sce_accum + abs(float(temp[6 * 16]))
-			vce_accum = vce_accum + abs(float(temp[7 * 16]))
+			vce_accum = vce_accum + abs(float(temp[8 * 16]))
 			sce = vce_accum/(float(temp[0]) + 0.5) # Normalize the velocity control effort by time
 			vce = sce_accum/(float(temp[0]) + 0.5) # Normalize the steering control effort by time
 			old = old + str(sce) + ' ; ' # Concatenate the normalized velcoity control effort

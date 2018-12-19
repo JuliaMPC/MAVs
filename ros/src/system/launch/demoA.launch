@@ -9,7 +9,7 @@
   <!--  ************* vehicle_description args and parameters ***************  -->
   <arg name="system_params_path" default="$(find system)/config/system/demos/demoA.yaml"/>
   <arg name="vehicle_params_path" default="$(find system)/config/vehicle/hmmwv.yaml"/>
-  <arg name="case_params_path" default="$(find system)/config/case/s9.yaml"/>
+  <arg name="case_params_path" default="$(find system)/config/case/s3.yaml"/>
   <arg name="gui" default="true"/>
   <arg name="paused" default="true"/> <!-- NOTE this pause overrides system/flags/pause for Gazebo-->
 
