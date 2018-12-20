@@ -10,6 +10,9 @@ vehicle:
   robotName: hmmwv  # NOTE cannot change, will break vehicle.launch because this is hardcoded in
   frameName: map
   ground_truth_topic: base_pose_ground_truth
+  lidar_model: 2 # 1: velodyne VLP16; 2: hokuyo_laser
+  lidar_frame: lidar_frame # NOTE cannot change until frame_tf_broadcaster.cpp does not hardcode in the lidar_frame!!
+  lidar_topic: scan
 
   # mesh parameters
   scale_factor: 0.2
@@ -118,3 +121,40 @@ vehicle:
    pinionRadius: "0.1,"
    pinionMaxAngle: "0.87"
    maxBrakeTorque: "4000"
+  controller:
+   Kp: 1.2
+   Ki: 0.002
+   Kd: 0.0
+   Kw: 0.00
+   upper_limit: 1.0
+   lower_limit: -1.0
+   anti_windup: clamping
+   time_shift: 0.5
+
+   velocity:
+    Kp: 0.5
+    Ki: 0.1
+    Kd: 0.0
+    Kw: 0.0
+    upper_limit: 1.0
+    lower_limit: -1.0
+    anti_windup: clamping
+
+   steering:
+    dist_error:
+     Kp: 0.02
+     Ki: 0.0
+     Kd: 0.0
+     Kw: 0.002
+     upper_limit: 0.5
+     lower_limit: -0.5
+     anti_windup: clamping
+
+    angle_error:
+     Kp: 0.05
+     Ki: 0.0
+     Kd: 0.0
+     Kw: 0.0
+     upper_limit: 0.5
+     lower_limit: -0.5
+     anti_windup: clamping

@@ -1,0 +1,24 @@
+<!-- Reusable launch file for obstacle detection -->
+<launch>
+
+  <rosparam command="load" file="$(find system)/config/detection/obstacle_detector_scan.yaml" />
+
+  <arg name="manager" default="nodelet_manager" />
+
+  <node name="$(arg manager)" pkg="nodelet" type="nodelet" args="manager" output="screen">
+    <param name="num_worker_threads" value="20"/>
+  </node>
+
+  <node name="obstacle_paramameters" pkg="obstacle_detector" type="obstacle_parameters.jl" output="screen"/>
+
+  <node name="obstacle_extractor" pkg="nodelet" type="nodelet" args="load obstacle_detector/ObstacleExtractor $(arg manager)">
+  </node>
+
+  <node name="obstacle_tracker" pkg="nodelet" type="nodelet" args="load obstacle_detector/ObstacleTracker $(arg manager)">
+    <remap from="tracked_obstacles" to="obstacles"/>
+  </node>
+
+  <node name="rviz" pkg="rviz" type="rviz" output="screen" args="-d $(find obstacle_detector)/resources/display.rviz"/>
+
+</launch>
+<!-- -->

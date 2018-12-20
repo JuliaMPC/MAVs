@@ -1,30 +1,21 @@
-FROM avpg/cain:base_cudagl
+FROM avpg/cain:middle
 
-#install pyqtgraph for visualization
-RUN sudo apt-get update \
-    && sudo apt-get install -y python-pip \
-    && sudo pip install pyqtgraph
+RUN /bin/bash -c 'rm -rf /home/$USERNAME/MAVs/ros/devel/* /home/$USERNAME/MAVs/ros/build/*'
 
-# create a folder and copy all the files in ros/ with MAVs owner
-RUN mkdir -p /home/$USERNAME/MAVs/ros
-COPY --chown=mavs:mavs ros /home/$USERNAME/MAVs/ros
-RUN /bin/bash -c 'source /opt/ros/kinetic/setup.bash; cd /home/$USERNAME/MAVs/ros/src; sudo rosdep init; rosdep update; catkin_init_workspace; cd ..; catkin_make' \
-    && echo "source /home/$USERNAME/MAVs/ros/devel/setup.bash" >> /home/$USERNAME/.bashrc \
-    && echo 'alias julia='/opt/julia-d386e40c17/bin/julia'' >> ~/.bashrc \
-    && echo 'export PATH="$PATH:/opt/julia-d386e40c17/bin"' >>  ~/.bashrc
+COPY ros /home/$USERNAME/MAVs/ros
+RUN /bin/bash -c 'source /opt/ros/kinetic/setup.bash; cd /home/$USERNAME/MAVs/ros/; catkin_make'
 
-RUN mkdir -p /home/$USERNAME/MAVs/results
+#COPY knitro-10.3.0-z-Linux-64 /home/$USERNAME/knitro-10.3.0-z-Linux-64
+#RUN echo 'export PATH="$HOME/knitro-10.3.0-z-Linux-64/knitroampl:$PATH"' >> ~/.bashrc
+#RUN echo 'export LD_LIBRARY_PATH="$HOME/knitro-10.3.0-z-Linux-64/lib:$LD_LIBRARY_PATH"' >> ~/.bashrc
+#RUN /bin/bash -c 'sudo chmod -R a+rX /home/mavs/knitro-10.3.0-z-Linux-64/*'
 
-RUN echo 2
-# update MichiganAutonomousVehicles.jl and remove .cache to avoid errors with PyCall.jl
-RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.checkout("NLOptControl"); Pkg.checkout("MichiganAutonomousVehicles")' \
-    && echo "rm -rf /home/mavs/.julia/.cache" \
-    && /opt/julia-d386e40c17/bin/julia -e 'ENV["PYTHON"]="/usr/bin/python2.7"; Pkg.build("PyCall");' \
-    && /opt/julia-d386e40c17/bin/julia -e 'Base.compilecache("PyCall")' \
-    && /opt/julia-d386e40c17/bin/julia -e 'Base.compilecache("RobotOS")' \
-    && /opt/julia-d386e40c17/bin/julia -e 'Base.compilecache("NLOptControl")'
+# laptop
+# COPY artelys_lic_897_umich_mecheng_mm_2018-02-06_knitro_1a-af-55-b8-be.txt /home/$USERNAME/
+#COPY artelys_lic_897_umich_mecheng_mm_2018-02-06_knitro_1a-af-55-b8-be.txt /home/$USERNAME/
 
-#RUN /opt/julia-d386e40c17/bin/julia -e 'Base.compilecache("MichiganAutonomousVehicles")'
+# home
+#COPY artelys_lic_404_umich_mecheng_mm_2017-03-27_knitro_73-34-b5-18-fc.txt /home/$USERNAME/
 
 # Default CMD
 CMD ["/bin/bash"]

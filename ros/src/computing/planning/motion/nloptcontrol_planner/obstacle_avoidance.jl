@@ -268,12 +268,13 @@ function loop(pub,pub_opt,pub_path,n,c)
 
       updateAutoParams!(n)                           # update model parameters
 
+    # @show n.ocp.X0
       status = optimize!(n)
 
     #  if !isequal(n.r.ocp.status, :Optimal)
-    @show n.r.ocp.tSolve
+  #  @show n.r.ocp.tSolve
     @show n.r.ocp.status
-        @show n.r.ocp.constraint.value
+  #      @show n.r.ocp.constraint.value
   #    end
       # advance time
       if isequal(RobotOS.get_param("system/plant"),"3DOF") # otherwise an external update on the initial state of the vehicle is needed

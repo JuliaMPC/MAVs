@@ -4,7 +4,8 @@
 #include "ros/ros.h"
 #include "std_msgs/String.h"
 #include "nloptcontrol_planner/Trajectory.h"
-#include "ros_chrono_msgs/veh_status.h"
+#include "mavs_msgs/state.h"
+#include "mavs_msgs/control.h"
 // Chrono library
 #include "chrono/core/ChFileutils.h"
 #include "chrono_vehicle/utils/ChVehiclePath.h"
@@ -15,10 +16,10 @@ double veh_pos_x;
 double veh_pos_y;
 double veh_v;
 
-void vehCallback(const ros_chrono_msgs::veh_status::ConstPtr& veh_msgs) {
-    veh_v = std::sqrt(pow(veh_msgs->x_v, 2) + pow(veh_msgs->y_v, 2));
-    veh_pos_x = veh_msgs->x_pos;
-    veh_pos_y = veh_msgs->y_pos;
+void vehCallback(const mavs_msgs::state::ConstPtr& veh_msgs) {
+    veh_v = std::sqrt(pow(veh_msgs->ux, 2) + pow(veh_msgs->v, 2));
+    veh_pos_x = veh_msgs->x;
+    veh_pos_y = veh_msgs->y;
 }
 
 int main(int argc, char **argv) {
@@ -42,7 +43,7 @@ int main(int argc, char **argv) {
     control_info.psi = std::vector<double>(control_num,0.0);
     control_info.ux = std::vector<double>(control_num,0.0);
 
-    ros::Subscriber vehicleinfo_sub = node.subscribe("/vehicleinfo", 100, vehCallback);
+    ros::Subscriber vehicleinfo_sub = node.subscribe("/state", 100, vehCallback);
 
     std::vector<double> path_1_x, path_1_y, path_2_x, path_2_y;
     node.getParam("case/path/path_1/x", path_1_x);

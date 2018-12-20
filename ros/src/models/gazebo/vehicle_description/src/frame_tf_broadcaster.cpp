@@ -28,7 +28,7 @@ int main(int argc, char** argv){
     double q2 = cy * cr * sp + sy * sr * cp;
     double q3 = sy * cr * cp - cy * sr * sp;
 */
-
+// TODO get these parameters dynamically
     broadcaster1.sendTransform(
       tf::StampedTransform(
         tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.0, 0.0, 0.5)),
@@ -37,7 +37,7 @@ int main(int argc, char** argv){
     broadcaster2.sendTransform(
       tf::StampedTransform(
         tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(1.55, 0.0, 0.738)),
-        ros::Time::now(),"base_link", "velodyne_top_link"));
+        ros::Time::now(),"base_link", "lidar_frame"));
     r.sleep();
   }
 }

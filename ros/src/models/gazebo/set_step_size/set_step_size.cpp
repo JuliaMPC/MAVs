@@ -20,14 +20,16 @@ namespace gazebo
     {
       double step_size = 0.001;
       ros::NodeHandle* rosnode = new ros::NodeHandle();
-      if(ros::param::has("system/params/step_size"))
+      if(ros::param::has("system/params/step_size")){
+        ROS_INFO("++++++++++++++++++get step_size!++++++++++++++++");
         rosnode->getParam("system/params/step_size", step_size);
+      }
 
       // Create a new transport node
       transport::NodePtr node(new transport::Node());
 
       // Initialize the node with the world name
-      node->Init(_parent->GetName());
+      node->Init(_parent->Name());
 
       // Create a publisher on the ~/physics topic
       transport::PublisherPtr physicsPub =

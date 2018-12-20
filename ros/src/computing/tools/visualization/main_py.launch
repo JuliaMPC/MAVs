@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<launch>
+
+  <node name="plotter2" pkg="visualization" type="tSolve_plot.py" output="screen" />
+  <node name="plotter5" pkg="visualization" type="Trajec_Only.py" output="screen" />
+  <node name="plotter6" pkg="visualization" type="sa_plot.py" output="screen" />
+  <node name="plotter7" pkg="visualization" type="ax_plot.py" output="screen" />
+  <node name="plotter8" pkg="visualization" type="ux_plot.py" output="screen" />
+
+</launch>

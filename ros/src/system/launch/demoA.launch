@@ -3,14 +3,13 @@
 
   <!-- demo of obstacle_detector with vehicle_description-->
 
-  <!-- sim time setting -->
-  <node name="ros_get_world_time_" pkg="get_world_time_test" type="ros_get_world_time" output="screen" />
+  <!-- use Gazebo's simulation time -->
   <param name="use_sim_time" value="true"/>
 
   <!--  ************* vehicle_description args and parameters ***************  -->
   <arg name="system_params_path" default="$(find system)/config/system/demos/demoA.yaml"/>
   <arg name="vehicle_params_path" default="$(find system)/config/vehicle/hmmwv.yaml"/>
-  <arg name="case_params_path" default="$(find system)/config/case/s9.yaml"/>
+  <arg name="case_params_path" default="$(find system)/config/case/s3.yaml"/>
   <arg name="gui" default="true"/>
   <arg name="paused" default="true"/> <!-- NOTE this pause overrides system/flags/pause for Gazebo-->
 
@@ -27,13 +26,10 @@
   </include>
 
   <!--  ************* obstacle_detector args and parameters ***************  -->
-  <arg name="frame_id" default="velodyne_top_link" />
-  <arg name="manager" default="$(arg frame_id)_nodelet_manager" />
-
-  <include file="$(find obstacle_detector)/launch/obstacle_detector.launch">
-    <arg name="frame_id" value="$(arg frame_id)" />
-    <arg name="manager" value="$(arg manager)" />
-  </include>
+  <!-- NOTE lidar_model: 1 # 1: velodyne VLP16; 2: hokuyo_laser -->
+  <!-- include file="$(find obstacle_detector)/launch/main_pcl.launch"/ -->
+  <!-- NOTE lidar_model: 2 # 1: velodyne VLP16; 2: hokuyo_laser -->
+  <include file="$(find obstacle_detector)/launch/main_scan.launch"/>
 
   <!--  system_shutdown node -->
   <node name="system_shutdown" pkg="system" type="system_shutdown" output="screen" required="true">

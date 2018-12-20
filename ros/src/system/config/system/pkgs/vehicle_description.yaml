@@ -7,4 +7,6 @@ system:
   flags:
    lidar_initialized: false
    obstacles_initialized: false
-   postion_update_external: true
+   postion_update_external: false
+  params:
+   step_distance: 0.0

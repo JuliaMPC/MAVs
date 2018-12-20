@@ -1,0 +1,43 @@
+<!-- Reusable launch file for obstacle detection -->
+<launch>
+
+  <rosparam command="load" file="$(find system)/config/detection/obstacle_detector_pcl.yaml" />
+
+  <arg name="manager" default="nodelet_manager" />
+
+  <node name="$(arg manager)" pkg="nodelet" type="nodelet" args="manager" output="screen">
+    <param name="num_worker_threads" value="20"/>
+  </node>
+
+  <node name="obstacle_paramameters" pkg="obstacle_detector" type="obstacle_parameters.jl" output="screen"/>
+
+  <!-- Run a VoxelGrid filter to clean NaNs and downsample the data -->
+  <node  name="voxel_grid" pkg="nodelet" type="nodelet" args="load pcl/VoxelGrid $(arg manager)" output="screen">
+    <remap from="~input" to="/scan"/>
+  </node>
+
+  <!-- Convert PointCloud2 to PointCloud1 -->
+  <node pkg="point_cloud_converter" name="point_cloud_converter" type="point_cloud_converter_node" >
+    <remap from="points2_in" to="/voxel_grid/output"/>
+    <remap from="points_out" to="/pcl" />
+		<!--
+		<remap from="points2_in" to="velodyne_points"/>
+		<remap from="points_out" to="velodyne_points" />
+		-->
+  </node>
+
+ <!-- remove scan merger -->
+ <!--node name="scans_merger" pkg="nodelet" type="nodelet" args="load obstacle_detector/ScansMerger $(arg manager)">
+</node-->
+
+  <node name="obstacle_extractor" pkg="nodelet" type="nodelet" args="load obstacle_detector/ObstacleExtractor $(arg manager)">
+  </node>
+
+  <node name="obstacle_tracker" pkg="nodelet" type="nodelet" args="load obstacle_detector/ObstacleTracker $(arg manager)">
+    <remap from="tracked_obstacles" to="obstacles"/>
+  </node>
+
+  <node name="rviz" pkg="rviz" type="rviz" output="screen" args="-d $(find obstacle_detector)/resources/display.rviz"/>
+
+</launch>
+<!-- -->
