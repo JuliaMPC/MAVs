@@ -29,7 +29,6 @@ pages = [
         "system_shutdown" => "packages/system/system_shutdown.md",
         "data_logging" => "packages/system/data_logging.md",
         "chrono_position_broadcaster" => "packages/model/chrono/chrono_position_broadcaster/main.md",
-        "ros_chrono_msgs" => "packages/model/chrono/ros_chrono_msgs/main.md",
         "point_cloud_converter" => "packages/computing/perception/point_cloud_converter.md",
     ],
     "System demos" => [

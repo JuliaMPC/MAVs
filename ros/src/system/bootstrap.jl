@@ -22,6 +22,12 @@ function main()
         println("waiting on move_obstacles.jl in vehicle_description ...")
         sleep(2)
       end
+      if RobotOS.has_param("system/vehicle_description/flags/obstacles_spawned")
+          while(!RobotOS.get_param("system/vehicle_description/flags/obstacles_spawned"))
+            println("waiting on creating obstacles in vehicle_description ...")
+            sleep(2)
+          end
+      end
     end
   end
 
@@ -56,6 +62,15 @@ function main()
     if RobotOS.get_param("system/shutdown/flags/running")
       while(!RobotOS.get_param("system/shutdown/flags/initialized"))
         println("waiting on shudown node to initialize in system ...")
+        sleep(5)
+      end
+    end
+  end
+
+  if RobotOS.has_param("system/result_store/flags/running")
+    if RobotOS.get_param("system/result_store/flags/running")
+      while(!RobotOS.get_param("system/result_store/flags/initialized"))
+        println("waiting on result store node to initialize in system ...")
         sleep(5)
       end
     end

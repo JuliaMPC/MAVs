@@ -14,7 +14,7 @@ class DataPlotter():
         self.t_actual = np.array([], dtype=np.float64)
         self.t_traj = np.array([], dtype=np.float64)
         self.t_traj_last = np.array([], dtype=np.float64)
-        
+
         # position data
         self.x_actual = np.array([], dtype=np.float64)
         self.y_actual = np.array([], dtype=np.float64)
@@ -91,10 +91,14 @@ class DataPlotter():
         self.line_sa_actual = Line2D([], [], color='green', linewidth=2, linestyle='-')
         self.line_sa_traj = Line2D([], [], color='red', linewidth=1.5, linestyle='--')
         self.line_sa_traj_last = Line2D([], [], color='orange', linewidth=1.5, linestyle='--')
+        self.line_sa_upper_limit = Line2D([], [], color='black', linestyle='--')
+        self.line_sa_lower_limit = Line2D([], [], color='black', linestyle='--')
         self.sa_subplot.add_line(self.line_sa_actual)
         self.sa_subplot.add_line(self.line_sa_traj)
         self.sa_subplot.add_line(self.line_sa_traj_last)
-        self.sa_subplot.legend(['actual', 'planned', 'last planned'], fontsize='x-small')
+        self.sa_subplot.add_line(self.line_sa_upper_limit)
+        self.sa_subplot.add_line(self.line_sa_lower_limit)
+        self.sa_subplot.legend(['actual', 'planned', 'previous planned', 'upper limit', 'lower limit'], fontsize='x-small')
         self.sa_subplot.set_xlabel('time (s)', fontsize='larger', verticalalignment='center')
         self.sa_subplot.set_ylabel('sa (rad)', fontsize='larger')
         self.sa_subplot.tick_params('both', labelsize='x-small')
@@ -119,10 +123,14 @@ class DataPlotter():
         self.line_ax_actual = Line2D([], [], linewidth=1.8, color='green', linestyle='-')
         self.line_ax_traj = Line2D([], [], color='red', linewidth=1.5, linestyle='--')
         self.line_ax_traj_last = Line2D([], [], color='orange', linewidth=1.5, linestyle='--')
+        self.line_ax_upper_limit = Line2D([], [], color='black', linestyle='--')
+        self.line_ax_lower_limit = Line2D([], [], color='black', linestyle='--')
         self.ax_subplot.add_line(self.line_ax_actual)
         self.ax_subplot.add_line(self.line_ax_traj)
         self.ax_subplot.add_line(self.line_ax_traj_last)
-        self.ax_subplot.legend(['actual', 'planned', 'last planned'], fontsize='x-small')
+        self.ax_subplot.add_line(self.line_ax_upper_limit)
+        self.ax_subplot.add_line(self.line_ax_lower_limit)
+        self.ax_subplot.legend(['actual', 'planned', 'previous planned', 'upper limit', 'lower limit'], fontsize='x-small')
         self.ax_subplot.set_xlabel('time (s)', fontsize='larger', verticalalignment='center')
         self.ax_subplot.set_ylabel('ax (m/s)', fontsize='larger')
         self.ax_subplot.tick_params('both', labelsize='x-small')
@@ -158,6 +166,8 @@ class DataPlotter():
             self.line_sa_actual.set_data(self.t_actual, self.sa_actual)
             self.line_sa_traj.set_data(self.t_traj, self.sa_traj)
             self.line_sa_traj_last.set_data(self.t_traj_last, self.sa_traj_last)
+            self.line_sa_upper_limit.set_data(self.t_actual, self.sa_upper_limit)
+            self.line_sa_lower_limit.set_data(self.t_actual, self.sa_lower_limit)
 
             self.line_ux_actual.set_data(self.t_actual, self.ux_actual)
             self.line_ux_traj.set_data(self.t_traj, self.ux_traj)
@@ -168,6 +178,8 @@ class DataPlotter():
             self.line_ax_actual.set_data(self.t_actual, self.ax_actual)
             self.line_ax_traj.set_data(self.t_traj, self.ax_traj)
             self.line_ax_traj_last.set_data(self.t_traj_last, self.ax_traj_last)
+            self.line_ax_upper_limit.set_data(self.t_actual, self.ax_upper_limit)
+            self.line_ax_lower_limit.set_data(self.t_actual, self.ax_lower_limit)
 
             self.line_solve_time.set_data(self.solve_num, self.solve_time)
             self.line_solve_time_pass.set_data(self.solve_num_pass, self.solve_time_pass)
@@ -179,11 +191,11 @@ class DataPlotter():
                 self.sa_subplot.set_xlim(self.t_actual[-1]-self.t_band, self.t_actual[-1])
                 self.ux_subplot.set_xlim(self.t_actual[-1]-self.t_band, self.t_actual[-1])
                 self.ax_subplot.set_xlim(self.t_actual[-1]-self.t_band, self.t_actual[-1])
-                
+
             if (len(self.solve_num) > 0 and self.solve_num[-1] > self.solve_num_band):
                 self.tSolve_subplot.set_xlim(self.solve_num[0], self.solve_num[-1])
 
-            
+
             plt.draw()
             plt.pause(0.001) #0.001
         except:
@@ -198,6 +210,10 @@ def stateCallback(msg):
     data_plotter.ux_actual = np.append(data_plotter.ux_actual, msg.ux)
     data_plotter.sa_actual_real = np.append(data_plotter.sa_actual_real, msg.sa)
     data_plotter.ax_actual_real = np.append(data_plotter.ax_actual_real, msg.ax)
+    data_plotter.sa_upper_limit = np.append(data_plotter.sa_upper_limit, rospy.get_param('/vehicle/nloptcontrol_planner/sa_max'))
+    data_plotter.sa_lower_limit = np.append(data_plotter.sa_lower_limit, rospy.get_param('/vehicle/nloptcontrol_planner/sa_min'))
+    data_plotter.ax_upper_limit = np.append(data_plotter.ax_upper_limit, rospy.get_param('/vehicle/nloptcontrol_planner/ax_max'))
+    data_plotter.ax_lower_limit = np.append(data_plotter.ax_lower_limit, rospy.get_param('/vehicle/nloptcontrol_planner/ax_min'))
 
     if(len(data_plotter.ax_actual_real) > num_avg):
         data_plotter.ax_cumsum = data_plotter.ax_cumsum + data_plotter.ax_actual_real[(len(data_plotter.ax_actual_real)-1)]-data_plotter.ax_actual_real[(len(data_plotter.ax_actual_real)-num_avg-1)]
@@ -207,8 +223,8 @@ def stateCallback(msg):
         data_plotter.ax_cumsum = data_plotter.ax_cumsum + data_plotter.ax_actual_real[len(data_plotter.ax_actual_real)-1]
         temp = data_plotter.ax_cumsum/len(data_plotter.ax_actual_real)
         data_plotter.ax_actual = np.append(data_plotter.ax_actual, temp)
-	
-    
+
+
     if(len(data_plotter.sa_actual_real) > num_avg):
         data_plotter.sa_cumsum = data_plotter.sa_cumsum + data_plotter.sa_actual_real[(len(data_plotter.sa_actual_real)-1)]-data_plotter.sa_actual_real[(len(data_plotter.sa_actual_real)-num_avg-1)]
         temp = sum(data_plotter.sa_actual_real[(len(data_plotter.sa_actual_real)-num_avg-1):(len(data_plotter.sa_actual_real)-1)])/num_avg
@@ -217,17 +233,18 @@ def stateCallback(msg):
         data_plotter.sa_cumsum = data_plotter.sa_cumsum + data_plotter.sa_actual_real[len(data_plotter.sa_actual_real)-1]
         temp = data_plotter.sa_cumsum/len(data_plotter.sa_actual_real)
         data_plotter.sa_actual = np.append(data_plotter.sa_actual, temp)
-    
+
+
 
 def trajectoryCallback(msg):
     global data_plotter
 
     # # truncate the current message and append it to the old trajectory
     data_plotter.t_traj_last = np.append(data_plotter.t_traj_last, data_plotter.t_traj[1:2])
-    data_plotter.x_traj_last = np.append(data_plotter.x_traj_last, data_plotter.x_traj[1:2]) 
+    data_plotter.x_traj_last = np.append(data_plotter.x_traj_last, data_plotter.x_traj[1:2])
     data_plotter.y_traj_last = np.append(data_plotter.y_traj_last, data_plotter.y_traj[1:2])
     data_plotter.sa_traj_last = np.append(data_plotter.sa_traj_last, data_plotter.sa_traj[1:2])
-    data_plotter.ux_traj_last = np.append(data_plotter.ux_traj_last, data_plotter.ux_traj[1:2]) 
+    data_plotter.ux_traj_last = np.append(data_plotter.ux_traj_last, data_plotter.ux_traj[1:2])
     data_plotter.ax_traj_last = np.append(data_plotter.ax_traj_last, data_plotter.ax_traj[1:2])
 
     data_plotter.t_traj = msg.t
@@ -256,7 +273,7 @@ if __name__ == '__main__':
 
     # initialize node
     rospy.init_node("visualization_plotter")
-    
+
     # create a data plotter instance
     data_plotter = DataPlotter()
 
@@ -265,11 +282,10 @@ if __name__ == '__main__':
     rospy.Subscriber("nlopcontrol_planner/control", Trajectory, trajectoryCallback)
     rospy.Subscriber("nlopcontrol_planner/opt", Optimization, optCallback)
 
-    rate = rospy.Rate(30) # 50hz
+    rate = rospy.Rate(50) # 50hz
     plt.ion()
     plt.show()
 
     while not rospy.is_shutdown():
         data_plotter.draw_frame()
         rate.sleep()
-        

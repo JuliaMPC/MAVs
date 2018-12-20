@@ -3,9 +3,9 @@ system:
  plant: chrono
 
  params:
-  step_size: 0.01
+  step_size: 0.005
   goal_tol: 0.1
-  tire_step_size: 0.005
+  tire_step_size: 0.00025
 
  flags:
   goal_attained: false
@@ -43,6 +43,7 @@ system:
    running: true
    lidar_initialized: false
    obstacles_initialized: false
+   obstacles_spawned: false
    postion_update_external: true
 
  sim_time:

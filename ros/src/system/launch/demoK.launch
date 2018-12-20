@@ -6,13 +6,13 @@
   <!--common args and parameters-->
   <arg name="system_params_path" default="$(find system)/config/system/demos/demoK.yaml"/>
   <arg name="vehicle_params_path" default="$(find system)/config/vehicle/hmmwv.yaml"/>
-  <arg name="case_params_path" default="$(find system)/config/case/s1.yaml"/>
+  <arg name="case_params_path" default="$(find system)/config/case/s6.yaml"/>
   <rosparam command="load" file="$(arg case_params_path)" />
   <rosparam command="load" file="$(arg system_params_path)" />
   <rosparam command="load" file="$(arg vehicle_params_path)" />
 
   <!--nloptcontrol_planner args and parameters-->
-  <arg name="planner_params_path" default="$(find system)/config/planner/nloptcontrol_planner/default.yaml"/>
+  <arg name="planner_params_path" default="$(find system)/config/planner/nloptcontrol_planner/plannerD.yaml"/>
   <rosparam command="load" file="$(arg planner_params_path)" />
 
   <!--vehicle_description args and parameters-->
@@ -22,12 +22,10 @@
   <param name="use_sim_time" value="true"/>
 
   <!-- rosbag arg -->
-  <arg name="ros_bag_name" default="demoK"/>
-
+  <arg name="ros_bag_name" default="demoK_s6_D"/>
   <!--  ************** load args and parameters ***************  -->
 
   <!--  ************** launch scripts ***************  -->
-
   <include file="$(find nloptcontrol_planner)/launch/main.launch">
     <arg name="case_params_path" value="$(arg case_params_path)"/>
     <arg name="planner_params_path" value="$(arg planner_params_path)"/>
@@ -42,7 +40,6 @@
     <arg name="gui" value="$(arg gui)"/>
     <arg name="paused" value="$(arg paused)"/>
   </include>
-
   <!--  ************** launch scripts ***************  -->
 
 
@@ -67,10 +64,11 @@
   </node>
 
   <!-- save data using rosbag -->
-  <node pkg="rosbag" type="record" name="record" args="record -O /home/mavs/MAVs/results/$(arg ros_bag_name).bag 
+  <node pkg="rosbag" type="record" name="record" args="record -O /home/mavs/MAVs/results/$(arg ros_bag_name).bag
                                                                  /nlopcontrol_planner/opt
                                                                  /nlopcontrol_planner/control
-                                                                 /state"/>
+                                                                 /state
+                                                                 /control"/>
 
   <node name="visualization" pkg="visualization" type="data_plotter.py" />
   <!--  ************** additional nodes ***************  -->

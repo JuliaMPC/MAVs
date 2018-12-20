@@ -1,24 +1,28 @@
 obstacle_detector:
   obstacle_extractor:
-    active: 'true'
-    use_pcl: 'true'
-    use_scan: 'false'
-    use_split_and_merge: 'true'
-    circles_from_visibles: 'true'
-    discard_converted_segments: 'false'
-    transform_coordinates: 'true'
+    active: true
+    use_pcl: false
+    use_scan: true
+    use_split_and_merge: true
+    circles_from_visibles: false
+    discard_converted_segments: false
+    transform_coordinates: true
     min_group_points: 5
     max_group_distance: 0.5
     distance_proportion: 0.001
     max_split_distance: 5
     max_merge_separation: 3
     max_merge_spread: 2
-    max_circle_radius: 4
+    max_circle_radius: 15
     radius_enlargement: 0.3
     frame_id: 'map'
+    p_min_x_limit: -1000.
+    p_max_x_limit: 1000.
+    p_min_y_limit: -1000.
+    p_max_y_limit: 1000.
 
   obstacle_tracker:
-    active: 'true'
+    active: true
     loop_rate: 100.0
     tracking_duration: 1
     min_correspondence_cost: 0.6
@@ -27,10 +31,3 @@ obstacle_detector:
     process_rate_variance: 0.1
     measurement_variance: 1.0
     frame_id: 'map'
-
-voxel_grid:
-  filter_field_name: 'z'
-  filter_limit_min: 0.01
-  filter_limit_max: 3.5
-  filter_limit_negative: 'false'
-  leaf_size: 0.01

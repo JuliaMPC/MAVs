@@ -12,12 +12,18 @@ system:
   initialized: false
   paused: true
 
+ result_store:
+   flags:
+     running: true
+     initialized: false
+     shutdown: false
+
  shutdown:
   flags:
    running: true
    initialized: false
   params:
-    shutdown_initiation_flags: ["system/flags/goal_attained", "/vehicle_collided"]
+    shutdown_initiation_flags: ["result_store/flags/shutdown"]
     shutdown_completion_flags: []
 
  nloptcontrol_planner:
