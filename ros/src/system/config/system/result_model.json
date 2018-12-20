@@ -41,20 +41,6 @@
         ],
         "description": "Goal is attained."
       }
-    },
-    {
-      "key": "Steering Angle",
-      "val": "/state",
-      "sub_val": "sa",
-      "ros_msg_type": "topic",
-      "dataType": "state",
-      "save": true
-    },
-    {
-      "key": "Asumed obstacle X coord",
-      "val": "/case/assumed/obstacle/x0",
-      "ros_msg_type": "parameter",
-      "save": true
     }
   ]
 }
