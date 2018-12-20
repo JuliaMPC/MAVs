@@ -24,13 +24,15 @@ Name | Description
 
 ## Output
 
-The output of this package is the steering angle only.
+The output of this package is as follows.
 
 #### Vehicle State
 
 Name | Description
 --- | ---
-`/state/sa`| steering angle at the tire (rad)
+`/control/sa`| steering angle at the tire (rad)
+`/control/thr`| throttle input, range: [0, 1]
+`/control/brk`| break input, range: [0, 1]
 
 ## Logic
 
