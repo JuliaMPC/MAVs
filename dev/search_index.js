@@ -849,6 +849,134 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "packages/computing/controller/path_follower/main/#",
+    "page": "path_follower",
+    "title": "path_follower",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "packages/computing/controller/path_follower/main/#path_follower-1",
+    "page": "path_follower",
+    "title": "path_follower",
+    "category": "section",
+    "text": "The path_follower package is to control the vehicle using Pure Pursuit (PP) controller. The logic is described as follows."
+},
+
+{
+    "location": "packages/computing/controller/path_follower/main/#Inputs-1",
+    "page": "path_follower",
+    "title": "Inputs",
+    "category": "section",
+    "text": "Following are the arguments are required by path_follower.launch package"
+},
+
+{
+    "location": "packages/computing/controller/path_follower/main/#Vehicle-State-1",
+    "page": "path_follower",
+    "title": "Vehicle State",
+    "category": "section",
+    "text": "Name Description\n/state/x global x position (m)\n/state/y global y position (m)\n/state/psi global heading angle (rad)\n/state/ux velocity in the x direction (vehicle frame) in (m/s)"
+},
+
+{
+    "location": "packages/computing/controller/path_follower/main/#Trajectories-1",
+    "page": "path_follower",
+    "title": "Trajectories",
+    "category": "section",
+    "text": "Name Description\n/trajectory/x global x position trajectory (m)\n/trajectory/y global y position trajectory (m)"
+},
+
+{
+    "location": "packages/computing/controller/path_follower/main/#Output-1",
+    "page": "path_follower",
+    "title": "Output",
+    "category": "section",
+    "text": "The output of this package is as follows."
+},
+
+{
+    "location": "packages/computing/controller/path_follower/main/#Vehicle-State-2",
+    "page": "path_follower",
+    "title": "Vehicle State",
+    "category": "section",
+    "text": "Name Description\n/control/sa steering angle at the tire (rad)\n/control/thr throttle input, range: [0, 1]\n/control/brk break input, range: [0, 1]"
+},
+
+{
+    "location": "packages/computing/controller/path_follower/main/#Logic-1",
+    "page": "path_follower",
+    "title": "Logic",
+    "category": "section",
+    "text": "The Logic of the Pure Pursuit (PP) controller is shown in the figure below.(Image: link)When a path is given to the vehicle to follow, we will first draw an arc   AB with radius R1, and the center of the arc is the vehicle itself. R1 can is chosen to be proportional to the vehicle speed, R1=Kv, with saturation Rmax and Rmin to avoid the case of no solution. Then, find the intersection (point D) between arc AB and the planned path, and express the position of point D as (xD, yD) using the vehicle coordinate system. Point D is the position where the vehicle wants to arrive next. To command the vehicle to head towards point D, we fit another arc CD which passes through the current vehicle position (0, 0) and (xD, yD), and the direction of the arc at (0, 0) is straight up. The radius of the arc CD is R2, which is also the radius of curvature of the real vehicle path. Then, the relationship between R2 and (xD, yD) can be expressed as(Image: link)Then we have(Image: link)The radius of curvature R_2 is closely related to the steering angle as shown in the figure below. Point E is the instantaneous rotation center of the vehicle. (Image: link)Finally, assume there is no slip between tires and the ground. The relationship between the steering angle and the radius of curvature R_2 is(Image: link)Where L is the wheelbase."
+},
+
+{
+    "location": "packages/computing/controller/trajectory_follower/main/#",
+    "page": "trajectory_follower",
+    "title": "trajectory_follower",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "packages/computing/controller/trajectory_follower/main/#trajectory_follower-1",
+    "page": "trajectory_follower",
+    "title": "trajectory_follower",
+    "category": "section",
+    "text": "The trajectoryfollower package is to control the vehicle by directly applying the output from the `nloptcontrolplanner` package."
+},
+
+{
+    "location": "packages/computing/controller/trajectory_follower/main/#Inputs-1",
+    "page": "trajectory_follower",
+    "title": "Inputs",
+    "category": "section",
+    "text": "Following are the arguments are required by trajectory_follower.launch package"
+},
+
+{
+    "location": "packages/computing/controller/trajectory_follower/main/#Vehicle-State-1",
+    "page": "trajectory_follower",
+    "title": "Vehicle State",
+    "category": "section",
+    "text": "Name Description\n/state/ux velocity in the x direction (vehicle frame) in (m/s)"
+},
+
+{
+    "location": "packages/computing/controller/trajectory_follower/main/#Trajectories-1",
+    "page": "trajectory_follower",
+    "title": "Trajectories",
+    "category": "section",
+    "text": "Name Description\n/trajectory/t time (s)\n/trajectory/x global x position trajectory (m)\n/trajectory/y global y position trajectory (m)\n/trajectory/psi global heading angle trajectory (rad)\n/trajectory/sa steering angle trajectory at the tire (rad)\n/trajectory/ux speed in the x direction (vehicle frame) (m/s)"
+},
+
+{
+    "location": "packages/computing/controller/trajectory_follower/main/#Output-1",
+    "page": "trajectory_follower",
+    "title": "Output",
+    "category": "section",
+    "text": "The output of this package is as follows."
+},
+
+{
+    "location": "packages/computing/controller/trajectory_follower/main/#Vehicle-State-2",
+    "page": "trajectory_follower",
+    "title": "Vehicle State",
+    "category": "section",
+    "text": "Name Description\n/control/sa steering angle at the tire (rad)\n/control/thr throttle input, range: [0, 1]\n/control/brk break input, range: [0, 1]"
+},
+
+{
+    "location": "packages/computing/controller/trajectory_follower/main/#Logic-1",
+    "page": "trajectory_follower",
+    "title": "Logic",
+    "category": "section",
+    "text": "The other kind of follower is trajectory follower,  namely longitudinal speed and steering angle control, shown below.(Image: link)The control of the chrono vehicle model utilizes the longitudinal speed and steering angle command from the planner. For longitudinal speed, it is controlled by a closed-loop PID controller which calculates the throttle and braking input into the chrono model. For steering angle, it is under open-loop control which calculates the steering input to the chrono model, where a low-pass filter is implemented to prevent the steering input from changing drastically. "
+},
+
+{
     "location": "packages/system/system_shutdown/#",
     "page": "system_shutdown",
     "title": "system_shutdown",
@@ -969,30 +1097,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "packages/model/chrono/ros_chrono_msgs/main/#",
-    "page": "roschronomsgs",
-    "title": "roschronomsgs",
-    "category": "page",
-    "text": ""
-},
-
-{
-    "location": "packages/model/chrono/ros_chrono_msgs/main/#ros*chrono*msgs-1",
-    "page": "roschronomsgs",
-    "title": "roschronomsgs",
-    "category": "section",
-    "text": "Creates a ROS msg file vehstatus.msg to observe vehicle states during runtime of Chrono model. Used by the roschrono package."
-},
-
-{
-    "location": "packages/model/chrono/ros_chrono_msgs/main/#Message-format-1",
-    "page": "roschronomsgs",
-    "title": "Message format",
-    "category": "section",
-    "text": "Name | Variable | Description –- | –- float64 | tchrono | simulation time float64 | xpos | vehicle x position float64 | ypos | vehicle y position float64 | xv | vehicle velocity in x (m/s) float64 | xa | vehicle acceleration in x (m/s^2) float64 | yv | vehicle velocity in y float64 | yawcurr | current yaw value (rad) float64 | yawrate | current yaw rate (rad/s) float64 | sa | steering angle (rad) float64 | thrtin | throttle control input float64 | brkin | brake control input float64 | str_in | steering control input"
-},
-
-{
     "location": "packages/computing/perception/point_cloud_converter/#",
     "page": "pointcloudconverter",
     "title": "pointcloudconverter",
@@ -1009,414 +1113,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "packages/system/demos/demoA/#",
-    "page": "demoA",
-    "title": "demoA",
-    "category": "page",
-    "text": ""
-},
-
-{
-    "location": "packages/system/demos/demoA/#demoA-1",
-    "page": "demoA",
-    "title": "demoA",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "packages/system/demos/demoA/#obstacle*detector-with-vehicle*description-1",
-    "page": "demoA",
-    "title": "obstacledetector with vehicledescription",
-    "category": "section",
-    "text": "A demo which shows the obstacledetector with vehicledescription."
-},
-
-{
-    "location": "packages/system/demos/demoA/#status-working-1",
-    "page": "demoA",
-    "title": "status = working",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "packages/system/demos/demoA/#To-Run-1",
-    "page": "demoA",
-    "title": "To Run",
-    "category": "section",
-    "text": "roslaunch system demoA.launch"
-},
-
-{
-    "location": "packages/system/demos/demoA/#Expected-Output-1",
-    "page": "demoA",
-    "title": "Expected Output",
-    "category": "section",
-    "text": "Gazebo should pop up, and the vehicle is located at the origin and heading towards y axis. There should be three cylinder obstacles ahead of the vehicle. Rviz should display the pointcloud in blue and the fitted circular obstacles."
-},
-
-{
-    "location": "packages/system/demos/demoB/#",
-    "page": "demoB",
-    "title": "demoB",
-    "category": "page",
-    "text": ""
-},
-
-{
-    "location": "packages/system/demos/demoB/#demoB-1",
-    "page": "demoB",
-    "title": "demoB",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "packages/system/demos/demoB/#nloptcontrol*planner-with-vehicle*description-1",
-    "page": "demoB",
-    "title": "nloptcontrolplanner with vehicledescription",
-    "category": "section",
-    "text": "A demo that shows nloptcontrol_planner moving the vehicle_description vehicle within Gazebo based off of the solution to the OCP every 0.5 s."
-},
-
-{
-    "location": "packages/system/demos/demoB/#status-working-1",
-    "page": "demoB",
-    "title": "status = working",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "packages/system/demos/demoB/#To-Run-1",
-    "page": "demoB",
-    "title": "To Run",
-    "category": "section",
-    "text": "roslaunch system demoB.launch"
-},
-
-{
-    "location": "packages/system/demos/demoB/#Expected-Output-1",
-    "page": "demoB",
-    "title": "Expected Output",
-    "category": "section",
-    "text": "Gazebo should pop up and if you move the view so that you can see to the right (x,y)=(0,200), you will see the vehicle. All of the nodes are thin initialized and the nloptcontrol_planner node takes the longest, so for a few minutes the terminal screen will displaywaiting on obstacle_avoidance.jl in nloptcontrol_planner ...\nwaiting on obstacle_avoidance.jl in nloptcontrol_planner ...\nwaiting on obstacle_avoidance.jl in nloptcontrol_planner ...\nwaiting on obstacle_avoidance.jl in nloptcontrol_planner ...\n......\nRunning model for the: 1 time\n[bootstrap-12] process has finished cleanly\nlog file: /home/tq/.ros/log/60726692-353d-11e8-8a62-b06ebf2c81c1/bootstrap-12*.log\nRunning model for the: 2 time\nRunning model for the: 3 time\nRunning model for the: 4 time\nRunning model for the: 5 time\nRunning model for the: 6 time\nRunning model for the: 7 time\nRunning model for the: 8 time\nRunning model for the: 9 time\nRunning model for the: 10 time\ngoal is in range\nRunning model for the: 11 time\ngoal is in range\nRunning model for the: 12 time\ngoal is in range\nRunning model for the: 13 time\ngoal is in range\nRunning model for the: 14 time\ngoal is in range\nGoal Attained!\n\n[obstacle_avoidance-2] process has finished cleanly\nlog file: /home/tq/.ros/log/60726692-353d-11e8-8a62-b06ebf2c81c1/obstacle_avoidance-2*.logA green path planned by nloptcontrol_planner will be displayed in rviz. Eventually, the controller will be ready and the vehicle will start to move every time a new solution is generated. This is not closed loop, it just shows the connectivity of these nodes within a system."
-},
-
-{
-    "location": "packages/system/demos/demoC/#",
-    "page": "demoC",
-    "title": "demoC",
-    "category": "page",
-    "text": ""
-},
-
-{
-    "location": "packages/system/demos/demoC/#demoC-1",
-    "page": "demoC",
-    "title": "demoC",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "packages/system/demos/demoC/#vehicle*description-and-ros*base_planner-1",
-    "page": "demoC",
-    "title": "vehicledescription and rosbase_planner",
-    "category": "section",
-    "text": "A demo that shows ros_base_planner calculating a path from the LiDAR data collected from the vehicle_description package."
-},
-
-{
-    "location": "packages/system/demos/demoC/#status-working-1",
-    "page": "demoC",
-    "title": "status = working",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "packages/system/demos/demoC/#To-Run-1",
-    "page": "demoC",
-    "title": "To Run",
-    "category": "section",
-    "text": "roslaunch system demoC.launch"
-},
-
-{
-    "location": "packages/system/demos/demoC/#Expected-Output-1",
-    "page": "demoC",
-    "title": "Expected Output",
-    "category": "section",
-    "text": "Gazebo would open with the vehicle and Rviz will pop up showing LIDAR scan data.Case Description\nsystem/rosbaseplanner/flags/goal_known = false User can click on publish goal button in Rviz and select a goal point within the gloabl cost map area. The planner would plan a path from start to goal and display it. It will also update following ros parameters with trajectory data: vehicle/chrono/ros_base_planner/traj/x, vehicle/chrono/ros_base_planner/traj/y.\nsystem/rosbaseplanner/flags/goal_known = true Planner would pick the goal coordinates from the case file. The trajectory would be shown on Rviz and planner will update the ros parameters mentioned above.Once, the trajectory is published on Rviz, ros parameter /system/ros_base_planner/initialized will be set to true"
-},
-
-{
-    "location": "packages/system/demos/demoC/#Note-1",
-    "page": "demoC",
-    "title": "Note",
-    "category": "section",
-    "text": "Goal point has to be within the global cost map for the planner to ba able to plan.\nThis is not closed loop, it just shows the a functional ros planner built into the system."
-},
-
-{
-    "location": "packages/system/demos/demoD/#",
-    "page": "demoD",
-    "title": "demoD",
-    "category": "page",
-    "text": ""
-},
-
-{
-    "location": "packages/system/demos/demoD/#demoD-1",
-    "page": "demoD",
-    "title": "demoD",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "packages/system/demos/demoD/#vehicle*description,-ros*base_planner-and-chrono-1",
-    "page": "demoD",
-    "title": "vehicledescription, rosbase_planner and chrono",
-    "category": "section",
-    "text": "A demo showing a completely integrated, end-to-end setup with a moving vehicle in Gazebo/Chrono that uses a trajectory planned by ros_base_planner."
-},
-
-{
-    "location": "packages/system/demos/demoD/#status-working-1",
-    "page": "demoD",
-    "title": "status = working",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "packages/system/demos/demoD/#To-Run-1",
-    "page": "demoD",
-    "title": "To Run",
-    "category": "section",
-    "text": "roslaunch system demoD.launch"
-},
-
-{
-    "location": "packages/system/demos/demoD/#Expected-Output-1",
-    "page": "demoD",
-    "title": "Expected Output",
-    "category": "section",
-    "text": "Gazebo and Chrono would open with the vehicle and Rviz will pop up showing LIDAR scan data. Chrono simulation start takes a while.Case Description\nsystem/rosbaseplanner/flags/goal_known = false User can click on publish goal button in Rviz and select a goal point within the gloabl cost map area. The planner would plan a path from start to goal and display it. The vehicle in chrono should start moving.\nsystem/rosbaseplanner/flags/goal_known = true Planner would pick the goal coordinates from the case file. The trajectory would be shown on Rviz and the vehicle in Gazebo and Chrono should start moving.Once, the trajectory is published on Rviz, ros parameter /system/ros_base_planner/initialized will be set to true"
-},
-
-{
-    "location": "packages/system/demos/demoD/#Output-windows-1",
-    "page": "demoD",
-    "title": "Output windows",
-    "category": "section",
-    "text": "(Image: link) (Image: link) (Image: link)"
-},
-
-{
-    "location": "packages/system/demos/demoD/#Note-1",
-    "page": "demoD",
-    "title": "Note",
-    "category": "section",
-    "text": "Unless there is a path displayed on Rviz, Chrono will not start. Chrono waits for planner to get initialized, that means, the planner has successfully published a global plan at least once.\nPresently, at startup, Chrono vehicles spawns at z > 0, first it lands on the ground and then starts moving. This process takes a while."
-},
-
-{
-    "location": "packages/system/demos/demoE/#",
-    "page": "demoE",
-    "title": "demoE",
-    "category": "page",
-    "text": ""
-},
-
-{
-    "location": "packages/system/demos/demoE/#demoE-1",
-    "page": "demoE",
-    "title": "demoE",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "packages/system/demos/demoE/#obstacle-detector-with-nloptcontrol*planner-and-vehicle*description-1",
-    "page": "demoE",
-    "title": "obstacle detector with nloptcontrolplanner and vehicledescription",
-    "category": "section",
-    "text": "Same as system demoB.launch except, knownenvironment is set to false, obstacledetector is used to detect the obstacle information and pass it to nloptcontrol_planner."
-},
-
-{
-    "location": "packages/system/demos/demoE/#status-working-1",
-    "page": "demoE",
-    "title": "status = working",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "packages/system/demos/demoE/#To-Run-1",
-    "page": "demoE",
-    "title": "To Run",
-    "category": "section",
-    "text": "roslaunch system demoE.launch"
-},
-
-{
-    "location": "packages/system/demos/demoE/#Expected-Output-1",
-    "page": "demoE",
-    "title": "Expected Output",
-    "category": "section",
-    "text": "Gazebo should pop up and if you move the view so that you can see to the right (x,y)=(0,200), you will see the vehicle. All of the nodes are thin initialized and the nloptcontrol_planner node takes the longest, so for a few minutes the terminal screen will displaywaiting on obstacle_avoidance.jl in nloptcontrol_planner ...\nwaiting on obstacle_avoidance.jl in nloptcontrol_planner ...\nwaiting on obstacle_avoidance.jl in nloptcontrol_planner ...\nwaiting on obstacle_avoidance.jl in nloptcontrol_planner ...\n......\nRunning model for the: 1 time\n[bootstrap-12] process has finished cleanly\nlog file: /home/tq/.ros/log/60726692-353d-11e8-8a62-b06ebf2c81c1/bootstrap-12*.log\nRunning model for the: 2 time\nRunning model for the: 3 time\nRunning model for the: 4 time\nRunning model for the: 5 time\nRunning model for the: 6 time\nRunning model for the: 7 time\nRunning model for the: 8 time\nRunning model for the: 9 time\nRunning model for the: 10 time\ngoal is in range\nRunning model for the: 11 time\ngoal is in range\nRunning model for the: 12 time\ngoal is in range\nRunning model for the: 13 time\ngoal is in range\nRunning model for the: 14 time\ngoal is in range\nGoal Attained!\n\n[obstacle_avoidance-2] process has finished cleanly\nlog file: /home/tq/.ros/log/60726692-353d-11e8-8a62-b06ebf2c81c1/obstacle_avoidance-2*.logA green path planned by nloptcontrol_planner will be displayed in rviz. Eventually, the controller will be ready and the vehicle will start to move every time a new solution is generated. This is not closed loop, it just shows the connectivity of these nodes within a system."
-},
-
-{
-    "location": "packages/system/demos/demoF/#",
-    "page": "demoF",
-    "title": "demoF",
-    "category": "page",
-    "text": ""
-},
-
-{
-    "location": "packages/system/demos/demoF/#demoF-1",
-    "page": "demoF",
-    "title": "demoF",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "packages/system/demos/demoF/#nloptcontrol*planner-with-vehicle*description-and-chrono-1",
-    "page": "demoF",
-    "title": "nloptcontrolplanner with vehicledescription and chrono",
-    "category": "section",
-    "text": "A demo that shows nloptcontrol_planner moving the vehicle_description vehicle within Gazebo based off of the solution to the OCP every 0.5 s. Chrono takes the trajectory and follow the path/ trajectory, and feedback the states to vehicle_description. Now the loop is closed."
-},
-
-{
-    "location": "packages/system/demos/demoF/#status-working-1",
-    "page": "demoF",
-    "title": "status = working",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "packages/system/demos/demoF/#To-Run-1",
-    "page": "demoF",
-    "title": "To Run",
-    "category": "section",
-    "text": "roslaunch system demoF.launch"
-},
-
-{
-    "location": "packages/system/demos/demoF/#Expected-Output-1",
-    "page": "demoF",
-    "title": "Expected Output",
-    "category": "section",
-    "text": "Chrono will pop up when nloptcontrol_planner is initialized. The hmmwv and path will display. The command line output of demoF is similar to demoE, since the ros time is slowed down to chrono time, the planner will be ran for more times.   Display in Gazebo and Chrono are mirrored in y axis since Gazebo is right-handed and Irrlicht (Chrono gui app) is left-handed."
-},
-
-{
-    "location": "packages/system/demos/demoG/#",
-    "page": "demoG",
-    "title": "demoG",
-    "category": "page",
-    "text": ""
-},
-
-{
-    "location": "packages/system/demos/demoG/#demoG-1",
-    "page": "demoG",
-    "title": "demoG",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "packages/system/demos/demoG/#obstacle-detector-with-nloptcontrol*planner-and-vehicle*description-1",
-    "page": "demoG",
-    "title": "obstacle detector with nloptcontrolplanner and vehicledescription",
-    "category": "section",
-    "text": "Same as system demoF.launch except, knownenvironment is set to false, `obstacledetectoris used to detect the obstacle information and pass it tonloptcontrol_planner`."
-},
-
-{
-    "location": "packages/system/demos/demoG/#status-working??-1",
-    "page": "demoG",
-    "title": "status = working??",
-    "category": "section",
-    "text": "There are still previous obstacle information in the current frame.  "
-},
-
-{
-    "location": "packages/system/demos/demoG/#To-Run-1",
-    "page": "demoG",
-    "title": "To Run",
-    "category": "section",
-    "text": "roslaunch system demoE.launch"
-},
-
-{
-    "location": "packages/system/demos/demoG/#Expected-Output-1",
-    "page": "demoG",
-    "title": "Expected Output",
-    "category": "section",
-    "text": "Same as demoF output.Frame map is not published until nloptcontrol_planner is initialized."
-},
-
-{
-    "location": "packages/system/demos/demoH/#",
-    "page": "demoH",
-    "title": "demoH",
-    "category": "page",
-    "text": ""
-},
-
-{
-    "location": "packages/system/demos/demoH/#demoH-1",
-    "page": "demoH",
-    "title": "demoH",
-    "category": "section",
-    "text": ""
-},
-
-{
-    "location": "packages/system/demos/demoH/#obstacle-detector-with-nloptcontrol*planner-and-vehicle*description-1",
-    "page": "demoH",
-    "title": "obstacle detector with nloptcontrolplanner and vehicledescription",
-    "category": "section",
-    "text": "Same as system demoF.launch except, knownenvironment is set to false, `obstacledetectoris used to detect the obstacle information and pass it tonloptcontrol_planner`."
-},
-
-{
-    "location": "packages/system/demos/demoH/#status-working??-1",
-    "page": "demoH",
-    "title": "status = working??",
-    "category": "section",
-    "text": "There are still previous obstacle information in the current frame.  "
-},
-
-{
-    "location": "packages/system/demos/demoH/#To-Run-1",
-    "page": "demoH",
-    "title": "To Run",
-    "category": "section",
-    "text": "roslaunch system demoH.launch"
-},
-
-{
-    "location": "packages/system/demos/demoH/#Expected-Output-1",
-    "page": "demoH",
-    "title": "Expected Output",
-    "category": "section",
-    "text": "Same as demoF output.Frame map is not published until nloptcontrol_planner is initialized."
-},
-
-{
     "location": "packages/system/demos/demoI/#",
     "page": "demoI",
     "title": "demoI",
@@ -1429,15 +1125,7 @@ var documenterSearchIndex = {"docs": [
     "page": "demoI",
     "title": "demoI",
     "category": "section",
-    "text": ""
-},
-
-{
-    "location": "packages/system/demos/demoI/#nloptcontrol_planner-is-used-to-generate-a-path-which-avoids-all-the-obstacles-and-give-a-optimal-trajectory.-Then-the-generated-trajectory-will-be-passed-to-chronode,-and-vehicle-will-follow-the-trajectory-by-/trajectory/sa-and-/trajectory/ux-in-chrono-environment.-1",
-    "page": "demoI",
-    "title": "nloptcontrol_planner is used to generate a path which avoids all the obstacles and give a optimal trajectory. Then the generated trajectory will be passed to chronode, and vehicle will follow the trajectory by /trajectory/sa and /trajectory/ux in chrono environment.",
-    "category": "section",
-    "text": ""
+    "text": "In this demo, the vehicle follows a path autonomously, which is generated by nloptcontrol_planner and helps the vehicle to avoid obstacles. The obstacles are assumed to be known which means its position\'s information is directly known by the nloptcontrol_planner. The motion controller used in this demo is Trajectory Follower which is based on the PID. This demo utilizes the command x, y, ux from nloptcontrol_planner."
 },
 
 {
@@ -1453,7 +1141,103 @@ var documenterSearchIndex = {"docs": [
     "page": "demoI",
     "title": "Expected Output",
     "category": "section",
-    "text": "First figure shows the ui for demoI, where Running model for the: xxx time shows the current step time.  (Image: link) Second figure shows the topic maps for demo I where we can see nlopcontrol_planner/control communicate with /obstacle_avoidance and \\path (Image: link)"
+    "text": "First figure shows the ui for demoI, where Running model for the: xxx time shows the current step time.  (Image: link)For the numeric results, if you run demoI with case 3 and planner A, B and C, you should expect the reuslts shown in the following figure. In this figure, the black circle shows the 2D geometry of obstacle. The right five figures show velocity, steering angle, velocity control effort, steering control effort and solving time. The solve time depends on the hardware so the real one may different from the one we shown below.(Image: link)Second figure shows the topic maps for demo I where we can see nlopcontrol_planner/control communicate with /obstacle_avoidance and \\path (Image: link)"
+},
+
+{
+    "location": "packages/system/demos/demoM/#",
+    "page": "demoM",
+    "title": "demoM",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "packages/system/demos/demoM/#demoM-1",
+    "page": "demoM",
+    "title": "demoM",
+    "category": "section",
+    "text": "In this demo, the vehicle follows a path autonomously, which is generated by nloptcontrol_planner and helps the vehicle to avoid obstacles. The obstacles\' positions are assumed to be known. The controller in demoM is trajectoryfollower which is based on PID. This demo utilizes the command x, y, ux from `nloptcontrolplanner`. "
+},
+
+{
+    "location": "packages/system/demos/demoM/#To-Run-1",
+    "page": "demoM",
+    "title": "To Run",
+    "category": "section",
+    "text": "$ roslaunch system demoM.launchThis may take a long time to initialize."
+},
+
+{
+    "location": "packages/system/demos/demoM/#Expected-Output-1",
+    "page": "demoM",
+    "title": "Expected Output",
+    "category": "section",
+    "text": "The output of this demo should be similar to the figure below. Running model for the: xxx time shows the current step time. (Image: link)For the numeric results, if you run demoM with case 5 and planner new, you should expect the reuslts shown in the following figure. In this figure, the black circle shows the 2D geometry of obstacle. The right five figures show velocity, steering angle, velocity control effort, steering control effort and solving time. The solve time depends on the hardware so the real one may different from the one we shown below.(Image: link)The relationship between different topics/topics is checked by opening a new terminal, and enter the docker by$ docker exec -it <container_name> /bin/bash<container_name> can be auto filled by the Tab key. Then, open the rqt graph by$ rqt_graphThe output of rqt_graph is shown below. nlopcontrol_planner/control communicates with /obstacle_avoidance.(Image: link)"
+},
+
+{
+    "location": "packages/system/demos/demoK/#",
+    "page": "demoK",
+    "title": "demoK",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "packages/system/demos/demoK/#demoK-1",
+    "page": "demoK",
+    "title": "demoK",
+    "category": "section",
+    "text": "In this demo, the vehicle follows a path autonomously, which is generated by nloptcontrol_planner and helps the vehicle to avoid obstacles. The obstacles are assumed to be known which means its position\'s information is directly known by the nloptcontrol_planner. The motion controller used in this demo is Path Follower which is based on the Pure Pursuit. This demo utilizes the command x, y, ux from nloptcontrol_planner."
+},
+
+{
+    "location": "packages/system/demos/demoK/#To-Run-1",
+    "page": "demoK",
+    "title": "To Run",
+    "category": "section",
+    "text": "$ roslaunch system demoK.launchThis may take a long time to initialize."
+},
+
+{
+    "location": "packages/system/demos/demoK/#Expected-Output-1",
+    "page": "demoK",
+    "title": "Expected Output",
+    "category": "section",
+    "text": "The output of this demo should be similar to the figure below. Running model for the: xxx time shows the current step time. (Image: link)For the numeric results, if you run demoK with case 3 and planner A, B and C, you should expect the reuslts shown in the following figure. In this figure, the black circle shows the 2D geometry of obstacle. The right five figures show velocity, steering angle, velocity control effort, steering control effort and solving time. The solve time depends on the hardware so the real one may different from the one we shown below.(Image: link)The relationship between different topics/topics is checked by opening a new terminal, and enter the docker by$ docker exec -it <container_name> /bin/bash<container_name> can be auto filled by the Tab key. Then, open the rqt graph by$ rqt_graphThe output of rqt_graph is shown below. nlopcontrol_planner/control communicates with /obstacle_avoidance.(Image: link)"
+},
+
+{
+    "location": "packages/system/demos/demoZ/#",
+    "page": "demoZ",
+    "title": "demoZ",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "packages/system/demos/demoZ/#demoZ-1",
+    "page": "demoZ",
+    "title": "demoZ",
+    "category": "section",
+    "text": "In this demo, the vehicle follows a path autonomously, which is generated by nloptcontrol_planner and helps the vehicle to avoid obstacles. The obstacles in this demo is assumed to be unknown, where a 2D LiDAR model is used to detect the position of obstacles and feedback this information to nloptcontrol_planner. The controller in demoZ is pathfollower which is based on Pure Pursuit. This demo utilizes the command x, y, ux from `nloptcontrolplanner`."
+},
+
+{
+    "location": "packages/system/demos/demoZ/#To-Run-1",
+    "page": "demoZ",
+    "title": "To Run",
+    "category": "section",
+    "text": "$ roslaunch system demoZ.launchThis may take a long time to initialize."
+},
+
+{
+    "location": "packages/system/demos/demoZ/#Expected-Output-1",
+    "page": "demoZ",
+    "title": "Expected Output",
+    "category": "section",
+    "text": "The output of this demo should be similar to the figure below. Running model for the: xxx time shows the current step time. (Image: link)For the numeric results, if you run demoZ with case 5 and planner new, you should expect the reuslts shown in the following figure. In this figure, the black circle shows the 2D geometry of obstacle. The right five figures show velocity, steering angle, velocity control effort, steering control effort and solving time. The solve time depends on the hardware so the real one may different from the one we shown below.(Image: link)The relationship between different topics/topics is checked by opening a new terminal, and enter the docker by$ docker exec -it <container_name> /bin/bash<container_name> can be auto filled by the Tab key. Then, open the rqt graph by$ rqt_graphThe output of rqt_graph is shown below. nlopcontrol_planner/control communicates with /obstacle_avoidance.(Image: link)"
 },
 
 {
@@ -1477,7 +1261,15 @@ var documenterSearchIndex = {"docs": [
     "page": "Workflow",
     "title": "Build a Image:",
     "category": "section",
-    "text": "Pull the base image from avpg/cain:base_cudagl  \nBuild Dockerfile: this Dockerfile mainly copy the source files in ros/ into the container and run “catkin_make” to setup ros workspace.  "
+    "text": "Pull the image from avpg/cain:middle  \nBuild Dockerfile: this Dockerfile mainly copy the source files in ros/ into the container and run “catkin_make” to setup ros workspace.  "
+},
+
+{
+    "location": "docker/workflow/#Dockerfile-of-avpg/cain:middle:-1",
+    "page": "Workflow",
+    "title": "Dockerfile of avpg/cain:middle:",
+    "category": "section",
+    "text": "Pull the image from avpg/cain:base_cudagl:\nUpdate Julia packages\nClone the source code from JuliaMPC/MAVs and build workspace"
 },
 
 {
@@ -1485,7 +1277,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Workflow",
     "title": "Inside the Dockerfile of avpg/cain:base_cudagl:",
     "category": "section",
-    "text": "Build the base image from nvidia/cudagl:9.0-devel-ubuntu16.04\nInstall essential packages  \nInstall ROS kinetic  \nInstall Julia\nInstall Chrono  "
+    "text": "Build the base image from nvidia/cudagl:9.0-devel-ubuntu16.04\nInstall required packages  \nInstall ROS kinetic  \nInstall Julia\nInstall Chrono  "
 },
 
 {
@@ -1493,15 +1285,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Workflow",
     "title": "Run a Container:",
     "category": "section",
-    "text": "Setup PATH variable for later use of volumes when execute docker run.\ndocker run command to execute mavs image."
-},
-
-{
-    "location": "docker/workflow/#What-Are-Volumes?-1",
-    "page": "Workflow",
-    "title": "What Are Volumes?",
-    "category": "section",
-    "text": "For simplicity, volumes are the mechanism for persisting data generated by and used by Docker containers. Click here for more information.   In runsh, several volumes are created. The results/ directory is used to store the demonstration data and we can do some post process after we terminate the container. As for ros/src/ directory, it shares the source files in the local machine with container. That is, we can modify the files outside the container and see the instant change inside the container. And it fits the scenario where we need to update script file, such as Python, ROS launch file, without rebuild the image.  (Image: volume_diagram)"
+    "text": "Setup PATH variable for later use of volumes when execute docker run.\ndocker run command to execute mavs image.(Image: volume_diagram)"
 },
 
 {
@@ -1553,6 +1337,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "docker/notes/#Stopping-a-running-container:-1",
+    "page": "Notes",
+    "title": "Stopping a running container:",
+    "category": "section",
+    "text": "First look the containers:docker container lsthen stop the container that is running for instance:docker rm -f mavs_container"
+},
+
+{
     "location": "docker/notes/#Save-changes-made-in-docker-container:-1",
     "page": "Notes",
     "title": "Save changes made in docker container:",
@@ -1573,7 +1365,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Notes",
     "title": "Open up new terminals to access Container (example):",
     "category": "section",
-    "text": "Look at the current containers available with $docker container lsCONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES\nce4096e14bef        mavs                \"/ros_entrypoint.sh …\"   34 minutes ago      Up 34 minutes                           vigilant_johnsonOpen a new terminal$docker exec -it vigilant_johnson /bin/bashNote: you can use “tab” key to auto-complete the <container_name>"
+    "text": "Look at the current containers available with$docker container lsCONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES\nce4096e14bef        mavs                \"/ros_entrypoint.sh …\"   34 minutes ago      Up 34 minutes                           vigilant_johnsonOpen a new terminal$docker exec -it vigilant_johnson /bin/bashNote: you can use “tab” key to auto-complete the <container_name>"
 },
 
 {
@@ -1605,7 +1397,15 @@ var documenterSearchIndex = {"docs": [
     "page": "Notes",
     "title": "Running out of space?",
     "category": "section",
-    "text": "Check your current images:docker image lsCheck your current containers:docker image lsDo some trimmingdocker image prune\ndocker container prune"
+    "text": "Check your current images:docker image lsCheck your current containers:docker image lsDo some trimmingdocker image prune\ndocker container prune\ndocker system prune"
+},
+
+{
+    "location": "docker/notes/#What-Are-Volumes?-1",
+    "page": "Notes",
+    "title": "What Are Volumes?",
+    "category": "section",
+    "text": "For simplicity, volumes are the mechanism for persisting data generated by and used by Docker containers. Click here for more information.   In runsh, several volumes are created. The results/ directory is used to store the demonstration data and we can do some post process after we terminate the container. As for ros/src/ directory, it shares the source files in the local machine with container. That is, we can modify the files outside the container and see the instant change inside the container. And it fits the scenario where we need to update script file, such as Python, ROS launch file, without rebuild the image."
 },
 
 {
