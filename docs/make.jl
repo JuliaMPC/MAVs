@@ -25,6 +25,10 @@ pages = [
         "nloptcontrol_planner" => "packages/computing/planning/nloptcontrol_planner/main.md",
         "mavs_ros_planner" => "packages/computing/planning/mavs_ros_planner/main.md",
     ],
+    "Controller" => [
+        "path_follower" => "packages/computing/controller/path_follower/main.md",
+        "trajectory_follower" => "packages/computing/controller/trajectory_follower/main.md",
+    ],
     "Miscellaneous" => [
         "system_shutdown" => "packages/system/system_shutdown.md",
         "data_logging" => "packages/system/data_logging.md",
