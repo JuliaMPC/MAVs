@@ -624,6 +624,7 @@ int main(int argc, char* argv[]) {
 		state_data.psi = yaw_angle; // yaw angle (rad)
 		state_data.r = VehicleRot_dt[2];// yaw rate (rad/s)
 		state_data.sa = steering_angle; // steering angle at the tire (rad)
+		control_data.t = chrono_time;
 		control_data.thrt_in = throttle_input; // throttle input in the range [0,+1]
 		control_data.brk_in = braking_input; // braking input in the range [0,+1]
 		control_data.str_in = steering_input; // steeering input in the range [-1,+1]
