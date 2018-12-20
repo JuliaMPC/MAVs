@@ -36,15 +36,10 @@ pages = [
         "point_cloud_converter" => "packages/computing/perception/point_cloud_converter.md",
     ],
     "System demos" => [
-        "demoA" => "packages/system/demos/demoA.md",
-        "demoB" => "packages/system/demos/demoB.md",
-        "demoC" => "packages/system/demos/demoC.md",
-        "demoD" => "packages/system/demos/demoD.md",
-        "demoE" => "packages/system/demos/demoE.md",
-        "demoF" => "packages/system/demos/demoF.md",
-        "demoG" => "packages/system/demos/demoG.md",
-        "demoH" => "packages/system/demos/demoH.md",
         "demoI" => "packages/system/demos/demoI.md",
+        "demoM" => "packages/system/demos/demoM.md",
+        "demoK" => "packages/system/demos/demoK.md",
+        "demoZ" => "packages/system/demos/demoZ.md"
     ],
     "Docker" => [
         "Workflow" => "docker/workflow.md",
