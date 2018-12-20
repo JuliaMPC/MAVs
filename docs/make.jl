@@ -27,6 +27,7 @@ pages = [
     ],
     "Controller" => [
         "path_follower" => "packages/computing/controller/path_follower/main.md",
+        "trajectory_follower" => "packages/computing/controller/trajectory_follower/main.md",
     ],
     "Miscellaneous" => [
         "system_shutdown" => "packages/system/system_shutdown.md",
