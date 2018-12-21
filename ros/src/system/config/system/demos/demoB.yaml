@@ -1,5 +1,5 @@
 system:
- planner: nlopcontrol_planner
+ planner: nloptcontrol_planner
  plant: 3DOF
  params:
   step_size: 0.001
@@ -24,7 +24,7 @@ system:
    postion_update_external: true
 
  nloptcontrol_planner:
-  namespace: nlopcontrol_planner
+  namespace: nloptcontrol_planner
   flags:
    running: true
    initialized: false

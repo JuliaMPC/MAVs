@@ -303,13 +303,15 @@ function loop(pub,pub_opt,pub_path,n,c)
       publish(pub, traj)
 
       opt = Optimization()
-      opt.texP = n.mpc.v.tex
+      opt.t =  get_rostime()
+      opt.evalNum = n.mpc.v.evalNum - 1
+    #  opt.texP = n.mpc.v.tex
       opt.texA = get_rostime() - tA
       opt.tSolve = n.r.ocp.tSolve
       opt.status = n.r.ocp.status
-      opt.X0p = n.ocp.X0
-      opt.X0a = getStateData(n)
-      opt.X0e = abs.(opt.X0p - opt.X0a)
+      #opt.X0p = n.ocp.X0
+      #opt.X0a = getStateData(n)
+      #opt.X0e = abs.(opt.X0p - opt.X0a)
       publish(pub_opt, opt)
       tA = get_rostime()
 
