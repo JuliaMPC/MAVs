@@ -84,6 +84,12 @@ end
 --------------------------------------------------------------------------------------\n
 Author: Huckleberry Febbo, Graduate Student, University of Michigan
 Date Create: 4/6/2017, Last Modified: 2/28/2018 \n
+
+ERROR: LoadError: BoundsError: attempt to access 1-element Array{Float64,1} at index [2]
+Stacktrace:
+ [1] getindex(::Array{Float64,1}, ::Int64) at ./array.jl:554
+ [2] setObstacleData(::Array{Any,1}) at /home/mavs/MAVs/ros/src/computing/planning/motion/nloptcontrol_planner/obstacle_avoidance.jl:118
+
 --------------------------------------------------------------------------------------\n
 """
 function setObstacleData(params)
@@ -110,7 +116,8 @@ function setObstacleData(params)
       end
 
       for i in 1:Q
-        if i <= L          # add obstacle
+         # isequal(typeof(r[i]),Float64)
+        if i <= L        # add obstacle
           setvalue(params[2][1][i],r[i]);
           setvalue(params[2][2][i],r[i]);
           setvalue(params[2][3][i],x[i]);
