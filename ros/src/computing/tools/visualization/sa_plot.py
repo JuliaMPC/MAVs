@@ -41,7 +41,7 @@ if __name__ == '__main__':
     sa_temp = 0
     rospy.init_node("plotter6")
     flag_state = rospy.Subscriber("state", state, plot_x)
-    flag_traj = rospy.Subscriber("nlopcontrol_planner/control", Trajectory, plot_opt)
+    flag_traj = rospy.Subscriber("nloptcontrol_planner/control", Trajectory, plot_opt)
 
 
     rate = rospy.Rate(400) # 50hz
@@ -73,4 +73,3 @@ if __name__ == '__main__':
     plt.ion()
     plt.show()
     rospy.spin()
-    

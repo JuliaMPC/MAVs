@@ -26,7 +26,7 @@ def plot_tsolve(msg):
 if __name__ == '__main__':
     solve_num = 0
     rospy.init_node("plotter2")
-    rospy.Subscriber("nlopcontrol_planner/opt", Optimization, plot_tsolve)
+    rospy.Subscriber("nloptcontrol_planner/opt", Optimization, plot_tsolve)
     plt.ion()
     plt.show()
     rospy.spin()

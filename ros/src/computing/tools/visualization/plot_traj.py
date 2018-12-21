@@ -81,7 +81,7 @@ if __name__ == '__main__':
     t_chrono = 0
     rospy.init_node("plotter")
     flag_state = rospy.Subscriber("state", state, plot_x)
-    flag_traj = rospy.Subscriber("nlopcontrol_planner/control", Trajectory, plot_opt)
+    flag_traj = rospy.Subscriber("nloptcontrol_planner/control", Trajectory, plot_opt)
 
 
     rate = rospy.Rate(400) # 50hz
@@ -143,10 +143,10 @@ if __name__ == '__main__':
 
         # Print x array start
         print('t_chrono')
-        print(' '.join(map(str, x_1)))  
-        # print('\n'.join(map(str, x_))) 
+        print(' '.join(map(str, x_1)))
+        # print('\n'.join(map(str, x_)))
         print"in new line"
-        # Print x array end  
+        # Print x array end
 
         # # Print size
         # print('x size: %d', len(x_))
