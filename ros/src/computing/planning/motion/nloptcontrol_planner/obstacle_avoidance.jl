@@ -71,8 +71,6 @@ function setTrajParams(msg::Trajectory)
     RobotOS.set_param(string("/trajectory/ax"),ax)
     RobotOS.set_param(string("/trajectory/sr"),sr)
     RobotOS.set_param(string("/trajectory/jx"),jx)
-
-
   else
     error("L !> 0")
   end
@@ -84,12 +82,6 @@ end
 --------------------------------------------------------------------------------------\n
 Author: Huckleberry Febbo, Graduate Student, University of Michigan
 Date Create: 4/6/2017, Last Modified: 2/28/2018 \n
-
-ERROR: LoadError: BoundsError: attempt to access 1-element Array{Float64,1} at index [2]
-Stacktrace:
- [1] getindex(::Array{Float64,1}, ::Int64) at ./array.jl:554
- [2] setObstacleData(::Array{Any,1}) at /home/mavs/MAVs/ros/src/computing/planning/motion/nloptcontrol_planner/obstacle_avoidance.jl:118
-
 --------------------------------------------------------------------------------------\n
 """
 function setObstacleData(params)
@@ -256,6 +248,7 @@ function loop(pub,pub_opt,pub_path,n,c)
 
   n.s.mpc.shiftX0 = true # tmp
 
+  tSolveCum = 0
   tA = get_rostime()
   init = false
   tex = RobotOS.get_param("planner/nloptcontrol_planner/misc/tex")
@@ -319,7 +312,15 @@ function loop(pub,pub_opt,pub_path,n,c)
       #opt.X0p = n.ocp.X0
       #opt.X0a = getStateData(n)
       #opt.X0e = abs.(opt.X0p - opt.X0a)
+
+      # slow down optimization to real-time
+      tSolveCum = tSolveCum + n.r.ocp.tSolve
+      if init
+        while(tSolveCum > Float64(get_rostime()))
+        end
+      end
       publish(pub_opt, opt)
+
       tA = get_rostime()
 
       path = Path()
