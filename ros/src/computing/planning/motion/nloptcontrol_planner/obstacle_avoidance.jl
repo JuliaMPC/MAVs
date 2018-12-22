@@ -33,21 +33,6 @@ function goalAttained(xa,ya,xg,yg,gTol)
    return ((xa-xg)^2 + (ya-yg)^2)^0.5 < gTol
 end
 
-#"""
-# used to publish the current tire vertical load value
-#--------------------------------------------------------------------------------------\n
-#Author: Huckleberry Febbo, Graduate Student, University of Michigan
-#Date Create: 12/21/2018, Last Modified: 12/21/2018 \n
-#--------------------------------------------------------------------------------------\n
-#"""
-#function setTireParams(msg::state)
-#    RobotOS.set_param("/state/vtfl", msg.tireF_fl)
-#    RobotOS.set_param("/state/vtfr", msg.tireF_fr)
-#    RobotOS.set_param("/state/vtrl", msg.tireF_rl)
-#    RobotOS.set_param("/state/vtrr", msg.tireF_rr)
-#  return nothing
-#end
-
 """
 # used to publish the solution of the ocp to ROS params
 --------------------------------------------------------------------------------------\n
@@ -369,8 +354,8 @@ function loop(pub,pub_opt,pub_path,n,c)
             vtflMA[tireCount] = RobotOS.get_param("state/vtfl")
 
             if Float64(get_rostime()) > 2 # only start to check after simulation has been running for at least 2 seconds
-              @show mean([mean(vtrlMA),mean(vtflMA)])
-              @show mean([mean(vtrrMA),mean(vtfrMA)])
+              #@show mean([mean(vtrlMA),mean(vtflMA)])
+              #@show mean([mean(vtrrMA),mean(vtfrMA)])
               if isequal(mean([mean(vtrlMA),mean(vtflMA)]), 0.0) || isequal(mean([mean(vtrrMA),mean(vtfrMA)]), 0.0)
                 RobotOS.set_param("system/flags/rollover",true)
                 break
