@@ -32,7 +32,7 @@ run_launchfile () {
   roslaunch_PID=$!
 }
 wait_for_fixed_execution_time () {
-  DURATION=20
+  DURATION=180
   START_TIME=$SECONDS
   until (($(( SECONDS - START_TIME )) > "$DURATION")) ; do sleep 1; done
 }
