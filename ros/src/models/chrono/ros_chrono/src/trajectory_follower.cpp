@@ -339,7 +339,7 @@ int main(int argc, char* argv[]) {
     double braking_input = 0;
 
 
-    
+
 
     while (ros::ok()) {
         // Get chrono time
@@ -365,18 +365,18 @@ int main(int argc, char* argv[]) {
             traj_ux_interp = traj_ux[0];
             traj_sa_interp = traj_sa[0];
         }
-        
+
         // steering input
         // steering rate saturation
         if (((traj_sa_interp - steering_input*maximum_steering_angle) / step_size) > 1.5) {
             traj_sa_interp = (steering_input*maximum_steering_angle + 1.5*step_size);
         }
         else if (((steering_input*maximum_steering_angle - traj_sa_interp) / step_size) < -1.5) {
-            traj_sa_interp = (steering_input*maximum_steering_angle - 1.5*step_size); 
+            traj_sa_interp = (steering_input*maximum_steering_angle - 1.5*step_size);
         }
-        // simple low pass filter 
+        // simple low pass filter
         double alpha = 0.4;
-        steering_input = (1.0 - alpha) * steering_input + alpha * traj_sa_interp / maximum_steering_angle; 
+        steering_input = (1.0 - alpha) * steering_input + alpha * traj_sa_interp / maximum_steering_angle;
         // steering angle saturation
         steering_input = std::max(-1.0, std::min(1.0, steering_input));
 
@@ -431,11 +431,11 @@ int main(int argc, char* argv[]) {
         ChVector<> VehicleRot_dt = my_hmmwv.GetChassisBody()->GetWvel_loc(); // actual angular speed (expressed in local coords)
         ChVector<> VehicleCOMVel_global = my_hmmwv.GetVehicle().GetVehiclePointVelocity(ORI2COM); // vehicle COM velocity (m/s)
         ChVector<> VehicleCOMAcc = my_hmmwv.GetVehicle().GetVehicleAcceleration(ORI2COM); // vehicle COM acceleration (m/s^2)
-        VehicleCOMAcc[0] = std::max(-1.5, std::min(1.5, VehicleCOMAcc[0])); // let vehicle acceleration bounded in [-1.5, 1.5] (temporary solution) 
+        VehicleCOMAcc[0] = std::max(-1.5, std::min(1.5, VehicleCOMAcc[0])); // let vehicle acceleration bounded in [-1.5, 1.5] (temporary solution)
 
         ChVector<> VehicleCOMVel = global2veh(yaw_angle, VehicleCOMVel_global);
         long_velocity = VehicleCOMVel[0];
-    
+
         // Get vertical tire force
         std::vector<double> TireForceVertical;
         for (int i = 0; i < 4; i++) {
@@ -468,7 +468,12 @@ int main(int argc, char* argv[]) {
         state_data.psi = yaw_angle; // yaw angle (rad)
         state_data.r = VehicleRot_dt[2]; // yaw rate (rad/s)
         state_data.sa = steering_angle; // steering angle at the tire (rad)
-        state_data.tire_f = TireForceVertical; // vertical tire force 
+        //state_data.tire_f = TireForceVertical; // vertical tire force
+	state_data.tireF_fl = TireForceVertical[0];
+	state_data.tireF_fr = TireForceVertical[1];
+	state_data.tireF_rl = TireForceVertical[2];
+	state_data.tireF_rr = TireForceVertical[3];
+
         control_data.t = chrono_time;
         control_data.thrt_in = throttle_input; // throttle input in the range [0,+1]
         control_data.brk_in = braking_input; // braking input in the range [0,+1]
