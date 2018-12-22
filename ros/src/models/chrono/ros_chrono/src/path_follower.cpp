@@ -609,6 +609,10 @@ int main(int argc, char* argv[]) {
 		node.setParam("/state/sa", steering_angle);        // steering angle at the tire (rad)
 		node.setParam("/state/ux", VehicleCOMVel[0]);      //// longitudinal velocity  (vehicle frame) (m/s)
 		node.setParam("/state/ax", VehicleCOMAcc[0]);      //// longitudinal acceleration (vehicle frame) (m/s^2)
+		node.setParam("/state/vtfl", TireForceVertical[0]);
+		node.setParam("/state/vtfr", TireForceVertical[1]);
+		node.setParam("/state/vtrl", TireForceVertical[2]);
+		node.setParam("/state/vtrr", TireForceVertical[3]);
 		node.setParam("/control/thr", throttle_input);
 		node.setParam("/control/brk", braking_input);
 		node.setParam("/control/str", steering_input);

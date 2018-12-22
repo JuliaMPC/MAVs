@@ -41,6 +41,38 @@
         ],
         "description": "Goal is attained."
       }
+      },
+      {
+        "key": "Out of time",
+        "val": "/system/flags/timelimit",
+        "ros_msg_type": "parameter",
+        "save": true,
+        "stopping_criteria": {
+          "logical_op": "OR",
+          "conditions": [
+            {
+              "op": "eq",
+              "val": true
+            }
+          ],
+          "description": "Out of time"
+        }
+        },
+        {
+          "key": "Rollover",
+          "val": "/system/flags/rollover",
+          "ros_msg_type": "parameter",
+          "save": true,
+          "stopping_criteria": {
+            "logical_op": "OR",
+            "conditions": [
+              {
+                "op": "eq",
+                "val": true
+              }
+            ],
+            "description": "The vehicle rolled over."
+          }
     }
   ]
 }

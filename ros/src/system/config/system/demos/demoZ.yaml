@@ -6,9 +6,12 @@ system:
   step_size: 0.005
   goal_tol: 0.1
   tire_step_size: 0.00025
+  timelimit: 50
 
  flags:
   goal_attained: false
+  rollover: false
+  timelimit: false
   initialized: false
   paused: true
 

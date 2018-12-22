@@ -167,7 +167,7 @@ def readcase(demoname, casename, plannername, pathname):
 	# add result
 	planned_filename1 = open('report.csv', 'r')
 	report_csv = csv.reader(planned_filename1, delimiter=',')
-	name = name +'isCollision' + ',' +'isGoalReached'
+	name = name +'collision' + ',' +'goalReached'+ ',' +'timeLimit'+ ',' +'rollover'
 	iter2 = 0
 
 	for row2 in report_csv:
@@ -182,7 +182,7 @@ def readcase(demoname, casename, plannername, pathname):
 	iter1 = 0
 	for row1 in report_csv1:
 		if(iter1 == iter2 ):
-			value = value +row1[1]+ ','+row1[2]
+			value = value +row1[1]+ ','+row1[2]+ ','+row1[3]+ ','+row1[4]
 
 		iter1 += 1
 
