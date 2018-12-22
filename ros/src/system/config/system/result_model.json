@@ -2,7 +2,7 @@
   "model_id": "model1",
   "add_description": true,
   "description_header": "Description",
-  "default_description": "Shutdown was caused by some unmonitored external phenomenon.",
+  "default_description": "Shutdown caused by external interrupt.",
   "model": [
     {
       "key": "Case Id",
