@@ -106,7 +106,6 @@ def processcsv(pathname):
 	miscResults_filename.close()
 
 
-
 # save sX.ymal
 def readcase(demoname, casename, plannername, pathname):
 	configpath = "../ros/src/system/config/case/"
@@ -164,6 +163,30 @@ def readcase(demoname, casename, plannername, pathname):
 
 
 		line = F_sx.readline()
+
+	# add result
+	planned_filename1 = open('report.csv', 'r')
+	report_csv = csv.reader(planned_filename1, delimiter=',')
+	name = name +'isCollision' + ',' +'isGoalReached'
+	iter2 = 0
+
+	for row2 in report_csv:
+		iter2 += 1
+
+
+	iter2 -= 1
+	planned_filename1.close()
+
+	planned_filename2 = open('report.csv', 'r')
+	report_csv1 = csv.reader(planned_filename2, delimiter=',')
+	iter1 = 0
+	for row1 in report_csv1:
+		if(iter1 == iter2 ):
+			value = value +row1[1]+ ','+row1[2]
+
+		iter1 += 1
+
+
 	value = name+'\n'+value
 	F_w.truncate(0)
 	#F_w.writelines(name)
