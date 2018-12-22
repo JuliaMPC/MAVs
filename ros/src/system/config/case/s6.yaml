@@ -4,7 +4,7 @@ case:
   x: 0.
   yVal: 300.
   psi: 1.5701
-  tol: 5.
+  tol: 10.
 
  actual:
   X0:
@@ -24,9 +24,9 @@ case:
    radius: [10.]
    length: [5.]
    x0: [0.0]
-   y0: [250.]
+   y0: [275.]
    vx: [0.0]
-   vy: [-3.0]
+   vy: [-8.]
 
  assumed:
   obstacle:

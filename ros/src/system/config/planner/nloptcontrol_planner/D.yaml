@@ -11,16 +11,16 @@ planner:
       Ymin: NaN              # min limit for y in OCP
       Ymax: NaN              # max limit for y in OCP
       tp: NaN                # N/A prediction horizon (s)
-      tex: 0.001               # execution horizon (s)
+      tex: 0.001             # execution horizon (s)
       sm: 2.                 # (m) distance to see if obstacle was hit (for crash checking)
       sm1: 2.5               # (m) distance 1 to make sure we don't hit obstacle (for optimization)
       sm2: 4.0               # (m) distance 2 to make sure we don't hit obstacle (for optimization)
       Lr: 90.                # LiDAR range (m)
-      L_rd: 10.               # relaxation distance to LiDAR range
+      L_rd: 10.              # relaxation distance to LiDAR range
       Nck: NaN               # number of points per interval
       N: 20                  # number of points in :tm methods
       solver: KNITRO         # either Ipopt of KNITRO
-      mpc_max_iter: 1000      # an MPC parameter
+      mpc_max_iter: 1000     # an MPC parameter
       PredictX0: false       # if the state that the vehicle will be at when the optimization is finished is to be predicted
       FixedTp: true          # fixed final time for predicting X0
       finalTimeDV: true      # bool to indicate if the final time is a variable
@@ -33,7 +33,7 @@ planner:
       EP: 0.01   # small number to avoid singularities TODO move this from VehicleModels.jl
       x0slackVariables: true
       xFslackVariables: true
-      movingObstacles: false
+      movingObstacles: true
       onlyOptimal: true
       evalConstraints: false
       ocpSave: false
@@ -71,8 +71,8 @@ planner:
       isa: 10.0 #0.025 #0.0025
       iu: 1.0 #0.5 #0.25
       iax: 10.0 #0.5 # 0.05
-      fx: 10.0 #5.0 # 5.0
-      fy: 10.0 #5.0 # 5.0
+      fx: 5.0 #5.0 # 5.0
+      fy: 5.0 #5.0 # 5.0
       fv: NaN # NOTE YAML file turns these into strings
       fr: NaN
       fpsi: NaN

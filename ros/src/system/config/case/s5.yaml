@@ -4,7 +4,7 @@ case:
   x: 0.
   yVal: 250.
   psi: 1.5701
-  tol: 5.
+  tol: 15.
 
  actual:
   X0:
