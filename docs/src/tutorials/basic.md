@@ -43,3 +43,15 @@ A ``.gitignore`` file is added to make sure that when these results are produced
 
 ## Parameters
 Parameters are broken into two categories; `Inputs` and `Outputs`. In the demo, the inputs are also generated, but flags can be set to let the node know that the user will be setting these `rosparams` externally.
+
+
+## Running multiple tests consecutively
+Parameter sweeps can be easily performed in MAVs using the test suite script. This script runs automated test scenarios. Key points to note:
+
+* Test suite has its own set of parameters files and launch scripts
+* ``test_main.sh`` is the script you want to run
+* In ``test_main.sh`` one can provide multiple nested loops(each to change one single parameter for individual run)
+* Results will be stored in ``results/report_test.csv``
+* IMPORTANT: If a parameter is updated dynamically inside the ``test_main.sh``, then remove the corresponding entry from the required yaml file. Otherwise value will be overwritten and dynamic parameter update won't work.
+* You can modify ``system/config/system/result_model.json`` to specify which parameter or topics you want to save at shutdown
+* Delete any old copy of ``report_test.csv`` in results folder, if ``result_model.json`` is modified Otherwise headers won't correspond with new row entries
