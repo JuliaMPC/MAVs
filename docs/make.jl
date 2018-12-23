@@ -36,6 +36,8 @@ pages = [
         "point_cloud_converter" => "packages/computing/perception/point_cloud_converter.md",
     ],
     "System demos" => [
+        "demoA" => "packages/system/demos/demoA.md",
+        "demoB" => "packages/system/demos/demoB.md",
         "demoI" => "packages/system/demos/demoI.md",
         "demoM" => "packages/system/demos/demoM.md",
         "demoK" => "packages/system/demos/demoK.md",
