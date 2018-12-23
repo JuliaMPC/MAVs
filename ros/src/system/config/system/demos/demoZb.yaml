@@ -1,5 +1,5 @@
 system:
- planner: nlopcontrol_planner
+ planner: nloptcontrol_planner
  plant: chrono
 
  params:
@@ -10,6 +10,8 @@ system:
 
  flags:
   goal_attained: false
+  rollover: false
+  timelimit: false
   initialized: false
   paused: true
 
@@ -28,7 +30,7 @@ system:
     shutdown_completion_flags: []
 
  nloptcontrol_planner:
-  namespace: nlopcontrol_planner
+  namespace: nloptcontrol_planner
   flags:
    running: true
    initialized: false
@@ -39,7 +41,7 @@ system:
   flags:
    initialized: false
    running: true
-   gui: true
+   gui: false
   field:
    h: 0
    l: 1000.0

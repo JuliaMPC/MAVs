@@ -82,4 +82,6 @@
   <node name="visualization" pkg="visualization" type="data_plotter.py" />
   <!--  ************** additional nodes ***************  -->
 
+  <node name="rviz" pkg="rviz" type="rviz" output="screen" args="-d $(find obstacle_detector)/resources/display.rviz"/>
+
 </launch>

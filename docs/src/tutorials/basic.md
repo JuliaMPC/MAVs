@@ -49,7 +49,11 @@ Parameters are broken into two categories; `Inputs` and `Outputs`. In the demo, 
 Parameter sweeps can be easily performed in MAVs using the test suite script. This script runs automated test scenarios. Key points to note:
 
 * Test suite has its own set of parameters files and launch scripts
-* ``test_main.sh`` is the script you want to run
+* ``test_main.sh`` is an example of a script that can be created. It can be ran as:
+```
+cd MAVs/ros/src/system/test/main
+./test_main.sh
+```
 * In ``test_main.sh`` one can provide multiple nested loops(each to change one single parameter for individual run)
 * Results will be stored in ``results/report_test.csv``
 * IMPORTANT: If a parameter is updated dynamically inside the ``test_main.sh``, then remove the corresponding entry from the required yaml file. Otherwise value will be overwritten and dynamic parameter update won't work.
