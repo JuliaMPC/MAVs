@@ -278,7 +278,7 @@ function loop(pub,pub_opt,pub_path,n,c)
 
       updateAutoParams!(n)                           # update model parameters
       status = optimize!(n)
-     @show n.r.ocp.status
+    # @show n.r.ocp.status
 
       if isequal(RobotOS.get_param("system/plant"),"3DOF") # otherwise an external update on the initial state of the vehicle is needed
         n.mpc.v.t = n.mpc.v.t + n.mpc.v.tex
@@ -358,6 +358,7 @@ function loop(pub,pub_opt,pub_path,n,c)
               #@show mean([mean(vtrrMA),mean(vtfrMA)])
               if isequal(mean([mean(vtrlMA),mean(vtflMA)]), 0.0) || isequal(mean([mean(vtrrMA),mean(vtfrMA)]), 0.0)
                 RobotOS.set_param("system/flags/rollover",true)
+                println("The vehicle rolled over. Stopping simulation!")
                 break
               end
             end
@@ -371,11 +372,13 @@ function loop(pub,pub_opt,pub_path,n,c)
 
       if goalAttained(xa,ya,c["goal"]["x"],c["goal"]["yVal"],2*c["goal"]["tol"])
         RobotOS.set_param("system/flags/goal_attained",true)
+        println("The goal was attained. Stopping simulation!")
         break
       end
 
       if Float64(get_rostime()) > RobotOS.get_param("system/params/timelimit")
         RobotOS.set_param("system/flags/timelimit",true)
+        println("The simulation ran out of time. Stopping simulation!")
         break
       end
 
