@@ -11,6 +11,7 @@ system:
   goal_attained: false
   initialized: false
   paused: true
+  done: false
 
  shutdown:
   flags:

@@ -358,6 +358,7 @@ function loop(pub,pub_opt,pub_path,n,c)
               #@show mean([mean(vtrrMA),mean(vtfrMA)])
               if isequal(mean([mean(vtrlMA),mean(vtflMA)]), 0.0) || isequal(mean([mean(vtrrMA),mean(vtfrMA)]), 0.0)
                 RobotOS.set_param("system/flags/rollover",true)
+                RobotOS.set_param("system/flags/done",true)
                 println("The vehicle rolled over. Stopping simulation!")
                 break
               end
@@ -372,12 +373,14 @@ function loop(pub,pub_opt,pub_path,n,c)
 
       if goalAttained(xa,ya,c["goal"]["x"],c["goal"]["yVal"],2*c["goal"]["tol"])
         RobotOS.set_param("system/flags/goal_attained",true)
+        RobotOS.set_param("system/flags/done",true)
         println("The goal was attained. Stopping simulation!")
         break
       end
 
       if Float64(get_rostime()) > RobotOS.get_param("system/params/timelimit")
         RobotOS.set_param("system/flags/timelimit",true)
+        RobotOS.set_param("system/flags/done",true)
         println("The simulation ran out of time. Stopping simulation!")
         break
       end

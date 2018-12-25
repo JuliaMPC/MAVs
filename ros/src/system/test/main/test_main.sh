@@ -33,15 +33,24 @@ run_launchfile () {
   update_dynamic_ros_parameters
   roslaunch system sweepA.launch &
   roslaunch_PID=$!
+  sleep 4
 }
-wait_for_fixed_execution_time () {
+wait_for_program () {
   DURATION=1000
   START_TIME=$SECONDS
-  until (($(( SECONDS - START_TIME )) > "$DURATION")) ; do sleep 1; done
+  shutdown=0;
+until [[ $(( SECONDS - START_TIME )) > "$DURATION" ]] || [[ $shutdown -eq 1 ]]; do
+  sleep 1;
+  if [[ `rosparam get "system/flags/done"` = "true" ]]; then
+    shutdown=1;
+    sleep 10
+  fi
+  done
 }
+
 loop_entry_point () {
   run_launchfile
-  wait_for_fixed_execution_time
+  wait_for_program
   kill_roslaunch_pid
 }
 

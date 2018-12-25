@@ -14,6 +14,7 @@ system:
   timelimit: false
   initialized: false
   paused: true
+  done: false
 
  result_store:
    flags:

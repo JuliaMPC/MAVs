@@ -71,7 +71,6 @@ void checkForShutdownRequest() {
       bool initiate_shutdown;
       ros::param::get(shutdown_initiation_flags[i], initiate_shutdown);
       if (initiate_shutdown) {
-        ros::param::set("system/flags/shutdown", true);
         ROS_INFO("Shutdown initiation flag triggered!!!! = %s\n", shutdown_initiation_flags[i].c_str());
         g_request_shutdown = 1;
         break;
@@ -111,8 +110,10 @@ int main(int argc, char** argv)
         shutdown_requested.publish(shutdown_msg);
       }
       if (isShutDownAllowed()) {
+        ROS_INFO("----Starting shutdownSystem()----\n");
         shutdownSystem();
       }
+      ROS_INFO("----Starting shutdownSystem()----\n");
       shutdown_process_started = true;
     } else {
       checkForShutdownRequest();

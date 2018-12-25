@@ -7,6 +7,7 @@ system:
   goal_attained: false
   initialized: false
   paused: true
+
  shutdown:
   flags:
    running: true
