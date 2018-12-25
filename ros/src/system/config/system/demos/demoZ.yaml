@@ -25,6 +25,7 @@ system:
   flags:
    running: true
    initialized: false
+   shutdown: false
   params:
     shutdown_initiation_flags: ["result_store/flags/shutdown"]
     shutdown_completion_flags: []
