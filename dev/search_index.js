@@ -113,6 +113,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "tutorials/basic/#Running-multiple-tests-consecutively-1",
+    "page": "Basic usage",
+    "title": "Running multiple tests consecutively",
+    "category": "section",
+    "text": "Parameter sweeps can be easily performed in MAVs using the test suite script. This script runs automated test scenarios. Key points to note:Test suite has its own set of parameters files and launch scripts\ntest_mainsh is an example of a script that can be created. It can be ran as:cd MAVs/ros/src/system/test/main\n./test_main.shIn test_mainsh one can provide multiple nested loops(each to change one single parameter for individual run)\nResults will be stored in resultsreport_testcsv\nIMPORTANT: If a parameter is updated dynamically inside the test_mainsh, then remove the corresponding entry from the required yaml file. Otherwise value will be overwritten and dynamic parameter update won\'t work.\nYou can modify systemconfigsystemresult_modeljson to specify which parameter or topics you want to save at shutdown\nDelete any old copy of report_testcsv in results folder, if result_modeljson is modified Otherwise headers won\'t correspond with new row entries"
+},
+
+{
     "location": "tutorials/developer/#",
     "page": "Developing MAVs",
     "title": "Developing MAVs",
@@ -1110,6 +1118,102 @@ var documenterSearchIndex = {"docs": [
     "title": "pointcloudconverter",
     "category": "section",
     "text": "The package is documented here.Used to convert PointCloud to PointCloud2. To go from vehicle_description outputs to obstacle_detector inputs.This is taken care of inside one of the obstacle_detector launch file."
+},
+
+{
+    "location": "packages/system/demos/demoA/#",
+    "page": "demoA",
+    "title": "demoA",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "packages/system/demos/demoA/#demoA-1",
+    "page": "demoA",
+    "title": "demoA",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "packages/system/demos/demoA/#obstacle*detector-with-vehicle*description-1",
+    "page": "demoA",
+    "title": "obstacledetector with vehicledescription",
+    "category": "section",
+    "text": "A demo which shows the obstacledetector with vehicledescription."
+},
+
+{
+    "location": "packages/system/demos/demoA/#status-working-1",
+    "page": "demoA",
+    "title": "status = working",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "packages/system/demos/demoA/#To-Run-1",
+    "page": "demoA",
+    "title": "To Run",
+    "category": "section",
+    "text": "roslaunch system demoA.launch"
+},
+
+{
+    "location": "packages/system/demos/demoA/#Expected-Output-1",
+    "page": "demoA",
+    "title": "Expected Output",
+    "category": "section",
+    "text": "Gazebo should pop up, and the vehicle is located at the origin and heading towards y axis. There should be three cylinder obstacles ahead of the vehicle. Rviz should display the pointcloud in blue and the fitted circular obstacles."
+},
+
+{
+    "location": "packages/system/demos/demoB/#",
+    "page": "demoB",
+    "title": "demoB",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "packages/system/demos/demoB/#demoB-1",
+    "page": "demoB",
+    "title": "demoB",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "packages/system/demos/demoB/#nloptcontrol*planner-with-vehicle*description-1",
+    "page": "demoB",
+    "title": "nloptcontrolplanner with vehicledescription",
+    "category": "section",
+    "text": "A demo that shows nloptcontrol_planner moving the vehicle_description vehicle within Gazebo based off of the solution to the OCP every 0.5 s."
+},
+
+{
+    "location": "packages/system/demos/demoB/#status-working-1",
+    "page": "demoB",
+    "title": "status = working",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "packages/system/demos/demoB/#To-Run-1",
+    "page": "demoB",
+    "title": "To Run",
+    "category": "section",
+    "text": "roslaunch system demoB.launch"
+},
+
+{
+    "location": "packages/system/demos/demoB/#Expected-Output-1",
+    "page": "demoB",
+    "title": "Expected Output",
+    "category": "section",
+    "text": "Gazebo should pop up and if you move the view so that you can see to the right (x,y)=(0,200), you will see the vehicle. All of the nodes are thin initialized and the nloptcontrol_planner node takes the longest, so for a few minutes the terminal screen will displaywaiting on obstacle_avoidance.jl in nloptcontrol_planner ...\nwaiting on obstacle_avoidance.jl in nloptcontrol_planner ...\nwaiting on obstacle_avoidance.jl in nloptcontrol_planner ...\nwaiting on obstacle_avoidance.jl in nloptcontrol_planner ...\n......\nRunning model for the: 1 time\n[bootstrap-12] process has finished cleanly\nlog file: /home/tq/.ros/log/60726692-353d-11e8-8a62-b06ebf2c81c1/bootstrap-12*.log\nRunning model for the: 2 time\nRunning model for the: 3 time\nRunning model for the: 4 time\nRunning model for the: 5 time\nRunning model for the: 6 time\nRunning model for the: 7 time\nRunning model for the: 8 time\nRunning model for the: 9 time\nRunning model for the: 10 time\ngoal is in range\nRunning model for the: 11 time\ngoal is in range\nRunning model for the: 12 time\ngoal is in range\nRunning model for the: 13 time\ngoal is in range\nRunning model for the: 14 time\ngoal is in range\nGoal Attained!\n\n[obstacle_avoidance-2] process has finished cleanly\nlog file: /home/tq/.ros/log/60726692-353d-11e8-8a62-b06ebf2c81c1/obstacle_avoidance-2*.logA green path planned by nloptcontrol_planner will be displayed in rviz. Eventually, the controller will be ready and the vehicle will start to move every time a new solution is generated. This is not closed loop, it just shows the connectivity of these nodes within a system."
 },
 
 {
