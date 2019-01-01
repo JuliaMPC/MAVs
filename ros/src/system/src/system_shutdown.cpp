@@ -110,8 +110,10 @@ int main(int argc, char** argv)
         shutdown_requested.publish(shutdown_msg);
       }
       if (isShutDownAllowed()) {
+        ROS_INFO("----Starting shutdownSystem()----\n");
         shutdownSystem();
       }
+      ROS_INFO("----Starting shutdownSystem()----\n");
       shutdown_process_started = true;
     } else {
       checkForShutdownRequest();

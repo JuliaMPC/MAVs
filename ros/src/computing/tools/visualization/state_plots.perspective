@@ -41,7 +41,7 @@
                 },
                 "topics": {
                   "type": "repr",
-                  "repr": "[u'/nlopcontrol_planner/opt/X0a[7]', u'/nlopcontrol_planner/opt/X0p[7]']"
+                  "repr": "[u'/nloptcontrol_planner/opt/X0a[7]', u'/nloptcontrol_planner/opt/X0p[7]']"
                 },
                 "y_limits": {
                   "type": "repr",
@@ -236,7 +236,7 @@
                 },
                 "topics": {
                   "type": "repr",
-                  "repr": "[u'/nlopcontrol_planner/control/brk', u'/nlopcontrol_planner/control/thr']"
+                  "repr": "[u'/nloptcontrol_planner/control/brk', u'/nloptcontrol_planner/control/thr']"
                 },
                 "y_limits": {
                   "type": "repr",
@@ -283,7 +283,7 @@
                 },
                 "topics": {
                   "type": "repr",
-                  "repr": "[u'/nlopcontrol_planner/opt/X0a[3]', u'/nlopcontrol_planner/opt/X0p[3]']"
+                  "repr": "[u'/nloptcontrol_planner/opt/X0a[3]', u'/nloptcontrol_planner/opt/X0p[3]']"
                 },
                 "y_limits": {
                   "type": "repr",
@@ -330,7 +330,7 @@
                 },
                 "topics": {
                   "type": "repr",
-                  "repr": "[u'/nlopcontrol_planner/opt/X0a[4]', u'/nlopcontrol_planner/opt/X0p[4]']"
+                  "repr": "[u'/nloptcontrol_planner/opt/X0a[4]', u'/nloptcontrol_planner/opt/X0p[4]']"
                 },
                 "y_limits": {
                   "type": "repr",
@@ -377,7 +377,7 @@
                 },
                 "topics": {
                   "type": "repr",
-                  "repr": "[u'/nlopcontrol_planner/opt/X0a[5]', u'/nlopcontrol_planner/opt/X0p[5]']"
+                  "repr": "[u'/nloptcontrol_planner/opt/X0a[5]', u'/nloptcontrol_planner/opt/X0p[5]']"
                 },
                 "y_limits": {
                   "type": "repr",
@@ -424,7 +424,7 @@
                 },
                 "topics": {
                   "type": "repr",
-                  "repr": "[u'/nlopcontrol_planner/opt/X0a[6]', u'/nlopcontrol_planner/opt/X0p[6]']"
+                  "repr": "[u'/nloptcontrol_planner/opt/X0a[6]', u'/nloptcontrol_planner/opt/X0p[6]']"
                 },
                 "y_limits": {
                   "type": "repr",

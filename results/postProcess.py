@@ -5,7 +5,7 @@ import rosbag
 import io
 import os
 
-def bag2csv(bag_name):
+def bag2csv(bag_name, pathname):
 
     csv_name = bag_name.rstrip('.bag')
 
@@ -14,15 +14,17 @@ def bag2csv(bag_name):
     bag = rosbag.Bag(bag_name)
     bag_topics = bag.get_type_and_topic_info()[1].keys()
 
-    # open csv file for write
-    csvfile = open(csv_name+'.csv', 'w')
-    #bag2csv = csv.writer(csvfile, delimiter=';', quotechar='\'', quoting=csv.QUOTE_MINIMAL)
-    bag2csv = csv.writer(csvfile, delimiter=',', quotechar='\'', quoting=csv.QUOTE_MINIMAL)
+
 
     for bag_topic in bag_topics:
         # write topic name
         print "Write " + bag_topic + " into csv file..."
-        bag2csv.writerow([bag_topic])
+        csv_filename_temp = bag_topic.replace('/', '_')
+
+		# open csv file for write
+        csvfile = open(pathname + '/' +csv_filename_temp[1:]+'.csv', 'w')
+        bag2csv = csv.writer(csvfile, delimiter=',', quoting=csv.QUOTE_MINIMAL)
+
         # set title_flag to 0
         title_flag = 0
 
@@ -36,10 +38,13 @@ def bag2csv(bag_name):
                 split_pair = msg_pair.split(':')
                 msg_title = split_pair[0]
                 msg_value = split_pair[1]
+                msg_value = msg_value.replace('[', '')
+                msg_value = msg_value.replace(']', '')
 
                 if title_flag == 0:
                     title_list.append(msg_title)
                 value_list.append(msg_value)
+
 
             if title_flag == 0:
                 bag2csv.writerow(title_list)
@@ -47,146 +52,58 @@ def bag2csv(bag_name):
 
             bag2csv.writerow(value_list)
 
-        # insert a row between to topics
-        bag2csv.writerow([])
+		# close files
+        csvfile.close()
 
-
-    # close files
-    csvfile.close()
     bag.close()
     return csv_name+'.csv'
 
 
-def processcsv(pathname, csvfilename):
-	csvfilename_full = csvfilename
-	statefilename_full = os.path.join(pathname, "state.csv")
-	tempfilename_full = os.path.join(pathname, "temp.csv")
-	F = open(csvfilename_full, 'r')
-	F_w = open(statefilename_full, 'w')
-	F_w1 = open(tempfilename_full, 'w')
+def processcsv(pathname):
+	planned_filename = open(pathname+'/'+'nloptcontrol_planner_control.csv', 'r')
+	planned_csv = csv.reader(planned_filename, delimiter=',')
+	state_filename = open(pathname+'/'+'state.csv', 'r')
+	state_csv = csv.reader(state_filename, delimiter=',')
+	miscResults_filename = open(pathname+'/'+'miscResults.csv', 'w')
+	miscResults_csv = csv.writer(miscResults_filename, delimiter=',', quoting=csv.QUOTE_MINIMAL)
+	miscResults_csv.writerow(['ceStr', 'ceAcc', 'teStr', 'teU'])
 
-	old = F.read()
-	F.seek(0,0)
-	old1 = F.read()
-	F.seek(0,0)
-	old2 = F.read()
-	# copy the whole input F file and remove all the [] and replaced that with ; for state
-	old = old.replace("[", "")
-	old = old.replace("]", "")
-	#old = old.replace(",", ";")
-	# copy the whole input F file and remove all the [] and replaced that with ; for planned
-	old1 = old1.replace("[", "")
-	old1 = old1.replace("]", "")
-	#old1 = old1.replace(",", ";")
-	# copy the whole input F file and remove all the [] and replaced that with ; for control
-	old2 = old2.replace("[", "") # for control information
-	old2 = old2.replace("]", "")
-	#old2 = old2.replace(",", ";")
-
-	# Find the start position for three topics: /state, /opt, /control
-	result = old.find("state")
-	result1 = old1.find("/opt")
-	result2 = old1.find("/nlopcontrol_planner/control")
-	old = old[result+7:len(old)]
-	old = old.replace("tire_f", "vtffr,vtffl,vtfrr,vtfrl")
-	old1 = old1[result1+6:result2]
-	old1 = old1.replace("X0p,X0a,X0e", "x,y,v,r,psi,sa,ux,ax")
-	old2 = old2[result2+30:result]
-
-	# The first step cleaned values for three topics in total are written in F_w1 for latter use
-	# State information is already good to go and store in F_w
-	F_w.truncate(0)
-	F_w.write(old)
-	F_w1.truncate(0)
-	F_w1.write(old1)
-	F_w1.seek(0,0)
-	F_w1.close()
-
-	# Continue to process planned csv
-	F_w1 = open(tempfilename_full, 'r')
-	plannedfilename_full = os.path.join(pathname, "planned.csv")
-	F_w2 = open(plannedfilename_full, 'w')
-	old = ""
-	count = 0
-	line = F_w1.readline()
-	cnt = 1
-	se = list()
-	ve = list()
-	old = line
-	while line:
-		line = F_w1.readline()
-		temp = line.split(',',28)
-		old = old + '\n'
+	planned_data = []
+	for row in planned_csv:
 		try:
-			for i in xrange(0,11):
-				old = old + temp[i] + ','
-			old = old + temp[11]
-			se.append(temp[25])
-			ve.append(temp[26])
+			t_list = row[0].split(',')
+			sa_list = row[6].split(',')
+			ux_list = row[7].split(',')
+			planned_data.append([t_list[0], sa_list[0], ux_list[0]])
 		except:
 			pass
-		cnt += 1
-	F_w2.truncate(0)
-	F_w2.write(old)
-	F_w1.close()
+	planned_data = planned_data[1:]
+	# print planned_data
 
-	# Continue to process control csv
-	controlfilename_full = os.path.join(pathname, "miscResults.csv")
-	F_w1 = open(tempfilename_full, 'w')
-	F_w1.truncate(0)
-	F_w1.write(old2)
-	F_w1.close()
-	F_w1 = open(tempfilename_full, 'r')
-	F_w3 = open(controlfilename_full, 'w')
-	old = ""
-	count = 0
-	line = F_w1.readline()
+
 	cnt = 0
 	vce = 0.0 # Acc control effort
 	sce = 0.0 # Steering control effort
 	vce_accum = 0.0 # accumulated value for acc control effort
 	sce_accum = 0.0 # accumulated value for steering control effort
-	old = line[0:-2] + ',ceStr' + ',ceAcc' + ',teStr' + ',teU' # se is the steering error and ve is the acc error
-	while line:
-		line = F_w1.readline()
-		temp = line.split(',',11*16-1)
-		# print temp
-		old = old + '\n'
-		try:
-			for i in xrange(0,11):
-				old = old + temp[i*16] + ', '
-			sce_accum = sce_accum + abs(float(temp[6 * 16]))
-			vce_accum = vce_accum + abs(float(temp[8 * 16]))
-			sce = vce_accum/(float(temp[0]) + 0.5) # Normalize the velocity control effort by time
-			vce = sce_accum/(float(temp[0]) + 0.5) # Normalize the steering control effort by time
-			old = old + str(sce) + ' , ' # Concatenate the normalized acc control effort
-			old = old + str(vce) + ' , ' # Concatenate the normalized steering control effort
-			old = old + se[cnt] + ' , '
-			old = old + ve[cnt]
 
+	for row in state_csv:
+		try:
+			se = float(planned_data[cnt][1]) - float(row[8])
+			ve = float(planned_data[cnt][2]) - float(row[3])
+			sce_accum = sce_accum + abs(float(row[8]))
+			vce_accum = vce_accum + abs(float(row[4]))
+			sce = vce_accum/(float(row[0]) + 0.5) # Normalize the acc control effort by time
+			vce = sce_accum/(float(row[0]) + 0.5) # Normalize the steering control effort by time
+
+			miscResults_csv.writerow([sce, vce, se, ve])
+
+			if float(row[0]) > float(planned_data[cnt][0]):
+				cnt += 1
 		except:
 			pass
-		cnt += 1
-	F_w3.truncate(0)
-	F_w3.write(old)
-	F_w1.close()
-	F_w3.close()
-	# Remove last several lines for control, because there are several redudant symbols
-	F_w3 = open(controlfilename_full, 'r')
-	lines = F_w3.readlines()
-	F_w3.close()
-	F_w3 = open(controlfilename_full, 'w')
-	F_w3.writelines([item for item in lines[:-3]])
-	F_w3.close()
-	# Remove last several lines for planned, because there are several redudant symbols
-	F_w2 = open(plannedfilename_full, 'r')
-	lines = F_w2.readlines()
-	F_w2.close()
-	F_w2 = open(plannedfilename_full, 'w')
-	F_w2.writelines([item for item in lines[:-2]])
-	F_w2.close()
-	os.remove(tempfilename_full)
-	os.remove(csvfilename_full)
+	state_filename.close()
+	miscResults_filename.close()
 
 
 # save sX.ymal
@@ -246,6 +163,30 @@ def readcase(demoname, casename, plannername, pathname):
 
 
 		line = F_sx.readline()
+
+	# add result
+	planned_filename1 = open('report.csv', 'r')
+	report_csv = csv.reader(planned_filename1, delimiter=',')
+	name = name +'collision' + ',' +'goalReached'+ ',' +'timeLimit'+ ',' +'rollover'
+	iter2 = 0
+
+	for row2 in report_csv:
+		iter2 += 1
+
+
+	iter2 -= 1
+	planned_filename1.close()
+
+	planned_filename2 = open('report.csv', 'r')
+	report_csv1 = csv.reader(planned_filename2, delimiter=',')
+	iter1 = 0
+	for row1 in report_csv1:
+		if(iter1 == iter2 ):
+			value = value +row1[1]+ ','+row1[2]+ ','+row1[3]+ ','+row1[4]
+
+		iter1 += 1
+
+
 	value = name+'\n'+value
 	F_w.truncate(0)
 	#F_w.writelines(name)
@@ -279,6 +220,6 @@ if __name__ == '__main__':
 	if not os.path.exists(pathname):
     		os.makedirs(pathname)
 
-	filename = bag2csv(bag_name)
-	processcsv(pathname, filename)
+	filename = bag2csv(bag_name, pathname)
+	processcsv(pathname)
 	readcase(demoname, casename, plannername, pathname)

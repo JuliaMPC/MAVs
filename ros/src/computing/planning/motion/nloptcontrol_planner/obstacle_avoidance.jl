@@ -3,11 +3,13 @@ using RobotOS
 @rosimport geometry_msgs.msg: Point, Pose, Pose2D, PoseStamped, Vector3, Twist
 @rosimport nloptcontrol_planner.msg: Trajectory, Optimization
 @rosimport nav_msgs.msg: Path
+#@rosimport mavs_msgs.msg: state
 
 rostypegen()
 using geometry_msgs.msg
 using nloptcontrol_planner.msg
 using nav_msgs.msg
+#using mavs_msgs.msg
 
 import YAML
 using NLOptControl
@@ -71,8 +73,6 @@ function setTrajParams(msg::Trajectory)
     RobotOS.set_param(string("/trajectory/ax"),ax)
     RobotOS.set_param(string("/trajectory/sr"),sr)
     RobotOS.set_param(string("/trajectory/jx"),jx)
-
-
   else
     error("L !> 0")
   end
@@ -110,7 +110,8 @@ function setObstacleData(params)
       end
 
       for i in 1:Q
-        if i <= L          # add obstacle
+         # isequal(typeof(r[i]),Float64)
+        if i <= L        # add obstacle
           setvalue(params[2][1][i],r[i]);
           setvalue(params[2][2][i],r[i]);
           setvalue(params[2][3][i],x[i]);
@@ -247,8 +248,17 @@ Date Create: 4/6/2017, Last Modified: 11/9/2018 \n
 """
 function loop(pub,pub_opt,pub_path,n,c)
 
+  # define vectors to calculate moving average for tire forces
+  MA = 4
+  vtrrMA = zeros(MA)
+  vtrlMA = zeros(MA)
+  vtfrMA = zeros(MA)
+  vtflMA = zeros(MA)
+  tireCount = 1
+
   n.s.mpc.shiftX0 = true # tmp
 
+  tSolveCum = 0
   tA = get_rostime()
   init = false
   tex = RobotOS.get_param("planner/nloptcontrol_planner/misc/tex")
@@ -267,28 +277,18 @@ function loop(pub,pub_opt,pub_path,n,c)
     #  end  NOTE currently this is after the optimization, eventually put it just before for better performace.
 
       updateAutoParams!(n)                           # update model parameters
-
-    # @show n.ocp.X0
       status = optimize!(n)
+    # @show n.r.ocp.status
 
-    #  if !isequal(n.r.ocp.status, :Optimal)
-  #  @show n.r.ocp.tSolve
-    @show n.r.ocp.status
-  #      @show n.r.ocp.constraint.value
-  #    end
-      # advance time
       if isequal(RobotOS.get_param("system/plant"),"3DOF") # otherwise an external update on the initial state of the vehicle is needed
-        #n.mpc.t0_actual = (n.mpc.v.evalNum-1)*n.mpc.tex  # NOTE this is for testing
         n.mpc.v.t = n.mpc.v.t + n.mpc.v.tex
         n.mpc.v.evalNum = n.mpc.v.evalNum + 1
       else
-        #n.mpc.t0_actual = to_sec(get_rostime())
         n.mpc.v.t = to_sec(get_rostime())
         n.mpc.v.evalNum = n.mpc.v.evalNum + 1
       end
 
       traj = Trajectory()
-      #traj.t = n.mpc.t0_actual + n.r.ocp.tst
       traj.t = n.r.ocp.tst
       traj.x = n.r.ocp.X[:,1]
       traj.y = n.r.ocp.X[:,2]
@@ -303,14 +303,20 @@ function loop(pub,pub_opt,pub_path,n,c)
       publish(pub, traj)
 
       opt = Optimization()
-      opt.texP = n.mpc.v.tex
+      opt.t =  get_rostime()
+      opt.evalNum = n.mpc.v.evalNum - 1
       opt.texA = get_rostime() - tA
       opt.tSolve = n.r.ocp.tSolve
       opt.status = n.r.ocp.status
-      opt.X0p = n.ocp.X0
-      opt.X0a = getStateData(n)
-      opt.X0e = abs.(opt.X0p - opt.X0a)
+
+      # slow down optimization to real-time
+      tSolveCum = tSolveCum + n.r.ocp.tSolve
+      if init
+        while(tSolveCum > Float64(get_rostime()))
+        end
+      end
       publish(pub_opt, opt)
+
       tA = get_rostime()
 
       path = Path()
@@ -341,10 +347,41 @@ function loop(pub,pub_opt,pub_path,n,c)
       else
           xa = deepcopy(RobotOS.get_param("state/x"))
           ya = deepcopy(RobotOS.get_param("state/y"))
+          if Float64(get_rostime()) > 0.5
+            vtrrMA[tireCount] = RobotOS.get_param("state/vtrr")
+            vtrlMA[tireCount] = RobotOS.get_param("state/vtrl")
+            vtfrMA[tireCount] = RobotOS.get_param("state/vtfr")
+            vtflMA[tireCount] = RobotOS.get_param("state/vtfl")
+
+            if Float64(get_rostime()) > 2 # only start to check after simulation has been running for at least 2 seconds
+              #@show mean([mean(vtrlMA),mean(vtflMA)])
+              #@show mean([mean(vtrrMA),mean(vtfrMA)])
+              if isequal(mean([mean(vtrlMA),mean(vtflMA)]), 0.0) || isequal(mean([mean(vtrrMA),mean(vtfrMA)]), 0.0)
+                RobotOS.set_param("system/flags/rollover",true)
+                RobotOS.set_param("system/flags/done",true)
+                println("The vehicle rolled over. Stopping simulation!")
+                break
+              end
+            end
+
+            tireCount = tireCount + 1
+            if tireCount > MA
+              tireCount = 1
+            end
+          end
       end
 
       if goalAttained(xa,ya,c["goal"]["x"],c["goal"]["yVal"],2*c["goal"]["tol"])
         RobotOS.set_param("system/flags/goal_attained",true)
+        RobotOS.set_param("system/flags/done",true)
+        println("The goal was attained. Stopping simulation!")
+        break
+      end
+
+      if Float64(get_rostime()) > RobotOS.get_param("system/params/timelimit")
+        RobotOS.set_param("system/flags/timelimit",true)
+        RobotOS.set_param("system/flags/done",true)
+        println("The simulation ran out of time. Stopping simulation!")
         break
       end
 
@@ -377,6 +414,7 @@ function main()
 
   sub = Subscriber{Trajectory}(string(plannerNamespace, "/control"), setTrajParams, queue_size = 10)
 
+  #subRoll = Subscriber{state}("/state", setTireParams, queue_size = 10)
   # using the filenames set as rosparams, the datatypes of the parameters get messed up if they are put on the ROS server
   # and then loaded into julia through RobotOS.jl; but less is messed up by loading using YAML.jl
   case = YAML.load(open(RobotOS.get_param("case_params_path")))["case"]

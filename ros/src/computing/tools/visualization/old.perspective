@@ -41,7 +41,7 @@
                 },
                 "topics": {
                   "type": "repr",
-                  "repr": "[u'/nlopcontrol_planner/opt/X0a[0]', u'/nlopcontrol_planner/opt/X0p[0]']"
+                  "repr": "[u'/nloptcontrol_planner/opt/X0a[0]', u'/nloptcontrol_planner/opt/X0p[0]']"
                 },
                 "y_limits": {
                   "type": "repr",
@@ -88,7 +88,7 @@
                 },
                 "topics": {
                   "type": "repr",
-                  "repr": "[u'/nlopcontrol_planner/opt/X0p[1]', u'/nlopcontrol_planner/opt/X0a[1]']"
+                  "repr": "[u'/nloptcontrol_planner/opt/X0p[1]', u'/nloptcontrol_planner/opt/X0a[1]']"
                 },
                 "y_limits": {
                   "type": "repr",

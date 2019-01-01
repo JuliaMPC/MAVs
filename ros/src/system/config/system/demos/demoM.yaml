@@ -1,5 +1,5 @@
 system:
- planner: nlopcontrol_planner
+ planner: nloptcontrol_planner
  plant: chrono
 
  params:
@@ -11,17 +11,19 @@ system:
   goal_attained: false
   initialized: false
   paused: true
+  done: false
 
  shutdown:
   flags:
    running: true
    initialized: false
+   shutdown: false
   params:
     shutdown_initiation_flags: ["system/flags/goal_attained", "/vehicle_collided"]
     shutdown_completion_flags: []
 
  nloptcontrol_planner:
-  namespace: nlopcontrol_planner
+  namespace: nloptcontrol_planner
   flags:
    running: true
    initialized: false

@@ -6,12 +6,21 @@ system:
   step_size: 0.005
   goal_tol: 0.1
   tire_step_size: 0.00025
+  timelimit: 50
 
  flags:
   goal_attained: false
+  rollover: false
+  timelimit: false
   initialized: false
   paused: true
   done: false
+
+ result_store:
+   flags:
+     running: true
+     initialized: false
+     shutdown: false
 
  shutdown:
   flags:
@@ -19,7 +28,7 @@ system:
    initialized: false
    shutdown: false
   params:
-    shutdown_initiation_flags: ["system/flags/goal_attained", "/vehicle_collided"]
+    shutdown_initiation_flags: ["result_store/flags/shutdown"]
     shutdown_completion_flags: []
 
  nloptcontrol_planner:
@@ -27,18 +36,18 @@ system:
   flags:
    running: true
    initialized: false
-   known_environment: true
+   known_environment: false
 
  chrono:
   namespace: chrono
   flags:
    initialized: false
    running: true
-   gui: true
+   gui: false
   field:
    h: 0
-   l: 500.0
-   w: 500.0
+   l: 1000.0
+   w: 1000.0
 
  vehicle_description:
   flags:
@@ -48,10 +57,12 @@ system:
    obstacles_spawned: false
    postion_update_external: true
 
+ obstacle_detector:
+  flags:
+   running: true
+   initialized: false
+
  sim_time:
    flags:
     initialized: false
     running: true
-
- control_initial_size: 2
- receive_flag: false

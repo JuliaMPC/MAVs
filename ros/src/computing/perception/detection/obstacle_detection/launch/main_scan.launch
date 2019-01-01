@@ -18,7 +18,5 @@
     <remap from="tracked_obstacles" to="obstacles"/>
   </node>
 
-  <node name="rviz" pkg="rviz" type="rviz" output="screen" args="-d $(find obstacle_detector)/resources/display.rviz"/>
-
 </launch>
 <!-- -->

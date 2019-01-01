@@ -7,4 +7,7 @@ float64 v
 float64 psi
 float64 r
 float64 sa
-float64[] tire_f
+float64 tireF_fl
+float64 tireF_fr
+float64 tireF_rl
+float64 tireF_rr

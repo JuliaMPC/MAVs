@@ -279,8 +279,8 @@ if __name__ == '__main__':
 
     # setup ROS subscriber
     rospy.Subscriber("state", state, stateCallback)
-    rospy.Subscriber("nlopcontrol_planner/control", Trajectory, trajectoryCallback)
-    rospy.Subscriber("nlopcontrol_planner/opt", Optimization, optCallback)
+    rospy.Subscriber("nloptcontrol_planner/control", Trajectory, trajectoryCallback)
+    rospy.Subscriber("nloptcontrol_planner/opt", Optimization, optCallback)
 
     rate = rospy.Rate(50) # 50hz
     plt.ion()

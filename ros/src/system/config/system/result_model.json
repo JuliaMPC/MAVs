@@ -2,7 +2,7 @@
   "model_id": "model1",
   "add_description": true,
   "description_header": "Description",
-  "default_description": "Shutdown was caused by some unmonitored external phenomenon.",
+  "default_description": "Shutdown caused by external interrupt.",
   "model": [
     {
       "key": "Case Id",
@@ -41,20 +41,38 @@
         ],
         "description": "Goal is attained."
       }
-    },
-    {
-      "key": "Steering Angle",
-      "val": "/state",
-      "sub_val": "sa",
-      "ros_msg_type": "topic",
-      "dataType": "state",
-      "save": true
-    },
-    {
-      "key": "Asumed obstacle X coord",
-      "val": "/case/assumed/obstacle/x0",
-      "ros_msg_type": "parameter",
-      "save": true
+      },
+      {
+        "key": "Out of time",
+        "val": "/system/flags/timelimit",
+        "ros_msg_type": "parameter",
+        "save": true,
+        "stopping_criteria": {
+          "logical_op": "OR",
+          "conditions": [
+            {
+              "op": "eq",
+              "val": true
+            }
+          ],
+          "description": "Out of time"
+        }
+        },
+        {
+          "key": "Rollover",
+          "val": "/system/flags/rollover",
+          "ros_msg_type": "parameter",
+          "save": true,
+          "stopping_criteria": {
+            "logical_op": "OR",
+            "conditions": [
+              {
+                "op": "eq",
+                "val": true
+              }
+            ],
+            "description": "The vehicle rolled over."
+          }
     }
   ]
 }

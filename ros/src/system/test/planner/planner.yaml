@@ -11,15 +11,15 @@ planner:
       Ymin: NaN              # min limit for y in OCP
       Ymax: NaN              # max limit for y in OCP
       tp: NaN                # N/A prediction horizon (s)
-      tex: 0.001               # execution horizon (s)
+      tex: 0.05              # execution horizon (s)
       sm: 2.                 # (m) distance to see if obstacle was hit (for crash checking)
       sm1: 2.5               # (m) distance 1 to make sure we don't hit obstacle (for optimization)
       sm2: 4.0               # (m) distance 2 to make sure we don't hit obstacle (for optimization)
-      Lr: 50.                # LiDAR range (m)
-      L_rd: 5.               # relaxation distance to LiDAR range
+      Lr: 90.                # LiDAR range (m)
+      L_rd: 10.               # relaxation distance to LiDAR range
       Nck: NaN               # number of points per interval
-      N: 15                  # number of points in :tm methods
-      solver: Ipopt          # either Ipopt of KNITRO
+      N: 20                  # number of points in :tm methods
+      solver: Ipopt         # either Ipopt of KNITRO
       mpc_max_iter: 1000      # an MPC parameter
       PredictX0: false       # if the state that the vehicle will be at when the optimization is finished is to be predicted
       FixedTp: true          # fixed final time for predicting X0
@@ -29,7 +29,7 @@ planner:
       followPath: NaN        # a bool to follow the path
       NF: NaN                # number to subtract off the constraint check vector-> used for activeSafety mode so driver sees obstacle before autonomy
       integrationScheme: trapezoidal
-      tfMax: 10.0 # maximum final time in MPC
+      tfMax: 20.0 # maximum final time in MPC
       EP: 0.01   # small number to avoid singularities TODO move this from VehicleModels.jl
       x0slackVariables: true
       xFslackVariables: true
@@ -38,11 +38,10 @@ planner:
       evalConstraints: false
       ocpSave: false
 
-
     weights:
       ic: 100.0
-      x0: 1. #0.1
-      y0: 1. #0.1
+      x0: 50. #0.1
+      y0: 50. #0.1
       v0: 10.0 #10.
       r0: 10.0 #10.
       psi0: 10.0 #1.
@@ -52,7 +51,7 @@ planner:
       xf: 100.
       goal: 10. # 100.
       psi: 0.01
-      time: 10.
+      time: 50.
       haf: 1.
       Fz: 0.5 # 0.1
       ce: 1.
@@ -70,7 +69,7 @@ planner:
       ir: 10.0 # 0.05 #0.15
       ipsi: 10.0 #0.5 #0.07
       isa: 10.0 #0.025 #0.0025
-      iu: 10.0 #0.5 #0.25
+      iu: 1.0 #0.5 #0.25
       iax: 10.0 #0.5 # 0.05
       fx: 10.0 #5.0 # 5.0
       fy: 10.0 #5.0 # 5.0

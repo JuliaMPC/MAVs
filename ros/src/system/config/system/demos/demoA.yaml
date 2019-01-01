@@ -12,7 +12,7 @@ system:
   flags:
    running: true
    initialized: false
-   goal_attained: false
+   shutdown: false
   params:
     shutdown_initiation_flags: ["system/flags/goal_attained", "/vehicle_collided"]
     shutdown_completion_flags: []

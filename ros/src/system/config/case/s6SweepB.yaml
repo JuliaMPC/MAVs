@@ -1,5 +1,4 @@
 case:
- id: Case6
  goal:
   x: 0.
   yVal: 300.
@@ -26,8 +25,7 @@ case:
    x0: [0.0]
    y0: [275.]
    vx: [0.0]
-   vy: [-8.]
-
+   
  assumed:
   obstacle:
    num: 10

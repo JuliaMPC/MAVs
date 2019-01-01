@@ -41,7 +41,7 @@
 #include "chrono/utils/ChFilters.h"
 #include "chrono_vehicle/ChVehicleModelData.h"
 #include "chrono_vehicle/terrain/RigidTerrain.h"
-#include "chrono_vehicle/terrain/FlatTerrain.h" 
+#include "chrono_vehicle/terrain/FlatTerrain.h"
 #include "chrono_vehicle/driver/ChIrrGuiDriver.h"
 #include "chrono_vehicle/driver/ChPathFollowerDriver.h"
 #include "chrono_vehicle/utils/ChVehiclePath.h"
@@ -326,7 +326,7 @@ int main(int argc, char* argv[]) {
 	double time_shift;
 	node.getParam("planner/nloptcontrol_planner/misc/tex", time_shift);
 	time_shift = 0.1;
-	
+
 	// ---------------------
 	// Set up PID controller
 	// ---------------------
@@ -609,6 +609,10 @@ int main(int argc, char* argv[]) {
 		node.setParam("/state/sa", steering_angle);        // steering angle at the tire (rad)
 		node.setParam("/state/ux", VehicleCOMVel[0]);      //// longitudinal velocity  (vehicle frame) (m/s)
 		node.setParam("/state/ax", VehicleCOMAcc[0]);      //// longitudinal acceleration (vehicle frame) (m/s^2)
+		node.setParam("/state/vtfl", TireForceVertical[0]);
+		node.setParam("/state/vtfr", TireForceVertical[1]);
+		node.setParam("/state/vtrl", TireForceVertical[2]);
+		node.setParam("/state/vtrr", TireForceVertical[3]);
 		node.setParam("/control/thr", throttle_input);
 		node.setParam("/control/brk", braking_input);
 		node.setParam("/control/str", steering_input);
@@ -624,6 +628,12 @@ int main(int argc, char* argv[]) {
 		state_data.psi = yaw_angle; // yaw angle (rad)
 		state_data.r = VehicleRot_dt[2];// yaw rate (rad/s)
 		state_data.sa = steering_angle; // steering angle at the tire (rad)
+		//state_data.tire_f = TireForceVertical; // vertical tire force
+		state_data.tireF_fl = TireForceVertical[0];
+		state_data.tireF_fr = TireForceVertical[1];
+		state_data.tireF_rl = TireForceVertical[2];
+		state_data.tireF_rr = TireForceVertical[3];
+
 		control_data.t = chrono_time;
 		control_data.thrt_in = throttle_input; // throttle input in the range [0,+1]
 		control_data.brk_in = braking_input; // braking input in the range [0,+1]

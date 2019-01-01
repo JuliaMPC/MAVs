@@ -2,7 +2,7 @@ case:
  id: Case5
  goal:
   x: 0.
-  yVal: 200.
+  yVal: 250.
   psi: 1.5701
   tol: 15.
 

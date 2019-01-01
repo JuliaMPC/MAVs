@@ -1,10 +1,9 @@
 case:
- id: Case6
  goal:
   x: 0.
-  yVal: 300.
+  yVal: 200.
   psi: 1.5701
-  tol: 10.
+  tol: 15.
 
  actual:
   X0:
@@ -24,9 +23,9 @@ case:
    radius: [10.]
    length: [5.]
    x0: [0.0]
-   y0: [275.]
+   y0: [150.]
    vx: [0.0]
-   vy: [-8.]
+   vy: [0.0]
 
  assumed:
   obstacle:
