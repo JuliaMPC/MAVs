@@ -36,14 +36,14 @@ run_launchfile () {
   sleep 4
 }
 wait_for_program () {
-  DURATION=1000
+  DURATION=2000
   START_TIME=$SECONDS
   shutdown=0;
-until [[ $(( SECONDS - START_TIME )) > "$DURATION" ]] || [[ $shutdown -eq 1 ]]; do
+until (($(( SECONDS - START_TIME )) > "$DURATION")) || [[ $shutdown -eq 1 ]]; do
   sleep 1;
   if [[ `rosparam get "system/flags/done"` = "true" ]]; then
     shutdown=1;
-    sleep 10
+    sleep 45  # assuming that this is enough time, but there is not check to make sure that everything has shutdown.
   fi
   done
 }

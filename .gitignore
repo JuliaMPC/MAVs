@@ -1,7 +1,7 @@
 /results/*
 !/results/postProcess.py
 !/results/rundata.py
-!/results/plottingData.py
+!/results/plottingData.jl
 !/results/README.md
 /docs/build
 docs/Manifest.toml
