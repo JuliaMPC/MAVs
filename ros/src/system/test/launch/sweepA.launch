@@ -7,7 +7,7 @@
   <!--NOTE system launch file is currently the same as demoM-->
   <arg name="system_params_path" default="$(find system)/config/system/demos/demoZb.yaml"/>
   <arg name="vehicle_params_path" default="$(find system)/config/vehicle/hmmwv.yaml"/>
-  <arg name="case_params_path" default="$(find system)/config/case/s6Sweep.yaml"/>
+  <arg name="case_params_path" default="$(find system)/config/case/s8b.yaml"/>
   <rosparam command="load" file="$(arg case_params_path)" />
   <rosparam command="load" file="$(arg system_params_path)" />
   <rosparam command="load" file="$(arg vehicle_params_path)" />

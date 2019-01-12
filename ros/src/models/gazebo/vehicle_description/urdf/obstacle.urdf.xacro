@@ -19,7 +19,6 @@
       <child link="obstacle" />
     </joint>
 
-
     <link name="obstacle">
 
       <inertial>
@@ -43,7 +42,6 @@
       </collision>
 
     </link>
-
 
     <gazebo>
       <material>Gazebo/Black</material>
