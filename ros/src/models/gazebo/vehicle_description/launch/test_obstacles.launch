@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- start gazebo and load the world -->
+  <include file="$(find vehicle_description)/launch/world.launch"/>
+
+  <!--  spawn obstacles into Gazebo -->
+  <arg name="case_params_path" default="$(find system)/config/case/s8.yaml"/>
+  <rosparam command="load" file="$(arg case_params_path)" />
+  <param name="case_params_path" value="$(arg case_params_path)"/>
+  <node name="spawn_obstacles" pkg="vehicle_description" type="spawn_obstacles.sh"/>
+
+  <!--make obstacles move -->
+  <node name="move_obstacles" pkg="vehicle_description" type="move_obstacles.jl" output="screen"/>
+</launch>
