@@ -75,8 +75,8 @@ int current_index = 0;
 // ------
 // Chrono
 // ------
-// Contact method type
-ChMaterialSurface::ContactMethod contact_method = ChMaterialSurface::SMC;
+// Contact method type (SMC, NSC) http://api.projectchrono.org/classchrono_1_1_ch_material_surface.html#ac59231413e1592095475c507cd7cfb95
+ChMaterialSurface::ContactMethod contact_method = ChMaterialSurface::NSC;
 
 // Type of tire model (RIGID, LUGRE, FIALA, PACEJKA, or TMEASY)
 TireModelType tire_model = TireModelType::TMEASY;
@@ -273,7 +273,7 @@ int main(int argc, char* argv[]) {
 	node.getParam("system/chrono/field/h", terrainHeight);
 	node.getParam("system/chrono/field/l", terrainLength);
 	node.getParam("system/chrono/field/w", terrainWidth);
-	
+
 	node.getParam("case/actual/X0/x", x0); // initial x
 	node.getParam("case/actual/X0/yVal", y0); // initial y
 	node.getParam("case/actual/X0/z", z0); // initial z
