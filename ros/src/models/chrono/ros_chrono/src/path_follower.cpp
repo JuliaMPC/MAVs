@@ -46,7 +46,9 @@
 #include "chrono_vehicle/driver/ChPathFollowerDriver.h"
 #include "chrono_vehicle/utils/ChVehiclePath.h"
 #include "chrono_vehicle/wheeled_vehicle/utils/ChWheeledVehicleIrrApp.h"
+#include "chrono_vehicle/wheeled_vehicle/tire/ChTMeasyTire.h"
 #include "chrono_models/vehicle/hmmwv/HMMWV.h"
+
 
 using namespace chrono;
 using namespace chrono::geometry;
@@ -78,7 +80,7 @@ int current_index = 0;
 ChMaterialSurface::ContactMethod contact_method = ChMaterialSurface::SMC;
 
 // Type of tire model (RIGID, LUGRE, FIALA, PACEJKA, or TMEASY)
-TireModelType tire_model = TireModelType::RIGID;
+TireModelType tire_model = TireModelType::TMEASY;
 
 // Type of powertrain model (SHAFTS or SIMPLE)
 PowertrainModelType powertrain_model = PowertrainModelType::SHAFTS;
