@@ -37,7 +37,6 @@
 #include "mavs_msgs/control.h"
 // Chrono include library
 #include "chrono/core/ChFileutils.h"
-#include "chrono/core/ChRealtimeStep.h"
 #include "chrono/utils/ChFilters.h"
 #include "chrono_vehicle/ChVehicleModelData.h"
 #include "chrono_vehicle/terrain/RigidTerrain.h"
@@ -274,8 +273,7 @@ int main(int argc, char* argv[]) {
 	node.getParam("system/chrono/field/h", terrainHeight);
 	node.getParam("system/chrono/field/l", terrainLength);
 	node.getParam("system/chrono/field/w", terrainWidth);
-
-
+	
 	node.getParam("case/actual/X0/x", x0); // initial x
 	node.getParam("case/actual/X0/yVal", y0); // initial y
 	node.getParam("case/actual/X0/z", z0); // initial z
@@ -469,9 +467,6 @@ int main(int argc, char* argv[]) {
 	// Simulation loop
 	// ---------------
 
-	// Initialize simulation frame counter and simulation time
-	ChRealtimeStepTimer realtime_timer;
-
 	// Vehicle steering angle
 	double long_velocity = 0.0;
 	ChVector<> VehicleCOMPos = my_hmmwv.GetVehicle().GetVehicleCOMPos();
@@ -569,12 +564,11 @@ int main(int argc, char* argv[]) {
 		}
 
 		// Advance simulation for one timestep for all modules
-		double step = realtime_timer.SuggestSimulationStep(step_size);
-		terrain.Advance(step);
-		my_hmmwv.Advance(step);
+		terrain.Advance(step_size);
+		my_hmmwv.Advance(step_size);
 
 		if (gui) {
-			app.Advance(step);
+			app.Advance(step_size);
 		}
 
 		VehicleCOMPos = my_hmmwv.GetVehicle().GetVehicleCOMPos();
