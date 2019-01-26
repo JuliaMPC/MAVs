@@ -170,6 +170,7 @@ endif()
 ## The recommended prefix ensures that target names across packages don't collide
 add_executable(path_follower src/path_follower.cpp)
 add_executable(trajectory_follower src/trajectory_follower.cpp)
+add_executable(terrain src/terrain.cpp)
 
 #--------------------------------------------------------------
 # Set properties for your executable target
@@ -190,6 +191,11 @@ set_target_properties(trajectory_follower PROPERTIES
       COMPILE_DEFINITIONS "CHRONO_DATA_DIR=\"${CHRONO_DATA_DIR}\""
 	    LINK_FLAGS "${CHRONO_LINKER_FLAGS} ${LINKERFLAG_EXE}")
 
+set_target_properties(terrain PROPERTIES
+	    COMPILE_FLAGS "${CHRONO_CXX_FLAGS} ${CH_CXX_FLAGS} ${CH_IRRLICHT_CXX_FLAGS} ${EXTRA_COMPILE_FLAGS}"
+      COMPILE_DEFINITIONS "CHRONO_DATA_DIR=\"${CHRONO_DATA_DIR}\""
+	    LINK_FLAGS "${CHRONO_LINKER_FLAGS} ${LINKERFLAG_EXE}")
+
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
 ## target back to the shorter version for ease of user use
@@ -200,6 +206,7 @@ set_target_properties(trajectory_follower PROPERTIES
 ## same as for the library above
 add_dependencies(path_follower ${catkin_EXPORTED_TARGETS})
 add_dependencies(trajectory_follower ${catkin_EXPORTED_TARGETS})
+add_dependencies(terrain ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
 # target_link_libraries(${PROJECT_NAME}_node
@@ -226,6 +233,15 @@ target_link_libraries(trajectory_follower
   interpolation
   controller)
 
+target_link_libraries(terrain
+  ChronoEngine
+  ChronoEngine_irrlicht
+  ChronoEngine_vehicle
+  ChronoModels_vehicle
+  ${catkin_LIBRARIES}
+  ${CHRONO_LIBRARIES}
+  interpolation
+  controller)
 
 # target_link_libraries(test_1
 #   ChronoEngine

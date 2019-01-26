@@ -15,9 +15,14 @@ system:
    running: false
    gui: true
   field:
-   h: 0
-   l: 500.0
-   w: 500.0
+   pa: [0,0,0]
+   sa: [5,100,50] # height, length, width
+   pb: [0,100,0]
+   sb: [5,100,50]
+   pc: [0,200,0]
+   sc: [5,100,50]
+   pd: [0,300,0]
+   sd: [5,100,50]
 
  planner: default
  default:

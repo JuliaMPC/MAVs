@@ -1,0 +1,7 @@
+<launch>
+  <arg name="system_params_path" default="$(find system)/config/system/pkgs/chrono.yaml"/>
+  <rosparam command="load" file="$(arg system_params_path)"/>
+
+  <node name="Chronode" pkg="ros_chrono" type="terrain" cwd="node" />
+
+</launch>

@@ -3,7 +3,7 @@ system:
  plant: chrono
 
  params:
-  step_size: 0.005
+  step_size: 0.003
   goal_tol: 0.1
   tire_step_size: 0.00025
   timelimit: 50
@@ -45,9 +45,14 @@ system:
    running: true
    gui: true
   field:
-   h: 0
-   l: 1000.0
-   w: 1000.0
+   pa: [0,0,0]
+   sa: [5,100,50] # height, length, width
+   pb: [0,100,0]
+   sb: [5,100,50]
+   pc: [0,200,0]
+   sc: [5,100,50]
+   pd: [0,300,0]
+   sd: [5,100,50]
 
  vehicle_description:
   flags:
