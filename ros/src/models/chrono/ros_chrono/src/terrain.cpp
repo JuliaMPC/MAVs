@@ -116,28 +116,28 @@ int main(int argc, char* argv[]) {
     patch1->SetContactRestitutionCoefficient(0.01f);
     patch1->SetContactMaterialProperties(2e7f, 0.3f);
     patch1->SetColor(ChColor(0.8f, 0.8f, 0.5f));
-    patch1->SetTexture(vehicle::GetDataFile("terrain/textures/tile4.jpg"), pa[1], pa[2]);
+    patch1->SetTexture(vehicle::GetDataFile("terrain/textures/tile4.jpg"), sa[1], sa[2]);
 
     auto patch2 = terrain.AddPatch(ChCoordsys<>(ChVector<>(pb[1], pb[2], pb[3]), QUNIT), ChVector<>(sb[1],sb[2], sb[3]));
     patch2->SetContactFrictionCoefficient(0.9f);
     patch2->SetContactRestitutionCoefficient(0.01f);
     patch2->SetContactMaterialProperties(2e7f, 0.3f);
     patch2->SetColor(ChColor(1.0f, 0.5f, 0.5f));
-    patch2->SetTexture(vehicle::GetDataFile("terrain/textures/dirt.jpg"), pb[1], pb[2]);
+    patch2->SetTexture(vehicle::GetDataFile("terrain/textures/dirt.jpg"), sb[1], sb[2]);
 
     auto patch3 = terrain.AddPatch(ChCoordsys<>(ChVector<>(pc[1], pc[2], pc[3]), QUNIT), ChVector<>(sc[1],sc[2],sc[3]));
     patch3->SetContactFrictionCoefficient(0.9f);
     patch3->SetContactRestitutionCoefficient(0.01f);
     patch3->SetContactMaterialProperties(2e7f, 0.3f);
     patch3->SetColor(ChColor(0.5f, 0.5f, 0.8f));
-    patch3->SetTexture(vehicle::GetDataFile("terrain/textures/dirt.jpg"), pc[1], pc[2]);
+    patch3->SetTexture(vehicle::GetDataFile("terrain/textures/dirt.jpg"), sc[1], sc[2]);
 
     auto patch4 = terrain.AddPatch(ChCoordsys<>(ChVector<>(pd[1], pd[2], pd[3]), QUNIT), ChVector<>(sd[1],sd[2], sd[3]));
     patch4->SetContactFrictionCoefficient(0.9f);
     patch4->SetContactRestitutionCoefficient(0.01f);
     patch4->SetContactMaterialProperties(2e7f, 0.3f);
     patch4->SetColor(ChColor(0.5f, 0.5f, 0.8f));
-    patch4->SetTexture(vehicle::GetDataFile("terrain/textures/grass.jpg"), pd[1], pd[2]);
+    patch4->SetTexture(vehicle::GetDataFile("terrain/textures/grass.jpg"), sd[1], sd[2]);
 
     terrain.Initialize();
 #endif

@@ -45,14 +45,14 @@ system:
    running: true
    gui: true
   field:
-   pa: [0,0,0]
-   sa: [5,100,50] # height, length, width
-   pb: [0,100,0]
-   sb: [5,100,50]
-   pc: [0,200,0]
-   sc: [5,100,50]
-   pd: [0,300,0]
-   sd: [5,100,50]
+   pa: [0,0,40]
+   sa: [5,75,100] # height, width, length
+   pb: [0,0,140]
+   sb: [5,75,100]
+   pc: [0,0,240]
+   sc: [5,75,100]
+   pd: [0,0,340]
+   sd: [5,75,100]
 
  vehicle_description:
   flags:
