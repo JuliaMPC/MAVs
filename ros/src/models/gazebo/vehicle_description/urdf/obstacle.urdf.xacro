@@ -19,13 +19,12 @@
       <child link="obstacle" />
     </joint>
 
-
     <link name="obstacle">
 
       <inertial>
         <origin xyz="${x0[idx]} ${y0[idx]} ${length[idx]/2}" rpy="0 0 0"/>
-        <mass value="100.0" />
-        <inertia  ixx="0.0" ixy="0.0"  ixz="0.0"  iyy="0.0"  iyz="0.0"  izz="0.0" />
+        <mass value="1000.0" />
+        <inertia  ixx="200.0" ixy="0.0"  ixz="0.0"  iyy="200.0"  iyz="0.0"  izz="200.0" />
       </inertial>
 
       <visual>
@@ -43,7 +42,6 @@
       </collision>
 
     </link>
-
 
     <gazebo>
       <material>Gazebo/Black</material>

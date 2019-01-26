@@ -20,7 +20,9 @@ function loop(pub)
     RobotOS.set_param("system/vehicle_description/flags/obstacles_initialized",true)
     println("obstacle plugin in julia has been initialized.")
 
-    while(RobotOS.get_param("system/flags/paused"))
+    if RobotOS.has_param("system/flags/paused")
+        while(RobotOS.get_param("system/flags/paused"))
+        end
     end
 
     while !is_shutdown()

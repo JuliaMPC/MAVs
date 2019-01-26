@@ -42,10 +42,12 @@ wait_for_program () {
 until (($(( SECONDS - START_TIME )) > "$DURATION")) || [[ $shutdown -eq 1 ]]; do
   sleep 1;
   if [[ `rosparam get "system/flags/done"` = "true" ]]; then
+    echo "system/flags/done = true"
     shutdown=1;
-    sleep 45  # assuming that this is enough time, but there is not check to make sure that everything has shutdown.
+    sleep 45;  # assuming that this is enough time, but there is not check to make sure that everything has shutdown.
   fi
-  done
+done
+sleep 10;
 }
 
 loop_entry_point () {

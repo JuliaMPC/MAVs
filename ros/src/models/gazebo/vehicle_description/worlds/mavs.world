@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<sdf version="1.4">
+<sdf version="1.5">
 
   <world name="default">
     <include>
@@ -29,5 +29,7 @@
       <pose>5.0 0.0 0 0 0 1.5</pose>
     </include>
 
+    <!-- set max step size to 0.01 -->
+    <plugin name="set_step_size" filename="libset_step_size.so"/>
   </world>
 </sdf>
