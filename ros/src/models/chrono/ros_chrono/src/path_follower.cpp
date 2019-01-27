@@ -1,24 +1,3 @@
-// =============================================================================
-// PROJECT CHRONO - http://projectchrono.org
-//
-// Copyright (c) 2014 projectchrono.org
-// All rights reserved.
-//
-// Use of this source code is governed by a BSD-style license that can be found
-// in the LICENSE file at the top level of the distribution and at
-// http://projectchrono.org/license-chrono.txt.
-//
-// =============================================================================
-// Authors: Radu Serban
-// =============================================================================
-//
-// Demonstration of a steering path-follower PID controller.
-//
-// The vehicle reference frame has Z up, X towards the front of the vehicle, and
-// Y pointing to the left.
-//
-// =============================================================================
-
 // C/C++ library
 #include <iostream>
 #include <math.h>
@@ -157,9 +136,9 @@ int get_nearest_index(const ChVector<>& pos_global,
 }
 
 unsigned int getTargetPos(const ChVector<>& pos_global, const std::vector<double>& traj_x, const std::vector<double>& traj_y, const std::vector<double>& traj_ux,
-	double& target_speed, double cur_speed, double& x_target, double& y_target) {
+	double& target_speed, double cur_speed, double& x_target, double& y_target, double& Kpp, double& Rmin, double& Rmax) {
 	unsigned int index_closest = get_nearest_index(pos_global, traj_x, traj_y);
-	double dist_target = std::min(40.0, std::max(30.0, 1.5*cur_speed)); //double dist_target = std::min(40.0, std::max(30.0, 1.5*cur_speed));
+	double dist_target = std::min(Rmax, std::max(Rmin, Kpp*cur_speed)); //double dist_target = std::min(40.0, std::max(30.0, 1.5*cur_speed));
 	double index_target = index_closest;
 	double dist_last;
 	double dist_cur = sqrt(pow(pos_global[0] - traj_x[index_closest], 2) + pow(pos_global[1] - traj_y[index_closest], 2));
@@ -213,10 +192,10 @@ unsigned int getTargetPos(const ChVector<>& pos_global, const std::vector<double
 }
 
 double getTargetAngle(const ChVector<>& pos_global, const std::vector<double>& traj_x, const std::vector<double>& traj_y,
-	const std::vector<double>& traj_ux, double& target_speed, double cur_speed, double l, double yaw) {
+	const std::vector<double>& traj_ux, double& target_speed, double cur_speed, double l, double yaw, double& Kpp, double& Rmin, double& Rmax) {
 	double x_target;
 	double y_target;
-	unsigned int index_target = getTargetPos(pos_global, traj_x, traj_y, traj_ux, target_speed, cur_speed, x_target, y_target);
+	unsigned int index_target = getTargetPos(pos_global, traj_x, traj_y, traj_ux, target_speed, cur_speed, x_target, y_target, Kpp, Rmin, Rmax);
 	double x_target_COM = cos(yaw)*(x_target - pos_global[0]) + sin(yaw)*(y_target - pos_global[1]);
 	double y_target_COM = -sin(yaw)*(x_target - pos_global[0]) + cos(yaw)*(y_target - pos_global[1]);
 	double angle_target = atan(2 * y_target_COM*l / (x_target_COM*x_target_COM + y_target_COM * y_target_COM));
@@ -338,30 +317,31 @@ int main(int argc, char* argv[]) {
 	vel_controller.set_windup_metohd(windup_method_vel);
 	vel_controller.initialize();
 
-	// Declare loop rate
+	double Kpp, Rmin, Rmax; // parameters for pure pursuit controller
+	node.getParam("vehicle/chrono/controller/Kpp", Kpp);
+	node.getParam("vehicle/chrono/controller/Rmin", Rmin);
+	node.getParam("vehicle/chrono/controller/Rmax", Rmax);
+
+	// loop rate
 	ros::Rate loop_rate(1.0 / step_size);
 
-	// Set initial vehicle location and orientation
+	// initial vehicle location and orientation
 	ChVector<> initLoc(x0, y0, z0);
-
 	double t0 = std::cos(yaw0 * 0.5f);
 	double t1 = std::sin(yaw0 * 0.5f);
 	double t2 = std::cos(roll0 * 0.5f);
 	double t3 = std::sin(roll0 * 0.5f);
 	double t4 = std::cos(pitch0 * 0.5f);
 	double t5 = std::sin(pitch0 * 0.5f);
-
 	double q0_0 = t0 * t2 * t4 + t1 * t3 * t5;
 	double q0_1 = t0 * t3 * t4 - t1 * t2 * t5;
 	double q0_2 = t0 * t2 * t5 + t1 * t3 * t4;
 	double q0_3 = t1 * t2 * t4 - t0 * t3 * t5;
-
 	ChQuaternion<> initRot(q0_0, q0_1, q0_2, q0_3);
 
 	// ------------------------------
 	// Create the vehicle and terrain
 	// ------------------------------
-
 	// Create the HMMWV vehicle, set parameters, and initialize
 	HMMWV_Full my_hmmwv;
 	my_hmmwv.SetContactMethod(contact_method);
@@ -507,7 +487,7 @@ int main(int argc, char* argv[]) {
 			rear_x = (rear_pos1[0] + rear_pos2[0]) / 2.;
 			rear_y = (rear_pos1[1] + rear_pos2[1]) / 2.;
 			front2rear = sqrt(pow(rear_x - front_x, 2) + pow(rear_y - front_y, 2));
-			traj_sa_interp = 1.0*getTargetAngle(VehicleCOMPos, traj_x, traj_y, traj_ux, traj_ux_interp, long_velocity, front2rear, yaw_angle);
+			traj_sa_interp = 1.0*getTargetAngle(VehicleCOMPos, traj_x, traj_y, traj_ux, traj_ux_interp, long_velocity, front2rear, yaw_angle,Kpp, Rmin, Rmax);
 			traj_ux_interp = std::max(0.0, traj_ux_interp);
 
 			// steering rate saturation
