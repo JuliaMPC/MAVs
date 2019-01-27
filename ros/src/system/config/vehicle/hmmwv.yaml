@@ -129,7 +129,7 @@ vehicle:
    upper_limit: 1.0
    lower_limit: -1.0
    anti_windup: clamping
-   time_shift: 0.5
+   time_shift: 0.1
 
    velocity:
     Kp: 0.5

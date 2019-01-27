@@ -214,8 +214,6 @@ unsigned int getTargetPos(const ChVector<>& pos_global, const std::vector<double
 			break;
 		}
 	}
-
-
 	return index_target;
 }
 
@@ -227,12 +225,10 @@ double getTargetAngle(const ChVector<>& pos_global, const std::vector<double>& t
 	double x_target_COM = cos(yaw)*(x_target - pos_global[0]) + sin(yaw)*(y_target - pos_global[1]);
 	double y_target_COM = -sin(yaw)*(x_target - pos_global[0]) + cos(yaw)*(y_target - pos_global[1]);
 	double angle_target = atan(2 * y_target_COM*l / (x_target_COM*x_target_COM + y_target_COM * y_target_COM));
-
 	return angle_target;
 }
 
 // =============================================================================
-
 int main(int argc, char* argv[]) {
 
 	// ------------------------------
@@ -324,8 +320,7 @@ int main(int argc, char* argv[]) {
 
 	// Load interpolation parameter
 	double time_shift;
-	node.getParam("planner/nloptcontrol_planner/misc/tex", time_shift);
-	time_shift = 0.1;
+	node.getParam("vehicle/chrono/controller/time_shift", time_shift);
 
 	// ---------------------
 	// Set up PID controller
@@ -499,7 +494,6 @@ int main(int argc, char* argv[]) {
 	// ---------------------------------------
 	// Create the vehicle Irrlicht application
 	// ---------------------------------------
-
 	ChVehicleIrrApp app(&my_hmmwv.GetVehicle(), &my_hmmwv.GetPowertrain(), L"Path Follower",
 		irr::core::dimension2d<irr::u32>(800, 640));
 
@@ -514,18 +508,16 @@ int main(int argc, char* argv[]) {
 	// Finalize construction of visualization assets
 	app.AssetBindAll();
 	app.AssetUpdateAll();
+
 	// ---------------
 	// Simulation loop
 	// ---------------
-
 	// Vehicle steering angle
 	double long_velocity = 0.0;
 	ChVector<> VehicleCOMPos = my_hmmwv.GetVehicle().GetVehicleCOMPos();
 	ChQuaternion<> VehicleRot = my_hmmwv.GetVehicle().GetVehicleRot();//global orientation as quaternion
 	long_velocity = my_hmmwv.GetVehicle().GetVehicleSpeedCOM();
 	double yaw_angle = VehicleRot.Q_to_Euler123()[2];
-
-
 
 	// Collect controller output data from modules (for inter-module communication)
 	double throttle_input = 0;
@@ -536,7 +528,6 @@ int main(int argc, char* argv[]) {
 	std::vector<double> x_cal(3, VehicleCOMPos[0]);
 	std::vector<double> y_cal(3, VehicleCOMPos[1]);
 	double steering_angle;
-
 
 	// find lr and lf
 	ChVector<> front_pos1 = my_hmmwv.GetVehicle().GetWheelPos(0);
@@ -587,7 +578,6 @@ int main(int argc, char* argv[]) {
 			steering_angle = steering_input * maximum_steering_angle; // steering angle (rad)
 		}
 
-
 		// Control speed
 		double ux_err = traj_ux_interp - long_velocity;
 		double vel_controller_output = vel_controller.control(ux_err);
@@ -599,7 +589,6 @@ int main(int argc, char* argv[]) {
 			throttle_input = 0;
 			braking_input = -vel_controller_output;
 		}
-
 
 		if (gui) {
 			app.BeginScene(true, true, irr::video::SColor(255, 140, 161, 192));
