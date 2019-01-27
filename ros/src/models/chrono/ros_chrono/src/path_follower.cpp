@@ -122,8 +122,6 @@ ChVector<> global2veh(double yaw_angle, ChVector<> ChVector_global) {
 	return ChVector<>(veh_x, veh_y, veh_z);
 }
 
-
-
 void plannerCallback(const nloptcontrol_planner::Trajectory::ConstPtr& control_msgs) {
 	traj_t = control_msgs->t;
 	traj_x = control_msgs->x;
@@ -135,7 +133,6 @@ void plannerCallback(const nloptcontrol_planner::Trajectory::ConstPtr& control_m
 	if (traj_ux.empty() || traj_x.empty() || traj_x.size() <= 1) {
 		ROS_INFO("Error: Trajectory only has one point or less!");
 	}
-
 }
 
 int get_nearest_index(const ChVector<>& pos_global,
@@ -158,8 +155,6 @@ int get_nearest_index(const ChVector<>& pos_global,
 	}
 	return index;
 }
-
-
 
 unsigned int getTargetPos(const ChVector<>& pos_global, const std::vector<double>& traj_x, const std::vector<double>& traj_y, const std::vector<double>& traj_ux,
 	double& target_speed, double cur_speed, double& x_target, double& y_target) {
@@ -343,43 +338,6 @@ int main(int argc, char* argv[]) {
 	vel_controller.set_windup_metohd(windup_method_vel);
 	vel_controller.initialize();
 
-	// Steering PID controller due to distance error
-	double Kp_str_dist, Ki_str_dist, Kd_str_dist, Kw_str_dist, upper_lim_str_dist, lower_lim_str_dist;
-	std::string windup_method_str_dist; // Anti-windup method
-	PID str_controller_dist;
-
-	node.getParam("vehicle/chrono/controller/steering/dist_error/Kp", Kp_str_dist);
-	node.getParam("vehicle/chrono/controller/steering/dist_error/Ki", Ki_str_dist);
-	node.getParam("vehicle/chrono/controller/steering/dist_error/Kd", Kd_str_dist);
-	node.getParam("vehicle/chrono/controller/steering/dist_error/Kw", Kw_str_dist);
-	node.getParam("vehicle/chrono/controller/steering/dist_error/upper_limit", upper_lim_str_dist);
-	node.getParam("vehicle/chrono/controller/steering/dist_error/lower_limit", lower_lim_str_dist);
-	node.getParam("vehicle/chrono/controller/steering/dist_error/anti_windup", windup_method_str_dist);
-	str_controller_dist.set_PID(Kp_str_dist, Ki_str_dist, Kd_str_dist, Kw_str_dist);
-	str_controller_dist.set_step_size(step_size);
-	str_controller_dist.set_output_limit(lower_lim_str_dist, upper_lim_str_dist);
-	str_controller_dist.set_windup_metohd(windup_method_str_dist);
-	str_controller_dist.initialize();
-
-	// Steering PID controller due to distance error
-	double Kp_str_angl, Ki_str_angl, Kd_str_angl, Kw_str_angl, upper_lim_str_angl, lower_lim_str_angl;
-	std::string windup_method_str_angl; // Anti-windup method
-	PID str_controller_angl;
-
-	node.getParam("vehicle/chrono/controller/steering/angle_error/Kp", Kp_str_angl);
-	node.getParam("vehicle/chrono/controller/steering/angle_error/Ki", Ki_str_angl);
-	node.getParam("vehicle/chrono/controller/steering/angle_error/Kd", Kd_str_angl);
-	node.getParam("vehicle/chrono/controller/steering/angle_error/Kw", Kw_str_angl);
-	node.getParam("vehicle/chrono/controller/steering/angle_error/upper_limit", upper_lim_str_angl);
-	node.getParam("vehicle/chrono/controller/steering/angle_error/lower_limit", lower_lim_str_angl);
-	node.getParam("vehicle/chrono/controller/steering/angle_error/anti_windup", windup_method_str_angl);
-	str_controller_angl.set_PID(Kp_str_angl, Ki_str_angl, Kd_str_angl, Kw_str_angl);
-	str_controller_angl.set_step_size(step_size);
-	str_controller_angl.set_output_limit(lower_lim_str_angl, upper_lim_str_angl);
-	str_controller_angl.set_windup_metohd(windup_method_str_angl);
-	str_controller_angl.initialize();
-
-
 	// Declare loop rate
 	ros::Rate loop_rate(1.0 / step_size);
 
@@ -427,19 +385,6 @@ int main(int argc, char* argv[]) {
 	// read maximum_steering_angle
 	double maximum_steering_angle = my_hmmwv.GetVehicle().GetMaxSteeringAngle();
 
-	// Create the terrain
-	// https://github.com/projectchrono/chrono/blob/develop/src/demos/vehicle/demo_RigidTerrain/demo_VEH_RigidTerrain.cpp
-	//RigidTerrain terrain(terrainHeight - 5, frict_coeff);
-	//RigidTerrain terrain(my_hmmwv.GetSystem());
-	//auto patch = terrain.AddPatch(ChCoordsys<>(ChVector<>(0, 0, terrainHeight - 5), QUNIT),
-	//	ChVector<>(terrainLength, terrainWidth, 10));
-	//patch->SetContactFrictionCoefficient(frict_coeff);
-	//patch->SetContactRestitutionCoefficient(rest_coeff);
-	//patch->SetContactMaterialProperties(2e7f, 0.3f);
-	//patch->SetColor(ChColor(1, 1, 1));
-	//patch->SetTexture(data_path + "terrain/textures/tile4.jpg", 200, 200);
-	//terrain.Initialize();
-
 	// Create the terrain patches programatically
 	// https://github.com/projectchrono/chrono/blob/develop/src/demos/vehicle/demo_RigidTerrain/demo_VEH_RigidTerrain.cpp
 	RigidTerrain terrain(my_hmmwv.GetSystem());
@@ -466,6 +411,7 @@ int main(int argc, char* argv[]) {
   patch1->SetContactRestitutionCoefficient(rest_coeff);
   patch1->SetContactMaterialProperties(2e7f, 0.3f);
   patch1->SetColor(ChColor(0.8f, 0.8f, 0.5f));
+	//patch->SetColor(ChColor(1, 1, 1));
   patch1->SetTexture(vehicle::GetDataFile("terrain/textures/tile4.jpg"), sa[1], sa[2]);
 
   auto patch2 = terrain.AddPatch(ChCoordsys<>(ChVector<>(pb[1], pb[2], pb[3]), QUNIT), ChVector<>(sb[1], sb[2], sb[3]));
@@ -571,14 +517,14 @@ int main(int argc, char* argv[]) {
 			else if (((steering_input*maximum_steering_angle - traj_sa_interp) / step_size) < -1.5) {
 				traj_sa_interp = (steering_input*maximum_steering_angle - 1.5*step_size);
 			}*/
-			// simple low pass filter
+			// low pass filter
 			double alpha = 1.0;
 			steering_input = (1.0 - alpha) * steering_input + alpha * traj_sa_interp / maximum_steering_angle;
 			steering_input = std::max(-1.0, std::min(1.0, steering_input));
 			steering_angle = steering_input * maximum_steering_angle; // steering angle (rad)
 		}
 
-		// Control speed
+		// speed controller
 		double ux_err = traj_ux_interp - long_velocity;
 		double vel_controller_output = vel_controller.control(ux_err);
 		if (vel_controller_output > 0) {
