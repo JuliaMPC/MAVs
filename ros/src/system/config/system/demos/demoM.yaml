@@ -8,7 +8,11 @@ system:
   tire_step_size: 0.00025
 
  flags:
+  not_optimal: false
+  fall: false
   goal_attained: false
+  rollover: false
+  timelimit: false
   initialized: false
   paused: true
   done: false
@@ -36,9 +40,16 @@ system:
    running: true
    gui: true
   field:
-   h: 0
-   l: 1000.0
-   w: 1000.0
+   p: [0,190,-5]
+   s: [100,400,10]
+   pa: [0,0,40]
+   sa: [10,75,15] # height,length, width
+   pb: [0,0,140]
+   sb: [10,75,100]
+   pc: [0,0,240]
+   sc: [10,75,100]
+   pd: [0,0,340]
+   sd: [10,75,100]
 
  vehicle_description:
   flags:
