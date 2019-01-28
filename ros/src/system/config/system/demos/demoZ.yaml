@@ -9,6 +9,7 @@ system:
   timelimit: 50
 
  flags:
+  not_optimal: false
   fall: false
   goal_attained: false
   rollover: false
@@ -47,7 +48,7 @@ system:
    gui: true
   field:
    p: [0,190,-5]
-   s: [10,400,100]
+   s: [100,400,10]
    pa: [0,0,40]
    sa: [10,75,15] # height,length, width
    pb: [0,0,140]

@@ -74,6 +74,22 @@
             "description": "Fell off world"
           }
           },
+          {
+          "key": "Not optimal",
+          "val": "/system/flags/not_optimal",
+          "ros_msg_type": "parameter",
+          "save": true,
+          "stopping_criteria": {
+            "logical_op": "OR",
+            "conditions": [
+              {
+                "op": "eq",
+                "val": true
+              }
+            ],
+            "description": "Not Optimal"
+          }
+         },
         {
           "key": "Rollover",
           "val": "/system/flags/rollover",

@@ -279,6 +279,13 @@ function loop(pub,pub_opt,pub_path,n,c)
       updateAutoParams!(n)                           # update model parameters
       status = optimize!(n)
     # @show n.r.ocp.status
+    #  RobotOS.set_param("system/flags/initialized",true)
+      if  init && status!=:Optimal && RobotOS.get_param("planner/nloptcontrol_planner/misc/onlyOptimal")
+        RobotOS.set_param("system/flags/not_optimal",true)
+        RobotOS.set_param("system/flags/done",true)
+        println("The optimization was not optimally solved. Stopping simulation!")
+        break
+      end
 
       if isequal(RobotOS.get_param("system/plant"),"3DOF") # otherwise an external update on the initial state of the vehicle is needed
         n.mpc.v.t = n.mpc.v.t + n.mpc.v.tex
@@ -349,8 +356,9 @@ function loop(pub,pub_opt,pub_path,n,c)
           ya = deepcopy(RobotOS.get_param("state/y"))
 
           # in case vehicle falls off world in Chrono
+          # TODO test this fall-off functionality
           z = deepcopy(RobotOS.get_param("state/z"))
-          @show z
+    #      @show z
           if z < 0
             RobotOS.set_param("system/flags/fall",true)
             RobotOS.set_param("system/flags/done",true)

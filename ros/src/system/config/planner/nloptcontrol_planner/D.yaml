@@ -18,7 +18,7 @@ planner:
       Lr: 90.                # LiDAR range (m)
       L_rd: 10.              # relaxation distance to LiDAR range
       Nck: NaN               # number of points per interval
-      N: 20                  # number of points in :tm methods
+      N: 30                  # number of points in :tm methods
       solver: KNITRO         # either Ipopt of KNITRO
       mpc_max_iter: 1000     # an MPC parameter
       PredictX0: false       # if the state that the vehicle will be at when the optimization is finished is to be predicted
@@ -34,7 +34,7 @@ planner:
       x0slackVariables: true
       xFslackVariables: true
       movingObstacles: true
-      onlyOptimal: false
+      onlyOptimal: true   # if this is false make sure ocpSave is true otherwise there may be an error, there is no way to continue with a non-optimal signal without previous solution
       evalConstraints: false
       ocpSave: false
 
@@ -43,8 +43,8 @@ planner:
       x0: 50. #0.1
       y0: 50. #0.1
       v0: 10.0 #10.
-      r0: 10.0 #10.
-      psi0: 10.0 #1.
+      r0: 20.0 #10.
+      psi0: 20.0 #1.
       sa0: 2. #2.
       ux0: 0.1 #0.1
       ax0: 0.1 #0.1
@@ -66,8 +66,8 @@ planner:
       ix: 10.0 # 0.5 #0.05
       iy: 10.0 #0.5 #0.05
       iv: 10.0 # 0.5 #0.05
-      ir: 10.0 # 0.05 #0.15
-      ipsi: 10.0 #0.5 #0.07
+      ir: 0.2 # 0.05 #0.15
+      ipsi: 0.12 #0.5 #0.07
       isa: 10.0 #0.025 #0.0025
       iu: 1.0 #0.5 #0.25
       iax: 10.0 #0.5 # 0.05
@@ -81,19 +81,21 @@ planner:
       fax: NaN
 
     solver:
+      maxtime_cpu_init: 60. # maximum initial solve time
+
       # settings for both KNITRO and IPOPT
       outlev: 0 # (c.m.solver==:Ipopt) ? :print_level : :outlev # print level
       feastol_abs: 7e-1 #7e-2 # (c.m.solver==:Ipopt) ? :constr_viol_tol : :feastol_abs
       maxit: 500 # (c.m.solver==:Ipopt) ? :max_iter : :maxit
-      maxtime_cpu: 30. # (c.m.solver==:Ipopt) ? :max_cpu_time : :maxtime_cpu
-
+      maxtime_cpu: 1.0 # (c.m.solver==:Ipopt) ? :max_cpu_time : :maxtime_cpu
+# to do make it so that the initial optization gets more time..
       # settings for KNITRO
       ftol: 1e-15 # relative change in the objective function is less than ftol for ftol_iters consecutive iterations
       feastol: 1.0e20   # relative stopping tolerance for the feasibility error
       ftol_iters: 5   # number of iters to stop after if change in obj fun is less than
       infeastol: 1e-2 # (relative) tolerance used for declaring infeasibility of a model
       maxfevals: -1  # maximum number of function evaluations before termination
-      maxtime_real: 1. # in seconds, the maximum allowable real time before termination
+      maxtime_real: 1.0 # in seconds, the maximum allowable real time before termination
       opttol: 1e20  # final relative stopping tolerance for the KKT (optimality) error
       opttol_abs: 5e-1 # final absolute stopping tolerance for the KKT (optimality) error
       xtol: 1e-12  # optimization process will terminate if the relative change in all components of the solution point estimate is less than xtol for xtol_iters

@@ -81,6 +81,8 @@ planner:
       fax: NaN
 
     solver:
+      maxtime_cpu_init: 60. # maximum initial solve time
+
       # settings for both KNITRO and IPOPT
       outlev: 0 # (c.m.solver==:Ipopt) ? :print_level : :outlev # print level
       feastol_abs: 7e-1 #7e-2 # (c.m.solver==:Ipopt) ? :constr_viol_tol : :feastol_abs
