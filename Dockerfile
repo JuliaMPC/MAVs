@@ -6,6 +6,8 @@ RUN echo 'export LD_LIBRARY_PATH="$HOME/knitro-10.3.0-z-Linux-64/lib:$LD_LIBRARY
 RUN /bin/bash -c 'sudo chmod -R a+rX /home/mavs/knitro-10.3.0-z-Linux-64/*'
 COPY artelys_lic.txt /home/$USERNAME/
 
+RUN /opt/julia-d386e40c17/bin/julia -e 'Pkg.checkout("MichiganAutonomousVehicles")'
+
 #RUN /bin/bash -c 'rm -rf /home/$USERNAME/MAVs/ros/devel/* /home/$USERNAME/MAVs/ros/build/*'
 RUN /bin/bash -c 'rm -rf /home/$USERNAME/MAVs/ros/*'
 
