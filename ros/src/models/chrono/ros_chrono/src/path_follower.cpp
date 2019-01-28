@@ -420,7 +420,7 @@ int main(int argc, char* argv[]) {
 		patch4->SetTexture(data_path + "terrain/textures/tile4.jpg", 200, 200);
 	#endif
 	terrain.Initialize();
-	
+
 	// ---------------------------------------
 	// Create the vehicle Irrlicht application
 	// ---------------------------------------
@@ -434,19 +434,20 @@ int main(int argc, char* argv[]) {
 	//app.EnableGrid(false);
 
 	ChWheeledVehicleIrrApp app(&my_hmmwv.GetVehicle(), &my_hmmwv.GetPowertrain(), L"Path Follower");
-	app.SetSkyBox();
-	app.AddTypicalLights(irr::core::vector3df(30.f, -30.f, 100.f), irr::core::vector3df(30.f, 50.f, 100.f), 250, 130);
-	app.SetChaseCamera(ChVector<>(0.0, 0.0, .75), 6.0, 0.5);
+	if (gui) {
+		app.SetSkyBox();
+		app.AddTypicalLights(irr::core::vector3df(30.f, -30.f, 100.f), irr::core::vector3df(30.f, 50.f, 100.f), 250, 130);
+		app.SetChaseCamera(ChVector<>(0.0, 0.0, .75), 6.0, 0.5);
 
-	app.SetTimestep(step_size);
-	// Finalize construction of visualization assets
-	app.AssetBindAll();
-	app.AssetUpdateAll();
+		app.SetTimestep(step_size);
+		// Finalize construction of visualization assets
+		app.AssetBindAll();
+		app.AssetUpdateAll();
 
-	// Create the interactive driver system
-	ChIrrGuiDriver driver(app);
-	driver.Initialize();
-
+		// Create the interactive driver system
+		ChIrrGuiDriver driver(app);
+		driver.Initialize();
+	}
 	// ---------------
 	// Simulation loop
 	// ---------------
