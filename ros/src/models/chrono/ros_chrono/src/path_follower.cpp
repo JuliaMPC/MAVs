@@ -27,7 +27,6 @@
 #include "chrono_vehicle/wheeled_vehicle/tire/ChTMeasyTire.h"
 #include "chrono_models/vehicle/hmmwv/HMMWV.h"
 
-
 using namespace chrono;
 using namespace chrono::geometry;
 using namespace chrono::vehicle;
@@ -93,7 +92,6 @@ ChVector<> global2veh(double yaw_angle, ChVector<> ChVector_global) {
 	ChVector<> R1(std::cos(yaw_angle), std::sin(yaw_angle), 0.0);
 	ChVector<> R2(-std::sin(yaw_angle), std::cos(yaw_angle), 0.0);
 	ChVector<> R3(0.0, 0.0, 1.0);
-
 	auto veh_x = R1 ^ ChVector_global; // dot product in chrono
 	auto veh_y = R2 ^ ChVector_global; // dot product in chrono
 	auto veh_z = R3 ^ ChVector_global; // dot product in chrono
@@ -204,7 +202,6 @@ double getTargetAngle(const ChVector<>& pos_global, const std::vector<double>& t
 
 // =============================================================================
 int main(int argc, char* argv[]) {
-
 	// ------------------------------
 	// Initialize ROS node handle
 	// ------------------------------
@@ -232,17 +229,10 @@ int main(int argc, char* argv[]) {
 	double tire_step_size;
 	double x0, y0, z0; // Initial global position
 	double roll0, pitch0, yaw0, ux0, ax0, sa0; // Initial global orientation
-	double terrainHeight;
-	double terrainLength;  // size in X direction
-	double terrainWidth;   // size in Y direction
 
 	// Get parameters from ROS Parameter Server
 	node.getParam("system/params/step_size", step_size); // ROS loop rate and Chrono step size
 	node.getParam("system/params/tire_step_size", tire_step_size);
-	// Rigid terrain dimensions
-	node.getParam("system/chrono/field/h", terrainHeight);
-	node.getParam("system/chrono/field/l", terrainLength);
-	node.getParam("system/chrono/field/w", terrainWidth);
 
 	node.getParam("case/actual/X0/x", x0); // initial x
 	node.getParam("case/actual/X0/yVal", y0); // initial y
@@ -297,13 +287,12 @@ int main(int argc, char* argv[]) {
 	node.getParam("vehicle/chrono/controller/time_shift", time_shift);
 
 	// ---------------------
-	// Set up PID controller
+	// controllers
 	// ---------------------
-	// Velocity PID controller
+	// velocity PID controller
 	double Kp_vel, Ki_vel, Kd_vel, Kw_vel, upper_lim_vel, lower_lim_vel;
 	std::string windup_method_vel; // Anti-windup method
 	PID vel_controller;
-
 	node.getParam("vehicle/chrono/controller/velocity/Kp", Kp_vel);
 	node.getParam("vehicle/chrono/controller/velocity/Ki", Ki_vel);
 	node.getParam("vehicle/chrono/controller/velocity/Kd", Kd_vel);
@@ -317,7 +306,8 @@ int main(int argc, char* argv[]) {
 	vel_controller.set_windup_metohd(windup_method_vel);
 	vel_controller.initialize();
 
-	double Kpp, Rmin, Rmax; // parameters for pure pursuit controller
+  // pure pursuit controller
+	double Kpp, Rmin, Rmax;
 	node.getParam("vehicle/chrono/controller/Kpp", Kpp);
 	node.getParam("vehicle/chrono/controller/Rmin", Rmin);
 	node.getParam("vehicle/chrono/controller/Rmax", Rmax);
@@ -422,7 +412,6 @@ int main(int argc, char* argv[]) {
 	// ---------------------------------------
 	ChVehicleIrrApp app(&my_hmmwv.GetVehicle(), &my_hmmwv.GetPowertrain(), L"Path Follower",
 		irr::core::dimension2d<irr::u32>(800, 640));
-
 	app.SetHUDLocation(500, 20);
 	app.AddTypicalLights(irr::core::vector3df(-150.f, -150.f, 200.f), irr::core::vector3df(-150.f, 150.f, 200.f), 100,
 		100);
@@ -430,7 +419,6 @@ int main(int argc, char* argv[]) {
 		100);
 	app.EnableGrid(false);
 	app.SetTimestep(step_size);
-
 	// Finalize construction of visualization assets
 	app.AssetBindAll();
 	app.AssetUpdateAll();
@@ -445,12 +433,12 @@ int main(int argc, char* argv[]) {
 	long_velocity = my_hmmwv.GetVehicle().GetVehicleSpeedCOM();
 	double yaw_angle = VehicleRot.Q_to_Euler123()[2];
 
-	// Collect controller output data from modules (for inter-module communication)
+	// collect controller output data from modules (for inter-module communication)
 	double throttle_input = 0;
 	double steering_input = 0;
 	double braking_input = 0;
 
-	// to calculate control error:
+	// calculate control error
 	std::vector<double> x_cal(3, VehicleCOMPos[0]);
 	std::vector<double> y_cal(3, VehicleCOMPos[1]);
 	double steering_angle;
@@ -469,7 +457,7 @@ int main(int argc, char* argv[]) {
 	// wait system loaded
 	waitForLoaded(node);
 	while (ros::ok()) {
-		// Get chrono time
+		// get chrono time
 		double chrono_time = my_hmmwv.GetSystem()->GetChTime();
 
 		// steering control
