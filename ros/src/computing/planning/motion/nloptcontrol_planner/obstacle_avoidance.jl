@@ -277,10 +277,10 @@ function loop(pub,pub_opt,pub_path,n,c)
     #  end  NOTE currently this is after the optimization, eventually put it just before for better performace.
 
       updateAutoParams!(n)                           # update model parameters
-      status = optimize!(n)
+      optimize!(n)
     # @show n.r.ocp.status
     #  RobotOS.set_param("system/flags/initialized",true)
-      if  init && status!=:Optimal && RobotOS.get_param("planner/nloptcontrol_planner/misc/onlyOptimal")
+      if  init && n.r.ocp.status!=:Optimal && RobotOS.get_param("planner/nloptcontrol_planner/misc/onlyOptimal")
         RobotOS.set_param("system/flags/not_optimal",true)
         RobotOS.set_param("system/flags/done",true)
         println("The optimization was not optimally solved. Stopping simulation!")
