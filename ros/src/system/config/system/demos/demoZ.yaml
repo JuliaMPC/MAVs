@@ -46,8 +46,8 @@ system:
    running: true
    gui: true
   field:
-   p: [0,0,-5]
-   s: [10,10,10]
+   p: [0,190,-5]
+   s: [10,400,100]
    pa: [0,0,40]
    sa: [10,75,15] # height,length, width
    pb: [0,0,140]
