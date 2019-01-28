@@ -45,4 +45,7 @@
   <node name="unpause_gazebo" pkg="vehicle_description" type="unpause.jl" output="screen"/>
   <test test-name="unpause_gazebo" pkg="vehicle_description" type="unpause.jl" />
 
+  <!--  ************** additional nodes ***************  -->
+  <node name="rviz" pkg="rviz" type="rviz" output="screen" args="-d $(find obstacle_detector)/resources/display.rviz"/>
+
 </launch>
