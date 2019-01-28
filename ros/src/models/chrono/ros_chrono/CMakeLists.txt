@@ -305,11 +305,11 @@ target_link_libraries(terrain
 # g Tests and rostest
 #####################
 # New added for rostest
-if(CATKIN_ENABLE_TESTING)
-  message("\n\nGoing to build the ros_chrono tests!\n\n")
-  find_package(rostest REQUIRED)
+#if(CATKIN_ENABLE_TESTING)
+#  message("\n\nGoing to build the ros_chrono tests!\n\n")
+#  find_package(rostest REQUIRED)
   # You can add arbitrary new test files in the end of add_rostest_gtest
-  add_rostest(launch/steering.launch) #perhaps
+#  add_rostest(launch/steering.launch) #perhaps
 
-endif()
+#endif()
 # End rostest
