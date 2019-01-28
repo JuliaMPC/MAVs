@@ -59,6 +59,22 @@
         }
         },
         {
+          "key": "Fell off world",
+          "val": "/system/flags/fall",
+          "ros_msg_type": "parameter",
+          "save": true,
+          "stopping_criteria": {
+            "logical_op": "OR",
+            "conditions": [
+              {
+                "op": "eq",
+                "val": true
+              }
+            ],
+            "description": "Fell off world"
+          }
+          },
+        {
           "key": "Rollover",
           "val": "/system/flags/rollover",
           "ros_msg_type": "parameter",

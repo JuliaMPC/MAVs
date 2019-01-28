@@ -1,6 +1,7 @@
 float64 t
 float64 x
 float64 y
+float64 z
 float64 ux
 float64 ax
 float64 v

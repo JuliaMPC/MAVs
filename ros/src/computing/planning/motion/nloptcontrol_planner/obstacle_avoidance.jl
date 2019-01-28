@@ -18,7 +18,6 @@ using PyCall
 
 @pyimport tf.transformations as tf
 
-
 #          1  2  3  4  5    6   7   8
 #names = [:x,:y,:v,:r,:psi,:sa,:ux,:ax];
 #descriptions = ["X (m)","Y (m)","Lateral Velocity (m/s)", "Yaw Rate (rad/s)","Yaw Angle (rad)", "Steering Angle (rad)", "Longitudinal Velocity (m/s)", "Longitudinal Acceleration (m/s^2)"];
@@ -214,6 +213,7 @@ function setInitStateParams(c)
     RobotOS.set_param("state/sa", RobotOS.get_param("case/actual/X0/sa"))
     RobotOS.set_param("state/ux", RobotOS.get_param("case/actual/X0/ux"))
     RobotOS.set_param("state/ax", RobotOS.get_param("case/actual/X0/ax"))
+    RobotOS.set_param("state/z",10.)
   return nothing
 end
 
@@ -228,14 +228,14 @@ Date Create: 2/28/2018, Last Modified: 2/28/2018 \n
 function getStateData(n)
 
   # copy current vehicle state in case it changes
-  x=deepcopy(RobotOS.get_param("state/x"))
-  y=deepcopy(RobotOS.get_param("state/y"))
-  v=deepcopy(RobotOS.get_param("state/v"))
-  r=deepcopy(RobotOS.get_param("state/r"))
-  psi=deepcopy(RobotOS.get_param("state/psi"))
-  sa=deepcopy(RobotOS.get_param("state/sa"))
-  ux=deepcopy(RobotOS.get_param("state/ux"))
-  ax=deepcopy(RobotOS.get_param("state/ax"))
+  x = deepcopy(RobotOS.get_param("state/x"))
+  y = deepcopy(RobotOS.get_param("state/y"))
+  v = deepcopy(RobotOS.get_param("state/v"))
+  r = deepcopy(RobotOS.get_param("state/r"))
+  psi = deepcopy(RobotOS.get_param("state/psi"))
+  sa = deepcopy(RobotOS.get_param("state/sa"))
+  ux = deepcopy(RobotOS.get_param("state/ux"))
+  ax = deepcopy(RobotOS.get_param("state/ax"))
   return [x,y,v,r,psi,sa,ux,ax]
 end
 
@@ -347,6 +347,16 @@ function loop(pub,pub_opt,pub_path,n,c)
       else
           xa = deepcopy(RobotOS.get_param("state/x"))
           ya = deepcopy(RobotOS.get_param("state/y"))
+
+          # in case vehicle falls off world in Chrono
+          z = deepcopy(RobotOS.get_param("state/z"))
+          @show z
+          if z < 0
+            RobotOS.set_param("system/flags/fall",true)
+            RobotOS.set_param("system/flags/done",true)
+            println("The vehicle fell off the edge. Stopping simulation!")
+            break
+          end
           if Float64(get_rostime()) > 0.5
             vtrrMA[tireCount] = RobotOS.get_param("state/vtrr")
             vtrlMA[tireCount] = RobotOS.get_param("state/vtrl")

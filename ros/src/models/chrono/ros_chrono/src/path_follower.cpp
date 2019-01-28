@@ -565,6 +565,7 @@ int main(int argc, char* argv[]) {
 		node.setParam("/state/t", chrono_time);
 		node.setParam("/state/x", VehicleCOMPos[0]);       // global x position (m)
 		node.setParam("/state/y", VehicleCOMPos[1]);       // global y position (m)
+		node.setParam("/state/z", VehicleCOMPos[2]);       // global z position (m)
 		node.setParam("/state/v", VehicleCOMVel[1]);       //// lateral velocity (m/s)
 		node.setParam("/state/r", VehicleRot_dt[2]);       //// yaw rate (rad/s)
 		node.setParam("/state/psi", yaw_angle);            // global heading angle (yaw angle) (rad)
@@ -584,6 +585,7 @@ int main(int argc, char* argv[]) {
 		state_data.t = chrono_time; // time in chrono simulation
 		state_data.x = VehicleCOMPos[0];
 		state_data.y = VehicleCOMPos[1];
+		state_data.z = VehicleCOMPos[2];
 		state_data.ux = VehicleCOMVel[0];
 		state_data.v = VehicleCOMVel[1];
 		state_data.ax = VehicleCOMAcc[0];
