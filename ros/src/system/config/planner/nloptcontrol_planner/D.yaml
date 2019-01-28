@@ -13,8 +13,8 @@ planner:
       tp: NaN                # N/A prediction horizon (s)
       tex: 0.001             # execution horizon (s)
       sm: 2.                 # (m) distance to see if obstacle was hit (for crash checking)
-      sm1: 2.5               # (m) distance 1 to make sure we don't hit obstacle (for optimization)
-      sm2: 4.0               # (m) distance 2 to make sure we don't hit obstacle (for optimization)
+      sm1: 3.5               # (m) distance 1 to make sure we don't hit obstacle (for optimization)
+      sm2: 6.0               # (m) distance 2 to make sure we don't hit obstacle (for optimization)
       Lr: 90.                # LiDAR range (m)
       L_rd: 10.              # relaxation distance to LiDAR range
       Nck: NaN               # number of points per interval
@@ -34,7 +34,7 @@ planner:
       x0slackVariables: true
       xFslackVariables: true
       movingObstacles: true
-      onlyOptimal: true
+      onlyOptimal: false
       evalConstraints: false
       ocpSave: false
 
@@ -93,7 +93,7 @@ planner:
       ftol_iters: 5   # number of iters to stop after if change in obj fun is less than
       infeastol: 1e-2 # (relative) tolerance used for declaring infeasibility of a model
       maxfevals: -1  # maximum number of function evaluations before termination
-      maxtime_real: 30. # in seconds, the maximum allowable real time before termination
+      maxtime_real: 1. # in seconds, the maximum allowable real time before termination
       opttol: 1e20  # final relative stopping tolerance for the KKT (optimality) error
       opttol_abs: 5e-1 # final absolute stopping tolerance for the KKT (optimality) error
       xtol: 1e-12  # optimization process will terminate if the relative change in all components of the solution point estimate is less than xtol for xtol_iters

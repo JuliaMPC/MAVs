@@ -15,14 +15,16 @@ system:
    running: false
    gui: true
   field:
-   pa: [0,40,0]
-   sa: [5,100,50] # height, length, width
-   pb: [0,140,0]
-   sb: [5,100,50]
-   pc: [0,240,0]
-   sc: [5,100,50]
-   pd: [0,340,0]
-   sd: [5,100,50]
+   p: [0,190,-5]
+   s: [10,400,100]
+   pa: [-5,40,0]
+   sa: [10,100,50] # height, length, width
+   pb: [-5,140,0]
+   sb: [10,100,50]
+   pc: [-5,240,0]
+   sc: [10,100,50]
+   pd: [-5,340,0]
+   sd: [10,100,50]
 
  planner: default
  default:
