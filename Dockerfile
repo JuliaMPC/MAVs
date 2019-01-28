@@ -14,5 +14,7 @@ RUN /bin/bash -c 'rm -rf /home/$USERNAME/MAVs/ros/*'
 COPY ros /home/$USERNAME/MAVs/ros
 RUN /bin/bash -c 'source /opt/ros/kinetic/setup.bash; cd /home/$USERNAME/MAVs/ros/; catkin_make'
 
+#RUN echo 'alias sweepdir='cd "$HOME/MAVs/ros/src/system/param_sweep/scripts" '' >> ~/.bashrc
+
 # Default CMD
 CMD ["/bin/bash"]

@@ -87,7 +87,7 @@ planner:
       outlev: 0 # (c.m.solver==:Ipopt) ? :print_level : :outlev # print level
       feastol_abs: 7e-1 #7e-2 # (c.m.solver==:Ipopt) ? :constr_viol_tol : :feastol_abs
       maxit: 500 # (c.m.solver==:Ipopt) ? :max_iter : :maxit
-      maxtime_cpu: 1.0 # (c.m.solver==:Ipopt) ? :max_cpu_time : :maxtime_cpu
+      maxtime_cpu: 10.0 # (c.m.solver==:Ipopt) ? :max_cpu_time : :maxtime_cpu
 # to do make it so that the initial optization gets more time..
       # settings for KNITRO
       ftol: 1e-15 # relative change in the objective function is less than ftol for ftol_iters consecutive iterations
@@ -95,7 +95,7 @@ planner:
       ftol_iters: 5   # number of iters to stop after if change in obj fun is less than
       infeastol: 1e-2 # (relative) tolerance used for declaring infeasibility of a model
       maxfevals: -1  # maximum number of function evaluations before termination
-      maxtime_real: 1.0 # in seconds, the maximum allowable real time before termination
+      maxtime_real: 10.0 # in seconds, the maximum allowable real time before termination
       opttol: 1e20  # final relative stopping tolerance for the KKT (optimality) error
       opttol_abs: 5e-1 # final absolute stopping tolerance for the KKT (optimality) error
       xtol: 1e-12  # optimization process will terminate if the relative change in all components of the solution point estimate is less than xtol for xtol_iters

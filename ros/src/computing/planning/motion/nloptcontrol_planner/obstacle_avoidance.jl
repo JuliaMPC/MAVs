@@ -79,10 +79,67 @@ function setTrajParams(msg::Trajectory)
 end
 
 """
+Test Data:
+r = [10,9,8,5,10,6,3]
+x = [0,1,2,50,0,49,-30]
+y = [0,0,2,50,0,49,-30]
+vx = [0,0,0,0,0,0,0]
+vy = [0,0,0,0,0,0,0]
+L = 7
+
+r,x,y,vx,vy = filterObstacleData(r,x,y,vx,vy,L)
+
+# filter obstacle data to remove smallest overlapping circles
+--------------------------------------------------------------------------------------\n
+Author: Huckleberry Febbo, Graduate Student, University of Michigan
+Date Create: 1/28/2019, Last Modified: 1/28/2019 \n
+--------------------------------------------------------------------------------------\n
+"""
+function filterObstacleData(r,x,y,vx,vy,L)
+    ra = (); xa = (); ya = (); vxa = (); vya = ();
+    for i in 1:L # check each obstacle
+        add = true
+        # check all of the other obstacles
+        for j in 1:L
+            if 1!=j
+                # intersection? && are you the smaller obstacle
+                if (x[i] - x[j])^2 + (y[i] - y[j])^2 <= (r[i] + r[j])^2 && r[i] < r[j]
+                    add = false
+                    break
+                end
+            end
+        end
+
+        # check intersection with existing set
+        if add
+           for m in 1:length(ra)
+               if (xa[m] - x[i])^2 + (ya[m] - y[i])^2 <= (ra[m] + r[i])^2
+                   add = false
+                   break
+               end
+           end
+        end
+
+        if add  # add the larger one to the set
+            ra = (ra..., r[i])
+            xa = (xa..., x[i])
+            ya = (ya..., y[i])
+            vxa = (vxa..., vx[i])
+            vya = (vya..., vy[i])
+        end
+    end
+
+    if length(ra) > L
+        error("there is a bug in filterObstacleData(); it added obstacles to the set.")
+    end
+return ra, xa, ya, vxa, vya, length(ra)
+end
+
+"""
 # used to set the obstacle data in the ocp
 --------------------------------------------------------------------------------------\n
 Author: Huckleberry Febbo, Graduate Student, University of Michigan
-Date Create: 4/6/2017, Last Modified: 2/28/2018 \n
+Date Create: 4/6/2017, Last Modified: 1/28/2019 \n
 --------------------------------------------------------------------------------------\n
 """
 function setObstacleData(params)
@@ -99,13 +156,12 @@ function setObstacleData(params)
       if isnan(r[1]) # initilized, no obstacles detected
         L = 0
       else
-        L = length(r)               # number of obstacles detected
+        r,x,y,vx,vy,L = filterObstacleData(r,x,y,vx,vy,length(r))
       end
 
-      N = Q - L;
+      N = Q - L
       if N < 0
-        warn(" \n The number of obstacles detected exceeds the number of obstacles the algorithm was designed for! \n
-                  Consider increasing the number of obstacles the algorithm can handle \n!")
+        warn("The number of obstacles detected exceeds the number of obstacles the algorithm was set to.")
       end
 
       for i in 1:Q
