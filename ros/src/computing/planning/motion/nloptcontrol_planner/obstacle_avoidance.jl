@@ -511,6 +511,11 @@ function main()
   end
   fixYAML(c)   # fix messed up data types
 
+  # TMP hack to save a single ROS param
+  RobotOS.set_param("vy",case["actual"]["obstacle"]["vy"][1])
+  RobotOS.set_param("r",case["actual"]["obstacle"]["radius"][1])
+  # TMP hack to save a single ROS param
+
   n = initializeAutonomousControl(c);
   setInitStateParams(c)
 

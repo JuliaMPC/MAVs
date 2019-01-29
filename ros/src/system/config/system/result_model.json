@@ -24,7 +24,7 @@
     },
     {
       "key": "radius",
-      "val": "radius",
+      "val": "r",
       "ros_msg_type": "parameter",
       "save": true
     },

@@ -80,24 +80,35 @@ loop_entry_point () {
   kill_roscore_pid
 }
 
+
 planners=( "false" "true" )
 vys=( [-6.,0.,0.,-1.] [0.,0.,0.,-1.] )
 radi=( [9.,10.,5.,12.] [1.,10.,5.,12.] )
 
 declare -A parameters
 
+idx=1;
 for plan in ${planners[@]}; do
    for vy in ${vys[@]}; do
     for radius in ${radi[@]}; do
+      echo "______________________________________"
+      echo "Running for the $idx nd time out of 8."
+      echo "--------------------------------------"
       parameters["/planner/nloptcontrol_planner/misc/movingObstacles"]=${plan}
       parameters["/case/actual/obstacle/vy"]=${vy}
       parameters["/case/actual/obstacle/radius"]=${radius}
-      # create additional parameters that can be easily saved; since they are currently vectors
-      # dummy variables that holds size and speed
-      rosparam set vy ${vy}
-      rosparam set radius ${radius}
       start_roscore
+      sleep 2;
       loop_entry_point
+      idx=$(( $idx+1 ))
     done
   done
 done
+
+
+# create additional parameters that can be easily saved; since they are currently vectors
+# dummy variables that holds size and speed
+#      vyT=${vy};
+#      echo "${vyT[${1}]}"
+  #    rosparam set VYsingle ${vyT[1]}
+#      rosparam set Rsingle ${radius[1]}
