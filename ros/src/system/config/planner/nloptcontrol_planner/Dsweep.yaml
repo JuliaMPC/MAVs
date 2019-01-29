@@ -1,0 +1,120 @@
+planner:
+  nloptcontrol_planner:
+    misc:
+      mode: OCP
+      IPplant: ThreeDOFv1
+      model: ThreeDOFv2      # function name
+      Xlims: NaN     # N/A plotting limit for x
+      Ylims: NaN       # N/A plotting limit for y
+      Xmin: NaN              # min limit for x in OCP
+      Xmax: NaN              # max limit for x in OCP
+      Ymin: NaN              # min limit for y in OCP
+      Ymax: NaN              # max limit for y in OCP
+      tp: NaN                # N/A prediction horizon (s)
+      tex: 0.001             # execution horizon (s)
+      sm: 2.                 # (m) distance to see if obstacle was hit (for crash checking)
+      sm1: 3.5               # (m) distance 1 to make sure we don't hit obstacle (for optimization)
+      sm2: 6.0               # (m) distance 2 to make sure we don't hit obstacle (for optimization)
+      Lr: 90.                # LiDAR range (m)
+      L_rd: 10.              # relaxation distance to LiDAR range
+      Nck: NaN               # number of points per interval
+      N: 30                  # number of points in :tm methods
+      solver: KNITRO         # either Ipopt of KNITRO
+      mpc_max_iter: 1000     # an MPC parameter
+      PredictX0: false       # if the state that the vehicle will be at when the optimization is finished is to be predicted
+      FixedTp: true          # fixed final time for predicting X0
+      finalTimeDV: true      # bool to indicate if the final time is a variable
+      activeSafety: NaN      # a bool if the system is only used to avoid collisions with obstacles
+      followDriver: NaN      # a bool to try and follow the driver
+      followPath: NaN        # a bool to follow the path
+      NF: NaN                # number to subtract off the constraint check vector-> used for activeSafety mode so driver sees obstacle before autonomy
+      integrationScheme: trapezoidal
+      tfMax: 20.0 # maximum final time in MPC
+      EP: 0.01   # small number to avoid singularities TODO move this from VehicleModels.jl
+      x0slackVariables: true
+      xFslackVariables: true
+      onlyOptimal: true   # if this is false make sure ocpSave is true otherwise there may be an error, there is no way to continue with a non-optimal signal without previous solution
+      evalConstraints: false
+      ocpSave: false
+
+    weights:
+      ic: 100.0
+      x0: 50. #0.1
+      y0: 50. #0.1
+      v0: 10.0 #10.
+      r0: 20.0 #10.
+      psi0: 20.0 #1.
+      sa0: 2. #2.
+      ux0: 0.1 #0.1
+      ax0: 0.1 #0.1
+      xf: 100.
+      goal: 10. # 100.
+      psi: 0.01
+      time: 50.
+      haf: 1.
+      Fz: 0.5 # 0.1
+      ce: 1.
+      sa: 0.1
+      sr: 1.
+      ax: 0.1
+      jx: 0.01
+      path: 1.0
+      driver: 1.0
+
+    tolerances:
+      ix: 10.0 # 0.5 #0.05
+      iy: 10.0 #0.5 #0.05
+      iv: 10.0 # 0.5 #0.05
+      ir: 0.2 # 0.05 #0.15
+      ipsi: 0.12 #0.5 #0.07
+      isa: 10.0 #0.025 #0.0025
+      iu: 1.0 #0.5 #0.25
+      iax: 10.0 #0.5 # 0.05
+      fx: 5.0 #5.0 # 5.0
+      fy: 5.0 #5.0 # 5.0
+      fv: NaN # NOTE YAML file turns these into strings
+      fr: NaN
+      fpsi: NaN
+      fsa: NaN
+      fu: NaN
+      fax: NaN
+
+    solver:
+      maxtime_cpu_init: 60. # maximum initial solve time
+
+      # settings for both KNITRO and IPOPT
+      outlev: 0 # (c.m.solver==:Ipopt) ? :print_level : :outlev # print level
+      feastol_abs: 7e-1 #7e-2 # (c.m.solver==:Ipopt) ? :constr_viol_tol : :feastol_abs
+      maxit: 500 # (c.m.solver==:Ipopt) ? :max_iter : :maxit
+      maxtime_cpu: 10.0 # (c.m.solver==:Ipopt) ? :max_cpu_time : :maxtime_cpu
+# to do make it so that the initial optization gets more time..
+      # settings for KNITRO
+      ftol: 1e-15 # relative change in the objective function is less than ftol for ftol_iters consecutive iterations
+      feastol: 1.0e20   # relative stopping tolerance for the feasibility error
+      ftol_iters: 5   # number of iters to stop after if change in obj fun is less than
+      infeastol: 1e-2 # (relative) tolerance used for declaring infeasibility of a model
+      maxfevals: -1  # maximum number of function evaluations before termination
+      maxtime_real: 10.0 # in seconds, the maximum allowable real time before termination
+      opttol: 1e20  # final relative stopping tolerance for the KKT (optimality) error
+      opttol_abs: 5e-1 # final absolute stopping tolerance for the KKT (optimality) error
+      xtol: 1e-12  # optimization process will terminate if the relative change in all components of the solution point estimate is less than xtol for xtol_iters
+      algorithm: 1
+      bar_murule: 1
+      linsolver: 4
+      cg_pmem: 0
+      bar_initpt: 3
+      bar_penaltycons: 1
+      bar_penaltyrule: 2
+      bar_switchrule: 2
+      linesearch: 1
+
+      # settings for Ipopt
+      warm_start_init_point: yes  #
+      dual_inf_tol: 5.   # Absolute tolerance on the dual infeasibility
+      compl_inf_tol: 1e-1  # Absolute tolerance on the complementarity.
+      acceptable_tol: 1e-2   # Determines which (scaled) overall optimality error is considered to be "acceptable.
+      acceptable_constr_viol_tol: 0.01   # Absolute tolerance on the constraint violation. "Acceptable" termination requires that the max-norm of the (unscaled) constraint violation is less than this threshold
+      acceptable_dual_inf_tol: 1e10   # Acceptable" termination requires that the (max-norm of the unscaled) dual infeasibility is less than this threshold
+      acceptable_compl_inf_tol: 0.01  # "Acceptable" termination requires that the max-norm of the (unscaled) complementarity is less than this threshold
+      acceptable_obj_change_tol: 1e20   # If the relative change of the objective function (scaled by Max(1,|f(x)|)) is less than this value, this part of the acceptable tolerance termination is satisfied
+      diverging_iterates_tol: 1e20

@@ -45,7 +45,7 @@ system:
   flags:
    initialized: false
    running: true
-   gui: true
+   gui: false
   field:
    p: [0,190,-5]
    s: [100,400,10]

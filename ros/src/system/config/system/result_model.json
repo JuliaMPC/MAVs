@@ -5,8 +5,26 @@
   "default_description": "Shutdown caused by external interrupt.",
   "model": [
     {
+      "key": "move",
+      "val": "/planner/nloptcontrol_planner/misc/movingObstacles",
+      "ros_msg_type": "parameter",
+      "save": true
+    },
+    {
       "key": "Case Id",
       "val": "/case/id",
+      "ros_msg_type": "parameter",
+      "save": true
+    },
+    {
+      "key": "vy",
+      "val": "vy",
+      "ros_msg_type": "parameter",
+      "save": true
+    },
+    {
+      "key": "radius",
+      "val": "radius",
       "ros_msg_type": "parameter",
       "save": true
     },

@@ -9,3 +9,5 @@ docs/Manifest.toml
 artelys_lic_404_umich_mecheng_mm_2017-03-27_knitro_73-34-b5-18-fc.txt
 artelys_lic_897_umich_mecheng_mm_2018-02-06_knitro_1a-af-55-b8-be.txt
 artelys_lic.txt
+/ros/src/system/config/case/tmp.yaml
+/ros/src/system/config/planner/nloptcontrol_planner/tmp.yaml

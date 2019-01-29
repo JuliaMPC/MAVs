@@ -23,8 +23,9 @@
   <param name="use_sim_time" value="true"/>
 
   <!-- rosbag arg -->
-  <arg name="ros_bag_name" default="demoZ_s6_new"/>
+  <arg name="ros_bag_name" default="demoZ_s8_new"/>
   <!--  ************** load args and parameters ***************  -->
+
 
   <!--  ************** launch scripts ***************  -->
   <include file="$(find nloptcontrol_planner)/launch/main.launch">
