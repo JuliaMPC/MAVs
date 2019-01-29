@@ -3,8 +3,8 @@ FROM avpg/cain:middle
 RUN sudo apt-get install -y ros-kinetic-rosparam
 
 COPY knitro-10.3.0-z-Linux-64 /home/$USERNAME/knitro-10.3.0-z-Linux-64
-RUN echo "export PATH=$HOME/knitro-10.3.0-z-Linux-64/knitroampl:$PATH" >> ~/.bashrc
-RUN echo "export LD_LIBRARY_PATH=$HOME/knitro-10.3.0-z-Linux-64/lib:$LD_LIBRARY_PATH" >> ~/.bashrc
+RUN echo 'export PATH="$HOME/knitro-10.3.0-z-Linux-64/knitroampl:$PATH"' >> ~/.bashrc
+RUN echo 'export LD_LIBRARY_PATH="$HOME/knitro-10.3.0-z-Linux-64/lib:$LD_LIBRARY_PATH"' >> ~/.bashrc
 RUN /bin/bash -c 'sudo chmod -R a+rX /home/mavs/knitro-10.3.0-z-Linux-64/*'
 COPY artelys_lic.txt /home/$USERNAME/
 
