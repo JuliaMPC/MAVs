@@ -43,18 +43,16 @@ using namespace chrono::vehicle::hmmwv;
 
 std::string data_path("/opt/chrono/chrono_build/data/vehicle/");
 
-//#define SINGLE_PATCH
-
 // =============================================================================
 
 int main(int argc, char* argv[]) {
     GetLog() << "Copyright (c) 2017 projectchrono.org\nChrono version: " << CHRONO_VERSION << "\n\n";
 
     // ------------------------------
-	// Initialize ROS node handle
-	// ------------------------------
-	ros::init(argc, argv, "terrain");
-	ros::NodeHandle node;
+  	// Initialize ROS node handle
+  	// ------------------------------
+  	ros::init(argc, argv, "terrain");
+  	ros::NodeHandle node;
 
     // --------------
     // Create systems
@@ -65,10 +63,16 @@ int main(int argc, char* argv[]) {
     double tire_step_size = 1e-3;
 
     // Create the HMMWV vehicle, set parameters, and initialize
+    double x0, y0, z0; // Initial global position
+    node.getParam("case/actual/X0/x", x0); // initial x
+    node.getParam("case/actual/X0/yVal", y0); // initial y
+  	node.getParam("case/actual/X0/z", z0); // initial z
+    ChVector<> initLoc(x0, y0, z0);
+
     HMMWV_Reduced my_hmmwv;
     my_hmmwv.SetChassisFixed(false);
     my_hmmwv.SetChassisCollisionType(ChassisCollisionType::NONE);
-    my_hmmwv.SetInitPosition(ChCoordsys<>(ChVector<>(0, 0, 1), ChQuaternion<>(1, 0, 0, 0)));
+    my_hmmwv.SetInitPosition(ChCoordsys<>(initLoc, ChQuaternion<>(1, 0, 0, 0)));
     my_hmmwv.SetPowertrainType(PowertrainModelType::SIMPLE);
     my_hmmwv.SetDriveType(DrivelineType::RWD);
     my_hmmwv.SetTireType(TireModelType::RIGID);
@@ -83,73 +87,27 @@ int main(int argc, char* argv[]) {
     my_hmmwv.SetTireVisualizationType(VisualizationType::PRIMITIVES);
 
     // Create the terrain patches programatically
-	RigidTerrain terrain(my_hmmwv.GetSystem());
-	#ifdef SINGLE_PATCH
-		std::vector<double> p;
-		std::vector<double> s;
-		node.getParam("system/chrono/field/p", p);
-		node.getParam("system/chrono/field/s", s);
+  	RigidTerrain terrain(my_hmmwv.GetSystem());
+  	std::vector<double> terrainPosition;
+  	double terrainLength;  // size in X direction
+  	double terrainWidth;   // size in Y direction
+  	double frictCoeff, restCoeff;
 
-		auto patch = terrain.AddPatch(ChCoordsys<>(ChVector<>(p[1], p[2], p[3]), QUNIT),
-			ChVector<>(s[1], s[2], s[3]));
-		patch->SetContactFrictionCoefficient(0.9f);
-		patch->SetContactRestitutionCoefficient(.01f);
-		patch->SetContactMaterialProperties(2e7f, 0.3f);
-	    patch->SetColor(ChColor(0.8f, 0.8f, 0.5f));
-		patch->SetTexture(data_path + "terrain/textures/tile4.jpg", 200, 200);
+  	node.getParam("system/chrono/terrain/position", terrainPosition);
+  	node.getParam("system/chrono/terrain/length", terrainLength);
+  	node.getParam("system/chrono/terrain/width", terrainWidth);
+  	node.getParam("system/chrono/terrain/frictCoeff", frictCoeff);
+  	node.getParam("system/chrono/terrain/restCoeff", restCoeff);
 
-	#else
-		std::vector<double> pa;
-		std::vector<double> sa;
-		std::vector<double> pb;
-		std::vector<double> sb;
-		std::vector<double> pc;
-		std::vector<double> sc;
-		std::vector<double> pd;
-		std::vector<double> sd;
-		node.getParam("system/chrono/field/pa", pa);
-		node.getParam("system/chrono/field/sa", sa);
-		node.getParam("system/chrono/field/pb", pb);
-		node.getParam("system/chrono/field/sb", sb);
-		node.getParam("system/chrono/field/pc", pc);
-		node.getParam("system/chrono/field/sc", sc);
-		node.getParam("system/chrono/field/pd", pd);
-		node.getParam("system/chrono/field/sd", sd);
+  	auto patch = terrain.AddPatch	(ChCoordsys<>(ChVector<>(terrainPosition[0], terrainPosition[1], terrainPosition[2]), QUNIT),
+  															 ChVector<>(terrainLength, terrainWidth, 10)); //, true, 1, true -> does not work!
+  	patch->SetContactFrictionCoefficient(frictCoeff);
+  	patch->SetContactRestitutionCoefficient(restCoeff);
+  	patch->SetContactMaterialProperties(2e7f, 0.3f);
+  	patch->SetColor(ChColor(0.5f, 0.8f, 0.5f));
+  	patch->SetTexture(data_path + "terrain/textures/tile4.jpg", 200, 200);
+  	terrain.Initialize();
 
-		auto patch1 = terrain.AddPatch(ChCoordsys<>(ChVector<>(pa[1], pa[2], pa[3]), QUNIT), ChVector<>(sa[1],sa[2], sa[3]));
-		patch1->SetContactFrictionCoefficient(0.9f);
-		patch1->SetContactRestitutionCoefficient(0.01f);
-		patch1->SetContactMaterialProperties(2e7f, 0.3f);
-		patch1->SetColor(ChColor(0.8f, 0.8f, 0.5f));
-		//    patch1->SetTexture(vehicle::GetDataFile("terrain/textures/tile4.jpg"), sa[1], sa[2]);
-		patch1->SetTexture(data_path + "terrain/textures/dirt.jpg", 200, 200);
-
-		auto patch2 = terrain.AddPatch(ChCoordsys<>(ChVector<>(pb[1], pb[2], pb[3]), QUNIT), ChVector<>(sb[1],sb[2], sb[3]));
-		patch2->SetContactFrictionCoefficient(0.9f);
-		patch2->SetContactRestitutionCoefficient(0.01f);
-		patch2->SetContactMaterialProperties(2e7f, 0.3f);
-		patch2->SetColor(ChColor(1.0f, 0.5f, 0.5f));
-		//    patch2->SetTexture(vehicle::GetDataFile("terrain/textures/dirt.jpg"), sb[1], sb[2]);
-		patch2->SetTexture(data_path + "terrain/textures/tile4.jpg", 200, 200);
-
-		auto patch3 = terrain.AddPatch(ChCoordsys<>(ChVector<>(pc[1], pc[2], pc[3]), QUNIT), ChVector<>(sc[1],sc[2],sc[3]));
-		patch3->SetContactFrictionCoefficient(0.9f);
-		patch3->SetContactRestitutionCoefficient(0.01f);
-		patch3->SetContactMaterialProperties(2e7f, 0.3f);
-		patch3->SetColor(ChColor(0.5f, 0.5f, 0.8f));
-		//    patch3->SetTexture(vehicle::GetDataFile("terrain/textures/dirt.jpg"), sc[1], sc[2]);
-		patch3->SetTexture(data_path + "terrain/textures/tile4.jpg", 200, 200);
-
-		auto patch4 = terrain.AddPatch(ChCoordsys<>(ChVector<>(pd[1], pd[2], pd[3]), QUNIT), ChVector<>(sd[1],sd[2], sd[3]));
-		patch4->SetContactFrictionCoefficient(0.9f);
-		patch4->SetContactRestitutionCoefficient(0.01f);
-		patch4->SetContactMaterialProperties(2e7f, 0.3f);
-		patch4->SetColor(ChColor(0.5f, 0.5f, 0.8f));
-		//patch4->SetTexture(vehicle::GetDataFile("terrain/textures/grass.jpg"), sd[1], sd[2]);
-		patch4->SetTexture(data_path + "terrain/textures/tile4.jpg", 200, 200);
-#endif
-	terrain.Initialize();
-	
     // Create the vehicle Irrlicht interface
     ChWheeledVehicleIrrApp app(&my_hmmwv.GetVehicle(), &my_hmmwv.GetPowertrain(), L"Rigid Terrain Demo");
     app.SetSkyBox();

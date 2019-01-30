@@ -99,8 +99,6 @@ vehicle:
 
  chrono:
   vehicle_params:
-   frict_coeff: 0.9
-   rest_coeff: 0.1
    centroidLoc: '[0.056, 0.0, 0.523],'
    centroidOrientation: '[1, 0, 0, 0]'
    chassisMass: '2688.70,'

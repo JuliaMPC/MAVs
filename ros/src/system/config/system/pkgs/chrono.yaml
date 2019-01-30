@@ -14,20 +14,23 @@ system:
    initialized: false
    running: false
    gui: true
-  field:
-   p: [0,190,-5]
-   s: [10,400,100]
-   pa: [-5,40,0]
-   sa: [10,100,50] # height, length, width
-   pb: [-5,140,0]
-   sb: [10,100,50]
-   pc: [-5,240,0]
-   sc: [10,100,50]
-   pd: [-5,340,0]
-   sd: [10,100,50]
+
+  terrain:
+   position: [0,190,-5]
+   length: 100. # size in Chrono X direction
+   width: 400.  # size in Chrono Y direction
+   frictCoeff: 0.9
+   restCoeff: 0.01
 
  planner: default
  default:
   flags:
    initialized: true
    goal_attained: false
+
+case:
+ actual:
+  X0:
+   x: 0.0
+   yVal: 0.0
+   z: 1.0

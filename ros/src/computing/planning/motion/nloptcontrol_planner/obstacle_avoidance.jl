@@ -311,9 +311,7 @@ function loop(pub,pub_opt,pub_path,n,c)
   vtfrMA = zeros(MA)
   vtflMA = zeros(MA)
   tireCount = 1
-
-  n.s.mpc.shiftX0 = true # tmp
-
+  n.s.mpc.shiftX0 = true
   tSolveCum = 0
   tA = get_rostime()
   init = false
@@ -334,12 +332,12 @@ function loop(pub,pub_opt,pub_path,n,c)
 
       updateAutoParams!(n)                           # update model parameters
       optimize!(n)
-    # @show n.r.ocp.status
-    #  RobotOS.set_param("system/flags/initialized",true)
       if  init && n.r.ocp.status!=:Optimal && RobotOS.get_param("planner/nloptcontrol_planner/misc/onlyOptimal")
+        println("__________________________________________________________________")
+        println("The optimization was not optimally solved. Stopping simulation!")
+        println("===================================================================")
         RobotOS.set_param("system/flags/not_optimal",true)
         RobotOS.set_param("system/flags/done",true)
-        println("The optimization was not optimally solved. Stopping simulation!")
         break
       end
 
@@ -412,13 +410,12 @@ function loop(pub,pub_opt,pub_path,n,c)
           ya = deepcopy(RobotOS.get_param("state/y"))
 
           # in case vehicle falls off world in Chrono
-          # TODO test this fall-off functionality
-          z = deepcopy(RobotOS.get_param("state/z"))
-    #      @show z
-          if z < 0
+          if deepcopy(RobotOS.get_param("state/z")) < RobotOS.get_param("system/chrono/terrain/position")[3] - 3.0
+            println("__________________________________________________________________________")
+            println("The vehicle fell off the edge of the world in Chrono. Stopping simulation!")
+            println("==========================================================================")
             RobotOS.set_param("system/flags/fall",true)
             RobotOS.set_param("system/flags/done",true)
-            println("The vehicle fell off the edge. Stopping simulation!")
             break
           end
           if Float64(get_rostime()) > 0.5
@@ -428,12 +425,12 @@ function loop(pub,pub_opt,pub_path,n,c)
             vtflMA[tireCount] = RobotOS.get_param("state/vtfl")
 
             if Float64(get_rostime()) > 2 # only start to check after simulation has been running for at least 2 seconds
-              #@show mean([mean(vtrlMA),mean(vtflMA)])
-              #@show mean([mean(vtrrMA),mean(vtfrMA)])
               if isequal(mean([mean(vtrlMA),mean(vtflMA)]), 0.0) || isequal(mean([mean(vtrrMA),mean(vtfrMA)]), 0.0)
+                println("________________________________________________________")
+                println("The vehicle rolled over in Chrono. Stopping simulation!")
+                println("========================================================")
                 RobotOS.set_param("system/flags/rollover",true)
                 RobotOS.set_param("system/flags/done",true)
-                println("The vehicle rolled over. Stopping simulation!")
                 break
               end
             end
@@ -446,16 +443,20 @@ function loop(pub,pub_opt,pub_path,n,c)
       end
 
       if goalAttained(xa,ya,c["goal"]["x"],c["goal"]["yVal"],2*c["goal"]["tol"])
+        println("______________________________________________________")
+        println("The goal was attained. Stopping simulation!")
+        println("=======================================================")
         RobotOS.set_param("system/flags/goal_attained",true)
         RobotOS.set_param("system/flags/done",true)
-        println("The goal was attained. Stopping simulation!")
         break
       end
 
       if Float64(get_rostime()) > RobotOS.get_param("system/params/timelimit")
+        println("______________________________________________________")
+        println("The simulation ran out of time. Stopping simulation!")
+        println("=======================================================")
         RobotOS.set_param("system/flags/timelimit",true)
         RobotOS.set_param("system/flags/done",true)
-        println("The simulation ran out of time. Stopping simulation!")
         break
       end
 

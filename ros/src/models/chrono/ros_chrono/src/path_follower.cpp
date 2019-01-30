@@ -32,9 +32,9 @@ using namespace chrono::geometry;
 using namespace chrono::vehicle;
 using namespace chrono::vehicle::hmmwv;
 using namespace alglib;
+using namespace std;
 
 std::string data_path("/opt/chrono/chrono_build/data/vehicle/");
-#define SINGLE_PATCH
 
 // ROS Control Input (using ROS topic)
 std::vector<double> traj_t;
@@ -213,17 +213,16 @@ int main(int argc, char* argv[]) {
 	std::string planner_namespace;
 	node.getParam("system/planner", planner_namespace);
 	ros::Subscriber planner_sub = node.subscribe(planner_namespace + "/control", 100, plannerCallback);
-
 	std::string chrono_namespace;
 	node.getParam("system/chrono/namespace", chrono_namespace);
-	//veh_status message is depricated, use state and control topics and its publishers in future version
 	ros::Publisher state_pub = node.advertise<mavs_msgs::state>("/state", 1);
 	ros::Publisher control_pub = node.advertise<mavs_msgs::control>("/control", 1);
 	mavs_msgs::state state_data;
 	mavs_msgs::control control_data;
 
-	bool gui;
+	bool gui, debug;
 	node.getParam("system/chrono/flags/gui", gui);
+	node.getParam("system/chrono/flags/debug", debug);
 
 	// Define variables for ROS parameters server
 	double step_size;
@@ -239,7 +238,7 @@ int main(int argc, char* argv[]) {
 	node.getParam("case/actual/X0/yVal", y0); // initial y
 	node.getParam("case/actual/X0/z", z0); // initial z
 	//node.getParam("case/actual/X0/v", v); // lateral velocity
-	//node.getParam("case/actual/X0/r", r); // lateral velocity
+	//node.getParam("case/actual/X0/r", r); // yaw rate
 	node.getParam("case/actual/X0/theta", pitch0); // initial pitch
 	node.getParam("case/actual/X0/phi", roll0); // initial roll
 	node.getParam("case/actual/X0/psi", yaw0); // initial yaw angle
@@ -249,7 +248,6 @@ int main(int argc, char* argv[]) {
 
 
 	// Load chrono vehicle_params
-	double frict_coeff, rest_coeff;
 	std::vector<double> centroidLoc, centroidOrientation;
 	double chassisMass;
 	std::vector<double> chassisInertia;
@@ -260,8 +258,7 @@ int main(int argc, char* argv[]) {
 	double steeringLinkMass, steeringLinkRadius, steeringLinkLength;
 	std::vector<double> steeringLinkInertia;
 	double pinionRadius, pinionMaxAngle, maxBrakeTorque;
-	node.getParam("vehicle/chrono/vehicle_params/frict_coeff", frict_coeff);
-	node.getParam("vehicle/chrono/vehicle_params/rest_coeff", rest_coeff);
+
 	node.getParam("vehicle/chrono/vehicle_params/centroidLoc", centroidLoc);
 	node.getParam("vehicle/chrono/vehicle_params/centroidOrientation", centroidOrientation);
 	node.getParam("vehicle/chrono/vehicle_params/chassisMass", chassisMass);
@@ -358,91 +355,37 @@ int main(int argc, char* argv[]) {
 
 	// Create the terrain patches programatically
 	RigidTerrain terrain(my_hmmwv.GetSystem());
-	#ifdef SINGLE_PATCH
-		std::vector<double> p;
-		std::vector<double> s;
-		node.getParam("system/chrono/field/p", p);
-		node.getParam("system/chrono/field/s", s);
+	std::vector<double> terrainPosition;
+	double terrainLength;  // size in X direction
+	double terrainWidth;   // size in Y direction
+	double frictCoeff, restCoeff;
 
-		auto patch = terrain.AddPatch(ChCoordsys<>(ChVector<>(p[1], p[2], p[3]), QUNIT),
-			ChVector<>(s[1], s[2], s[3]));
-		patch->SetContactFrictionCoefficient(0.9f);
-		patch->SetContactRestitutionCoefficient(.01f);
-		patch->SetContactMaterialProperties(2e7f, 0.3f);
-	    patch->SetColor(ChColor(0.8f, 0.8f, 0.5f));
-		patch->SetTexture(data_path + "terrain/textures/tile4.jpg", 200, 200);
-	#else
-		// https://github.com/projectchrono/chrono/blob/develop/src/demos/vehicle/demo_RigidTerrain/demo_VEH_RigidTerrain.cpp
-		std::vector<double> pa;
-	  std::vector<double> sa;
-	  std::vector<double> pb;
-	  std::vector<double> sb;
-	  std::vector<double> pc;
-	  std::vector<double> sc;
-	  std::vector<double> pd;
-	  std::vector<double> sd;
-	  node.getParam("system/chrono/field/pa", pa);
-	  node.getParam("system/chrono/field/sa", sa);
-	  node.getParam("system/chrono/field/pb", pb);
-	  node.getParam("system/chrono/field/sb", sb);
-	  node.getParam("system/chrono/field/pc", pc);
-	  node.getParam("system/chrono/field/sc", sc);
-	  node.getParam("system/chrono/field/pd", pd);
-	  node.getParam("system/chrono/field/sd", sd);
+	node.getParam("system/chrono/terrain/position", terrainPosition);
+	node.getParam("system/chrono/terrain/length", terrainLength);
+	node.getParam("system/chrono/terrain/width", terrainWidth);
+	node.getParam("system/chrono/terrain/frictCoeff", frictCoeff);
+	node.getParam("system/chrono/terrain/restCoeff", restCoeff);
 
-	  auto patch1 = terrain.AddPatch(ChCoordsys<>(ChVector<>(pa[1], pa[2], pa[3]), QUNIT), ChVector<>(sa[1], sa[2], sa[3]));
-	  patch1->SetContactFrictionCoefficient(frict_coeff);
-	  patch1->SetContactRestitutionCoefficient(rest_coeff);
-	  patch1->SetContactMaterialProperties(2e7f, 0.3f);
-	  patch1->SetColor(ChColor(0.8f, 0.8f, 0.5f));
-		//patch->SetColor(ChColor(1, 1, 1));
-		patch1->SetTexture(data_path + "terrain/textures/dirt.jpg", 200, 200);
-
-	  auto patch2 = terrain.AddPatch(ChCoordsys<>(ChVector<>(pb[1], pb[2], pb[3]), QUNIT), ChVector<>(sb[1], sb[2], sb[3]));
-	  patch2->SetContactFrictionCoefficient(frict_coeff);
-	  patch2->SetContactRestitutionCoefficient(rest_coeff);
-	  patch2->SetContactMaterialProperties(2e7f, 0.3f);
-	  patch2->SetColor(ChColor(1.0f, 0.5f, 0.5f));
-		patch2->SetTexture(data_path + "terrain/textures/tile4.jpg", 200, 200);
-
-	  auto patch3 = terrain.AddPatch(ChCoordsys<>(ChVector<>(pc[1], pc[2], pc[3]), QUNIT), ChVector<>(sc[1], sc[2], sc[3]));
-	  patch3->SetContactFrictionCoefficient(frict_coeff);
-	  patch3->SetContactRestitutionCoefficient(rest_coeff);
-	  patch3->SetContactMaterialProperties(2e7f, 0.3f);
-	  patch3->SetColor(ChColor(0.5f, 0.5f, 0.8f));
-		patch3->SetTexture(data_path + "terrain/textures/tile4.jpg", 200, 200);
-
-	  auto patch4 = terrain.AddPatch(ChCoordsys<>(ChVector<>(pd[1], pd[2], pd[3]), QUNIT), ChVector<>(sd[1], sd[2], sd[3]));
-	  patch4->SetContactFrictionCoefficient(frict_coeff);
-	  patch4->SetContactRestitutionCoefficient(rest_coeff);
-	  patch4->SetContactMaterialProperties(2e7f, 0.3f);
-	  patch4->SetColor(ChColor(0.5f, 0.5f, 0.8f));
-		patch4->SetTexture(data_path + "terrain/textures/tile4.jpg", 200, 200);
-	#endif
+	auto patch = terrain.AddPatch	(ChCoordsys<>(ChVector<>(terrainPosition[0], terrainPosition[1], terrainPosition[2]), QUNIT),
+												  			 ChVector<>(terrainLength, terrainWidth, 10)); //, true, 1, true -> does not work!
+	patch->SetContactFrictionCoefficient(frictCoeff);
+	patch->SetContactRestitutionCoefficient(restCoeff);
+	patch->SetContactMaterialProperties(2e7f, 0.3f);
+	patch->SetColor(ChColor(0.5f, 0.8f, 0.5f));
+	patch->SetTexture(data_path + "terrain/textures/tile4.jpg", 200, 200);
 	terrain.Initialize();
 
 	// ---------------------------------------
 	// Create the vehicle Irrlicht application
 	// ---------------------------------------
-	//ChVehicleIrrApp app(&my_hmmwv.GetVehicle(), &my_hmmwv.GetPowertrain(), L"Path Follower",
-	//	irr::core::dimension2d<irr::u32>(800, 640));
-	//app.SetHUDLocation(500, 20);
-	//app.AddTypicalLights(irr::core::vector3df(-150.f, -150.f, 200.f), irr::core::vector3df(-150.f, 150.f, 200.f), 100,
-	//	100);
-	//app.AddTypicalLights(irr::core::vector3df(150.f, -150.f, 200.f), irr::core::vector3df(150.0f, 150.f, 200.f), 100,
-	//	100);
-	//app.EnableGrid(false);
-
 	ChWheeledVehicleIrrApp app(&my_hmmwv.GetVehicle(), &my_hmmwv.GetPowertrain(), L"Path Follower");
 	if (gui) {
-		app.SetSkyBox();
-		app.AddTypicalLights(irr::core::vector3df(30.f, -30.f, 100.f), irr::core::vector3df(30.f, 50.f, 100.f), 250, 130);
-		app.SetChaseCamera(ChVector<>(0.0, 0.0, .75), 6.0, 0.5);
-
-		app.SetTimestep(step_size);
-		// Finalize construction of visualization assets
-		app.AssetBindAll();
-		app.AssetUpdateAll();
+    app.SetSkyBox();
+    app.AddTypicalLights(irr::core::vector3df(30.f, -30.f, 100.f), irr::core::vector3df(30.f, 50.f, 100.f), 250, 130);
+    app.SetChaseCamera(ChVector<>(0.0, 0.0, .75), 6.0, 0.5);
+    app.SetTimestep(step_size);
+    app.AssetBindAll();
+    app.AssetUpdateAll();
 
 		// Create the interactive driver system
 		ChIrrGuiDriver driver(app);
@@ -503,13 +446,6 @@ int main(int argc, char* argv[]) {
 			traj_sa_interp = 1.0*getTargetAngle(VehicleCOMPos, traj_x, traj_y, traj_ux, traj_ux_interp, long_velocity, front2rear, yaw_angle,Kpp, Rmin, Rmax);
 			traj_ux_interp = std::max(0.0, traj_ux_interp);
 
-			// steering rate saturation
-			/*if (((traj_sa_interp - steering_input*maximum_steering_angle) / step_size) > 1.5) {
-				traj_sa_interp = (steering_input*maximum_steering_angle + 1.5*step_size);
-			}
-			else if (((steering_input*maximum_steering_angle - traj_sa_interp) / step_size) < -1.5) {
-				traj_sa_interp = (steering_input*maximum_steering_angle - 1.5*step_size);
-			}*/
 			// low pass filter
 			double alpha = 1.0;
 			steering_input = (1.0 - alpha) * steering_input + alpha * traj_sa_interp / maximum_steering_angle;
@@ -553,19 +489,25 @@ int main(int argc, char* argv[]) {
 		VehicleCOMPos = my_hmmwv.GetVehicle().GetVehicleCOMPos();
 		VehicleRot = my_hmmwv.GetVehicle().GetVehicleRot();//global orientation as quaternion
 		ChVector<> rot_dt = my_hmmwv.GetChassisBody()->GetWvel_loc(); // actual angular speed (expressed in local coords)
-		ChVector<> VehiclePos = my_hmmwv.GetVehicle().GetVehiclePos(); // gloabal vehicle frame origin location
+	  ChVector<> VehiclePos = my_hmmwv.GetVehicle().GetVehiclePos(); // gloabal vehicle frame origin location
 
 		// Compute yaw angle
 		yaw_angle = VehicleRot.Q_to_Euler123()[2];
-
 		ChVector<> ORI2COM = global2veh(yaw_angle, VehicleCOMPos - VehiclePos);
-
 		ChVector<> VehicleRot_dt = my_hmmwv.GetChassisBody()->GetWvel_loc(); // actual angular speed (expressed in local coords)
 		ChVector<> VehicleCOMVel_global = my_hmmwv.GetVehicle().GetVehiclePointVelocity(ORI2COM); // vehicle COM velocity (m/s)
 		ChVector<> VehicleCOMAcc = my_hmmwv.GetVehicle().GetVehicleAcceleration(ORI2COM); // vehicle COM acceleration (m/s^2)
 		VehicleCOMAcc[0] = std::max(-1.5, std::min(1.5, VehicleCOMAcc[0])); // let vehicle acceleration bounded in [-1.5, 1.5] (temporary solution)
-
 		ChVector<> VehicleCOMVel = global2veh(yaw_angle, VehicleCOMVel_global);
+
+		if (debug) {
+			std::cout << " VehiclePos[0] = " <<  VehiclePos[0] << std::endl;
+			std::cout << " VehiclePos[1] = " <<  VehiclePos[1] << std::endl;
+			std::cout << " VehiclePos[2] = " <<  VehiclePos[2] << std::endl;
+			std::cout << " VehicleCOMPos[0] = " <<  VehicleCOMPos[0] << std::endl;
+			std::cout << " VehicleCOMPos[1] = " <<  VehicleCOMPos[1] << std::endl;
+			std::cout << " VehicleCOMPos[2] = " <<  VehicleCOMPos[2] << std::endl;
+		}
 
 		// Get vertical tire force
 		std::vector<double> TireForceVertical;
@@ -574,17 +516,17 @@ int main(int argc, char* argv[]) {
 			TireForceVertical.push_back(TireForce[2]);
 		}
 
-		// Update vehicle state
+		// Update vehicle state and control parameters
 		node.setParam("/state/t", chrono_time);
 		node.setParam("/state/x", VehicleCOMPos[0]);       // global x position (m)
 		node.setParam("/state/y", VehicleCOMPos[1]);       // global y position (m)
 		node.setParam("/state/z", VehicleCOMPos[2]);       // global z position (m)
-		node.setParam("/state/v", VehicleCOMVel[1]);       //// lateral velocity (m/s)
-		node.setParam("/state/r", VehicleRot_dt[2]);       //// yaw rate (rad/s)
+		node.setParam("/state/v", VehicleCOMVel[1]);       // lateral velocity (m/s)
+		node.setParam("/state/r", VehicleRot_dt[2]);       // yaw rate (rad/s)
 		node.setParam("/state/psi", yaw_angle);            // global heading angle (yaw angle) (rad)
 		node.setParam("/state/sa", steering_angle);        // steering angle at the tire (rad)
-		node.setParam("/state/ux", VehicleCOMVel[0]);      //// longitudinal velocity  (vehicle frame) (m/s)
-		node.setParam("/state/ax", VehicleCOMAcc[0]);      //// longitudinal acceleration (vehicle frame) (m/s^2)
+		node.setParam("/state/ux", VehicleCOMVel[0]);      // longitudinal velocity  (vehicle frame) (m/s)
+		node.setParam("/state/ax", VehicleCOMAcc[0]);      // longitudinal acceleration (vehicle frame) (m/s^2)
 		node.setParam("/state/vtfl", TireForceVertical[0]);
 		node.setParam("/state/vtfr", TireForceVertical[1]);
 		node.setParam("/state/vtrl", TireForceVertical[2]);
@@ -593,8 +535,7 @@ int main(int argc, char* argv[]) {
 		node.setParam("/control/brk", braking_input);
 		node.setParam("/control/str", steering_input);
 
-		// In future we will shift to state and control variables
-		// Update state and control data
+		// Update state and control messages
 		state_data.t = chrono_time; // time in chrono simulation
 		state_data.x = VehicleCOMPos[0];
 		state_data.y = VehicleCOMPos[1];
@@ -602,20 +543,17 @@ int main(int argc, char* argv[]) {
 		state_data.ux = VehicleCOMVel[0];
 		state_data.v = VehicleCOMVel[1];
 		state_data.ax = VehicleCOMAcc[0];
-		state_data.psi = yaw_angle; // yaw angle (rad)
-		state_data.r = VehicleRot_dt[2];// yaw rate (rad/s)
-		state_data.sa = steering_angle; // steering angle at the tire (rad)
-		//state_data.tire_f = TireForceVertical; // vertical tire force
+		state_data.psi = yaw_angle;      // yaw angle (rad)
+		state_data.r = VehicleRot_dt[2]; // yaw rate (rad/s)
+		state_data.sa = steering_angle;  // steering angle at the tire (rad)
 		state_data.tireF_fl = TireForceVertical[0];
 		state_data.tireF_fr = TireForceVertical[1];
 		state_data.tireF_rl = TireForceVertical[2];
 		state_data.tireF_rr = TireForceVertical[3];
-
 		control_data.t = chrono_time;
-		control_data.thrt_in = throttle_input; // throttle input in the range [0,+1]
-		control_data.brk_in = braking_input; // braking input in the range [0,+1]
-		control_data.str_in = steering_input; // steeering input in the range [-1,+1]
-
+		control_data.thrt_in = throttle_input;  // throttle input in the range [0,+1]
+		control_data.brk_in = braking_input;    // braking input in the range [0,+1]
+		control_data.str_in = steering_input;   // steeering input in the range [-1,+1]
 		state_pub.publish(state_data);
 		control_pub.publish(control_data);
 		if (gui) {
@@ -623,7 +561,6 @@ int main(int argc, char* argv[]) {
 		}
 
 		ros::spinOnce();
-		// loop_rate.sleep();
 	}
 
 	return 0;
