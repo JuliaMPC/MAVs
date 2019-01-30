@@ -1,10 +1,13 @@
 /results/*
 !/results/postProcess.py
-!/results/rundata.py
-!/results/plottingData.py
+!/results/bag_to_csv.py
+!/results/plottingData.jl
 !/results/README.md
 /docs/build
 docs/Manifest.toml
 /knitro-10.3.0-z-Linux-64/*
 artelys_lic_404_umich_mecheng_mm_2017-03-27_knitro_73-34-b5-18-fc.txt
 artelys_lic_897_umich_mecheng_mm_2018-02-06_knitro_1a-af-55-b8-be.txt
+artelys_lic.txt
+/ros/src/system/config/case/tmp.yaml
+/ros/src/system/config/planner/nloptcontrol_planner/tmp.yaml

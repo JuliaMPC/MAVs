@@ -19,13 +19,12 @@ case:
    ux: 0.0
    ax: 0.0
   obstacle:
-   num: 1
-   radius: [10.]
-   length: [5.]
-   x0: [0.0]
-   y0: [275.]
-   vx: [0.0]
-   
+   num: 4
+   length: [5.,5.,5.,5.]
+   x0: [0.,-25.,-25.,-25.]
+   y0: [275.,168.,145.,110.]
+   vx: [0.,0.,0.,0.]
+
  assumed:
   obstacle:
    num: 10

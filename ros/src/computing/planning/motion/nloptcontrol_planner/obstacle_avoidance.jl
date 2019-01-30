@@ -18,7 +18,6 @@ using PyCall
 
 @pyimport tf.transformations as tf
 
-
 #          1  2  3  4  5    6   7   8
 #names = [:x,:y,:v,:r,:psi,:sa,:ux,:ax];
 #descriptions = ["X (m)","Y (m)","Lateral Velocity (m/s)", "Yaw Rate (rad/s)","Yaw Angle (rad)", "Steering Angle (rad)", "Longitudinal Velocity (m/s)", "Longitudinal Acceleration (m/s^2)"];
@@ -80,10 +79,67 @@ function setTrajParams(msg::Trajectory)
 end
 
 """
+Test Data:
+r = [10,9,8,5,10,6,3]
+x = [0,1,2,50,0,49,-30]
+y = [0,0,2,50,0,49,-30]
+vx = [0,0,0,0,0,0,0]
+vy = [0,0,0,0,0,0,0]
+L = 7
+
+r,x,y,vx,vy = filterObstacleData(r,x,y,vx,vy,L)
+
+# filter obstacle data to remove smallest overlapping circles
+--------------------------------------------------------------------------------------\n
+Author: Huckleberry Febbo, Graduate Student, University of Michigan
+Date Create: 1/28/2019, Last Modified: 1/28/2019 \n
+--------------------------------------------------------------------------------------\n
+"""
+function filterObstacleData(r,x,y,vx,vy,L)
+    ra = (); xa = (); ya = (); vxa = (); vya = ();
+    for i in 1:L # check each obstacle
+        add = true
+        # check all of the other obstacles
+        for j in 1:L
+            if 1!=j
+                # intersection? && are you the smaller obstacle
+                if (x[i] - x[j])^2 + (y[i] - y[j])^2 <= (r[i] + r[j])^2 && r[i] < r[j]
+                    add = false
+                    break
+                end
+            end
+        end
+
+        # check intersection with existing set
+        if add
+           for m in 1:length(ra)
+               if (xa[m] - x[i])^2 + (ya[m] - y[i])^2 <= (ra[m] + r[i])^2
+                   add = false
+                   break
+               end
+           end
+        end
+
+        if add  # add the larger one to the set
+            ra = (ra..., r[i])
+            xa = (xa..., x[i])
+            ya = (ya..., y[i])
+            vxa = (vxa..., vx[i])
+            vya = (vya..., vy[i])
+        end
+    end
+
+    if length(ra) > L
+        error("there is a bug in filterObstacleData(); it added obstacles to the set.")
+    end
+return ra, xa, ya, vxa, vya, length(ra)
+end
+
+"""
 # used to set the obstacle data in the ocp
 --------------------------------------------------------------------------------------\n
 Author: Huckleberry Febbo, Graduate Student, University of Michigan
-Date Create: 4/6/2017, Last Modified: 2/28/2018 \n
+Date Create: 4/6/2017, Last Modified: 1/28/2019 \n
 --------------------------------------------------------------------------------------\n
 """
 function setObstacleData(params)
@@ -100,13 +156,12 @@ function setObstacleData(params)
       if isnan(r[1]) # initilized, no obstacles detected
         L = 0
       else
-        L = length(r)               # number of obstacles detected
+        r,x,y,vx,vy,L = filterObstacleData(r,x,y,vx,vy,length(r))
       end
 
-      N = Q - L;
+      N = Q - L
       if N < 0
-        warn(" \n The number of obstacles detected exceeds the number of obstacles the algorithm was designed for! \n
-                  Consider increasing the number of obstacles the algorithm can handle \n!")
+        warn("The number of obstacles detected exceeds the number of obstacles the algorithm was set to.")
       end
 
       for i in 1:Q
@@ -214,6 +269,7 @@ function setInitStateParams(c)
     RobotOS.set_param("state/sa", RobotOS.get_param("case/actual/X0/sa"))
     RobotOS.set_param("state/ux", RobotOS.get_param("case/actual/X0/ux"))
     RobotOS.set_param("state/ax", RobotOS.get_param("case/actual/X0/ax"))
+    RobotOS.set_param("state/z",10.)
   return nothing
 end
 
@@ -228,14 +284,14 @@ Date Create: 2/28/2018, Last Modified: 2/28/2018 \n
 function getStateData(n)
 
   # copy current vehicle state in case it changes
-  x=deepcopy(RobotOS.get_param("state/x"))
-  y=deepcopy(RobotOS.get_param("state/y"))
-  v=deepcopy(RobotOS.get_param("state/v"))
-  r=deepcopy(RobotOS.get_param("state/r"))
-  psi=deepcopy(RobotOS.get_param("state/psi"))
-  sa=deepcopy(RobotOS.get_param("state/sa"))
-  ux=deepcopy(RobotOS.get_param("state/ux"))
-  ax=deepcopy(RobotOS.get_param("state/ax"))
+  x = deepcopy(RobotOS.get_param("state/x"))
+  y = deepcopy(RobotOS.get_param("state/y"))
+  v = deepcopy(RobotOS.get_param("state/v"))
+  r = deepcopy(RobotOS.get_param("state/r"))
+  psi = deepcopy(RobotOS.get_param("state/psi"))
+  sa = deepcopy(RobotOS.get_param("state/sa"))
+  ux = deepcopy(RobotOS.get_param("state/ux"))
+  ax = deepcopy(RobotOS.get_param("state/ax"))
   return [x,y,v,r,psi,sa,ux,ax]
 end
 
@@ -255,9 +311,7 @@ function loop(pub,pub_opt,pub_path,n,c)
   vtfrMA = zeros(MA)
   vtflMA = zeros(MA)
   tireCount = 1
-
-  n.s.mpc.shiftX0 = true # tmp
-
+  n.s.mpc.shiftX0 = true
   tSolveCum = 0
   tA = get_rostime()
   init = false
@@ -277,8 +331,15 @@ function loop(pub,pub_opt,pub_path,n,c)
     #  end  NOTE currently this is after the optimization, eventually put it just before for better performace.
 
       updateAutoParams!(n)                           # update model parameters
-      status = optimize!(n)
-    # @show n.r.ocp.status
+      optimize!(n)
+      if  init && n.r.ocp.status!=:Optimal && RobotOS.get_param("planner/nloptcontrol_planner/misc/onlyOptimal")
+        println("__________________________________________________________________")
+        println("The optimization was not optimally solved. Stopping simulation!")
+        println("===================================================================")
+        RobotOS.set_param("system/flags/not_optimal",true)
+        RobotOS.set_param("system/flags/done",true)
+        break
+      end
 
       if isequal(RobotOS.get_param("system/plant"),"3DOF") # otherwise an external update on the initial state of the vehicle is needed
         n.mpc.v.t = n.mpc.v.t + n.mpc.v.tex
@@ -347,6 +408,16 @@ function loop(pub,pub_opt,pub_path,n,c)
       else
           xa = deepcopy(RobotOS.get_param("state/x"))
           ya = deepcopy(RobotOS.get_param("state/y"))
+
+          # in case vehicle falls off world in Chrono
+          if deepcopy(RobotOS.get_param("state/z")) < RobotOS.get_param("system/chrono/terrain/position")[3] - 3.0
+            println("__________________________________________________________________________")
+            println("The vehicle fell off the edge of the world in Chrono. Stopping simulation!")
+            println("==========================================================================")
+            RobotOS.set_param("system/flags/fall",true)
+            RobotOS.set_param("system/flags/done",true)
+            break
+          end
           if Float64(get_rostime()) > 0.5
             vtrrMA[tireCount] = RobotOS.get_param("state/vtrr")
             vtrlMA[tireCount] = RobotOS.get_param("state/vtrl")
@@ -354,12 +425,12 @@ function loop(pub,pub_opt,pub_path,n,c)
             vtflMA[tireCount] = RobotOS.get_param("state/vtfl")
 
             if Float64(get_rostime()) > 2 # only start to check after simulation has been running for at least 2 seconds
-              #@show mean([mean(vtrlMA),mean(vtflMA)])
-              #@show mean([mean(vtrrMA),mean(vtfrMA)])
               if isequal(mean([mean(vtrlMA),mean(vtflMA)]), 0.0) || isequal(mean([mean(vtrrMA),mean(vtfrMA)]), 0.0)
+                println("________________________________________________________")
+                println("The vehicle rolled over in Chrono. Stopping simulation!")
+                println("========================================================")
                 RobotOS.set_param("system/flags/rollover",true)
                 RobotOS.set_param("system/flags/done",true)
-                println("The vehicle rolled over. Stopping simulation!")
                 break
               end
             end
@@ -372,16 +443,20 @@ function loop(pub,pub_opt,pub_path,n,c)
       end
 
       if goalAttained(xa,ya,c["goal"]["x"],c["goal"]["yVal"],2*c["goal"]["tol"])
+        println("______________________________________________________")
+        println("The goal was attained. Stopping simulation!")
+        println("=======================================================")
         RobotOS.set_param("system/flags/goal_attained",true)
         RobotOS.set_param("system/flags/done",true)
-        println("The goal was attained. Stopping simulation!")
         break
       end
 
       if Float64(get_rostime()) > RobotOS.get_param("system/params/timelimit")
+        println("______________________________________________________")
+        println("The simulation ran out of time. Stopping simulation!")
+        println("=======================================================")
         RobotOS.set_param("system/flags/timelimit",true)
         RobotOS.set_param("system/flags/done",true)
-        println("The simulation ran out of time. Stopping simulation!")
         break
       end
 
@@ -436,6 +511,12 @@ function main()
     c["obstacle"] = case["assumed"]["obstacle"]
   end
   fixYAML(c)   # fix messed up data types
+
+  # TMP hack to save a single ROS param
+  RobotOS.set_param("vy",case["actual"]["obstacle"]["vy"][1])
+  RobotOS.set_param("r",case["actual"]["obstacle"]["radius"][1])
+
+  # TMP hack to save a single ROS param
 
   n = initializeAutonomousControl(c);
   setInitStateParams(c)

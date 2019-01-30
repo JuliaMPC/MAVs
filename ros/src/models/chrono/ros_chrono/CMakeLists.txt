@@ -169,7 +169,9 @@ endif()
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
 add_executable(path_follower src/path_follower.cpp)
+add_executable(path_follower_no_gui src/path_follower_no_gui.cpp)
 add_executable(trajectory_follower src/trajectory_follower.cpp)
+add_executable(terrain src/terrain.cpp)
 
 #--------------------------------------------------------------
 # Set properties for your executable target
@@ -185,7 +187,17 @@ set_target_properties(path_follower PROPERTIES
       COMPILE_DEFINITIONS "CHRONO_DATA_DIR=\"${CHRONO_DATA_DIR}\""
 	    LINK_FLAGS "${CHRONO_LINKER_FLAGS} ${LINKERFLAG_EXE}")
 
+set_target_properties(path_follower_no_gui PROPERTIES
+	    COMPILE_FLAGS "${CHRONO_CXX_FLAGS} ${CH_CXX_FLAGS} ${CH_IRRLICHT_CXX_FLAGS} ${EXTRA_COMPILE_FLAGS}"
+      COMPILE_DEFINITIONS "CHRONO_DATA_DIR=\"${CHRONO_DATA_DIR}\""
+	    LINK_FLAGS "${CHRONO_LINKER_FLAGS} ${LINKERFLAG_EXE}")
+
 set_target_properties(trajectory_follower PROPERTIES
+	    COMPILE_FLAGS "${CHRONO_CXX_FLAGS} ${CH_CXX_FLAGS} ${CH_IRRLICHT_CXX_FLAGS} ${EXTRA_COMPILE_FLAGS}"
+      COMPILE_DEFINITIONS "CHRONO_DATA_DIR=\"${CHRONO_DATA_DIR}\""
+	    LINK_FLAGS "${CHRONO_LINKER_FLAGS} ${LINKERFLAG_EXE}")
+
+set_target_properties(terrain PROPERTIES
 	    COMPILE_FLAGS "${CHRONO_CXX_FLAGS} ${CH_CXX_FLAGS} ${CH_IRRLICHT_CXX_FLAGS} ${EXTRA_COMPILE_FLAGS}"
       COMPILE_DEFINITIONS "CHRONO_DATA_DIR=\"${CHRONO_DATA_DIR}\""
 	    LINK_FLAGS "${CHRONO_LINKER_FLAGS} ${LINKERFLAG_EXE}")
@@ -199,7 +211,9 @@ set_target_properties(trajectory_follower PROPERTIES
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 add_dependencies(path_follower ${catkin_EXPORTED_TARGETS})
+add_dependencies(path_follower_no_gui ${catkin_EXPORTED_TARGETS})
 add_dependencies(trajectory_follower ${catkin_EXPORTED_TARGETS})
+add_dependencies(terrain ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
 # target_link_libraries(${PROJECT_NAME}_node
@@ -207,6 +221,16 @@ add_dependencies(trajectory_follower ${catkin_EXPORTED_TARGETS})
 # )
 
 target_link_libraries(path_follower
+  ChronoEngine
+  ChronoEngine_irrlicht
+  ChronoEngine_vehicle
+  ChronoModels_vehicle
+  ${catkin_LIBRARIES}
+  ${CHRONO_LIBRARIES}
+  interpolation
+  controller)
+
+target_link_libraries(path_follower_no_gui
   ChronoEngine
   ChronoEngine_irrlicht
   ChronoEngine_vehicle
@@ -226,6 +250,15 @@ target_link_libraries(trajectory_follower
   interpolation
   controller)
 
+target_link_libraries(terrain
+  ChronoEngine
+  ChronoEngine_irrlicht
+  ChronoEngine_vehicle
+  ChronoModels_vehicle
+  ${catkin_LIBRARIES}
+  ${CHRONO_LIBRARIES}
+  interpolation
+  controller)
 
 # target_link_libraries(test_1
 #   ChronoEngine
@@ -289,11 +322,11 @@ target_link_libraries(trajectory_follower
 # g Tests and rostest
 #####################
 # New added for rostest
-if(CATKIN_ENABLE_TESTING)
-  message("\n\nGoing to build the ros_chrono tests!\n\n")
-  find_package(rostest REQUIRED)
+#if(CATKIN_ENABLE_TESTING)
+#  message("\n\nGoing to build the ros_chrono tests!\n\n")
+#  find_package(rostest REQUIRED)
   # You can add arbitrary new test files in the end of add_rostest_gtest
-  add_rostest(launch/steering.launch) #perhaps
+#  add_rostest(launch/steering.launch) #perhaps
 
-endif()
+#endif()
 # End rostest

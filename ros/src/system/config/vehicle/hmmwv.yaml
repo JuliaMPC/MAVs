@@ -99,8 +99,6 @@ vehicle:
 
  chrono:
   vehicle_params:
-   frict_coeff: 0.9
-   rest_coeff: 0.1
    centroidLoc: '[0.056, 0.0, 0.523],'
    centroidOrientation: '[1, 0, 0, 0]'
    chassisMass: '2688.70,'
@@ -129,7 +127,10 @@ vehicle:
    upper_limit: 1.0
    lower_limit: -1.0
    anti_windup: clamping
-   time_shift: 0.5
+   time_shift: 0.1
+   Kpp: 1.3
+   Rmin: 30.0
+   Rmax: 40.0
 
    velocity:
     Kp: 0.5

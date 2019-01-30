@@ -220,8 +220,7 @@ int main(int argc, char* argv[]) {
 	mavs_msgs::state state_data;
 	mavs_msgs::control control_data;
 
-	bool gui, debug;
-	node.getParam("system/chrono/flags/gui", gui);
+	bool debug;
 	node.getParam("system/chrono/flags/debug", debug);
 
 	// Define variables for ROS parameters server
@@ -376,22 +375,6 @@ int main(int argc, char* argv[]) {
 	patch->SetTexture(data_path + "terrain/textures/tile4.jpg", 200, 200);
 	terrain.Initialize();
 
-	// ---------------------------------------
-	// Create the vehicle Irrlicht application
-	// ---------------------------------------
-	ChWheeledVehicleIrrApp app(&my_hmmwv.GetVehicle(), &my_hmmwv.GetPowertrain(), L"Path Follower");
-	if (gui) {
-    app.SetSkyBox();
-    app.AddTypicalLights(irr::core::vector3df(30.f, -30.f, 100.f), irr::core::vector3df(30.f, 50.f, 100.f), 250, 130);
-    app.SetChaseCamera(ChVector<>(0.0, 0.0, .75), 6.0, 0.5);
-    app.SetTimestep(step_size);
-    app.AssetBindAll();
-    app.AssetUpdateAll();
-
-		// Create the interactive driver system
-		ChIrrGuiDriver driver(app);
-		driver.Initialize();
-	}
 	// ---------------
 	// Simulation loop
 	// ---------------
@@ -466,26 +449,13 @@ int main(int argc, char* argv[]) {
 			braking_input = -vel_controller_output;
 		}
 
-		if (gui) {
-			app.BeginScene(true, true, irr::video::SColor(255, 140, 161, 192));
-			app.DrawAll();
-		}
-
 		// Update modules (process inputs from other modules)
 		terrain.Synchronize(chrono_time);
 		my_hmmwv.Synchronize(chrono_time, steering_input, braking_input, throttle_input, terrain);
 
-		if (gui) {
-			app.Synchronize("", steering_input, throttle_input, braking_input);
-		}
-
 		// Advance simulation for one timestep for all modules
 		terrain.Advance(step_size);
 		my_hmmwv.Advance(step_size);
-
-		if (gui) {
-			app.Advance(step_size);
-		}
 
 		VehicleCOMPos = my_hmmwv.GetVehicle().GetVehicleCOMPos();
 		VehicleRot = my_hmmwv.GetVehicle().GetVehicleRot();//global orientation as quaternion
@@ -557,9 +527,7 @@ int main(int argc, char* argv[]) {
 		control_data.str_in = steering_input;   // steeering input in the range [-1,+1]
 		state_pub.publish(state_data);
 		control_pub.publish(control_data);
-		if (gui) {
-			app.EndScene();
-		}
+
 
 		ros::spinOnce();
 	}
