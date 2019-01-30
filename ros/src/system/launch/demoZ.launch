@@ -51,7 +51,7 @@
   <!--  ************** additional nodes ***************  -->
 
   <!--ros_chrono-->
-  <node name="Chronode" pkg="ros_chrono" type="path_follower" cwd="node"  output="screen"/>
+  <node name="Chronode" pkg="ros_chrono" type="path_follower_no_gui" cwd="node"  output="screen"/>
   <node name="sim_time" pkg="sim_time" type="ros_get_world_time" output="screen" />
 
   <!--initialize system-->
