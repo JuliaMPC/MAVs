@@ -1,6 +1,6 @@
 /results/*
 !/results/postProcess.py
-!/results/rundata.py
+!/results/bag_to_csv.py
 !/results/plottingData.jl
 !/results/README.md
 /docs/build

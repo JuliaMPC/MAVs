@@ -4,8 +4,6 @@
 
   <!--  ************** load args and parameters ***************  -->
   <!--common args and parameters-->
-  <!--NOTE system launch file is currently the same as demoM-->
-
   <arg name="system_params_path" default="$(find system)/config/system/demos/demoZ.yaml"/>
   <arg name="vehicle_params_path" default="$(find system)/config/vehicle/hmmwv.yaml"/>
   <arg name="case_params_path" default="$(find system)/config/case/tmp.yaml"/>
@@ -23,8 +21,8 @@
   <!-- use Gazebo's simulation time -->
   <param name="use_sim_time" value="true"/>
 
-  <!-- rosbag arg -->
-  <arg name="ros_bag_name" default="test_demo"/>
+  <!-- rosbag arg  -->
+  <arg name="ros_bag_name" default="tmp"/>
 
   <!--  ************** load args and parameters ***************  -->
 
@@ -52,7 +50,7 @@
   <!--  ************** additional nodes ***************  -->
 
   <!--ros_chrono-->
-  <node name="Chronode" pkg="ros_chrono" type="path_follower" cwd="node"  output="screen"/>
+  <node name="Chronode" pkg="ros_chrono" type="path_follower_no_gui" cwd="node"  output="screen"/>
   <node name="sim_time" pkg="sim_time" type="ros_get_world_time" output="screen" />
 
   <!--initialize system-->

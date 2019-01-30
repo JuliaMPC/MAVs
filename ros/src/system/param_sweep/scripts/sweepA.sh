@@ -57,13 +57,18 @@ run_launchfile () {
 }
 wait_for_program () {
   echo "Entering: wait_for_program"
-  DURATION=2000
+  DURATION=500
   START_TIME=$SECONDS
   shutdown=0;
 until (($(( SECONDS - START_TIME )) > "$DURATION")) || [[ $shutdown -eq 1 ]]; do
   sleep 1;
   if [[ `rosparam get "system/flags/done"` = "true" ]]; then
     echo "system/flags/done = true"
+    shutdown=1;
+    sleep 45;  # assuming that this is enough time, but there is not check to make sure that everything has shutdown.
+  fi
+  if [[ `rosparam get "/vehicle_collided"` = "true" ]]; then
+    echo "/vehicle_collided = true"
     shutdown=1;
     sleep 45;  # assuming that this is enough time, but there is not check to make sure that everything has shutdown.
   fi
@@ -78,37 +83,41 @@ loop_entry_point () {
   wait_for_program
   kill_roslaunch_pid
   kill_roscore_pid
+  echo "Exiting: loop_entry_point"
 }
 
-
-planners=( "false" "true" )
-vys=([-10.,0.,0.,-1.] [-9.5,0.,0.,-1.] [-9.,0.,0.,-1.] [-8.5,0.,0.,-1.] [-8.,0.,0.,-1.] [-7.5,0.,0.,-1.] [-7.,0.,0.,-1.] [-6.5,0.,0.,-1.] [-6.,0.,0.,-1.] [-5.,0.,0.,-1.] [-5.5,0.,0.,-1.] [-5.,0.,0.,-1.] [-4.5,0.,0.,-1.] [-4.,0.,0.,-1.] [-3.5,0.,0.,-1.] [-3.,0.,0.,-1.] [-2.5,0.,0.,-1.] [-2.,0.,0.,-1.] [-1.5,0.,0.,-1.] [-1.,0.,0.,-1.] [-0.5,0.,0.,-1.] [0.,0.,0.,-1.])
-radi=( [0.25,10.,5.,12.] [0.5,10.,5.,12.] [1.,10.,5.,12.] [1.5,10.,5.,12.] [2.,10.,5.,12.] [2.5,10.,5.,12.] [3.,10.,5.,12.] [3.5,10.,5.,12.] [4.,10.,5.,12.] [4.5,10.,5.,12.] [5.,10.,5.,12.] [5.5,10.,5.,12.] [6.5,10.,5.,12.] [7.5,10.,5.,12.] [8.,10.,5.,12.] [8.5,10.,5.,12.] [9.,10.,5.,12.] [9.5,10.,5.,12.] [10.,10.,5.,12.] )
+planners=( "true" "false" )
+#vys=([-10.,0.,0.,-1.] [-9.5,0.,0.,-1.] [-9.,0.,0.,-1.] [-8.5,0.,0.,-1.] [-8.,0.,0.,-1.] [-7.5,0.,0.,-1.] [-7.,0.,0.,-1.] [-6.5,0.,0.,-1.] [-6.,0.,0.,-1.] [-5.,0.,0.,-1.] [-5.5,0.,0.,-1.] [-5.,0.,0.,-1.] [-4.5,0.,0.,-1.] [-4.,0.,0.,-1.] [-3.5,0.,0.,-1.] [-3.,0.,0.,-1.] [-2.5,0.,0.,-1.] [-2.,0.,0.,-1.] [-1.5,0.,0.,-1.] [-1.,0.,0.,-1.] [-0.5,0.,0.,-1.] [0.,0.,0.,-1.])
+#radi=( [0.25,10.,5.,12.] [0.5,10.,5.,12.] [1.,10.,5.,12.] [1.5,10.,5.,12.] [2.,10.,5.,12.] [2.5,10.,5.,12.] [3.,10.,5.,12.] [3.5,10.,5.,12.] [4.,10.,5.,12.] [4.5,10.,5.,12.] [5.,10.,5.,12.] [5.5,10.,5.,12.] [6.5,10.,5.,12.] [7.5,10.,5.,12.] [8.,10.,5.,12.] [8.5,10.,5.,12.] [9.,10.,5.,12.] [9.5,10.,5.,12.] [10.,10.,5.,12.] )
+vys=([-21.,0.,0.,-1.] [-20.,0.,0.,-1.] [-19.,0.,0.,-1.] [-18,0.,0.,-1.] [-17.,0.,0.,-1.] [-16.,0.,0.,-1.] [-15.,0.,0.,-1.] [-14.,0.,0.,-1.] [-13.,0.,0.,-1.] [-12.,0.,0.,-1.] [-11,0.,0.,-1.] [-10.,0.,0.,-1.] [-9,0.,0.,-1.] [-8.,0.,0.,-1.] [-7,0.,0.,-1.] [-6.,0.,0.,-1.] [-5,0.,0.,-1.] [-4.,0.,0.,-1.] [-3,0.,0.,-1.] [-2.,0.,0.,-1.] [-1,0.,0.,-1.] [0.,0.,0.,-1.])
+radi=( [10.,10.,5.,12.] [9.,10.,5.,12.] [8.,10.,5.,12.] [7.,10.,5.,12.] [6.,10.,5.,12.] [5.,10.,5.,12.] )
 
 declare -A parameters
 
 idx=1;
-for plan in ${planners[@]}; do
+for radius in ${radi[@]}; do
    for vy in ${vys[@]}; do
-    for radius in ${radi[@]}; do
+     for plan in ${planners[@]}; do
       echo "______________________________________"
-      echo "Running for the $idx nd time out of 8."
+      echo "Running for the $idx nd time."
       echo "--------------------------------------"
       parameters["/planner/nloptcontrol_planner/misc/movingObstacles"]=${plan}
       parameters["/case/actual/obstacle/vy"]=${vy}
       parameters["/case/actual/obstacle/radius"]=${radius}
       start_roscore
       sleep 2;
+      rosparam set "/case/id" test$idx
       loop_entry_point
+      echo "Entering: postProcess"
+      mkdir /home/mavs/MAVs/results/sweepA/test"$idx"
+      cd /home/mavs/MAVs/results;
+      python bag_to_csv.py tmp.bag "sweepA/test$idx"
+      julia plottingData.jl "sweepA/test$idx" "tmp"
+      rm /home/mavs/MAVs/results/sweepA/test$idx/control.csv
+      rm /home/mavs/MAVs/results/sweepA/test$idx/state.csv
+      rm /home/mavs/MAVs/results/sweepA/test$idx/nloptcontrol_plannercontrol.csv
+      echo "Exiting: postProcess"
       idx=$(( $idx+1 ))
     done
   done
 done
-
-
-# create additional parameters that can be easily saved; since they are currently vectors
-# dummy variables that holds size and speed
-#      vyT=${vy};
-#      echo "${vyT[${1}]}"
-  #    rosparam set VYsingle ${vyT[1]}
-#      rosparam set Rsingle ${radius[1]}

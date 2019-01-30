@@ -13,8 +13,8 @@ planner:
       tp: NaN                # N/A prediction horizon (s)
       tex: 0.001             # execution horizon (s)
       sm: 2.                 # (m) distance to see if obstacle was hit (for crash checking)
-      sm1: 3.5               # (m) distance 1 to make sure we don't hit obstacle (for optimization)
-      sm2: 6.0               # (m) distance 2 to make sure we don't hit obstacle (for optimization)
+      sm1: 2.5               # (m) distance 1 to make sure we don't hit obstacle (for optimization)
+      sm2: 4.0               # (m) distance 2 to make sure we don't hit obstacle (for optimization)
       Lr: 90.                # LiDAR range (m)
       L_rd: 10.              # relaxation distance to LiDAR range
       Nck: NaN               # number of points per interval
