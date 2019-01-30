@@ -366,7 +366,8 @@ int main(int argc, char* argv[]) {
 	node.getParam("system/chrono/terrain/restCoeff", restCoeff);
 
 	auto patch = terrain.AddPatch	(ChCoordsys<>(ChVector<>(terrainPosition[0], terrainPosition[1], terrainPosition[2]), QUNIT),
-												  			 ChVector<>(terrainLength, terrainWidth, 10)); //, true, 1, true -> does not work!
+																 ChVector<>(terrainLength, terrainWidth, 10),
+																 true, 20, true);
 	patch->SetContactFrictionCoefficient(frictCoeff);
 	patch->SetContactRestitutionCoefficient(restCoeff);
 	patch->SetContactMaterialProperties(2e7f, 0.3f);
