@@ -99,7 +99,7 @@ loop_entry_point () {
   rosbag record -O tmp.bag /state /nloptcontrol_planner/opt __name:=my_bag &
   run_launchfile
   wait_for_program
-  wait 5
+  sleep 5
   rosnode kill /my_bag
   kill_roslaunch_pid
   kill_roscore_pid
@@ -109,20 +109,42 @@ loop_entry_point () {
 
 planners=( "true" )
 knowns=( "true" "false")
-#vys=([-10.,0.,0.,-1.] [-9.5,0.,0.,-1.] [-9.,0.,0.,-1.] [-8.5,0.,0.,-1.] [-8.,0.,0.,-1.] [-7.5,0.,0.,-1.] [-7.,0.,0.,-1.] [-6.5,0.,0.,-1.] [-6.,0.,0.,-1.] [-5.,0.,0.,-1.] [-5.5,0.,0.,-1.] [-5.,0.,0.,-1.] [-4.5,0.,0.,-1.] [-4.,0.,0.,-1.] [-3.5,0.,0.,-1.] [-3.,0.,0.,-1.] [-2.5,0.,0.,-1.] [-2.,0.,0.,-1.] [-1.5,0.,0.,-1.] [-1.,0.,0.,-1.] [-0.5,0.,0.,-1.] [0.,0.,0.,-1.])
-#radi=( [0.25,10.,5.,12.] [0.5,10.,5.,12.] [1.,10.,5.,12.] [1.5,10.,5.,12.] [2.,10.,5.,12.] [2.5,10.,5.,12.] [3.,10.,5.,12.] [3.5,10.,5.,12.] [4.,10.,5.,12.] [4.5,10.,5.,12.] [5.,10.,5.,12.] [5.5,10.,5.,12.] [6.5,10.,5.,12.] [7.5,10.,5.,12.] [8.,10.,5.,12.] [8.5,10.,5.,12.] [9.,10.,5.,12.] [9.5,10.,5.,12.] [10.,10.,5.,12.] )
-vys=( [-20.,0.,0.,-1.] [-19.,0.,0.,-1.] [-18,0.,0.,-1.] [-17.,0.,0.,-1.] [-16.,0.,0.,-1.] [-15.,0.,0.,-1.] [-14.,0.,0.,-1.] [-13.,0.,0.,-1.] [-12.,0.,0.,-1.] [-11,0.,0.,-1.] [-10.,0.,0.,-1.] [-9,0.,0.,-1.] [-8.,0.,0.,-1.] [-7,0.,0.,-1.] [-6.,0.,0.,-1.] [-5,0.,0.,-1.] [-4.,0.,0.,-1.] [-3,0.,0.,-1.] [-2.,0.,0.,-1.] [-1,0.,0.,-1.] [0.,0.,0.,-1.])
-radi=( [9.,10.,5.,12.] [8.,10.,5.,12.] [7.,10.,5.,12.] [6.,10.,5.,12.] [5.,10.,5.,12.]  [4.,10.,5.,12.]  [3.,10.,5.,12.]  [2.,10.,5.,12.]  [1.,10.,5.,12.] [10.,10.,5.,12.])
+nt=2; # number of combinations of planners and knowns
+
+# generate data
+rl=1; # cannot be a float
+ru=10; # cannot be a float
+nr=10;
+declare -a radi
+for ((i=0;i<nr;i+=1));
+do
+  radi[${i}]=[$((rl+RANDOM%(ru-rl))).$((RANDOM%99)),10.,5.,12.]
+done
+echo "the radius vectors are: "${radi[*]}
+
+vl=1; # cannot be a float
+vu=10; # cannot be a float
+nv=10;
+declare -a vys
+for ((i=0;i<nv;i+=1));
+do
+  vys[${i}]=[$((vl+RANDOM%(vu-vl))).$((RANDOM%99)),0.,0.,-1.]
+done
+echo "the velocity vectors are: "${vys[*]}
 
 declare -A parameters
 idx=1;
+INITIAL_TIME=$SECONDS
+
 for radius in ${radi[@]}; do
    for vy in ${vys[@]}; do
      for plan in ${planners[@]}; do
        for known in ${knowns[@]}; do
-        echo "______________________________________"
-        echo "Running for the $idx th time."
-        echo "--------------------------------------"
+        num=$(( nr*nv*nt ))
+        echo "_____________________________________________________________"
+        echo "Running for the $idx th time out of  $num."
+        echo "--------------------------------------------------------------"
+
         rm /home/mavs/MAVs/results/tmp.bag
         rosclean purge -y
         parameters["/system/nloptcontrol_planner/flags/known_environment"]=${known}
@@ -142,6 +164,12 @@ for radius in ${radi[@]}; do
         julia plottingData.jl "/home/mavs/MAVs/results/$FOLDERNAME/test"$idx"" "tmp"
         rm /home/mavs/MAVs/results/$FOLDERNAME/test"$idx"/state.csv
         echo "Exiting: postProcess"
+
+        REMAINING_TIME=$(( (($SECONDS-INITIAL_TIME) / idx / 3600) *(nr-idx) ))
+        echo "--------------------------------------------------------------"
+        echo "Estimated remaining time is $(( ((REMAINING_TIME)) )) hours."
+        echo "_____________________________________________________________"
+
         idx=$(( $idx+1 ))
       done
     done
