@@ -5,13 +5,19 @@
   "default_description": "Shutdown caused by external interrupt.",
   "model": [
     {
+      "key": "known",
+      "val": "/system/nloptcontrol_planner/flags/known_environment",
+      "ros_msg_type": "parameter",
+      "save": true
+    },
+    {
       "key": "move",
       "val": "/planner/nloptcontrol_planner/misc/movingObstacles",
       "ros_msg_type": "parameter",
       "save": true
     },
     {
-      "key": "Case Id",
+      "key": "CaseID",
       "val": "/case/id",
       "ros_msg_type": "parameter",
       "save": true
@@ -29,7 +35,7 @@
       "save": true
     },
     {
-      "key": "Vehicle Collided",
+      "key": "vehicleCollided",
       "val": "/vehicle_collided",
       "ros_msg_type": "parameter",
       "save": true,
@@ -45,7 +51,7 @@
       }
     },
     {
-      "key": "Goal attained",
+      "key": "goalAttained",
       "val": "/system/flags/goal_attained",
       "ros_msg_type": "parameter",
       "save": true,
@@ -61,7 +67,7 @@
       }
       },
       {
-        "key": "Out of time",
+        "key": "outOfTime",
         "val": "/system/flags/timelimit",
         "ros_msg_type": "parameter",
         "save": true,
@@ -77,7 +83,7 @@
         }
         },
         {
-          "key": "Fell off world",
+          "key": "fellOffWorld",
           "val": "/system/flags/fall",
           "ros_msg_type": "parameter",
           "save": true,
@@ -93,7 +99,7 @@
           }
           },
           {
-          "key": "Not optimal",
+          "key": "notOptimal",
           "val": "/system/flags/not_optimal",
           "ros_msg_type": "parameter",
           "save": true,
@@ -109,7 +115,7 @@
           }
          },
         {
-          "key": "Rollover",
+          "key": "rollover",
           "val": "/system/flags/rollover",
           "ros_msg_type": "parameter",
           "save": true,

@@ -1,0 +1,72 @@
+system:
+ planner: nloptcontrol_planner
+ plant: chrono
+
+ params:
+  step_size: 0.003
+  goal_tol: 0.1
+  tire_step_size: 0.00025
+  timelimit: 50
+
+ flags:
+  not_optimal: false
+  fall: false
+  goal_attained: false
+  rollover: false
+  timelimit: false
+  initialized: false
+  paused: true
+  done: false
+
+ result_store:
+   flags:
+     running: true
+     initialized: false
+     shutdown: false
+
+ shutdown:
+  flags:
+   running: true
+   initialized: false
+   shutdown: false
+  params:
+    shutdown_initiation_flags: ["result_store/flags/shutdown"]
+    shutdown_completion_flags: []
+
+ nloptcontrol_planner:
+  namespace: nloptcontrol_planner
+  flags:
+   running: true
+   initialized: false
+
+ chrono:
+  namespace: chrono
+  flags:
+   initialized: false
+   running: true
+   gui: false
+   debug: false
+  terrain:
+   position: [0,190,-5]
+   length: 100. # size in Chrono X direction
+   width: 400.  # size in Chrono Y direction
+   frictCoeff: 0.9
+   restCoeff: 0.01
+
+ vehicle_description:
+  flags:
+   running: true
+   lidar_initialized: false
+   obstacles_initialized: false
+   obstacles_spawned: false
+   postion_update_external: true
+
+ obstacle_detector:
+  flags:
+   running: true
+   initialized: false
+
+ sim_time:
+   flags:
+    initialized: false
+    running: true
