@@ -26,7 +26,7 @@ system:
 
  shutdown:
   flags:
-   running: true
+   running: false
    initialized: false
    shutdown: false
   params:

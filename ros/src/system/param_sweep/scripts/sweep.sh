@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # $0 is the script name, $1 is the folder name
+# EX: ./sweep.sh "sweepB"
 
 FOLDERNAME="$1"
 rm -rf /home/mavs/MAVs/results/$FOLDERNAME/*
@@ -65,7 +66,7 @@ start_roscore () {
 run_launchfile () {
   echo "Entering: run_launchfile"
   update_dynamic_ros_parameters
-  roslaunch system $FOLDERNAME.launch &
+  roslaunch system sweepA.launch &
   roslaunch_PID=$!
   sleep 4
   echo "Exiting: run_launchfile"
@@ -79,39 +80,41 @@ until (($(( SECONDS - START_TIME )) > "$DURATION")) || [[ $shutdown -eq 1 ]]; do
   sleep 1;
   if [[ `rosparam get "system/flags/done"` = "true" ]]; then
     echo "system/flags/done = true"
-    sleep 20;  # assuming that this is enough time, but there is not check to make sure that everything has shutdown.
     shutdown=1;
-    sleep 20;
+    sleep 10
   fi
   if [[ `rosparam get "/vehicle_collided"` = "true" ]]; then
     echo "/vehicle_collided = true"
-    sleep 20;  # assuming that this is enough time, but there is not check to make sure that everything has shutdown.
     shutdown=1;
-    sleep 20;
+    sleep 10
   fi
 done
-sleep 10;
+sleep 5
 echo "Exiting: wait_for_program"
 }
 
 loop_entry_point () {
   echo "Entering: loop_entry_point"
+  cd /home/mavs/MAVs/results
+  rosbag record -O tmp.bag /state /nloptcontrol_planner/opt __name:=my_bag &
   run_launchfile
   wait_for_program
+  wait 5
+  rosnode kill /my_bag
   kill_roslaunch_pid
   kill_roscore_pid
+  sleep 20
   echo "Exiting: loop_entry_point"
 }
 
-planners=( "true" "false" )
+planners=( "true" )
 knowns=( "true" "false")
 #vys=([-10.,0.,0.,-1.] [-9.5,0.,0.,-1.] [-9.,0.,0.,-1.] [-8.5,0.,0.,-1.] [-8.,0.,0.,-1.] [-7.5,0.,0.,-1.] [-7.,0.,0.,-1.] [-6.5,0.,0.,-1.] [-6.,0.,0.,-1.] [-5.,0.,0.,-1.] [-5.5,0.,0.,-1.] [-5.,0.,0.,-1.] [-4.5,0.,0.,-1.] [-4.,0.,0.,-1.] [-3.5,0.,0.,-1.] [-3.,0.,0.,-1.] [-2.5,0.,0.,-1.] [-2.,0.,0.,-1.] [-1.5,0.,0.,-1.] [-1.,0.,0.,-1.] [-0.5,0.,0.,-1.] [0.,0.,0.,-1.])
 #radi=( [0.25,10.,5.,12.] [0.5,10.,5.,12.] [1.,10.,5.,12.] [1.5,10.,5.,12.] [2.,10.,5.,12.] [2.5,10.,5.,12.] [3.,10.,5.,12.] [3.5,10.,5.,12.] [4.,10.,5.,12.] [4.5,10.,5.,12.] [5.,10.,5.,12.] [5.5,10.,5.,12.] [6.5,10.,5.,12.] [7.5,10.,5.,12.] [8.,10.,5.,12.] [8.5,10.,5.,12.] [9.,10.,5.,12.] [9.5,10.,5.,12.] [10.,10.,5.,12.] )
 vys=( [-20.,0.,0.,-1.] [-19.,0.,0.,-1.] [-18,0.,0.,-1.] [-17.,0.,0.,-1.] [-16.,0.,0.,-1.] [-15.,0.,0.,-1.] [-14.,0.,0.,-1.] [-13.,0.,0.,-1.] [-12.,0.,0.,-1.] [-11,0.,0.,-1.] [-10.,0.,0.,-1.] [-9,0.,0.,-1.] [-8.,0.,0.,-1.] [-7,0.,0.,-1.] [-6.,0.,0.,-1.] [-5,0.,0.,-1.] [-4.,0.,0.,-1.] [-3,0.,0.,-1.] [-2.,0.,0.,-1.] [-1,0.,0.,-1.] [0.,0.,0.,-1.])
-radi=( [10.,10.,5.,12.] [9.,10.,5.,12.] [8.,10.,5.,12.] [7.,10.,5.,12.] [6.,10.,5.,12.] [5.,10.,5.,12.]  [4.,10.,5.,12.]  [3.,10.,5.,12.]  [2.,10.,5.,12.]  [1.,10.,5.,12.])
+radi=( [9.,10.,5.,12.] [8.,10.,5.,12.] [7.,10.,5.,12.] [6.,10.,5.,12.] [5.,10.,5.,12.]  [4.,10.,5.,12.]  [3.,10.,5.,12.]  [2.,10.,5.,12.]  [1.,10.,5.,12.] [10.,10.,5.,12.])
 
 declare -A parameters
-
 idx=1;
 for radius in ${radi[@]}; do
    for vy in ${vys[@]}; do
@@ -120,33 +123,27 @@ for radius in ${radi[@]}; do
         echo "______________________________________"
         echo "Running for the $idx th time."
         echo "--------------------------------------"
+        rm /home/mavs/MAVs/results/tmp.bag
+        rosclean purge -y
         parameters["/system/nloptcontrol_planner/flags/known_environment"]=${known}
         parameters["/planner/nloptcontrol_planner/misc/movingObstacles"]=${plan}
         parameters["/case/actual/obstacle/vy"]=${vy}
         parameters["/case/actual/obstacle/radius"]=${radius}
         start_roscore
         sleep 2;
-        rosparam set "/case/id" test"$idx"
+        rosparam set "/case/id" "$FOLDERNAME"test"$idx"
         loop_entry_point
         echo "Entering: postProcess"
         mkdir /home/mavs/MAVs/results/$FOLDERNAME/test"$idx"
         cd /home/mavs/MAVs/results
-        python bag_to_csv.py tmp.bag "$FOLDERNAME/test"$idx""
-        cd /home/mavs/MAVs/results/$FOLDERNAME/test"$idx"
-        ls
-        cd /home/mavs/MAVs/results
-        julia plottingData.jl "$FOLDERNAME/test"$idx"" "tmp"
-        cd /home/mavs/MAVs/results/$FOLDERNAME/test"$idx"
-        ls
-        cd /home/mavs/MAVs/results
-        rm /home/mavs/MAVs/results/$FOLDERNAME/test"$idx"/control.csv
+        #rosbag reindex -f tmp.bag
+        rosbag info tmp.bag
+        python bag_to_csv.py /home/mavs/MAVs/results/tmp.bag "/home/mavs/MAVs/results/$FOLDERNAME/test"$idx""
+        julia plottingData.jl "/home/mavs/MAVs/results/$FOLDERNAME/test"$idx"" "tmp"
         rm /home/mavs/MAVs/results/$FOLDERNAME/test"$idx"/state.csv
-        rm /home/mavs/MAVs/results/$FOLDERNAME/test"$idx"/nloptcontrol_plannercontrol.csv
         echo "Exiting: postProcess"
         idx=$(( $idx+1 ))
       done
     done
   done
 done
-
-# NOTE for some reason, when the vehicle crashes, only the state is saved in the bag file
