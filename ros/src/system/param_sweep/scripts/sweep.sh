@@ -8,6 +8,13 @@ rm -rf /home/mavs/MAVs/results/$FOLDERNAME/*
 rmdir /home/mavs/MAVs/results/$FOLDERNAME
 mkdir /home/mavs/MAVs/results/$FOLDERNAME
 
+convertsecs() {
+ ((h=${1}/3600))
+ ((m=(${1}%3600)/60))
+ ((s=${1}%60))
+ printf "%02d:%02d:%02d\n" $h $m $s
+}
+
 wait_for_roscore_to_initialize () {
   echo "Entering: wait_for_roscore_to_initialize"
   until rostopic list ; do sleep 1; done
@@ -186,7 +193,7 @@ for radius in ${radi[@]}; do
         echo "--------------------------------------------------------------"
         echo "Estimated time (hours, minutes, seconds) remaining is: "
         echo $(convertsecs $TIME1)
-        
+
         idx=$(( $idx+1 ))
       done
     done
