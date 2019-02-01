@@ -48,7 +48,7 @@ system:
    debug: false
   terrain:
    position: [0,190,-5]
-   length: 100. # size in Chrono X direction
+   length: 250. # size in Chrono X direction
    width: 400.  # size in Chrono Y direction
    frictCoeff: 0.9
    restCoeff: 0.01
