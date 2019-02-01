@@ -20,23 +20,24 @@ using mavs_msgs.msg
     # 4) increased solve-times *
 
 """
-S = [1., 2., 3., 4.]
-NS = 0.5
-ts = (S..., NS)
 --------------------------------------------------------------------------------------\n
 Author: Huckleberry Febbo, Graduate Student, University of Michigan
 Date Create: 1/31/2019, Last Modified: 1/31/2019 \n
 --------------------------------------------------------------------------------------\n
 """
 function averageSolveTime(msg::Optimization)
-    if !RobotOS.has_param("/terms/vector/solveTime")
-        ts = msg.tSolve
-        RobotOS.set_param("/terms/vector/solveTime", ts)
+    currentTs = msg.tSolve
+    if !RobotOS.has_param("/terms/average/solveTime")
+        RobotOS.set_param("/terms/average/solveTime", currentTs)
+        RobotOS.set_param("/terms/number/solveTime", 1)
     else
-        ts = ( RobotOS.get_param("/terms/vector/solveTime")..., msg.tSolve )
-        RobotOS.set_param("/terms/vector/solveTime", ts)
+        prevAve = RobotOS.get_param("/terms/average/solveTime")
+        prevNum = RobotOS.get_param("/terms/number/solveTime")
+        ave = (prevAve*prevNum + msg.tSolve)/(prevNum + 1)
+        RobotOS.set_param("/terms/average/solveTime", ave)
+        RobotOS.set_param("/terms/number/solveTime", prevNum + 1)
     end
-    RobotOS.set_param("/terms/average/solveTime", sum(ts)/length(ts) )
+
     return
 end
 
@@ -48,58 +49,41 @@ Date Create: 1/31/2019, Last Modified: 1/31/2019 \n
 """
 function controlEffort(msg::control)
     # time
-    if !RobotOS.has_param("/terms/vector/time")
-        t = msg.t
-        RobotOS.set_param("/terms/vector/time", t)
+    if !RobotOS.has_param("/terms/control/t")
+        dt = 0;
+        RobotOS.set_param("/terms/control/t", msg.t)
     else
-        t = ( RobotOS.get_param("/terms/vector/time")..., msg.t )
-        RobotOS.set_param("/terms/vector/steeringEffort", t)
+        dt = msg.t - RobotOS.get_param("/terms/control/t")
     end
+    RobotOS.set_param("/terms/control/t", msg.t)
 
-    # steering
-    if !RobotOS.has_param("/terms/vector/steeringEffort")
-        str = msg.str_in^2
-        RobotOS.set_param("/terms/vector/steeringEffort", str)
+    # steering effort
+    if !RobotOS.has_param("/terms/steeringEffort")
+        sePrev = 0
     else
-        str = ( RobotOS.get_param("/terms/vector/steeringEffort")..., msg.str_in^2 )
-        RobotOS.set_param("/terms/vector/steeringEffort", str)
+        sePrev = RobotOS.get_param("/terms/steeringEffort")
+        if isnan(sePrev); sePrev = 0; end
     end
-    # integrate
-    se = 0
-    for i in 1:length(t)-1
-        se = se + str[i]*(t[i+1] - t[i])
-    end
-    RobotOS.set_param("/terms/steeringEffort", se)
+    RobotOS.get_param("/terms/control/t")
+    RobotOS.set_param("/terms/steeringEffort", sePrev + msg.str_in^2*dt)
 
     # throttle effort
-    if !RobotOS.has_param("/terms/vector/throttleEffort")
-        thrt = msg.thrt_in^2
-        RobotOS.set_param("/terms/vector/throttleEffort", thrt)
+    if !RobotOS.has_param("/terms/throttleEffort")
+        tePrev = 0
     else
-        thrt = ( RobotOS.get_param("/terms/vector/throttleEffort")..., msg.thrt_in^2 )
-        RobotOS.set_param("/terms/vector/throttleEffort", thrt)
+        tePrev = RobotOS.get_param("/terms/throttleEffort")
+        if isnan(tePrev); tePrev = 0; end
     end
-    # integrate
-    te = 0
-    for i in 1:length(t)-1
-        te = te + thrt[i]*(t[i+1] - t[i])
-    end
-    RobotOS.set_param("/terms/throttleEffort", te)
+    RobotOS.set_param("/terms/throttleEffort", tePrev + msg.thrt_in^2*dt)
 
     # braking effort
-    if !RobotOS.has_param("/terms/vector/brakingEffort")
-        brk = msg.brk_in^2
-        RobotOS.set_param("/terms/vector/brakingEffort", brk)
+    if !RobotOS.has_param("/terms/brakingEffort")
+        brkPrev = 0
     else
-        brk = ( RobotOS.get_param("/terms/vector/brakingEffort")..., msg.brk_in^2 )
-        RobotOS.set_param("/terms/vector/brakingEffort", brk)
+        brkPrev = RobotOS.get_param("/terms/brakingEffort")
+        if isnan(brkPrev); brkPrev = 0; end
     end
-    # integrate
-    be = 0
-    for i in 1:length(t)-1
-        be = be + brk[i]*(t[i+1] - t[i])
-    end
-    RobotOS.set_param("/terms/brakingEffort", be)
+    RobotOS.set_param("/terms/brakingEffort", brkPrev + msg.brk_in^2*dt)
 
     return nothing
 end
@@ -111,16 +95,12 @@ Date Create: 2/1/2019, Last Modified: 2/1/2019 \n
 --------------------------------------------------------------------------------------\n
 """
 function statePts(msg::state)
-    if !RobotOS.has_param("/terms/vector/xv")
-        xv = (0., msg.x)
-        yv = (0., msg.y)
-        RobotOS.set_param("/terms/vector/xv", msg.x)
-        RobotOS.set_param("/terms/vector/yv", msg.y)
+    if !RobotOS.has_param("/terms/xv")
+        RobotOS.set_param("/terms/xv",(0., msg.x))
+        RobotOS.set_param("/terms/yv", (0., msg.y))
     else
-        xv = ( RobotOS.get_param("/terms/vector/xv"), msg.x )
-        yv = ( RobotOS.get_param("/terms/vector/yv"), msg.y )
-        RobotOS.set_param("/terms/vector/xv", msg.x )
-        RobotOS.set_param("/terms/vector/yv", msg.y )
+        RobotOS.set_param("/terms/xv", ( RobotOS.get_param("/terms/xv")[end], msg.x ))
+        RobotOS.set_param("/terms/yv", ( RobotOS.get_param("/terms/yv")[end], msg.y ))
     end
     return nothing
 end
@@ -133,19 +113,37 @@ py = [1., 2.5, 3.2, 5.]
 xv = [2., 2.1]
 yv = [1.5, 1.7]
 
+px = [0., 0.]
+py = [0., 1.]
+xv = [0., 0.]
+yv = [0., 0.002]
+
+px = [0., 1.]
+py = [0., 1.]
+xv = [0., 0.]
+yv = [0., 0.002]
+
 px = [0., 1.]
 py = [1., 1.]
 xv = [0.001, .5]
 yv = [0.001, 0.002]
 
+px = [-0.0359484, -0.0350867, -0.0296149, -0.0215991, -0.0116513, 0.000304115, 0.0145289, 0.0313392, 0.0510726, 0.0740774, 0.100708, 0.131319, 0.166263, 0.205882, 0.250503, 0.300433, 0.355952, 0.417305, 0.484701, 0.558301, 0.638217, 0.724506, 0.817161, 0.916109, 1.02121, 1.13223, 1.2489, 1.37083, 1.4976, 1.62876, 1.76389]
+py =  [19.6402, 22.069, 24.5229, 26.9977, 29.4915, 32.004, 34.5353, 37.0858, 39.656, 42.2463, 44.857, 47.4881, 50.1397, 52.8117, 55.5036, 58.215, 60.9452, 63.6933, 66.4581, 69.2383, 72.0321, 74.8375, 77.6518, 80.4719, 83.2939, 86.1132, 88.9246, 91.7222, 94.4998, 97.2513, 99.9719]
+xv = [-0.0365072, -0.0365088]
+yv = [21.2213, 21.2554]
+
 D = (px.- xv[2]).^2 + (py.-yv[2]).^2
 idxA = indmin(D)
-idxB = indmin(D[1:end .!= idxA])
-m1 = (px[idxB] - px[idxA])/(py[idxB] - py[idxA] + eps())
+D[idxA] = NaN
+idxB = indmin(D)
+# one of the closest points can be ahead and the other may be behind etc.
+m1 = (py[idxB] - py[idxA])/(px[idxB] - px[idxA] + eps())
 m2 = (yv[2] - yv[1])/(xv[2] - xv[1] + eps())
 
 # orientation error
-ae = atan( (m2 - m1)/(1 + m2*m1 + eps()) )
+ae = atan( (m1 - m2)/(1 + m1*m2 + eps()) )
+aeDegrees = abs(ae*180/pi)
 
 # calculate the intersection between the two lines
 x = (yv[1] - m2*xv[1] - py[idxA] + m1*px[idxA])/(m1 - m2 + eps())
@@ -155,7 +153,7 @@ y = m1*x + py[1] - m1*px[1]
 R = ( (x - xv[2])^2 + (y - yv[2])^2 )^0.5
 
 # tracking error
-te = R*sin(ae)
+te = abs(R*sin(ae))
 
 # could do a parameter sweep on the look-ahead distance in the planner and the scaling factor on speed
 --------------------------------------------------------------------------------------\n
@@ -166,58 +164,67 @@ Date Create: 1/31/2019, Last Modified: 1/31/2019 \n
 function loop()
     loop_rate = Rate(5.0)
 
-    while(!RobotOS.has_param("/terms/vector/xv") && !RobotOS.has_param("/trajectory/y"))
+    while(!RobotOS.has_param("/terms/xv"))
+        rossleep(Rate(0.5))
+    end
+    while(!RobotOS.has_param("/trajectory/x"))
+        rossleep(Rate(0.5))
     end
 
     RobotOS.set_param("system/flags/terms_initialized",true)
     println("calcualte terms has been initialized")
+
     while(RobotOS.get_param("system/flags/paused"))
     end
 
     # calcuates trackingError
     while !is_shutdown()
-        if false # TODO finish
-            xv = RobotOS.get_param("/terms/vector/xv")
-            yv = RobotOS.get_param("/terms/vector/yv")
-            px = RobotOS.get_param("/trajectory/x")
-            py = RobotOS.get_param("/trajectory/y")
+        xv = RobotOS.get_param("/terms/xv")
+        yv = RobotOS.get_param("/terms/yv")
+        px = RobotOS.get_param("/trajectory/x")
+        py = RobotOS.get_param("/trajectory/y")
 
-            # calculations
-            D = (px.- xv[2]).^2 + (py.-yv[2]).^2
-            idxA = indmin(D)
-            idxB = indmin(D[1:end .!= idxA])
-            m1 = (px[idxB] - px[idxA])/(py[idxB] - py[idxA] + eps())
-            m2 = (yv[2] - yv[1])/(xv[2] - xv[1] + eps())
+        # calculations
+        # one of the closest points can be ahead and the other may be behind etc.
+        D = (px.- xv[2]).^2 + (py.-yv[2]).^2
+        idxA = indmin(D)
+        D[idxA] = NaN
+        idxB = indmin(D)
+        m1 = (py[idxB] - py[idxA])/(px[idxB] - px[idxA] + eps())
+        m2 = (yv[2] - yv[1])/(xv[2] - xv[1] + eps())
 
-            # orientation error
-            oe = atan( (m2 - m1)/(1 + m2*m1 + eps()) )
-            if !RobotOS.has_param("/terms/vector/oe")
-                oe = oe^2
-                RobotOS.set_param("/terms/vector/oe", oe)
-            else
-                oe = ( RobotOS.get_param("/terms/vector/oe")..., oe^2 )
-                RobotOS.set_param("/terms/vector/oe", oe)
-            end
-            RobotOS.set_param("/terms/oeAve", mean(oe))
-
-            # calculate the intersection between the two lines
-            x = (yv[1] - m2*xv[1] - py[idxA] + m1*px[idxA])/(m1 - m2 + eps())
-            y = m1*x + py[1] - m1*px[1]
-
-            # need distance R between intersection point of two lines and the vehicle's current state
-            R = ( (x - xv[2])^2 + (y - yv[2])^2 )^0.5
-
-            # tracking error
-            te = R*sin(oe)
-            if !RobotOS.has_param("/terms/vector/te")
-                te = te^2
-                RobotOS.set_param("/terms/vector/te", te)
-            else
-                te = ( RobotOS.get_param("/terms/vector/te")..., te^2 )
-                RobotOS.set_param("/terms/vector/te", te)
-            end
-            RobotOS.set_param("/terms/teAve", mean(te))
+        # orientation error
+        currentOe = atan( (m1 - m2)/(1 + m1*m2 + eps()) )
+        if !RobotOS.has_param("/terms/average/orientationError")
+            RobotOS.set_param("/terms/average/orientationError", abs(currentOe*180/pi))
+            RobotOS.set_param("/terms/number/orientationError", 1)
+        else
+            prevAve = RobotOS.get_param("/terms/average/orientationError")
+            prevNum = RobotOS.get_param("/terms/number/orientationError")
+            ave = (prevAve*prevNum + abs(currentOe*180/pi))/(prevNum + 1)
+            RobotOS.set_param("/terms/average/orientationError", ave)
+            RobotOS.set_param("/terms/number/orientationError", prevNum + 1)
         end
+
+        # calculate the intersection between the two lines
+        x = (yv[1] - m2*xv[1] - py[idxA] + m1*px[idxA])/(m1 - m2 + eps())
+        y = m1*x + py[1] - m1*px[1]
+
+        # need distance R between intersection point of two lines and the vehicle's current state
+        R = ( (x - xv[2])^2 + (y - yv[2])^2 )^0.5
+
+        # tracking error
+        if !RobotOS.has_param("/terms/average/trackingError")
+            RobotOS.set_param("/terms/average/trackingError",  abs(R*sin(currentOe)))
+            RobotOS.set_param("/terms/number/trackingError", 1)
+        else
+            prevAve = RobotOS.get_param("/terms/average/trackingError")
+            prevNum = RobotOS.get_param("/terms/number/trackingError")
+            ave = (prevAve*prevNum + abs(R*sin(currentOe)))/(prevNum + 1)
+            RobotOS.set_param("/terms/average/trackingError", ave)
+            RobotOS.set_param("/terms/number/trackingError", prevNum + 1)
+        end
+
         rossleep(loop_rate)  # sleep for leftover time
     end
 end
@@ -232,8 +239,8 @@ function main()
     init_node("calculateTerms")
     plannerNamespace = RobotOS.get_param("system/nloptcontrol_planner/namespace")
     subA = Subscriber{Optimization}(string(plannerNamespace, "/opt"), averageSolveTime, queue_size = 10)
-#    subB = Subscriber{control}("/control", controlEffort, queue_size = 10)
-#    subC = Subscriber{state}("/state", statePts, queue_size = 10)
+    subB = Subscriber{control}("/control", controlEffort, queue_size = 10)
+    subC = Subscriber{state}("/state", statePts, queue_size = 10)
     loop()
 end
 

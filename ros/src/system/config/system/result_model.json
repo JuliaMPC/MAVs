@@ -47,6 +47,36 @@
       "save": true
     },
     {
+      "key": "steeringEffort",
+      "val": "/terms/steeringEffort",
+      "ros_msg_type": "parameter",
+      "save": true
+    },
+    {
+      "key": "throttleEffort",
+      "val": "/terms/throttleEffort",
+      "ros_msg_type": "parameter",
+      "save": true
+    },
+    {
+      "key": "brakingEffort",
+      "val": "/terms/brakingEffort",
+      "ros_msg_type": "parameter",
+      "save": true
+    },
+    {
+      "key": "trackingError",
+      "val": "/terms/average/trackingError",
+      "ros_msg_type": "parameter",
+      "save": true
+    },
+    {
+      "key": "orientationError",
+      "val": "/terms/average/orientationError",
+      "ros_msg_type": "parameter",
+      "save": true
+    },
+    {
       "key": "vehicleCollided",
       "val": "/vehicle_collided",
       "ros_msg_type": "parameter",
