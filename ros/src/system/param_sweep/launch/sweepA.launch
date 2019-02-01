@@ -70,7 +70,7 @@
   <!--calculate performace metrics-->
   <node name="calculateTerms" pkg="system" type="calculateTerms.jl" output="screen"/>
 
-  <node name="visualization" pkg="visualization" type="data_plotter.py" />
+  <!--node name="visualization" pkg="visualization" type="data_plotter.py" /-->
   <!--  ************** additional nodes ***************  -->
 
 </launch>
