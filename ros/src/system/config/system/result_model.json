@@ -35,6 +35,18 @@
       "save": true
     },
     {
+      "key": "tf",
+      "val": "/state/t",
+      "ros_msg_type": "parameter",
+      "save": true
+    },
+    {
+      "key": "aveSolveTime",
+      "val": "/terms/average/solveTime",
+      "ros_msg_type": "parameter",
+      "save": true
+    },
+    {
       "key": "vehicleCollided",
       "val": "/vehicle_collided",
       "ros_msg_type": "parameter",

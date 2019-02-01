@@ -9,6 +9,7 @@ system:
   timelimit: 50
 
  flags:
+  terms_initialized: false
   not_optimal: false
   fall: false
   goal_attained: false

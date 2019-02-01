@@ -94,6 +94,15 @@ function main()
     end
   end
 
+  if RobotOS.has_param("system/flags/terms_initialized")
+    if RobotOS.get_param("system/flags/terms_initialized")
+      while(!RobotOS.get_param("system/flags/terms_initialized"))
+        println("waiting on calculateTerms.jl ...")
+        sleep(2)
+      end
+    end
+  end
+  
   println("system has been initialized!")
   RobotOS.set_param("system/flags/paused",false)
   RobotOS.set_param("system/flags/initialized",true)

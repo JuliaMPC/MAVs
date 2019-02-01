@@ -67,6 +67,9 @@
     </rosparam>
   </node>
 
+  <!--calculate performace metrics-->
+  <node name="calculateTerms" pkg="system" type="calculateTerms.jl"/>
+
   <!-- node name="visualization" pkg="visualization" type="data_plotter.py" /-->
   <!--  ************** additional nodes ***************  -->
 

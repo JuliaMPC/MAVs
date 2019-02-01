@@ -87,7 +87,8 @@
 
   <node name="rviz" pkg="rviz" type="rviz" output="screen" args="-d $(find obstacle_detector)/resources/display.rviz"/>
 
-  <!-- node name="postProcess" type="postP.sh" args="$(arg ros_bag_name) $(arg folder_name) $(arg case_name)" pkg="system" output="screen"/-->
+  <!--calculate performace metrics-->
+  <node name="calculateTerms" pkg="system" type="calculateTerms.jl"/>
   <!--  ************** additional nodes ***************  -->
 
 </launch>
