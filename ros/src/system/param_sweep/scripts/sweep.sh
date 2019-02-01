@@ -109,7 +109,7 @@ loop_entry_point () {
   sleep 2
   rosnode kill /my_bag
   if [[ `rosparam get "/system/flags/goal_attained"` = "true" ]]; then
-    if [ ${known} ]; then
+    if [[ `rosparam get "system/nloptcontrol_planner/flags/known_environment"` = "true" ]]; then
       known_RESULTS=$(( $known_RESULTS + 1))
     else
       unknown_RESULTS=$(( $unknown_RESULTS + 1))
