@@ -171,7 +171,7 @@ for radius in ${radi[@]}; do
         parameters["/case/actual/obstacle/radius"]=${radius}
         start_roscore
         sleep 2;
-        rosparam set "/case/id" "D$FOLDERNAME"test"$idx"
+        rosparam set "/case/id" "$FOLDERNAME"test"$idx"
         mkdir /home/mavs/MAVs/results/$FOLDERNAME/test"$idx"
         cd /home/mavs/MAVs/results/$FOLDERNAME/test"$idx"
         loop_entry_point
