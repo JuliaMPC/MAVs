@@ -211,12 +211,15 @@ int main(int argc, char* argv[]) {
 
 	// Declare ROS subscriber to subscribe planner topic
 	std::string planner_namespace;
-	node.getParam("system/planner", planner_namespace);
-	ros::Subscriber planner_sub = node.subscribe(planner_namespace + "/control", 100, plannerCallback);
 	std::string chrono_namespace;
+
+	node.getParam("system/planner", planner_namespace);
 	node.getParam("system/chrono/namespace", chrono_namespace);
-	ros::Publisher state_pub = node.advertise<mavs_msgs::state>("/state", 1);
-	ros::Publisher control_pub = node.advertise<mavs_msgs::control>("/control", 1);
+
+	ros::Subscriber planner_sub = node.subscribe(planner_namespace + "/control", 100, plannerCallback);
+	ros::Publisher state_pub = node.advertise<mavs_msgs::state>("/state", 5);
+	ros::Publisher control_pub = node.advertise<mavs_msgs::control>("/control", 5);
+
 	mavs_msgs::state state_data;
 	mavs_msgs::control control_data;
 
