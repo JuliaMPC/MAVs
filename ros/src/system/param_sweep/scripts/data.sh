@@ -26,18 +26,24 @@ echo "the velocity vectors are: "${vys[*]}
 
 INITIAL_TIME=$SECONDS
 
+convertsecs() {
+ ((h=${1}/3600))
+ ((m=(${1}%3600)/60))
+ ((s=${1}%60))
+ printf "%02d:%02d:%02d\n" $h $m $s
+}
+
 for ((idx=1;idx<nr;idx+=1));
 do
 
-  num=$(( nr*nv ))
+  num=$(( nr ))
   echo "Running for the $idx th time out of $num"
 
+  TIME1=$(( ($SECONDS-INITIAL_TIME) / idx * (num-idx) ))
 
-  sleep 3.22
-
-  REMAINING_TIME=$(( (($SECONDS-INITIAL_TIME) / idx / 3600) *(nr-idx) ))
   echo "--------------------------------------------------------------"
-  echo "Estimated remaining time is $(( ((REMAINING_TIME)) )) hours."
+  echo "Estimated time (hours, minutes, seconds) remaining is: "
+  echo $(convertsecs $TIME1)
   echo "_____________________________________________________________"
 
 done

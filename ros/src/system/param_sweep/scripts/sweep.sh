@@ -99,8 +99,17 @@ loop_entry_point () {
   rosbag record -O tmp.bag /state /nloptcontrol_planner/opt __name:=my_bag &
   run_launchfile
   wait_for_program
-  sleep 5
+  sleep 2
   rosnode kill /my_bag
+  if [[ `rosparam get "/system/flags/goal_attained"` = "true" ]]; then
+    if [ ${known} ]; then
+      known_RESULTS=$(( $known_RESULTS + 1))
+    else
+      unknown_RESULTS=$(( $unknown_RESULTS + 1))
+    fi
+  fi
+  cd /home/mavs/MAVs/results/$FOLDERNAME/test"$idx"
+  rosparam dump dump.yaml
   kill_roslaunch_pid
   kill_roscore_pid
   sleep 20
@@ -109,6 +118,8 @@ loop_entry_point () {
 
 planners=( "true" )
 knowns=( "true" "false")
+known_RESULTS=0;
+unknown_RESULTS=0;
 nt=2; # number of combinations of planners and knowns
 
 # generate data
@@ -120,7 +131,7 @@ for ((i=0;i<nr;i+=1));
 do
   radi[${i}]=[$((rl+RANDOM%(ru-rl))).$((RANDOM%99)),10.,5.,12.]
 done
-echo "the radius vectors are: "${radi[*]}
+#echo "the radius vectors are: "${radi[*]}
 
 vl=1; # cannot be a float
 vu=10; # cannot be a float
@@ -130,7 +141,7 @@ for ((i=0;i<nv;i+=1));
 do
   vys[${i}]=[$((vl+RANDOM%(vu-vl))).$((RANDOM%99)),0.,0.,-1.]
 done
-echo "the velocity vectors are: "${vys[*]}
+#echo "the velocity vectors are: "${vys[*]}
 
 declare -A parameters
 idx=1;
@@ -141,8 +152,8 @@ for radius in ${radi[@]}; do
      for plan in ${planners[@]}; do
        for known in ${knowns[@]}; do
         num=$(( nr*nv*nt ))
-        echo "_____________________________________________________________"
-        echo "Running for the $idx th time out of  $num."
+        echo "________________________________________________________________"
+        echo "Running for the $idx th time out of $num."
         echo "--------------------------------------------------------------"
 
         rm /home/mavs/MAVs/results/tmp.bag
@@ -153,10 +164,11 @@ for radius in ${radi[@]}; do
         parameters["/case/actual/obstacle/radius"]=${radius}
         start_roscore
         sleep 2;
-        rosparam set "/case/id" "$FOLDERNAME"test"$idx"
+        rosparam set "/case/id" "D$FOLDERNAME"test"$idx"
+        mkdir /home/mavs/MAVs/results/$FOLDERNAME/test"$idx"
+        cd /home/mavs/MAVs/results/$FOLDERNAME/test"$idx"
         loop_entry_point
         echo "Entering: postProcess"
-        mkdir /home/mavs/MAVs/results/$FOLDERNAME/test"$idx"
         cd /home/mavs/MAVs/results
         #rosbag reindex -f tmp.bag
         rosbag info tmp.bag
@@ -165,11 +177,16 @@ for radius in ${radi[@]}; do
         rm /home/mavs/MAVs/results/$FOLDERNAME/test"$idx"/state.csv
         echo "Exiting: postProcess"
 
-        REMAINING_TIME=$(( (($SECONDS-INITIAL_TIME) / idx / 3600) *(nr-idx) ))
+        TIME1=$(( ($SECONDS-INITIAL_TIME) / idx * (num-idx) ))
+        echo "_________________________________________________________________"
+        echo "Results summary: goals attained"
         echo "--------------------------------------------------------------"
-        echo "Estimated remaining time is $(( ((REMAINING_TIME)) )) hours."
-        echo "_____________________________________________________________"
-
+        echo "known environemt = $known_RESULTS out of $num tests."
+        echo "unknown environemt = $unknown_RESULTS out of $num tests."
+        echo "--------------------------------------------------------------"
+        echo "Estimated time (hours, minutes, seconds) remaining is: "
+        echo $(convertsecs $TIME1)
+        
         idx=$(( $idx+1 ))
       done
     done
