@@ -140,13 +140,13 @@ do
 done
 #echo "the radius vectors are: "${radi[*]}
 
-vl=1; # cannot be a float
-vu=10; # cannot be a float
+vl=0; # cannot be a float
+vu=20; # cannot be a float
 nv=10;
 declare -a vys
 for ((i=0;i<nv;i+=1));
 do
-  vys[${i}]=[$((vl+RANDOM%(vu-vl))).$((RANDOM%99)),0.,0.,-1.]
+  vys[${i}]=[-$((vl+RANDOM%(vu-vl))).$((RANDOM%99)),0.,0.,-1.]
 done
 #echo "the velocity vectors are: "${vys[*]}
 
