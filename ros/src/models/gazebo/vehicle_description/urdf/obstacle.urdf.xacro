@@ -23,8 +23,8 @@
 
       <inertial>
         <origin xyz="${x0[idx]} ${y0[idx]} ${length[idx]/2}" rpy="0 0 0"/>
-        <mass value="1000.0" />
-        <inertia  ixx="200.0" ixy="0.0"  ixz="0.0"  iyy="200.0"  iyz="0.0"  izz="200.0" />
+        <mass value="100000.0" />
+        <inertia  ixx="20000.0" ixy="0.0"  ixz="0.0"  iyy="20000.0"  iyz="0.0"  izz="20000.0" />
       </inertial>
 
       <visual>
