@@ -8,6 +8,8 @@ rm -rf /home/mavs/MAVs/results/$FOLDERNAME/* &>/dev/null
 rmdir /home/mavs/MAVs/results/$FOLDERNAME &>/dev/null
 mkdir /home/mavs/MAVs/results/$FOLDERNAME &>/dev/null
 
+DEBUG="true"
+
 convertsecs() {
  ((h=${1}/3600))
  ((m=(${1}%3600)/60))
@@ -161,27 +163,50 @@ for ((idx=0;idx<NUMTESTS;idx+=1)); do
     echo "________________________________________________________________"
     echo "Running for the $(( ${idx} + 1 )) th time out of $num."
     echo "--------------------------------------------------------------"
-    #&>/dev/null
-    rm /home/mavs/MAVs/results/tmp.bag &>/dev/null
-    rosclean purge -y &>/dev/null
-    parameters["/system/nloptcontrol_planner/flags/known_environment"]=${known}
-    parameters["/planner/nloptcontrol_planner/misc/movingObstacles"]=${plan}
-    parameters["/case/actual/obstacle/vy"]=${vys[$idx]}
-    parameters["/case/actual/obstacle/radius"]=${radi[$idx]}
-    start_roscore &>/dev/null
-    sleep 2
-    rosparam set "/case/id" "$FOLDERNAME"test"$idx" &>/dev/null
-    mkdir /home/mavs/MAVs/results/$FOLDERNAME/test"$idx"
-    cd /home/mavs/MAVs/results/$FOLDERNAME/test"$idx"
-    loop_entry_point &>/dev/null
-    #echo "Entering: postProcess"
-    cd /home/mavs/MAVs/results
-    #rosbag reindex -f tmp.bag
-    rosbag info tmp.bag &>/dev/null
-    python bag_to_csv.py /home/mavs/MAVs/results/tmp.bag "/home/mavs/MAVs/results/$FOLDERNAME/test"$idx"" &>/dev/null
-    julia plottingData.jl "/home/mavs/MAVs/results/$FOLDERNAME/test"$idx"" "tmp" &>/dev/null
-    rm /home/mavs/MAVs/results/$FOLDERNAME/test"$idx"/state.csv &>/dev/null
-    #echo "Exiting: postProcess"
+
+    if [[ $DEBUG = "true" ]]; then
+      rm /home/mavs/MAVs/results/tmp.bag
+      rosclean purge -y
+      parameters["/system/nloptcontrol_planner/flags/known_environment"]=${known}
+      parameters["/planner/nloptcontrol_planner/misc/movingObstacles"]=${plan}
+      parameters["/case/actual/obstacle/vy"]=${vys[$idx]}
+      parameters["/case/actual/obstacle/radius"]=${radi[$idx]}
+      start_roscore
+      sleep 2
+      rosparam set "/case/id" "$FOLDERNAME"test"$idx"
+      mkdir /home/mavs/MAVs/results/$FOLDERNAME/test"$idx"
+      cd /home/mavs/MAVs/results/$FOLDERNAME/test"$idx"
+      loop_entry_point
+      echo "Entering: postProcess"
+      cd /home/mavs/MAVs/results
+      #rosbag reindex -f tmp.bag
+      rosbag info tmp.bag
+      python bag_to_csv.py /home/mavs/MAVs/results/tmp.bag "/home/mavs/MAVs/results/$FOLDERNAME/test"$idx""
+      julia plottingData.jl "/home/mavs/MAVs/results/$FOLDERNAME/test"$idx"" "tmp"
+      rm /home/mavs/MAVs/results/$FOLDERNAME/test"$idx"/state.csv
+      echo "Exiting: postProcess"
+    else
+      rm /home/mavs/MAVs/results/tmp.bag &>/dev/null
+      rosclean purge -y &>/dev/null
+      parameters["/system/nloptcontrol_planner/flags/known_environment"]=${known}
+      parameters["/planner/nloptcontrol_planner/misc/movingObstacles"]=${plan}
+      parameters["/case/actual/obstacle/vy"]=${vys[$idx]}
+      parameters["/case/actual/obstacle/radius"]=${radi[$idx]}
+      start_roscore &>/dev/null
+      sleep 2
+      rosparam set "/case/id" "$FOLDERNAME"test"$idx" &>/dev/null
+      mkdir /home/mavs/MAVs/results/$FOLDERNAME/test"$idx"
+      cd /home/mavs/MAVs/results/$FOLDERNAME/test"$idx"
+      loop_entry_point &>/dev/null
+      #echo "Entering: postProcess"
+      cd /home/mavs/MAVs/results
+      #rosbag reindex -f tmp.bag
+      rosbag info tmp.bag &>/dev/null
+      python bag_to_csv.py /home/mavs/MAVs/results/tmp.bag "/home/mavs/MAVs/results/$FOLDERNAME/test"$idx"" &>/dev/null
+      julia plottingData.jl "/home/mavs/MAVs/results/$FOLDERNAME/test"$idx"" "tmp" &>/dev/null
+      rm /home/mavs/MAVs/results/$FOLDERNAME/test"$idx"/state.csv &>/dev/null
+      #echo "Exiting: postProcess"
+    fi
 
     TIME1=$(( ($SECONDS-INITIAL_TIME) / (idx+1) * (num-(idx+1)) ))
     echo "_________________________________________________________________"
