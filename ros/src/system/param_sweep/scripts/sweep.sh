@@ -4,9 +4,9 @@
 # EX: ./sweep.sh "sweepB"
 
 FOLDERNAME="$1"
-rm -rf /home/mavs/MAVs/results/$FOLDERNAME/*
-rmdir /home/mavs/MAVs/results/$FOLDERNAME
-mkdir /home/mavs/MAVs/results/$FOLDERNAME
+rm -rf /home/mavs/MAVs/results/$FOLDERNAME/* &>/dev/null
+rmdir /home/mavs/MAVs/results/$FOLDERNAME &>/dev/null
+mkdir /home/mavs/MAVs/results/$FOLDERNAME &>/dev/null
 
 convertsecs() {
  ((h=${1}/3600))
@@ -130,11 +130,12 @@ unknown_RESULTS=0;
 nt=2; # number of combinations of planners and knowns
 
 # generate data
+NUMTESTS=200;
+
 rl=1; # cannot be a float
 ru=10; # cannot be a float
-nr=10;
 declare -a radi
-for ((i=0;i<nr;i+=1));
+for ((i=0;i<NUMTESTS;i+=1));
 do
   radi[${i}]=[$((rl+RANDOM%(ru-rl))).$((RANDOM%99)),10.,5.,12.]
 done
@@ -142,9 +143,8 @@ done
 
 vl=0; # cannot be a float
 vu=20; # cannot be a float
-nv=10;
 declare -a vys
-for ((i=0;i<nv;i+=1));
+for ((i=0;i<NUMTESTS;i+=1));
 do
   vys[${i}]=[-$((vl+RANDOM%(vu-vl))).$((RANDOM%99)),0.,0.,-1.]
 done
@@ -154,48 +154,46 @@ declare -A parameters
 idx=1;
 INITIAL_TIME=$SECONDS
 
-for radius in ${radi[@]}; do
-   for vy in ${vys[@]}; do
-     for plan in ${planners[@]}; do
-       for known in ${knowns[@]}; do
-        num=$(( nr*nv*nt ))
-        echo "________________________________________________________________"
-        echo "Running for the $idx th time out of $num."
-        echo "--------------------------------------------------------------"
+for ((idx=0;idx<NUMTESTS;idx+=1)); do
+  for plan in ${planners[@]}; do
+    for known in ${knowns[@]}; do
+    num=$(( NUMTESTS*nt ))
+    echo "________________________________________________________________"
+    echo "Running for the $(( ${idx} + 1 )) th time out of $num."
+    echo "--------------------------------------------------------------"
+    #&>/dev/null
+    rm /home/mavs/MAVs/results/tmp.bag &>/dev/null
+    rosclean purge -y &>/dev/null
+    parameters["/system/nloptcontrol_planner/flags/known_environment"]=${known}
+    parameters["/planner/nloptcontrol_planner/misc/movingObstacles"]=${plan}
+    parameters["/case/actual/obstacle/vy"]=${vys[$idx]}
+    parameters["/case/actual/obstacle/radius"]=${radi[$idx]}
+    start_roscore &>/dev/null
+    sleep 2
+    rosparam set "/case/id" "$FOLDERNAME"test"$idx" &>/dev/null
+    mkdir /home/mavs/MAVs/results/$FOLDERNAME/test"$idx"
+    cd /home/mavs/MAVs/results/$FOLDERNAME/test"$idx"
+    loop_entry_point &>/dev/null
+    #echo "Entering: postProcess"
+    cd /home/mavs/MAVs/results
+    #rosbag reindex -f tmp.bag
+    rosbag info tmp.bag &>/dev/null
+    python bag_to_csv.py /home/mavs/MAVs/results/tmp.bag "/home/mavs/MAVs/results/$FOLDERNAME/test"$idx"" &>/dev/null
+    julia plottingData.jl "/home/mavs/MAVs/results/$FOLDERNAME/test"$idx"" "tmp" &>/dev/null
+    rm /home/mavs/MAVs/results/$FOLDERNAME/test"$idx"/state.csv &>/dev/null
+    #echo "Exiting: postProcess"
 
-        rm /home/mavs/MAVs/results/tmp.bag
-        rosclean purge -y
-        parameters["/system/nloptcontrol_planner/flags/known_environment"]=${known}
-        parameters["/planner/nloptcontrol_planner/misc/movingObstacles"]=${plan}
-        parameters["/case/actual/obstacle/vy"]=${vy}
-        parameters["/case/actual/obstacle/radius"]=${radius}
-        start_roscore
-        sleep 2;
-        rosparam set "/case/id" "$FOLDERNAME"test"$idx"
-        mkdir /home/mavs/MAVs/results/$FOLDERNAME/test"$idx"
-        cd /home/mavs/MAVs/results/$FOLDERNAME/test"$idx"
-        loop_entry_point
-        echo "Entering: postProcess"
-        cd /home/mavs/MAVs/results
-        #rosbag reindex -f tmp.bag
-        rosbag info tmp.bag
-        python bag_to_csv.py /home/mavs/MAVs/results/tmp.bag "/home/mavs/MAVs/results/$FOLDERNAME/test"$idx""
-        julia plottingData.jl "/home/mavs/MAVs/results/$FOLDERNAME/test"$idx"" "tmp"
-        rm /home/mavs/MAVs/results/$FOLDERNAME/test"$idx"/state.csv
-        echo "Exiting: postProcess"
+    TIME1=$(( ($SECONDS-INITIAL_TIME) / (idx+1) * (num-(idx+1)) ))
+    echo "_________________________________________________________________"
+    echo "Results summary: goals attained"
+    echo "--------------------------------------------------------------"
+    echo "known environemt = $known_RESULTS out of $num tests."
+    echo "unknown environemt = $unknown_RESULTS out of $num tests."
+    echo "--------------------------------------------------------------"
+    echo "Estimated time (hours, minutes, seconds) remaining is: "
+    echo $(convertsecs $TIME1)
 
-        TIME1=$(( ($SECONDS-INITIAL_TIME) / idx * (num-idx) ))
-        echo "_________________________________________________________________"
-        echo "Results summary: goals attained"
-        echo "--------------------------------------------------------------"
-        echo "known environemt = $known_RESULTS out of $num tests."
-        echo "unknown environemt = $unknown_RESULTS out of $num tests."
-        echo "--------------------------------------------------------------"
-        echo "Estimated time (hours, minutes, seconds) remaining is: "
-        echo $(convertsecs $TIME1)
-
-        idx=$(( $idx+1 ))
-      done
+    idx=$(( $idx+1 ))
     done
   done
 done
