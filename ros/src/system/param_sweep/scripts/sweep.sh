@@ -129,11 +129,10 @@ planners=( "true" )
 knowns=( "true" "false")
 known_RESULTS=0;
 unknown_RESULTS=0;
-nt=2; # number of combinations of planners and knowns
-
-# generate data
 NUMTESTS=200;
+num=$(( $NUMTESTS*2 )); # 2 = number of combinations of planners and knowns
 
+# generate dat
 rl=1; # cannot be a float
 ru=10; # cannot be a float
 declare -a radi
@@ -156,13 +155,14 @@ declare -A parameters
 idx=1;
 INITIAL_TIME=$SECONDS
 
+RUN=1;
 for ((idx=0;idx<NUMTESTS;idx+=1)); do
   for plan in ${planners[@]}; do
     for known in ${knowns[@]}; do
-    num=$(( NUMTESTS*nt ))
     echo "________________________________________________________________"
-    echo "Running for the $(( ${idx} + 1 )) th time out of $num."
+    echo "Running for the $(( ${RUN} )) th time out of $num."
     echo "--------------------------------------------------------------"
+    RUN=$(( $RUN + 1 ))
 
     if [[ $DEBUG = "true" ]]; then
       rm /home/mavs/MAVs/results/tmp.bag
@@ -217,8 +217,6 @@ for ((idx=0;idx<NUMTESTS;idx+=1)); do
     echo "--------------------------------------------------------------"
     echo "Estimated time (hours, minutes, seconds) remaining is: "
     echo $(convertsecs $TIME1)
-
-    idx=$(( $idx+1 ))
     done
   done
 done
