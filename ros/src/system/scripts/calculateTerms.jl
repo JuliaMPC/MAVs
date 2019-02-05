@@ -178,7 +178,7 @@ function loop()
     end
 
     # calcuates trackingError
-    while !is_shutdown()
+    while !is_shutdown()  && !RobotOS.get_param("/system/flags/done") && !RobotOS.get_param("/vehicle_collided")
         xv = RobotOS.get_param("/terms/xv")
         yv = RobotOS.get_param("/terms/yv")
         px = RobotOS.get_param("/trajectory/x")
@@ -224,7 +224,8 @@ function loop()
             RobotOS.set_param("/terms/average/trackingError", ave)
             RobotOS.set_param("/terms/number/trackingError", prevNum + 1)
         end
-
+    #    @show RobotOS.get_param("/terms/average/orientationError")
+    #    @show RobotOS.get_param("/terms/average/trackingError")
         rossleep(loop_rate)  # sleep for leftover time
     end
 end
