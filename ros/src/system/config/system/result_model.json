@@ -2,7 +2,7 @@
   "model_id": "model1",
   "add_description": true,
   "description_header": "Description",
-  "default_description": "Shutdown caused by external interrupt.",
+  "default_description": "externalInterrupt",
   "model": [
     {
       "key": "known",
@@ -89,7 +89,7 @@
             "val": true
           }
         ],
-        "description": "Vehicle has collided."
+        "description": "vehicleCollided"
       }
     },
     {
@@ -105,7 +105,7 @@
             "val": true
           }
         ],
-        "description": "Goal is attained."
+        "description": "goalAttained"
       }
       },
       {
@@ -121,7 +121,7 @@
               "val": true
             }
           ],
-          "description": "Out of time"
+          "description": "outOfTime"
         }
         },
         {
@@ -137,7 +137,7 @@
                 "val": true
               }
             ],
-            "description": "Fell off world"
+            "description": "fellOffWorld"
           }
           },
           {
@@ -153,7 +153,7 @@
                 "val": true
               }
             ],
-            "description": "Not Optimal"
+            "description": "notOptimal"
           }
          },
         {
@@ -169,7 +169,7 @@
                 "val": true
               }
             ],
-            "description": "The vehicle rolled over."
+            "description": "rollover"
           }
     }
   ]
