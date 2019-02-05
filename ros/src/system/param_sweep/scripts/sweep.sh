@@ -8,7 +8,7 @@ rm -rf /home/mavs/MAVs/results/$FOLDERNAME/* &>/dev/null
 rmdir /home/mavs/MAVs/results/$FOLDERNAME &>/dev/null
 mkdir /home/mavs/MAVs/results/$FOLDERNAME &>/dev/null
 
-DEBUG="true"
+DEBUG="false"
 
 convertsecs() {
  ((h=${1}/3600))
@@ -173,17 +173,17 @@ for ((idx=0;idx<NUMTESTS;idx+=1)); do
       parameters["/case/actual/obstacle/radius"]=${radi[$idx]}
       start_roscore
       sleep 2
-      rosparam set "/case/id" "$FOLDERNAME"test"$idx"
-      mkdir /home/mavs/MAVs/results/$FOLDERNAME/test"$idx"
-      cd /home/mavs/MAVs/results/$FOLDERNAME/test"$idx"
+      rosparam set "/case/id" "$FOLDERNAME"test"$RUN"
+      mkdir /home/mavs/MAVs/results/$FOLDERNAME/test"$RUN"
+      cd /home/mavs/MAVs/results/$FOLDERNAME/test"$RUN"
       loop_entry_point
       echo "Entering: postProcess"
       cd /home/mavs/MAVs/results
       #rosbag reindex -f tmp.bag
       rosbag info tmp.bag
-      python bag_to_csv.py /home/mavs/MAVs/results/tmp.bag "/home/mavs/MAVs/results/$FOLDERNAME/test"$idx""
-      julia plottingData.jl "/home/mavs/MAVs/results/$FOLDERNAME/test"$idx"" "tmp"
-      rm /home/mavs/MAVs/results/$FOLDERNAME/test"$idx"/state.csv
+      python bag_to_csv.py /home/mavs/MAVs/results/tmp.bag "/home/mavs/MAVs/results/$FOLDERNAME/test"$RUN""
+      julia plottingData.jl "/home/mavs/MAVs/results/$FOLDERNAME/test"$RUN"" "tmp"
+      rm /home/mavs/MAVs/results/$FOLDERNAME/test"$RUN"/state.csv
       echo "Exiting: postProcess"
     else
       rm /home/mavs/MAVs/results/tmp.bag &>/dev/null
@@ -194,17 +194,17 @@ for ((idx=0;idx<NUMTESTS;idx+=1)); do
       parameters["/case/actual/obstacle/radius"]=${radi[$idx]}
       start_roscore &>/dev/null
       sleep 2
-      rosparam set "/case/id" "$FOLDERNAME"test"$idx" &>/dev/null
-      mkdir /home/mavs/MAVs/results/$FOLDERNAME/test"$idx"
-      cd /home/mavs/MAVs/results/$FOLDERNAME/test"$idx"
+      rosparam set "/case/id" "$FOLDERNAME"test"$RUN" &>/dev/null
+      mkdir /home/mavs/MAVs/results/$FOLDERNAME/test"$RUN"
+      cd /home/mavs/MAVs/results/$FOLDERNAME/test"$RUN"
       loop_entry_point &>/dev/null
       #echo "Entering: postProcess"
       cd /home/mavs/MAVs/results
       #rosbag reindex -f tmp.bag
       rosbag info tmp.bag &>/dev/null
-      python bag_to_csv.py /home/mavs/MAVs/results/tmp.bag "/home/mavs/MAVs/results/$FOLDERNAME/test"$idx"" &>/dev/null
-      julia plottingData.jl "/home/mavs/MAVs/results/$FOLDERNAME/test"$idx"" "tmp" &>/dev/null
-      rm /home/mavs/MAVs/results/$FOLDERNAME/test"$idx"/state.csv &>/dev/null
+      python bag_to_csv.py /home/mavs/MAVs/results/tmp.bag "/home/mavs/MAVs/results/$FOLDERNAME/test"$RUN"" &>/dev/null
+      julia plottingData.jl "/home/mavs/MAVs/results/$FOLDERNAME/test"$RUN"" "tmp" &>/dev/null
+      rm /home/mavs/MAVs/results/$FOLDERNAME/test"$RUN"/state.csv &>/dev/null
       #echo "Exiting: postProcess"
     fi
 
