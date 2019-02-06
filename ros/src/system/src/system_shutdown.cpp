@@ -48,6 +48,7 @@ bool areAllShutdownCompletionFlagsTrue() {
       ROS_WARN("Following parameter is expected for shutdown completion but not found: %s.\n", shutdown_completion_flags[i].c_str());
     }
   }
+  ROS_INFO("areAllShutdownCompletionFlagsTrue is true");
   return true;
 }
 
@@ -110,7 +111,7 @@ int main(int argc, char** argv)
         shutdown_requested.publish(shutdown_msg);
       }
       if (isShutDownAllowed()) {
-        ROS_INFO("----Starting shutdownSystem()----\n");
+        ROS_INFO("----isShutDownAllowed() is true----\n");
         shutdownSystem();
       }
       ROS_INFO("----Starting shutdownSystem()----\n");

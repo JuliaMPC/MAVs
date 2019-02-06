@@ -5,6 +5,8 @@
 #include <string>
 #include <unistd.h>
 #include <chrono>
+#include <stdint.h>
+
 // Computing tool library
 #include "interpolation.h"
 #include "PID.h"
@@ -177,7 +179,7 @@ unsigned int getTargetPos(const ChVector<>& pos_global, const std::vector<double
 					target_speed = traj_ux[i - 1] * (1 - t2) + traj_ux[i] * t2;
 				}
 				else {
-					std::cout << "no right solution" << std::endl;
+					std::cout << "no correct solution" << std::endl;
 					x_target = xb + pos_global[0];
 					y_target = yb + pos_global[1];
 					target_speed = traj_ux[i];
@@ -211,12 +213,15 @@ int main(int argc, char* argv[]) {
 
 	// Declare ROS subscriber to subscribe planner topic
 	std::string planner_namespace;
-	node.getParam("system/planner", planner_namespace);
-	ros::Subscriber planner_sub = node.subscribe(planner_namespace + "/control", 100, plannerCallback);
 	std::string chrono_namespace;
+
+	node.getParam("system/planner", planner_namespace);
 	node.getParam("system/chrono/namespace", chrono_namespace);
-	ros::Publisher state_pub = node.advertise<mavs_msgs::state>("/state", 1);
-	ros::Publisher control_pub = node.advertise<mavs_msgs::control>("/control", 1);
+
+	ros::Subscriber planner_sub = node.subscribe(planner_namespace + "/control", 100, plannerCallback);
+	ros::Publisher state_pub = node.advertise<mavs_msgs::state>("/state", 10);
+	ros::Publisher control_pub = node.advertise<mavs_msgs::control>("/control", 10);
+
 	mavs_msgs::state state_data;
 	mavs_msgs::control control_data;
 

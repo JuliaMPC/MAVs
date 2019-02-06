@@ -2,8 +2,14 @@
   "model_id": "model1",
   "add_description": true,
   "description_header": "Description",
-  "default_description": "Shutdown caused by external interrupt.",
+  "default_description": "externalInterrupt",
   "model": [
+    {
+      "key": "known",
+      "val": "/system/nloptcontrol_planner/flags/known_environment",
+      "ros_msg_type": "parameter",
+      "save": true
+    },
     {
       "key": "move",
       "val": "/planner/nloptcontrol_planner/misc/movingObstacles",
@@ -11,7 +17,7 @@
       "save": true
     },
     {
-      "key": "Case Id",
+      "key": "CaseID",
       "val": "/case/id",
       "ros_msg_type": "parameter",
       "save": true
@@ -29,7 +35,49 @@
       "save": true
     },
     {
-      "key": "Vehicle Collided",
+      "key": "tf",
+      "val": "/state/t",
+      "ros_msg_type": "parameter",
+      "save": true
+    },
+    {
+      "key": "aveSolveTime",
+      "val": "/terms/average/solveTime",
+      "ros_msg_type": "parameter",
+      "save": true
+    },
+    {
+      "key": "steeringEffort",
+      "val": "/terms/steeringEffort",
+      "ros_msg_type": "parameter",
+      "save": true
+    },
+    {
+      "key": "throttleEffort",
+      "val": "/terms/throttleEffort",
+      "ros_msg_type": "parameter",
+      "save": true
+    },
+    {
+      "key": "brakingEffort",
+      "val": "/terms/brakingEffort",
+      "ros_msg_type": "parameter",
+      "save": true
+    },
+    {
+      "key": "trackingError",
+      "val": "/terms/average/trackingError",
+      "ros_msg_type": "parameter",
+      "save": true
+    },
+    {
+      "key": "orientationError",
+      "val": "/terms/average/orientationError",
+      "ros_msg_type": "parameter",
+      "save": true
+    },
+    {
+      "key": "vehicleCollided",
       "val": "/vehicle_collided",
       "ros_msg_type": "parameter",
       "save": true,
@@ -41,11 +89,11 @@
             "val": true
           }
         ],
-        "description": "Vehicle has collided."
+        "description": "vehicleCollided"
       }
     },
     {
-      "key": "Goal attained",
+      "key": "goalAttained",
       "val": "/system/flags/goal_attained",
       "ros_msg_type": "parameter",
       "save": true,
@@ -57,11 +105,11 @@
             "val": true
           }
         ],
-        "description": "Goal is attained."
+        "description": "goalAttained"
       }
       },
       {
-        "key": "Out of time",
+        "key": "outOfTime",
         "val": "/system/flags/timelimit",
         "ros_msg_type": "parameter",
         "save": true,
@@ -73,11 +121,11 @@
               "val": true
             }
           ],
-          "description": "Out of time"
+          "description": "outOfTime"
         }
         },
         {
-          "key": "Fell off world",
+          "key": "fellOffWorld",
           "val": "/system/flags/fall",
           "ros_msg_type": "parameter",
           "save": true,
@@ -89,11 +137,11 @@
                 "val": true
               }
             ],
-            "description": "Fell off world"
+            "description": "fellOffWorld"
           }
           },
           {
-          "key": "Not optimal",
+          "key": "notOptimal",
           "val": "/system/flags/not_optimal",
           "ros_msg_type": "parameter",
           "save": true,
@@ -105,11 +153,11 @@
                 "val": true
               }
             ],
-            "description": "Not Optimal"
+            "description": "notOptimal"
           }
          },
         {
-          "key": "Rollover",
+          "key": "rollover",
           "val": "/system/flags/rollover",
           "ros_msg_type": "parameter",
           "save": true,
@@ -121,7 +169,7 @@
                 "val": true
               }
             ],
-            "description": "The vehicle rolled over."
+            "description": "rollover"
           }
     }
   ]

@@ -5,7 +5,7 @@ import json
 import csv
 from std_msgs.msg import String, Float64, Int64, Bool
 from mavs_msgs.msg import state, control
-from nloptcontrol_planner.msg import Trajectory
+from nloptcontrol_planner.msg import Trajectory, Optimization
 
 def do_shutdown_preprocess():
     record_data_row()
@@ -206,6 +206,8 @@ def subscribe_to_topics_in_model():
                 sub = rospy.Subscriber(topic_name, control, update_object_val, (_key, sub_val))
             elif _dtype == "Trajectory":
                 sub = rospy.Subscriber(topic_name, Trajectory, update_object_val, (_key, sub_val))
+            elif _dtype == "Optimization":
+                sub = rospy.Subscriber(topic_name, Optimization, update_object_val, (_key, sub_val))
             subscribers.append(sub)
 
 def update_shutdown_flag_for_future_enhancements():

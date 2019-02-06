@@ -80,14 +80,13 @@ end
 
 """
 Test Data:
-r = [10,9,8,5,10,6,3]
+r = [10,9,8,5,10,6,3,4]
 x = [0,1,2,50,0,49,-30]
 y = [0,0,2,50,0,49,-30]
 vx = [0,0,0,0,0,0,0]
 vy = [0,0,0,0,0,0,0]
-L = 7
 
-r,x,y,vx,vy = filterObstacleData(r,x,y,vx,vy,L)
+r,x,y,vx,vy = filterObstacleData(r,x,y,vx,vy)
 
 # filter obstacle data to remove smallest overlapping circles
 --------------------------------------------------------------------------------------\n
@@ -95,7 +94,13 @@ Author: Huckleberry Febbo, Graduate Student, University of Michigan
 Date Create: 1/28/2019, Last Modified: 1/28/2019 \n
 --------------------------------------------------------------------------------------\n
 """
-function filterObstacleData(r,x,y,vx,vy,L)
+function filterObstacleData(r,x,y,vx,vy)
+    # given sensitivity to time, it is possible that the obstacle data vectors have differnt lengths.
+    # take the smallest one and warn the user if this happens
+    L = sort([length(r), length(x),length(y),length(vx),length(vy)])[1]
+    if any(L.<[length(r), length(x),length(y),length(vx),length(vy)])
+        warn("obstacles data vectors have differnet sizes, taking the smalled one.")
+    end
     ra = (); xa = (); ya = (); vxa = (); vya = ();
     for i in 1:L # check each obstacle
         add = true
@@ -156,7 +161,7 @@ function setObstacleData(params)
       if isnan(r[1]) # initilized, no obstacles detected
         L = 0
       else
-        r,x,y,vx,vy,L = filterObstacleData(r,x,y,vx,vy,length(r))
+        r,x,y,vx,vy,L = filterObstacleData(r,x,y,vx,vy)
       end
 
       N = Q - L

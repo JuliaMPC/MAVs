@@ -80,7 +80,7 @@ planner:
       fax: NaN
 
     solver:
-      maxtime_cpu_init: 60. # maximum initial solve time
+      maxtime_cpu_init: 120. # maximum initial solve time
 
       # settings for both KNITRO and IPOPT
       outlev: 0 # (c.m.solver==:Ipopt) ? :print_level : :outlev # print level

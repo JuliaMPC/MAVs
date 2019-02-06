@@ -1,6 +1,4 @@
 #!/usr/bin/python
-
-
 import rosbag, sys, csv
 import time
 import string
@@ -45,7 +43,7 @@ for bagFile in listOfBagFiles:
 	bagContents = bag.read_messages()
 	bagName = bag.filename
 
-	print folder[1]
+	print "folder name = " + folder
 	#create a new directory
 	if (numberOfFiles == 1):
 		folder = string.rstrip(bagName, ".bag")
@@ -63,10 +61,11 @@ for bagFile in listOfBagFiles:
 		if topic not in listOfTopics:
 			listOfTopics.append(topic)
 
-
 	for topicName in listOfTopics:
+	#	print "topicName = " + topicName
 		#Create a new CSV file for each topic
 		filename = folder + '/' + string.replace(topicName, '/', '') + '.csv'
+		print "saving topic " + filename
 		with open(filename, 'w+') as csvfile:
 			filewriter = csv.writer(csvfile, delimiter = ',')
 			firstIteration = True	#allows header row

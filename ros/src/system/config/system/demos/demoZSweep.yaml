@@ -27,7 +27,7 @@ system:
 
  shutdown:
   flags:
-   running: true
+   running: false
    initialized: false
    shutdown: false
   params:
@@ -39,19 +39,18 @@ system:
   flags:
    running: true
    initialized: false
-   known_environment: false
 
  chrono:
   namespace: chrono
   flags:
    initialized: false
    running: true
-   gui: true
+   gui: false
    debug: false
   terrain:
-   position: [0,190,-5]
-   length: 100. # size in Chrono X direction
-   width: 400.  # size in Chrono Y direction
+   position: [0,290,-5] # 290 = width/2 -10, there is no reson to have a track behind the vehicle
+   length: 300. # size in Chrono X direction
+   width: 600.  # size in Chrono Y direction
    frictCoeff: 0.9
    restCoeff: 0.01
 

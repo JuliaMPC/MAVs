@@ -4,7 +4,7 @@
 
   <!--  ************** load args and parameters ***************  -->
   <!--common args and parameters-->
-  <arg name="system_params_path" default="$(find system)/config/system/demos/demoZ.yaml"/>
+  <arg name="system_params_path" default="$(find system)/config/system/demos/demoZSweep.yaml"/>
   <arg name="vehicle_params_path" default="$(find system)/config/vehicle/hmmwv.yaml"/>
   <arg name="case_params_path" default="$(find system)/config/case/tmp.yaml"/>
   <rosparam command="load" file="$(arg case_params_path)" />
@@ -60,25 +60,17 @@
   <node name="unpause_gazebo" pkg="vehicle_description" type="unpause.jl"/>
 
   <!-- Report generation node-->
-  <node name="result_store" pkg="system" type="result_store.py" output="screen" required="true">
+  <node name="result_store" pkg="system" type="result_store.py" output="screen">
     <rosparam subst_value="True">
       results_file: /home/mavs/MAVs/results/report_test.csv
       model_filename_path: $(find system)/config/system/result_model.json
     </rosparam>
   </node>
 
-  <!--system_shutdown node-->
-  <node name="system_shutdown" pkg="system" type="system_shutdown" output="screen" required="true">
-     <rosparam file="$(arg system_params_path)" command="load"/>
-  </node>
+  <!--calculate performace metrics-->
+  <node name="calculateTerms" pkg="system" type="calculateTerms.jl" output="screen"/>
 
-  <!-- save data using rosbag -->
-  <node pkg="rosbag" type="record" name="record" args="record -O /home/mavs/MAVs/results/$(arg ros_bag_name).bag
-                                                                 /nlopcontrol_planner/opt
-                                                                 /nlopcontrol_planner/control
-                                                                 /state"/>
-
-  <!-- node name="visualization" pkg="visualization" type="data_plotter.py" /-->
+  <!--node name="visualization" pkg="visualization" type="data_plotter.py" /-->
   <!--  ************** additional nodes ***************  -->
 
 </launch>
