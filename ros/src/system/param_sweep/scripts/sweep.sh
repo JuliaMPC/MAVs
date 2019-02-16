@@ -8,7 +8,7 @@ rm -rf /home/mavs/MAVs/results/$FOLDERNAME/* &>/dev/null
 rmdir /home/mavs/MAVs/results/$FOLDERNAME &>/dev/null
 mkdir /home/mavs/MAVs/results/$FOLDERNAME &>/dev/null
 
-DEBUG="false"
+DEBUG="true"
 
 convertsecs() {
  ((h=${1}/3600))

@@ -24,9 +24,9 @@ case:
    radius: [10.]
    length: [5.]
    x0: [0.0]
-   y0: [150.]
+   y0: [100.]
    vx: [0.0]
-   vy: [0.0]
+   vy: [-5.0]
 
  assumed:
   obstacle:
