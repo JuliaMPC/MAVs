@@ -19,7 +19,7 @@ planner:
       L_rd: 10.              # relaxation distance to LiDAR range
       Nck: NaN               # number of points per interval
       N: 30                  # number of points in :tm methods
-      solver: KNITRO         # either Ipopt of KNITRO
+      solver: Ipopt         # either Ipopt of KNITRO
       mpc_max_iter: 1000     # an MPC parameter
       PredictX0: false       # if the state that the vehicle will be at when the optimization is finished is to be predicted
       FixedTp: true          # fixed final time for predicting X0
