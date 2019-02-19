@@ -14,7 +14,7 @@ obstacle_detector:
     max_merge_separation: 3
     max_merge_spread: 2
     max_circle_radius: 30
-    radius_enlargement: 0.3
+    radius_enlargement: 0.
     frame_id: 'map'
     p_min_x_limit: -1000.
     p_max_x_limit: 1000.

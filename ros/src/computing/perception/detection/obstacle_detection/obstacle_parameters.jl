@@ -16,8 +16,6 @@ function setObstacleParams(msg::Obstacles)
       vx = (vx..., msg.circles[i].velocity.x)
       vy = (vy..., msg.circles[i].velocity.y)
     end
-    @show vy
-
     # update obstacle field parameters
     RobotOS.set_param("obstacle/radius",r)
     RobotOS.set_param("obstacle/x",x)
