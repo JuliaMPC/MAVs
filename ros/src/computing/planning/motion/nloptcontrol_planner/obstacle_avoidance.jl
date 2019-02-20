@@ -520,8 +520,8 @@ function main()
   # TODO add this to fixYAML
   # to fix this error: Tried to set Option: warm_start_init_point. It is a valid option, but it is of type  String, not of type Integer. Please check the documentation for options.
   # when dumping to a tmp.yaml "warm_start_init_point" swtitches to <true> instead of <yes>
-  if c["solver"]["warm_start_init_point"]
-      c["solver"]["warm_start_init_point"] = "yes"
+  if isequal(typeof(c["solver"]["warm_start_init_point"]),Bool)
+      c["solver"]["warm_start_init_point"] = "yes" # assuming that it is yes...
   end
   # TODO add this to fixYAML
 
