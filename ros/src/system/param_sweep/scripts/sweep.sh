@@ -82,7 +82,7 @@ run_launchfile () {
 }
 wait_for_program () {
   echo "Entering: wait_for_program"
-  DURATION=500
+  DURATION=1000
   START_TIME=$SECONDS
   shutdown=0;
 until (($(( SECONDS - START_TIME )) > "$DURATION")) || [[ $shutdown -eq 1 ]]; do
@@ -129,7 +129,7 @@ planners=( "true" )
 knowns=( "true" "false")
 known_RESULTS=0;
 unknown_RESULTS=0;
-NUMTESTS=200;
+NUMTESTS=600;
 num=$(( $NUMTESTS*2 )); # 2 = number of combinations of planners and knowns
 
 # generate dat
