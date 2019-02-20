@@ -211,8 +211,8 @@ for ((idx=0;idx<NUMTESTS;idx+=1)); do
     echo "_________________________________________________________________"
     echo "Results summary: goals attained"
     echo "--------------------------------------------------------------"
-    echo "known environemt = $known_RESULTS out of $NUMTESTS tests."
-    echo "unknown environemt = $unknown_RESULTS out of $NUMTESTS tests."
+    echo "known environemt = $known_RESULTS out of $(( $idx + 1 )) tests."
+    echo "unknown environemt = $unknown_RESULTS out of $(( $idx + 1 )) tests."
     echo "--------------------------------------------------------------"
     echo "Estimated time (hours, minutes, seconds) remaining is: "
     echo $(convertsecs $TIME1)
