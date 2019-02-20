@@ -162,7 +162,6 @@ for ((idx=0;idx<NUMTESTS;idx+=1)); do
     echo "________________________________________________________________"
     echo "Running for the $(( ${RUN} )) th time out of $num."
     echo "--------------------------------------------------------------"
-    RUN=$(( $RUN + 1 ))
 
     if [[ $DEBUG = "true" ]]; then
       rm /home/mavs/MAVs/results/tmp.bag
@@ -217,6 +216,8 @@ for ((idx=0;idx<NUMTESTS;idx+=1)); do
     echo "--------------------------------------------------------------"
     echo "Estimated time (hours, minutes, seconds) remaining is: "
     echo $(convertsecs $TIME1)
+    RUN=$(( $RUN + 1 ))
+
     done
   done
 done
