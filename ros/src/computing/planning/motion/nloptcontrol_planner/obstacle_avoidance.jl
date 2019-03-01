@@ -318,10 +318,10 @@ function loop(pub,pub_opt,pub_path,n,c)
   tireCount = 1
   n.s.mpc.shiftX0 = true
   tSolveCum = 0
-  tA = get_rostime()
+  tA = Float64(get_rostime())
   init = false
   tex = RobotOS.get_param("planner/nloptcontrol_planner/misc/tex")
-  loop_rate = Rate(1/tex)
+  loop_rate = Rate(10) # run as fast as it can
   while !is_shutdown()
       println("Running model for the: ",n.mpc.v.evalNum," time")
 
@@ -330,17 +330,13 @@ function loop(pub,pub_opt,pub_path,n,c)
         setObstacleData(n.ocp.params)
       end
 
-      # update optimization parameters based off of latest vehicle state
-    #  if ! isequal(RobotOS.get_param("system/plant"),"3DOF") # otherwise an external update on the initial state of the vehicle is needed
-    #    setStateData(n)
-    #  end  NOTE currently this is after the optimization, eventually put it just before for better performace.
-
       updateAutoParams!(n)                           # update model parameters
       optimize!(n)
       if  init && n.r.ocp.status!=:Optimal && RobotOS.get_param("planner/nloptcontrol_planner/misc/onlyOptimal")
         println("__________________________________________________________________")
         println("The optimization was not optimally solved. Stopping simulation!")
         println("===================================================================")
+        @show n.r.ocp.tSolve
         RobotOS.set_param("system/flags/not_optimal",true)
         RobotOS.set_param("system/flags/done",true)
         break
@@ -352,6 +348,25 @@ function loop(pub,pub_opt,pub_path,n,c)
       else
         n.mpc.v.t = to_sec(get_rostime())
         n.mpc.v.evalNum = n.mpc.v.evalNum + 1
+      end
+
+      if init
+        # slow down optimization to real-time, where the first solve is "free" because the vehicle is sitting waiting for initialization.
+        tSolveCum = tSolveCum + n.r.ocp.tSolve
+        # TODO add RTF to params
+        while(tSolveCum > RobotOS.get_param("planner/nloptcontrol_planner/misc/RTF")*Float64(RobotOS.get_param("state/t")) )
+            sleep(0.01)
+        end
+
+        opt = Optimization()
+        opt.t =  RobotOS.get_param("state/t")
+        opt.evalNum = n.mpc.v.evalNum - 1
+        opt.texA = RobotOS.get_param("state/t") - tA
+        opt.tSolve = n.r.ocp.tSolve
+        opt.status = n.r.ocp.status
+        publish(pub_opt, opt)
+
+        tA = RobotOS.get_param("state/t")
       end
 
       traj = Trajectory()
@@ -368,23 +383,6 @@ function loop(pub,pub_opt,pub_path,n,c)
       traj.jx = n.r.ocp.U[:,2]
       publish(pub, traj)
 
-      opt = Optimization()
-      opt.t =  get_rostime()
-      opt.evalNum = n.mpc.v.evalNum - 1
-      opt.texA = get_rostime() - tA
-      opt.tSolve = n.r.ocp.tSolve
-      opt.status = n.r.ocp.status
-
-      # slow down optimization to real-time
-      tSolveCum = tSolveCum + n.r.ocp.tSolve
-      if init
-        while(tSolveCum > Float64(get_rostime()))
-        end
-      end
-      publish(pub_opt, opt)
-
-      tA = get_rostime()
-
       path = Path()
       path.header.stamp = get_rostime()
       path.header.frame_id = "map" # TODO get from rosparams
@@ -397,15 +395,6 @@ function loop(pub,pub_opt,pub_path,n,c)
         path.poses[i].pose.position.y = traj.y[i]
       end
       publish(pub_path, path)
-
-      if isequal(RobotOS.get_param("system/plant"),"3DOF") # otherwise an external update on the initial state of the vehicle is needed
-        sol, U = simIPlant!(n)      # simulating plant in VehicleModels.jl
-        plant2dfs!(n,sol,U) # TODO see if this can be avoided
-        setStateParams(n)           # update X0 parameters in
-        updateX0!(n)                # update X0 in NLOptControl.jl
-      else
-         updateX0!(n,getStateData(n))
-      end  # consider shifting to feasible.
 
       if isequal(RobotOS.get_param("system/plant"),"3DOF")
           xa = n.r.ip.plant[n.ocp.state.name[1]][end]
@@ -472,6 +461,16 @@ function loop(pub,pub_opt,pub_path,n,c)
         while(RobotOS.get_param("system/flags/paused"))
         end
       end
+
+      if isequal(RobotOS.get_param("system/plant"),"3DOF") # otherwise an external update on the initial state of the vehicle is needed
+        sol, U = simIPlant!(n)      # simulating plant in VehicleModels.jl
+        plant2dfs!(n,sol,U) # TODO see if this can be avoided
+        setStateParams(n)           # update X0 parameters in
+        updateX0!(n)                # update X0 in NLOptControl.jl
+      else
+         updateX0!(n,getStateData(n))
+      end
+
       rossleep(loop_rate)  # sleep for leftover time
   end  # while()
 end

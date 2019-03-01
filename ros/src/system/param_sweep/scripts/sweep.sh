@@ -221,3 +221,5 @@ for ((idx=0;idx<NUMTESTS;idx+=1)); do
     done
   done
 done
+
+#python bag_to_csv.py /home/mavs/MAVs/results/test.bag "/home/mavs/MAVs/results/test

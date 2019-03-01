@@ -36,7 +36,7 @@ planner:
       onlyOptimal: true   # if this is false make sure ocpSave is true otherwise there may be an error, there is no way to continue with a non-optimal signal without previous solution
       evalConstraints: false
       ocpSave: false
-
+      RTF: 2
     weights:
       ic: 100.0
       x0: 50. #0.1
@@ -85,8 +85,8 @@ planner:
       # settings for both KNITRO and IPOPT
       outlev: 0 # (c.m.solver==:Ipopt) ? :print_level : :outlev # print level
       feastol_abs: 7e-1 #7e-2 # (c.m.solver==:Ipopt) ? :constr_viol_tol : :feastol_abs
-      maxit: 500 # (c.m.solver==:Ipopt) ? :max_iter : :maxit
-      maxtime_cpu: 10.0 # (c.m.solver==:Ipopt) ? :max_cpu_time : :maxtime_cpu
+      maxit: 5000 # (c.m.solver==:Ipopt) ? :max_iter : :maxit
+      maxtime_cpu: 4.0 # (c.m.solver==:Ipopt) ? :max_cpu_time : :maxtime_cpu
 # to do make it so that the initial optization gets more time..
       # settings for KNITRO
       ftol: 1e-15 # relative change in the objective function is less than ftol for ftol_iters consecutive iterations
