@@ -15,12 +15,12 @@ planner:
       sm: 2.                 # (m) distance to see if obstacle was hit (for crash checking)
       sm1: 3.5               # (m) distance 1 to make sure we don't hit obstacle (for optimization)
       sm2: 6.0               # (m) distance 2 to make sure we don't hit obstacle (for optimization)
-      Lr: 90.                # LiDAR range (m)
+      Lr: 50.                # LiDAR range (m)
       L_rd: 10.              # relaxation distance to LiDAR range
       Nck: NaN               # number of points per interval
       N: 30                  # number of points in :tm methods
       solver: KNITRO         # either Ipopt of KNITRO
-      mpc_max_iter: 1000     # an MPC parameter
+      mpc_max_iter: 10000    # an MPC parameter
       PredictX0: false       # if the state that the vehicle will be at when the optimization is finished is to be predicted
       FixedTp: true          # fixed final time for predicting X0
       finalTimeDV: true      # bool to indicate if the final time is a variable
@@ -37,8 +37,8 @@ planner:
       onlyOptimal: true   # if this is false make sure ocpSave is true otherwise there may be an error, there is no way to continue with a non-optimal signal without previous solution
       evalConstraints: false
       ocpSave: false
-      RTF: 2
-      
+      RTF: 1
+
     weights:
       ic: 100.0
       x0: 50. #0.1

@@ -1,0 +1,12 @@
+<launch>
+  <arg name="system_params_path" default="$(find system)/config/system/demos/demoR.yaml"/>
+  <arg name="vehicle_params_path" default="$(find system)/config/vehicle/hmmwv.yaml"/>
+  <arg name="case_params_path" default="$(find system)/config/case/s8.yaml"/>
+
+  <rosparam command="load" file="$(arg system_params_path)"/>
+  <rosparam command="load" file="$(arg vehicle_params_path)"/>
+  <rosparam command="load" file="$(arg case_params_path)" />
+
+  <node name="traj" pkg="nloptcontrol_planner" type="test_trajectory.jl" output="screen"/>
+  <node name="chrono" pkg="ros_chrono" type="path_follower" cwd="node" output="screen"/>
+</launch>

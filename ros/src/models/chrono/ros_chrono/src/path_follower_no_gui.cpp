@@ -387,7 +387,7 @@ int main(int argc, char* argv[]) {
 	double long_velocity = 0.0;
 	ChVector<> VehicleCOMPos = my_hmmwv.GetVehicle().GetVehicleCOMPos();
 	ChQuaternion<> VehicleRot = my_hmmwv.GetVehicle().GetVehicleRot();//global orientation as quaternion
-	long_velocity = my_hmmwv.GetVehicle().GetVehicleSpeedCOM();
+	//long_velocity = my_hmmwv.GetVehicle().GetVehicleSpeedCOM();
 	double yaw_angle = VehicleRot.Q_to_Euler123()[2];
 
 	// collect controller output data from modules (for inter-module communication)
@@ -511,6 +511,8 @@ int main(int argc, char* argv[]) {
 		node.setParam("/control/brk", braking_input);
 		node.setParam("/control/str", steering_input);
 
+		long_velocity = VehicleCOMVel[0];
+
 		// Update state and control messages
 		state_data.t = chrono_time; // time in chrono simulation
 		state_data.x = VehicleCOMPos[0];
@@ -532,7 +534,6 @@ int main(int argc, char* argv[]) {
 		control_data.str_in = steering_input;   // steeering input in the range [-1,+1]
 		state_pub.publish(state_data);
 		control_pub.publish(control_data);
-
 
 		ros::spinOnce();
 	}

@@ -473,10 +473,10 @@ int main(int argc, char* argv[]) {
         state_data.r = VehicleRot_dt[2]; // yaw rate (rad/s)
         state_data.sa = steering_angle; // steering angle at the tire (rad)
         //state_data.tire_f = TireForceVertical; // vertical tire force
-	state_data.tireF_fl = TireForceVertical[0];
-	state_data.tireF_fr = TireForceVertical[1];
-	state_data.tireF_rl = TireForceVertical[2];
-	state_data.tireF_rr = TireForceVertical[3];
+      	state_data.tireF_fl = TireForceVertical[0];
+      	state_data.tireF_fr = TireForceVertical[1];
+      	state_data.tireF_rl = TireForceVertical[2];
+      	state_data.tireF_rr = TireForceVertical[3];
 
         control_data.t = chrono_time;
         control_data.thrt_in = throttle_input; // throttle input in the range [0,+1]

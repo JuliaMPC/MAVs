@@ -1,5 +1,6 @@
 // C/C++ library
 #include <iostream>
+#include <cstdio>
 #include <math.h>
 #include <vector>
 #include <string>
@@ -402,7 +403,7 @@ int main(int argc, char* argv[]) {
 	double long_velocity = 0.0;
 	ChVector<> VehicleCOMPos = my_hmmwv.GetVehicle().GetVehicleCOMPos();
 	ChQuaternion<> VehicleRot = my_hmmwv.GetVehicle().GetVehicleRot();//global orientation as quaternion
-	long_velocity = my_hmmwv.GetVehicle().GetVehicleSpeedCOM();
+	// long_velocity = my_hmmwv.GetVehicle().GetVehicleSpeedCOM();
 	double yaw_angle = VehicleRot.Q_to_Euler123()[2];
 
 	// collect controller output data from modules (for inter-module communication)
@@ -460,6 +461,11 @@ int main(int argc, char* argv[]) {
 		// speed controller
 		double ux_err = traj_ux_interp - long_velocity;
 		double vel_controller_output = vel_controller.control(ux_err);
+
+		if (debug) {
+			printf("ux_err: %lf\ntraj_ux_interp: %lf\nlong_velocity: %lf\nvel_controller_output: %lf\n", ux_err, traj_ux_interp,long_velocity,vel_controller_output);
+		}
+
 		if (vel_controller_output > 0) {
 			throttle_input = vel_controller_output;
 			braking_input = 0;
@@ -538,6 +544,8 @@ int main(int argc, char* argv[]) {
 		node.setParam("/control/thr", throttle_input);
 		node.setParam("/control/brk", braking_input);
 		node.setParam("/control/str", steering_input);
+
+    long_velocity = VehicleCOMVel[0];
 
 		// Update state and control messages
 		state_data.t = chrono_time; // time in chrono simulation
