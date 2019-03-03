@@ -1,9 +1,9 @@
 case:
  goal:
   x: 0.
-  yVal: 320.
+  yVal: 400.
   psi: 1.5701
-  tol: 15.
+  tol: 10.
 
  actual:
   X0:

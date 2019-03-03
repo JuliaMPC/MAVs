@@ -137,7 +137,7 @@ function filterObstacleData(r,x,y,vx,vy)
     if length(ra) > L
         error("there is a bug in filterObstacleData(); it added obstacles to the set.")
     end
-return ra, xa, ya, vxa, vya, length(ra)
+    return ra, xa, ya, vxa, vya, length(ra)
 end
 
 """
@@ -336,7 +336,6 @@ function loop(pub,pub_opt,pub_path,n,c)
         println("__________________________________________________________________")
         println("The optimization was not optimally solved. Stopping simulation!")
         println("===================================================================")
-        @show n.r.ocp.tSolve
         RobotOS.set_param("system/flags/not_optimal",true)
         RobotOS.set_param("system/flags/done",true)
         break
@@ -353,7 +352,6 @@ function loop(pub,pub_opt,pub_path,n,c)
       if init
         # slow down optimization to real-time, where the first solve is "free" because the vehicle is sitting waiting for initialization.
         tSolveCum = tSolveCum + n.r.ocp.tSolve
-        # TODO add RTF to params
         while(tSolveCum > RobotOS.get_param("planner/nloptcontrol_planner/misc/RTF")*Float64(RobotOS.get_param("state/t")) )
             sleep(0.01)
         end
@@ -464,7 +462,7 @@ function loop(pub,pub_opt,pub_path,n,c)
 
       if isequal(RobotOS.get_param("system/plant"),"3DOF") # otherwise an external update on the initial state of the vehicle is needed
         sol, U = simIPlant!(n)      # simulating plant in VehicleModels.jl
-        plant2dfs!(n,sol,U) # TODO see if this can be avoided
+        plant2dfs!(n,sol,U)         # TODO see if this can be avoided
         setStateParams(n)           # update X0 parameters in
         updateX0!(n)                # update X0 in NLOptControl.jl
       else
