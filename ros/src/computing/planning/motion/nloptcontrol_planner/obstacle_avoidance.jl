@@ -356,6 +356,8 @@ function loop(pub,pub_opt,pub_path,n,c)
             sleep(0.01)
         end
 
+        RobotOS.set_param("vehicle/chrono/controller/time_shift", n.r.ocp.tSolve)
+
         opt = Optimization()
         opt.t =  RobotOS.get_param("state/t")
         opt.evalNum = n.mpc.v.evalNum - 1

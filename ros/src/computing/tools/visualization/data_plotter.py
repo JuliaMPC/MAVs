@@ -98,7 +98,7 @@ class DataPlotter():
         self.sa_subplot.add_line(self.line_sa_traj_last)
         self.sa_subplot.add_line(self.line_sa_upper_limit)
         self.sa_subplot.add_line(self.line_sa_lower_limit)
-        self.sa_subplot.legend(['actual', 'planned', 'previous planned', 'upper limit', 'lower limit'], fontsize='x-small')
+        #self.sa_subplot.legend(['actual', 'planned', 'previous planned', 'upper limit', 'lower limit'], fontsize='x-small')
         #self.sa_subplot.set_xlabel('time (s)', fontsize='larger', verticalalignment='center')
         self.sa_subplot.set_ylabel('sa (rad)', fontsize='larger')
         self.sa_subplot.tick_params('both', labelsize='x-small')
@@ -113,7 +113,7 @@ class DataPlotter():
         self.ux_subplot.add_line(self.line_ux_actual)
         self.ux_subplot.add_line(self.line_ux_traj)
         self.ux_subplot.add_line(self.line_ux_traj_last)
-        self.ux_subplot.legend(['actual', 'planned', 'last planned'], fontsize='x-small')
+        #self.ux_subplot.legend(['actual', 'planned', 'last planned'], fontsize='x-small')
         #self.ux_subplot.set_xlabel('time (s)', fontsize='larger', verticalalignment='center')
         self.ux_subplot.set_ylabel('ux (m/s)', fontsize='larger')
         self.ux_subplot.tick_params('both', labelsize='x-small')
@@ -132,7 +132,7 @@ class DataPlotter():
         self.ax_subplot.add_line(self.line_ax_traj_last)
         self.ax_subplot.add_line(self.line_ax_upper_limit)
         self.ax_subplot.add_line(self.line_ax_lower_limit)
-        self.ax_subplot.legend(['actual', 'planned', 'previous planned', 'upper limit', 'lower limit'], fontsize='x-small')
+        #self.ax_subplot.legend(['actual', 'planned', 'previous planned', 'upper limit', 'lower limit'], fontsize='x-small')
         self.ax_subplot.set_xlabel('time (s)', fontsize='larger', verticalalignment='center')
         self.ax_subplot.set_ylabel('ax (m/s)', fontsize='larger')
         self.ax_subplot.tick_params('both', labelsize='x-small')
@@ -189,7 +189,7 @@ class DataPlotter():
             self.line_solve_time_limit.set_data(self.solve_num, self.solve_time_limit)
 
             # moving time axis
-            if (len(self.t_actual) > 0 and self.t_actual[-1] > 10):
+            if (len(self.t_actual) > 0 and self.t_actual[-1] > self.t_band):
                 self.sa_subplot.set_xlim(self.t_actual[-1]-self.t_band, self.t_actual[-1])
                 self.ux_subplot.set_xlim(self.t_actual[-1]-self.t_band, self.t_actual[-1])
                 self.ax_subplot.set_xlim(self.t_actual[-1]-self.t_band, self.t_actual[-1])

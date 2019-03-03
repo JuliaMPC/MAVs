@@ -49,9 +49,9 @@ system:
    gui: true
    debug: false
   terrain:
-   position: [0,190,-5]
-   length: 100. # size in Chrono X direction
-   width: 400.  # size in Chrono Y direction
+   position: [0,0,-5] # (1000)...290 = width/2 -10, there is no reson to have a track behind the vehicle
+   length: 1000. # size in Chrono X direction
+   width: 1000.  # size in Chrono Y direction
    frictCoeff: 0.9
    restCoeff: 0.01
 

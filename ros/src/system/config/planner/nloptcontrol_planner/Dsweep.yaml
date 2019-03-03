@@ -15,10 +15,10 @@ planner:
       sm: 2.                 # (m) distance to see if obstacle was hit (for crash checking)
       sm1: 2.5               # (m) distance 1 to make sure we don't hit obstacle (for optimization)
       sm2: 4.0               # (m) distance 2 to make sure we don't hit obstacle (for optimization)
-      Lr: 50.                # LiDAR range (m)
-      L_rd: 10.              # relaxation distance to LiDAR range
+      Lr: 60.                # LiDAR range (m)
+      L_rd: 5.              # relaxation distance to LiDAR range
       Nck: NaN               # number of points per interval
-      N: 30                  # number of points in :tm methods
+      N: 35                  # number of points in :tm methods
       solver: KNITRO         # either Ipopt of KNITRO
       mpc_max_iter: 100000   # an MPC parameter
       PredictX0: false       # if the state that the vehicle will be at when the optimization is finished is to be predicted
@@ -29,7 +29,7 @@ planner:
       followPath: NaN        # a bool to follow the path
       NF: NaN                # number to subtract off the constraint check vector-> used for activeSafety mode so driver sees obstacle before autonomy
       integrationScheme: trapezoidal
-      tfMax: 20.0 # maximum final time in MPC
+      tfMax: 15.0 # maximum final time in MPC
       EP: 0.01    # small number to avoid singularities TODO move this from VehicleModels.jl
       x0slackVariables: true
       xFslackVariables: true
@@ -52,7 +52,7 @@ planner:
       xf: 100.
       goal: 10. # 100.
       psi: 0.01
-      time: 50.
+      time: 250.
       haf: 1.
       Fz: 0.5 # 0.1
       ce: 1.
@@ -88,7 +88,7 @@ planner:
       outlev: 0 # (c.m.solver==:Ipopt) ? :print_level : :outlev # print level
       feastol_abs: 7e-1 #7e-2 # (c.m.solver==:Ipopt) ? :constr_viol_tol : :feastol_abs
       maxit: 5000 # (c.m.solver==:Ipopt) ? :max_iter : :maxit
-      maxtime_cpu: 6.0 # (c.m.solver==:Ipopt) ? :max_cpu_time : :maxtime_cpu
+      maxtime_cpu: 4.0 # (c.m.solver==:Ipopt) ? :max_cpu_time : :maxtime_cpu
 # to do make it so that the initial optization gets more time..
       # settings for KNITRO
       ftol: 1e-15 # relative change in the objective function is less than ftol for ftol_iters consecutive iterations

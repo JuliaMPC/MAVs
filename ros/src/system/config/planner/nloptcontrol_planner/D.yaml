@@ -15,10 +15,10 @@ planner:
       sm: 2.                 # (m) distance to see if obstacle was hit (for crash checking)
       sm1: 3.5               # (m) distance 1 to make sure we don't hit obstacle (for optimization)
       sm2: 6.0               # (m) distance 2 to make sure we don't hit obstacle (for optimization)
-      Lr: 50.                # LiDAR range (m)
-      L_rd: 10.              # relaxation distance to LiDAR range
+      Lr: 60.                # LiDAR range (m)
+      L_rd: 5.              # relaxation distance to LiDAR range
       Nck: NaN               # number of points per interval
-      N: 30                  # number of points in :tm methods
+      N: 35                  # number of points in :tm methods
       solver: KNITRO         # either Ipopt of KNITRO
       mpc_max_iter: 10000    # an MPC parameter
       PredictX0: false       # if the state that the vehicle will be at when the optimization is finished is to be predicted
@@ -52,7 +52,7 @@ planner:
       xf: 100.
       goal: 10. # 100.
       psi: 0.01
-      time: 50.
+      time: 250.
       haf: 1.
       Fz: 0.5 # 0.1
       ce: 1.
