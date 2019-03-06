@@ -517,11 +517,17 @@ function main()
   end
   fixYAML(c)   # fix messed up data types
 
-  # TMP hack to save a single ROS param
+  # TODO add this to fixYAML
+  # to fix this error: Tried to set Option: warm_start_init_point. It is a valid option, but it is of type  String, not of type Integer. Please check the documentation for options.
+  # when dumping to a tmp.yaml "warm_start_init_point" swtitches to <true> instead of <yes>
+  if isequal(typeof(c["solver"]["warm_start_init_point"]),Bool)
+      c["solver"]["warm_start_init_point"] = "yes" # assuming that it is yes...
+  end
+  # TODO add this to fixYAML
+
+  # save a single ROS param
   RobotOS.set_param("vy",case["actual"]["obstacle"]["vy"][1])
   RobotOS.set_param("r",case["actual"]["obstacle"]["radius"][1])
-
-  # TMP hack to save a single ROS param
 
   n = initializeAutonomousControl(c);
   setInitStateParams(c)
