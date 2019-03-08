@@ -26,3 +26,15 @@ python bag_to_csv.py /home/mavs/MAVs/results/tmp.bag "/home/mavs/MAVs/results/tm
 julia plottingData.jl "/home/mavs/MAVs/results/tmp/" "s8"
 rm /home/mavs/MAVs/results/tmp/state.csv
 ```
+
+
+## Other examples
+
+Saving obstacle detector data
+
+```
+cd /home/mavs/MAVs/results
+rm -rf obsD
+mkdir obsD
+python bag_to_csv.py /home/mavs/MAVs/results/obs.bag "/home/mavs/MAVs/results/obsD"
+```
