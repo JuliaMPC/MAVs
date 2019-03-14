@@ -26,9 +26,9 @@ docker ps | show all containers that are currently running
 docker ps -a | show a list of all containers that we ran
 docker history <image> | view all the layers that make up the image once the image is built
 docker exec -it <container> /bin/bash | launch the docker from other terminals
-docker commit <container> <repository[:TAG]> | create a new image from a container’s changes
-docker kill <container> | kill one or more running containers
-docker rm <container> | remove existing container
+docker container commit <container> <repository[:TAG]> | create a new image from a container’s changes
+docker container kill <container> | kill one or more running containers
+docker container rm <container> | remove existing container
 docker image ls | list image built on the machine
 docker image rm <container> | remove image
 
