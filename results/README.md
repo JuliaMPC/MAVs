@@ -18,6 +18,8 @@ This script is provided to sample the position of obstacles and vehicle at a set
 The main function is `main(folder,case)`, where ``folder`` is the folder name that the results are stored in and ``case`` it the ``.yaml`` file case name, which is set in the launch file.
 
 ## Complete example using these scripts
+
+Running in the MAVs container
 ```
 cd /home/mavs/MAVs/results
 rmdir tmp
