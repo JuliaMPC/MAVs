@@ -2,6 +2,7 @@
 <launch>
 
   <!-- demo of obstacle_detector with vehicle_description-->
+  <arg name="ros_bag_name" default="obs"/>
 
   <!-- use Gazebo's simulation time -->
   <param name="use_sim_time" value="true"/>
@@ -48,4 +49,6 @@
   <!--  ************** additional nodes ***************  -->
   <node name="rviz" pkg="rviz" type="rviz" output="screen" args="-d $(find obstacle_detector)/resources/display.rviz"/>
 
+  <!-- save data using rosbag -->
+  <node pkg="rosbag" type="record" name="record" args="record -O /home/mavs/MAVs/results/$(arg ros_bag_name).bag /obstacles"/>
 </launch>
