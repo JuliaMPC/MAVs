@@ -1,5 +1,6 @@
 FROM avpg/cain:middle
 
+RUN sudo apt-get install ffmpeg
 RUN sudo apt-get install -y ros-kinetic-rosparam
 
 COPY knitro-10.3.0-z-Linux-64 /home/$USERNAME/knitro-10.3.0-z-Linux-64
