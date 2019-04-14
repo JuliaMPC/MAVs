@@ -17,6 +17,24 @@
       "save": true
     },
     {
+      "key": "Pr",
+      "val": "/planner/nloptcontrol_planner/misc/Lr",
+      "ros_msg_type": "parameter",
+      "save": true
+    },
+    {
+      "key": "N",
+      "val": "/planner/nloptcontrol_planner/misc/N",
+      "ros_msg_type": "parameter",
+      "save": true
+    },
+    {
+      "key": "RTF",
+      "val": "/planner/nloptcontrol_planner/misc/RTF",
+      "ros_msg_type": "parameter",
+      "save": true
+    },
+    {
       "key": "CaseID",
       "val": "/case/id",
       "ros_msg_type": "parameter",

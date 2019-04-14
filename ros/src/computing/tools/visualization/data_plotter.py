@@ -65,7 +65,7 @@ class DataPlotter():
         self.tSolve_subplot = self.fig.add_subplot(4,2,8)
 
         # axis band
-        self.t_band = 10
+        self.t_band = 20
         self.x_band = 20
         self.y_band = 50
         self.sa_band = 0.4
@@ -79,7 +79,7 @@ class DataPlotter():
         self.pos_subplot.add_line(self.line_pos_actual)
         self.pos_subplot.add_line(self.line_pos_traj)
         self.pos_subplot.add_line(self.line_pos_traj_last)
-        self.pos_subplot.legend(['actual path', 'planned path', 'last planned path'], fontsize='x-small')
+        self.pos_subplot.legend(['actual path', 'planned path', 'last planned path'], fontsize='x-small', bbox_to_anchor=(0., 1.02, 1., .102),loc=3,ncol=3,mode="expand",borderaxespad=0.)
         self.pos_subplot.set_xlabel('x (m)', fontsize='larger')
         self.pos_subplot.set_ylabel('y (m)', fontsize='larger')
         self.pos_subplot.tick_params('both', labelsize='small')
@@ -98,10 +98,11 @@ class DataPlotter():
         self.sa_subplot.add_line(self.line_sa_traj_last)
         self.sa_subplot.add_line(self.line_sa_upper_limit)
         self.sa_subplot.add_line(self.line_sa_lower_limit)
-        self.sa_subplot.legend(['actual', 'planned', 'previous planned', 'upper limit', 'lower limit'], fontsize='x-small')
-        self.sa_subplot.set_xlabel('time (s)', fontsize='larger', verticalalignment='center')
+        #self.sa_subplot.legend(['actual', 'planned', 'previous planned', 'upper limit', 'lower limit'], fontsize='x-small')
+        #self.sa_subplot.set_xlabel('time (s)', fontsize='larger', verticalalignment='center')
         self.sa_subplot.set_ylabel('sa (rad)', fontsize='larger')
         self.sa_subplot.tick_params('both', labelsize='x-small')
+        self.sa_subplot.set_xticklabels([])
         self.sa_subplot.grid(True)
         self.sa_subplot.set_xlim(0,self.t_band)
         self.sa_subplot.set_ylim(-self.sa_band/2.0,self.sa_band/2.0)
@@ -112,13 +113,14 @@ class DataPlotter():
         self.ux_subplot.add_line(self.line_ux_actual)
         self.ux_subplot.add_line(self.line_ux_traj)
         self.ux_subplot.add_line(self.line_ux_traj_last)
-        self.ux_subplot.legend(['actual', 'planned', 'last planned'], fontsize='x-small')
-        self.ux_subplot.set_xlabel('time (s)', fontsize='larger', verticalalignment='center')
+        #self.ux_subplot.legend(['actual', 'planned', 'last planned'], fontsize='x-small')
+        #self.ux_subplot.set_xlabel('time (s)', fontsize='larger', verticalalignment='center')
         self.ux_subplot.set_ylabel('ux (m/s)', fontsize='larger')
         self.ux_subplot.tick_params('both', labelsize='x-small')
+        self.ux_subplot.set_xticklabels([])
         self.ux_subplot.grid(True)
         self.ux_subplot.set_xlim(0,self.t_band)
-        self.ux_subplot.set_ylim(-self.ux_band/2.0,self.ux_band/2.0)
+        self.ux_subplot.set_ylim(0.0,self.ux_band/2.0)
 
         self.line_ax_actual = Line2D([], [], linewidth=1.8, color='green', linestyle='-')
         self.line_ax_traj = Line2D([], [], color='red', linewidth=1.5, linestyle='--')
@@ -130,7 +132,7 @@ class DataPlotter():
         self.ax_subplot.add_line(self.line_ax_traj_last)
         self.ax_subplot.add_line(self.line_ax_upper_limit)
         self.ax_subplot.add_line(self.line_ax_lower_limit)
-        self.ax_subplot.legend(['actual', 'planned', 'previous planned', 'upper limit', 'lower limit'], fontsize='x-small')
+        #self.ax_subplot.legend(['actual', 'planned', 'previous planned', 'upper limit', 'lower limit'], fontsize='x-small')
         self.ax_subplot.set_xlabel('time (s)', fontsize='larger', verticalalignment='center')
         self.ax_subplot.set_ylabel('ax (m/s)', fontsize='larger')
         self.ax_subplot.tick_params('both', labelsize='x-small')
@@ -187,7 +189,7 @@ class DataPlotter():
             self.line_solve_time_limit.set_data(self.solve_num, self.solve_time_limit)
 
             # moving time axis
-            if (len(self.t_actual) > 0 and self.t_actual[-1] > 10):
+            if (len(self.t_actual) > 0 and self.t_actual[-1] > self.t_band):
                 self.sa_subplot.set_xlim(self.t_actual[-1]-self.t_band, self.t_actual[-1])
                 self.ux_subplot.set_xlim(self.t_actual[-1]-self.t_band, self.t_actual[-1])
                 self.ax_subplot.set_xlim(self.t_actual[-1]-self.t_band, self.t_actual[-1])

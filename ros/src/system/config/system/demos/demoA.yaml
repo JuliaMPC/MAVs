@@ -31,3 +31,7 @@ system:
   flags:
    running: true
    initialized: false
+
+ nloptcontrol_planner:
+  flags:
+   running: false

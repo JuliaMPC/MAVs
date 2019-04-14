@@ -1,12 +1,11 @@
 // C/C++ library
 #include <iostream>
+#include <cstdio>
 #include <math.h>
 #include <vector>
 #include <string>
 #include <unistd.h>
 #include <chrono>
-#include <stdint.h>
-
 // Computing tool library
 #include "interpolation.h"
 #include "PID.h"
@@ -179,7 +178,7 @@ unsigned int getTargetPos(const ChVector<>& pos_global, const std::vector<double
 					target_speed = traj_ux[i - 1] * (1 - t2) + traj_ux[i] * t2;
 				}
 				else {
-					std::cout << "no correct solution" << std::endl;
+					std::cout << "no right solution" << std::endl;
 					x_target = xb + pos_global[0];
 					y_target = yb + pos_global[1];
 					target_speed = traj_ux[i];
@@ -219,8 +218,8 @@ int main(int argc, char* argv[]) {
 	node.getParam("system/chrono/namespace", chrono_namespace);
 
 	ros::Subscriber planner_sub = node.subscribe(planner_namespace + "/control", 100, plannerCallback);
-	ros::Publisher state_pub = node.advertise<mavs_msgs::state>("/state", 10);
-	ros::Publisher control_pub = node.advertise<mavs_msgs::control>("/control", 10);
+	ros::Publisher state_pub = node.advertise<mavs_msgs::state>("/state", 5);
+	ros::Publisher control_pub = node.advertise<mavs_msgs::control>("/control", 5);
 
 	mavs_msgs::state state_data;
 	mavs_msgs::control control_data;
@@ -387,7 +386,7 @@ int main(int argc, char* argv[]) {
 	double long_velocity = 0.0;
 	ChVector<> VehicleCOMPos = my_hmmwv.GetVehicle().GetVehicleCOMPos();
 	ChQuaternion<> VehicleRot = my_hmmwv.GetVehicle().GetVehicleRot();//global orientation as quaternion
-	long_velocity = my_hmmwv.GetVehicle().GetVehicleSpeedCOM();
+	// long_velocity = my_hmmwv.GetVehicle().GetVehicleSpeedCOM();
 	double yaw_angle = VehicleRot.Q_to_Euler123()[2];
 
 	// collect controller output data from modules (for inter-module communication)
@@ -416,42 +415,65 @@ int main(int argc, char* argv[]) {
 	while (ros::ok()) {
 		// get chrono time
 		double chrono_time = my_hmmwv.GetSystem()->GetChTime();
+		// update time shift based off of current solve time
+		node.getParam("vehicle/chrono/controller/time_shift", time_shift);
 
-		// steering control
-		if (traj_x.empty() || traj_x.size() == 1) {
-			steering_angle = 0;
-			steering_input = 0;
-		}
-		else {
-			front_pos1 = my_hmmwv.GetVehicle().GetWheelPos(0);
-			front_pos2 = my_hmmwv.GetVehicle().GetWheelPos(1);
-			rear_pos1 = my_hmmwv.GetVehicle().GetWheelPos(2);
-			rear_pos2 = my_hmmwv.GetVehicle().GetWheelPos(3);
-			front_x = (front_pos1[0] + front_pos2[0]) / 2.;
-			front_y = (front_pos1[1] + front_pos2[1]) / 2.;
-			rear_x = (rear_pos1[0] + rear_pos2[0]) / 2.;
-			rear_y = (rear_pos1[1] + rear_pos2[1]) / 2.;
-			front2rear = sqrt(pow(rear_x - front_x, 2) + pow(rear_y - front_y, 2));
-			traj_sa_interp = 1.0*getTargetAngle(VehicleCOMPos, traj_x, traj_y, traj_ux, traj_ux_interp, long_velocity, front2rear, yaw_angle,Kpp, Rmin, Rmax);
-			traj_ux_interp = std::max(0.0, traj_ux_interp);
+		// --------------------------
+		// interpolation using ALGLIB
+		// --------------------------
+		if (traj_t.size() > 1) {
+				real_1d_array t_arr, sa_arr, ux_arr;
+				t_arr.setcontent(traj_t.size(), &(traj_t[0]));
 
-			// low pass filter
-			double alpha = 1.0;
-			steering_input = (1.0 - alpha) * steering_input + alpha * traj_sa_interp / maximum_steering_angle;
-			steering_input = std::max(-1.0, std::min(1.0, steering_input));
-			steering_angle = steering_input * maximum_steering_angle; // steering angle (rad)
-		}
+				// speed
+				ux_arr.setcontent(traj_ux.size(), &(traj_ux[0]));
+				spline1dinterpolant s_ux;
+				spline1dbuildlinear(t_arr, ux_arr, s_ux);
+				traj_ux_interp = spline1dcalc(s_ux, chrono_time + time_shift);
+				double ux_err = traj_ux_interp - long_velocity;
+				double vel_controller_output = vel_controller.control(ux_err);
 
-		// speed controller
-		double ux_err = traj_ux_interp - long_velocity;
-		double vel_controller_output = vel_controller.control(ux_err);
-		if (vel_controller_output > 0) {
-			throttle_input = vel_controller_output;
-			braking_input = 0;
+				if (debug) {
+					printf("ux_err: %lf\ntraj_ux_interp: %lf\nlong_velocity: %lf\nvel_controller_output: %lf\n", ux_err, traj_ux_interp,long_velocity,vel_controller_output);
+				}
+
+				if (vel_controller_output > 0) {
+					throttle_input = vel_controller_output;
+					braking_input = 0;
+				}
+				else {
+					throttle_input = 0;
+					braking_input = -vel_controller_output;
+				}
+
+				// steering
+				/*
+				sa_arr.setcontent(traj_sa.size(), &(traj_sa[0]));
+				spline1dinterpolant s_sa;
+				spline1dbuildcubic(t_arr, sa_arr, s_sa);
+				traj_sa_interp = spline1dcalc(s_sa, chrono_time + time_shift);
+				*/
+				front_pos1 = my_hmmwv.GetVehicle().GetWheelPos(0);
+				front_pos2 = my_hmmwv.GetVehicle().GetWheelPos(1);
+				rear_pos1 = my_hmmwv.GetVehicle().GetWheelPos(2);
+				rear_pos2 = my_hmmwv.GetVehicle().GetWheelPos(3);
+				front_x = (front_pos1[0] + front_pos2[0]) / 2.;
+				front_y = (front_pos1[1] + front_pos2[1]) / 2.;
+				rear_x = (rear_pos1[0] + rear_pos2[0]) / 2.;
+				rear_y = (rear_pos1[1] + rear_pos2[1]) / 2.;
+				front2rear = sqrt(pow(rear_x - front_x, 2) + pow(rear_y - front_y, 2));
+				traj_sa_interp = 1.0*getTargetAngle(VehicleCOMPos, traj_x, traj_y, traj_ux, traj_ux_interp, long_velocity, front2rear, yaw_angle, Kpp, Rmin, Rmax);
+
+				double alpha = 1.0; 				// low pass filter on steering
+				steering_input = (1.0 - alpha) * steering_input + alpha * traj_sa_interp / maximum_steering_angle;
+				steering_input = std::max(-1.0, std::min(1.0, steering_input));
+				steering_angle = steering_input * maximum_steering_angle; // steering angle (rad)
 		}
-		else {
-			throttle_input = 0;
-			braking_input = -vel_controller_output;
+		else if (traj_x.empty() || traj_x.size() == 1) {
+				braking_input = 0;
+				throttle_input = 0;
+				steering_angle = 0;
+				steering_input = 0;
 		}
 
 		// Update modules (process inputs from other modules)
@@ -511,6 +533,8 @@ int main(int argc, char* argv[]) {
 		node.setParam("/control/brk", braking_input);
 		node.setParam("/control/str", steering_input);
 
+    long_velocity = VehicleCOMVel[0];
+
 		// Update state and control messages
 		state_data.t = chrono_time; // time in chrono simulation
 		state_data.x = VehicleCOMPos[0];
@@ -532,7 +556,6 @@ int main(int argc, char* argv[]) {
 		control_data.str_in = steering_input;   // steeering input in the range [-1,+1]
 		state_pub.publish(state_data);
 		control_pub.publish(control_data);
-
 
 		ros::spinOnce();
 	}

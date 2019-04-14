@@ -1,7 +1,7 @@
 case:
  goal:
   x: 0.
-  yVal: 300.
+  yVal: 400.
   psi: 1.5701
   tol: 10.
 

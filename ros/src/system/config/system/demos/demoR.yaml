@@ -1,0 +1,26 @@
+system:
+ planner: nloptcontrol_planner
+ plant: chrono
+
+ params:
+  step_size: 0.003
+  goal_tol: 0.1
+  tire_step_size: 0.00025
+  timelimit: 50
+
+ nloptcontrol_planner:
+  namespace: nloptcontrol_planner
+
+ chrono:
+  namespace: chrono
+  flags:
+   initialized: false
+   running: true
+   gui: true
+   debug: false
+  terrain:
+   position: [0,190,-5]
+   length: 100. # size in Chrono X direction
+   width: 400.  # size in Chrono Y direction
+   frictCoeff: 0.9
+   restCoeff: 0.01
