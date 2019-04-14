@@ -59,7 +59,7 @@ Check installation of docker:
 docker run hello-world
 ```
 
-[Expected output](docker.png)
+![Expected output](docker.png)
 
 ### Step 2, Update NVIDIA Driver
 
@@ -128,7 +128,7 @@ Test NVIDIA docker installation:
 ```
 docker run --runtime=nvidia --rm nvidia/cuda nvidia-smi
 ```
-[Expected output](nvidia.png)
+![Expected output](nvidia.png)
 
 
 ### Step 4, Install MAVs
@@ -156,7 +156,7 @@ Then, the most basic usage of MAVs is simply running the demos. For instance, de
 ```
 $roslaunch system demoA.launch
 ```
-[Example, output](gazebo.png)
+![Example, output](gazebo.png)
 
 #### Potential Issue, NVIDIA driver is too old for CUDA 10
 
