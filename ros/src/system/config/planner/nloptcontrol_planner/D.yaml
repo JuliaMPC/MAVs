@@ -37,7 +37,7 @@ planner:
       onlyOptimal: true   # if this is false make sure ocpSave is true otherwise there may be an error, there is no way to continue with a non-optimal signal without previous solution
       evalConstraints: false
       ocpSave: false
-      RTF: 1
+      RTF: 3
 
     weights:
       ic: 100.0
