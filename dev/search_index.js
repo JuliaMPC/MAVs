@@ -25,19 +25,51 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "#Requirements-1",
+    "location": "#Installation-Instructions-1",
     "page": "Home",
-    "title": "Requirements",
+    "title": "Installation Instructions",
     "category": "section",
-    "text": "Tested on Ubuntu Xenial (16.04)An X server\nDocker\nnvidia-docker"
+    "text": "These instructions depend on your machine\'s configuration."
 },
 
 {
-    "location": "#Installation-1",
+    "location": "#Step-1,-Install-Docker-1",
     "page": "Home",
-    "title": "Installation",
+    "title": "Step 1, Install Docker",
     "category": "section",
-    "text": "Clone the develop branch of the repositorygit clone -b develop https://github.com/JuliaMPC/MAVsBuild imagesh build.sh"
+    "text": "Remove any old versions of docker if they are on your machine:sudo apt-get remove docker docker-engine docker.ioUpdate the apt package index:sudo apt-get updateInstall the packages to allow apt to use a repository through HTTPS:sudo apt-get install \\\n   apt-transport-https \\\n   ca-certificates \\\n   curl \\\n   software-properties-commonAdd the official GPG key of Docker:curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -Verify that the command below print out 9DC8 5822 9FC7 DD38 854A E2D8 8D81 803C 0EBF CD88:sudo apt-key fingerprint 0EBFCD88Tell apt to use the stable repository by running the command below:sudo add-apt-repository \\\n   \"deb [arch=amd64] https://download.docker.com/linux/ubuntu \\\n   $(lsb_release -cs) \\\n   stable\"Update the apt package index and install Docker CE:sudo apt-get update && apt-get install docker-ceCheck installation of docker:docker run hello-worldExpected output"
+},
+
+{
+    "location": "#Step-2,-Update-NVIDIA-Driver-1",
+    "page": "Home",
+    "title": "Step 2, Update NVIDIA Driver",
+    "category": "section",
+    "text": "Use the CUDA 10.1 Toolkit to install CUDA. An example of using this toolkit follows.(Image: First, select your machine architecture)(Image: Next, download the .deb file provided)After the download is complete, cd into your Downloads folder and follow the installation instructions provided by the toolkit to install CUDA:sudo dpkg -i $HOME/Downloads/cuda-repo-ubuntu1604-10-1-local-10.1.105-418.39_1.0-1_amd64.deb\nsudo apt-key add /var/cuda-repo-<version>/7fa2af80.pub\nsudo apt-get update\nsudo apt-get install cudaNote: After you follow the first instruction, the <version> in the second instruction will be provided. For instance, in this example:$HOME/Downloads/cuda-repo-ubuntu1604-10-1-local-10.1.105-418.39_1.0-1_amd64.debProduces:Selecting previously unselected package cuda-repo-ubuntu1604-10-1-local-10.1.105-418.39.\n(Reading database ... 551128 files and directories currently installed.)\nPreparing to unpack .../cuda-repo-ubuntu1604-10-1-local-10.1.105-418.39_1.0-1_amd64.deb ...\nUnpacking cuda-repo-ubuntu1604-10-1-local-10.1.105-418.39 (1.0-1) ...\nSetting up cuda-repo-ubuntu1604-10-1-local-10.1.105-418.39 (1.0-1) ...\n\nThe public CUDA GPG key does not appear to be installed.\nTo install the key, run this command:\nsudo apt-key add /var/cuda-repo-10-1-local-10.1.105-418.39/7fa2af80.pubThus add the key as instructed, before proceeding with the final instructions.Reboot your computer and verify that the NVIDIA graphics driver can be loaded"
+},
+
+{
+    "location": "#Step-3,-Install-NVIDIA-docker-1",
+    "page": "Home",
+    "title": "Step 3, Install NVIDIA-docker",
+    "category": "section",
+    "text": "If installed, remove NVIDIA docker 1.0:docker volume ls -q -f driver=nvidia-docker | xargs -r -I{} -n1 docker ps -q -a -f volume={} | xargs -r docker rm -f\nsudo apt-get purge -y nvidia-dockerAdd the necessary repositories and update the apt package index:curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | \\\n  sudo apt-key add -\ncurl -s -L https://nvidia.github.io/nvidia-docker/ubuntu16.04/amd64/nvidia-docker.list | \\\n  sudo tee /etc/apt/sources.list.d/nvidia-docker.list\nsudo apt-get updateInstall NVIDIA docker:sudo apt-get install -y nvidia-docker2\nsudo pkill -SIGHUP dockerdTest NVIDIA docker installation:docker run --runtime=nvidia --rm nvidia/cuda nvidia-smiExpected output"
+},
+
+{
+    "location": "#Step-4,-Install-MAVs-1",
+    "page": "Home",
+    "title": "Step 4, Install MAVs",
+    "category": "section",
+    "text": "Make a directory to store MAVs in, e.g., HOMEDocumentsworkspaceMAVs. cd into that directory.\nClone the develop branch of the repositorygit clone -b develop https://github.com/JuliaMPC/MAVsBuild imagesh build.shTest MAVsFirst start Docker container in the MAVs folder:./run.shThen, the most basic usage of MAVs is simply running the demos. For instance, demoA can be run as:$roslaunch system demoA.launchExample, output"
+},
+
+{
+    "location": "#Potential-Issue,-NVIDIA-driver-is-too-old-for-CUDA-10-1",
+    "page": "Home",
+    "title": "Potential Issue, NVIDIA driver is too old for CUDA 10",
+    "category": "section",
+    "text": "If you try to run the test:$ docker run --runtime=nvidia --rm nvidia/cuda nvidia-smiAnd get this error:Unable to find image \'nvidia/cuda:latest\' locally\nlatest: Pulling from nvidia/cuda\n898c46f3b1a1: Pull complete\n63366dfa0a50: Pull complete\n041d4cd74a92: Pull complete\n6e1bee0f8701: Pull complete\n131dbe7c254d: Pull complete\n5bca6b05dcd6: Pull complete\n0d286a7b6e12: Pull complete\n5776d2c6371d: Pull complete\n768e84e7fc24: Pull complete\nDigest: sha256:eba1dc5810e40f60625ee797d618a6bd11be24cb67bc6647a4d36392202bb013\nStatus: Downloaded newer image for nvidia/cuda:latest\ndocker: Error response from daemon: OCI runtime create failed: container_linux.go:345: starting container process caused \"process_linux.go:424: container init caused \\\"process_linux.go:407: running prestart hook 1 caused \\\\\\\"error running hook: exit status 1, stdout: , stderr: exec command: [/usr/bin/nvidia-container-cli --load-kmods configure --ldconfig=@/sbin/ldconfig.real --device=all --compute --utility --require=cuda>=10.1 brand=tesla,driver>=384,driver<385 brand=tesla,driver>=410,driver<411 --pid=25518 /var/lib/docker/overlay2/daf8349b9ffd92c040ff872e037e3afa56b93a5abeb6f2406e42fa596a88facf/merged]\\\\\\\\nnvidia-container-cli: requirement error: unsatisfied condition: brand = tesla\\\\\\\\n\\\\\\\"\\\"\": unknown.Did you follow Step 2?Because it is likely that your nvidia driver is too old to support CUDA 10 see NVidia\'s compatibility table.To check your NVIDIA driver version:$ nvidia-smiSun Apr 14 09:10:14 2019       \n+-----------------------------------------------------------------------------+\n| NVIDIA-SMI 384.130                Driver Version: 384.130                   |\n|-------------------------------+----------------------+----------------------+\n| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |\n| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |\n|===============================+======================+======================|\n|   0  Quadro K2200M       Off  | 00000000:01:00.0  On |                  N/A |\n| N/A   45C    P8    N/A /  N/A |    437MiB /  1999MiB |      1%      Default |\n+-------------------------------+----------------------+----------------------+\n\n+-----------------------------------------------------------------------------+\n| Processes:                                                       GPU Memory |\n|  GPU       PID   Type   Process name                             Usage      |\n|=============================================================================|\n|    0      1385      G   /usr/lib/xorg/Xorg                           189MiB |\n|    0      2693      G   compiz                                        86MiB |\n|    0      3162      G   ...-token=8169387D71BE805A200B4A3744EC138E    94MiB |\n|    0      6728      G   ...passed-by-fd --v8-snapshot-passed-by-fd    62MiB |\n+-----------------------------------------------------------------------------+If that\'s the case, you can either use one of the numbered 1.12 tags or upgrade your device driver to a version that supports CUDA 10. Try using using the CUDA 10.1 Toolkit to install CUDA (i.e., Step 2)"
 },
 
 {
@@ -1429,7 +1461,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Notes",
     "title": "Docker Commands",
     "category": "section",
-    "text": "Command Description\ndocker run <image> run a docker container based on the image\ndocker ps show all containers that are currently running\ndocker ps -a show a list of all containers that we ran\ndocker history <image> view all the layers that make up the image once the image is built\ndocker exec -it <container> /bin/bash launch the docker from other terminals\ndocker commit <container> <repository[:TAG]> create a new image from a container’s changes\ndocker kill <container> kill one or more running containers\ndocker rm <container> remove existing container\ndocker image ls list image built on the machine\ndocker image rm <container> remove imagenvidia-docker build -t <container> -f <Dockerfile> nvidia-docker run -it –rm 		automatically remove the container when it exits. –volume list	bind mount a volume –env list		set environment variables -u		user or UID (i.e. mavs) –privileged	give extended privileges to this container"
+    "text": "Command Description\ndocker run <image> run a docker container based on the image\ndocker ps show all containers that are currently running\ndocker ps -a show a list of all containers that we ran\ndocker history <image> view all the layers that make up the image once the image is built\ndocker exec -it <container> /bin/bash launch the docker from other terminals\ndocker container commit <container> <repository[:TAG]> create a new image from a container’s changes\ndocker container kill <container> kill one or more running containers\ndocker container rm <container> remove existing container\ndocker image ls list image built on the machine\ndocker image rm <container> remove imagenvidia-docker build -t <container> -f <Dockerfile> nvidia-docker run -it –rm 		automatically remove the container when it exits. –volume list	bind mount a volume –env list		set environment variables -u		user or UID (i.e. mavs) –privileged	give extended privileges to this container"
 },
 
 {
