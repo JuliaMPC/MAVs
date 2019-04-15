@@ -19,7 +19,7 @@ COPY ros /home/$USERNAME/MAVs/ros
 
 # RUN /bin/bash -c 'chown -R $USERNAME:$USERNAME /opt/ros/kinetic; chown -R $USERNAME:$USERNAME /home/mavs/MAVs/results'
 
-RUN /bin/bash -c 'source /opt/ros/kinetic/setup.bash; cd /home/$USERNAME/MAVs/ros/; catkin_make'
+RUN sudo /bin/bash -c 'source /opt/ros/kinetic/setup.bash; cd /home/mavs/MAVs/ros/; catkin_make'
 
 #RUN echo 'alias sweepdir='cd "$HOME/MAVs/ros/src/system/param_sweep/scripts" '' >> ~/.bashrc
 
