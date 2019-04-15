@@ -101,8 +101,8 @@ Thus add the key as instructed, before proceeding with the final instructions.
 *Reboot your computer and verify that the NVIDIA graphics driver can be loaded*
 
 
-### Step 3, Install NVIDIA-docker
-
+### Step 3, [Install NVIDIA-docker](https://chunml.github.io/ChunML.github.io/project/Installing-NVIDIA-Docker-On-Ubuntu-16.04/
+)
 *If* installed, remove NVIDIA docker 1.0:
 ```
 docker volume ls -q -f driver=nvidia-docker | xargs -r -I{} -n1 docker ps -q -a -f volume={} | xargs -r docker rm -f
