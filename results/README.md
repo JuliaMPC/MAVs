@@ -24,7 +24,7 @@ Running in the MAVs container
 cd /home/mavs/MAVs/results
 rmdir tmp
 mkdir tmp
-python bag_to_csv.py /home/mavs/MAVs/results/tmp.bag "/home/mavs/MAVs/results/tmp"
+python bag_to_csv.py /home/mavs/MAVs/results/test.bag "/home/mavs/MAVs/results/tmp"
 julia plottingData.jl "/home/mavs/MAVs/results/tmp/" "s8"
 rm /home/mavs/MAVs/results/tmp/state.csv
 ```
