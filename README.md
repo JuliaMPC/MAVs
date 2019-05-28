@@ -109,20 +109,16 @@ docker volume ls -q -f driver=nvidia-docker | xargs -r -I{} -n1 docker ps -q -a 
 sudo apt-get purge -y nvidia-docker
 ```
 
-Add the necessary repositories and update the apt package index:
+Add the necessary repositories and update the apt package index and Install NVIDIA docker:
 ```
-curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | \
-  sudo apt-key add -
-curl -s -L https://nvidia.github.io/nvidia-docker/ubuntu16.04/amd64/nvidia-docker.list | \
-  sudo tee /etc/apt/sources.list.d/nvidia-docker.list
-sudo apt-get update
-```
-
-Install NVIDIA docker:
-```
-sudo apt-get install -y nvidia-docker2
+curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add - && \
+distribution=$(. /etc/os-release;echo $ID$VERSION_ID) && \
+curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list && \
+sudo apt-get update && \
+sudo apt-get install -y nvidia-docker2 && \
 sudo pkill -SIGHUP dockerd
 ```
+
 
 Test NVIDIA docker installation:
 ```
