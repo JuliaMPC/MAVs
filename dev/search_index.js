@@ -37,7 +37,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Step 1, Install Docker",
     "category": "section",
-    "text": "Remove any old versions of docker if they are on your machine:sudo apt-get remove docker docker-engine docker.ioUpdate the apt package index:sudo apt-get updateInstall the packages to allow apt to use a repository through HTTPS:sudo apt-get install \\\n   apt-transport-https \\\n   ca-certificates \\\n   curl \\\n   software-properties-commonAdd the official GPG key of Docker:curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -Verify that the command below print out 9DC8 5822 9FC7 DD38 854A E2D8 8D81 803C 0EBF CD88:sudo apt-key fingerprint 0EBFCD88Tell apt to use the stable repository by running the command below:sudo add-apt-repository \\\n   \"deb [arch=amd64] https://download.docker.com/linux/ubuntu \\\n   $(lsb_release -cs) \\\n   stable\"Update the apt package index and install Docker CE:sudo apt-get update && apt-get install docker-ceCheck installation of docker:docker run hello-worldExpected output"
+    "text": "Remove any old versions of docker if they are on your machine:sudo apt-get remove docker docker-engine docker.ioUpdate the apt package index:sudo apt-get updateInstall the packages to allow apt to use a repository through HTTPS:sudo apt-get install \\\n   apt-transport-https \\\n   ca-certificates \\\n   curl \\\n   software-properties-commonAdd the official GPG key of Docker:curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -Verify that the command below print out 9DC8 5822 9FC7 DD38 854A E2D8 8D81 803C 0EBF CD88:sudo apt-key fingerprint 0EBFCD88Tell apt to use the stable repository by running the command below:sudo add-apt-repository \\\n   \"deb [arch=amd64] https://download.docker.com/linux/ubuntu \\\n   $(lsb_release -cs) \\\n   stable\"Update the apt package index and install Docker CE:sudo apt-get update && apt-get install docker-ceCheck installation of docker:docker run hello-world(Image: Expected output)"
 },
 
 {
@@ -49,11 +49,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "#Step-3,-Install-NVIDIA-docker-1",
+    "location": "#Step-3,-[Install-NVIDIA-docker](https://chunml.github.io/ChunML.github.io/project/Installing-NVIDIA-Docker-On-Ubuntu-16.04/-1",
     "page": "Home",
-    "title": "Step 3, Install NVIDIA-docker",
+    "title": "Step 3, [Install NVIDIA-docker](https://chunml.github.io/ChunML.github.io/project/Installing-NVIDIA-Docker-On-Ubuntu-16.04/",
     "category": "section",
-    "text": "If installed, remove NVIDIA docker 1.0:docker volume ls -q -f driver=nvidia-docker | xargs -r -I{} -n1 docker ps -q -a -f volume={} | xargs -r docker rm -f\nsudo apt-get purge -y nvidia-dockerAdd the necessary repositories and update the apt package index:curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | \\\n  sudo apt-key add -\ncurl -s -L https://nvidia.github.io/nvidia-docker/ubuntu16.04/amd64/nvidia-docker.list | \\\n  sudo tee /etc/apt/sources.list.d/nvidia-docker.list\nsudo apt-get updateInstall NVIDIA docker:sudo apt-get install -y nvidia-docker2\nsudo pkill -SIGHUP dockerdTest NVIDIA docker installation:docker run --runtime=nvidia --rm nvidia/cuda nvidia-smiExpected output"
+    "text": ")If installed, remove NVIDIA docker 1.0:docker volume ls -q -f driver=nvidia-docker | xargs -r -I{} -n1 docker ps -q -a -f volume={} | xargs -r docker rm -f\nsudo apt-get purge -y nvidia-dockerAdd the necessary repositories and update the apt package index:curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | \\\n  sudo apt-key add -\ncurl -s -L https://nvidia.github.io/nvidia-docker/ubuntu16.04/amd64/nvidia-docker.list | \\\n  sudo tee /etc/apt/sources.list.d/nvidia-docker.list\nsudo apt-get updateInstall NVIDIA docker:sudo apt-get install -y nvidia-docker2\nsudo pkill -SIGHUP dockerdTest NVIDIA docker installation:docker run --runtime=nvidia --rm nvidia/cuda nvidia-smi(Image: Expected output)"
 },
 
 {
@@ -61,7 +61,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Step 4, Install MAVs",
     "category": "section",
-    "text": "Make a directory to store MAVs in, e.g., HOMEDocumentsworkspaceMAVs. cd into that directory.\nClone the develop branch of the repositorygit clone -b develop https://github.com/JuliaMPC/MAVsBuild imagesh build.shTest MAVsFirst start Docker container in the MAVs folder:./run.shThen, the most basic usage of MAVs is simply running the demos. For instance, demoA can be run as:$roslaunch system demoA.launchExample, output"
+    "text": "Make a directory to store MAVs in, e.g., HOMEDocumentsworkspaceMAVs. cd into that directory.\nClone the develop branch of the repositorygit clone -b develop https://github.com/JuliaMPC/MAVsBuild imagesh build.shTest MAVsFirst start Docker container in the MAVs folder:./run.shThen, the most basic usage of MAVs is simply running the demos. For instance, demoA can be run as:$roslaunch system demoA.launch(Image: Example, output)"
 },
 
 {
