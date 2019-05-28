@@ -8,7 +8,7 @@ This is the main processing script and it goes through and saves all of the topi
 
 Consider the example
 ```
-python bag_to_csv.py /home/mavs/MAVs/results/tmp.bag "/home/mavs/MAVs/results/tmp"
+python bag_to_csv.py /home/mavs/MAVs/results/test.bag "/home/mavs/MAVs/results/tmp"
 ```
 where the two arguments that are passed to this script are the rosbag file and the directory that the `.csv` files will be saved.
 
@@ -24,7 +24,7 @@ Running in the MAVs container
 cd /home/mavs/MAVs/results
 rmdir tmp
 mkdir tmp
-python bag_to_csv.py /home/mavs/MAVs/results/tmp.bag "/home/mavs/MAVs/results/tmp"
+python bag_to_csv.py /home/mavs/MAVs/results/test.bag "/home/mavs/MAVs/results/tmp"
 julia plottingData.jl "/home/mavs/MAVs/results/tmp/" "s8"
 rm /home/mavs/MAVs/results/tmp/state.csv
 ```
