@@ -16,6 +16,8 @@ SRC_HOST="$(pwd)"/ros/src
 
 echo "Results directory: ${RESULTS_CONTAINER}"
 
+xhost local:root
+
 nvidia-docker run \
     --name mavs_container \
     --user mavs \
