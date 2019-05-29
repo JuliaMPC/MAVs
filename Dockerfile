@@ -21,6 +21,7 @@ COPY ros /home/$USERNAME/MAVs/ros
 
 RUN sudo /bin/bash -c 'source /opt/ros/kinetic/setup.bash; cd /home/mavs/MAVs/ros/; catkin_make'
 
+RUN /bin/bash -c 'sudo chmod -R ugo+rw ~/MAVs/results'
 #RUN echo 'alias sweepdir='cd "$HOME/MAVs/ros/src/system/param_sweep/scripts" '' >> ~/.bashrc
 
 # Default CMD
