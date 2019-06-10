@@ -176,7 +176,9 @@ Then, the most basic usage of MAVs is simply running the demos. For instance, de
 ```
 $roslaunch system demoA.launch
 ```
-![Example, output](gazebo.png)
+
+![Example output](/gazebo.png)
+
 
 ## Tests
 Unfortunately this software stack exceeds the time limit on Docker as well as Travis services (~45 min). So, while these services are configured, they cannot be utilized.   
