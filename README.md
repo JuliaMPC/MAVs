@@ -143,12 +143,10 @@ sudo apt-get install -y nvidia-docker2 && \
 sudo pkill -SIGHUP dockerd
 ```
 
-
 Test NVIDIA docker installation:
 ```
 docker run --runtime=nvidia --rm nvidia/cuda nvidia-smi
 ```
-![Expected output](nvidia.png)
 
 
 ### Step 4, Install MAVs
