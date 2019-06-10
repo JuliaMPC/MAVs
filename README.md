@@ -99,10 +99,34 @@ Thus add the key as instructed, before proceeding with the final instructions.
 
 
 *Reboot your computer and verify that the NVIDIA graphics driver can be loaded*
-
-
-### Step 3, [Install NVIDIA-docker](https://chunml.github.io/ChunML.github.io/project/Installing-NVIDIA-Docker-On-Ubuntu-16.04/
-)
+```
+nvidia-smi
+```
+which should produce something like this
+```
+Mon Jun 10 08:59:09 2019       
++-----------------------------------------------------------------------------+
+| NVIDIA-SMI 418.67       Driver Version: 418.67       CUDA Version: 10.1     |
+|-------------------------------+----------------------+----------------------+
+| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
+|===============================+======================+======================|
+|   0  GeForce GTX TITAN   On   | 00000000:03:00.0  On |                  N/A |
+| 34%   50C    P8    17W / 250W |    433MiB /  6080MiB |      0%      Default |
++-------------------------------+----------------------+----------------------+
+                                                                               
++-----------------------------------------------------------------------------+
+| Processes:                                                       GPU Memory |
+|  GPU       PID   Type   Process name                             Usage      |
+|=============================================================================|
+|    0      1895      G   /usr/lib/xorg/Xorg                            27MiB |
+|    0      1965      G   /usr/bin/gnome-shell                          49MiB |
+|    0      2943      G   /usr/lib/xorg/Xorg                           177MiB |
+|    0      3103      G   /usr/bin/gnome-shell                          97MiB |
+|    0      3511      G   ...uest-channel-token=13252725915974596027    76MiB |
++-----------------------------------------------------------------------------+
+```
+### Step 3, [Install NVIDIA-docker](https://chunml.github.io/ChunML.github.io/project/Installing-NVIDIA-Docker-On-Ubuntu-16.04/)
 *If* installed, remove NVIDIA docker 1.0:
 ```
 docker volume ls -q -f driver=nvidia-docker | xargs -r -I{} -n1 docker ps -q -a -f volume={} | xargs -r docker rm -f
