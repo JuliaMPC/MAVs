@@ -153,9 +153,8 @@ docker run --runtime=nvidia --rm nvidia/cuda nvidia-smi
 
 1. Make a directory to store MAVs in, e.g., ``$HOME/Documents/workspace/MAVs``. cd into that directory.
 
-2. Clone the `develop` branch of the repository
 ```
-git clone -b develop https://github.com/JuliaMPC/MAVs
+git clone https://github.com/JuliaMPC/MAVs
 ```
 
 3. Build image
