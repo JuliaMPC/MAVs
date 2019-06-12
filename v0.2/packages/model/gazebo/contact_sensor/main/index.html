@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>contact_sensor · MAVs</title><link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css" rel="stylesheet" type="text/css"/><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../../../../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.2.0/require.min.js" data-main="../../../../../assets/documenter.js"></script><script src="../../../../../siteinfo.js"></script><script src="../../../../../../versions.js"></script><link href="../../../../../assets/documenter.css" rel="stylesheet" type="text/css"/><link href="../../../../../assets/style.css" rel="stylesheet" type="text/css"/></head><body><nav class="toc"><h1>MAVs</h1><select id="version-selector" onChange="window.location.href=this.value" style="visibility: hidden"></select><form class="search" id="search-form" action="../../../../../search/"><input id="search-query" name="q" type="text" placeholder="Search docs"/></form><ul><li><a class="toctext" href="../../../../../">Home</a></li><li><span class="toctext">Usage</span><ul><li><a class="toctext" href="../../../../../tutorials/basic/">Basic usage</a></li><li><a class="toctext" href="../../../../../tutorials/developer/">Developing MAVs</a></li></ul></li><li><span class="toctext">Sensing</span><ul><li><a class="toctext" href="../../vehicle_description/main/">vehicle_description</a></li><li class="current"><a class="toctext" href>contact_sensor</a><ul class="internal"><li><a class="toctext" href="#Input-1">Input</a></li><li><a class="toctext" href="#Output-1">Output</a></li><li><a class="toctext" href="#Example-use-case-in-a-.sdf-file:-1">Example use case in a .sdf file:</a></li></ul></li></ul></li><li><span class="toctext">Detection</span><ul><li><a class="toctext" href="../../../../computing/perception/obstacle_detector/main/">obstacle_detector</a></li></ul></li><li><span class="toctext">Vehicle model</span><ul><li><a class="toctext" href="../../../chrono/ros_chrono/main/">ros_chrono</a></li></ul></li><li><span class="toctext">Planning</span><ul><li><a class="toctext" href="../../../../computing/planning/nloptcontrol_planner/main/">nloptcontrol_planner</a></li><li><a class="toctext" href="../../../../computing/planning/mavs_ros_planner/main/">mavs<em>ros</em>planner</a></li></ul></li><li><span class="toctext">Controller</span><ul><li><a class="toctext" href="../../../../computing/controller/path_follower/main/">path_follower</a></li><li><a class="toctext" href="../../../../computing/controller/trajectory_follower/main/">trajectory_follower</a></li></ul></li><li><span class="toctext">Miscellaneous</span><ul><li><a class="toctext" href="../../../../system/system_shutdown/">system_shutdown</a></li><li><a class="toctext" href="../../../../system/data_logging/">data_logging</a></li><li><a class="toctext" href="../../../chrono/chrono_position_broadcaster/main/">chrono<em>position</em>broadcaster</a></li><li><a class="toctext" href="../../../../computing/perception/point_cloud_converter/">point<em>cloud</em>converter</a></li></ul></li><li><span class="toctext">System demos</span><ul><li><a class="toctext" href="../../../../system/demos/demoA/">demoA</a></li><li><a class="toctext" href="../../../../system/demos/demoB/">demoB</a></li><li><a class="toctext" href="../../../../system/demos/demoI/">demoI</a></li><li><a class="toctext" href="../../../../system/demos/demoM/">demoM</a></li><li><a class="toctext" href="../../../../system/demos/demoK/">demoK</a></li><li><a class="toctext" href="../../../../system/demos/demoZ/">demoZ</a></li></ul></li><li><span class="toctext">Docker</span><ul><li><a class="toctext" href="../../../../../docker/workflow/">Workflow</a></li><li><a class="toctext" href="../../../../../docker/notes/">Notes</a></li></ul></li><li><a class="toctext" href="../../../../../testing/main/">Testing</a></li><li><a class="toctext" href="../../../../../issues/main/">Troubleshooting</a></li></ul></nav><article id="docs"><header><nav><ul><li>Sensing</li><li><a href>contact_sensor</a></li></ul><a class="edit-page" href="https://github.com/JuliaMPC/MAVs/blob/master/docs/src/packages/model/gazebo/contact_sensor/main.md"><span class="fa"></span> Edit on GitHub</a></nav><hr/><div id="topbar"><span>contact_sensor</span><a class="fa fa-bars" href="#"></a></div></header><h1><a class="nav-anchor" id="contact_sensor-1" href="#contact_sensor-1">contact_sensor</a></h1><p>This package provides a Gazebo plugin: <code>libcontact_sensor_mavs.so</code> that can be used in .sdf files to detect collision of the associated link.</p><p>For developers that work on top of Gazebo, and wish to update plugins, do: <code>sudo apt-get install libgazebo8-dev</code></p><h2><a class="nav-anchor" id="Input-1" href="#Input-1">Input</a></h2><table><tr><th>Name</th><th>Description</th></tr><tr><td><code>rosParamName</code></td><td>Ros param that should be updated with truth values for collision detection</td></tr></table><h2><a class="nav-anchor" id="Output-1" href="#Output-1">Output</a></h2><p>When a collision is detected, the ros parameter is set to <code>true</code>, it is <code>false</code> at the start. Once a collsion is detected, the ros parameter will always be <code>true</code>.</p><h3><a class="nav-anchor" id="Note-1" href="#Note-1">Note</a></h3><ul><li>When <code>rosParamName</code> is not specified, the plugin defaults to <code>/vehicle_collided</code></li></ul><h2><a class="nav-anchor" id="Example-use-case-in-a-.sdf-file:-1" href="#Example-use-case-in-a-.sdf-file:-1">Example use case in a .sdf file:</a></h2><pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;sdf version=&quot;1.6&quot;&gt;
+  &lt;world name=&quot;default&quot;&gt;
+    &lt;include&gt;
+      &lt;uri&gt;model://ground_plane&lt;/uri&gt;
+    &lt;/include&gt;
+
+     &lt;include&gt;
+      &lt;uri&gt;model://sun&lt;/uri&gt;
+    &lt;/include&gt;
+
+    &lt;model name=&quot;box&quot;&gt;
+      &lt;link name=&quot;link&quot;&gt;
+        &lt;pose&gt;...&lt;/pose&gt;
+
+        &lt;collision name=&quot;box_collision&quot;&gt;
+          ...
+        &lt;/collision&gt;
+
+        &lt;visual name=&quot;visual&quot;&gt;
+          ...
+        &lt;/visual&gt;
+
+        &lt;sensor name=&quot;my_contact&quot; type=&quot;contact&quot;&gt;
+          &lt;plugin name=&quot;contact_sensor&quot; filename=&quot;libcontact_sensor_mavs.so&quot;&gt;
+            &lt;rosParamName&gt;/vehicle_collided&lt;/rosParamName&gt;
+          &lt;/plugin&gt;
+          &lt;contact&gt;
+            &lt;collision&gt;box_collision&lt;/collision&gt;
+          &lt;/contact&gt;
+          &lt;update_rate&gt;5&lt;/update_rate&gt;
+        &lt;/sensor&gt;
+      &lt;/link&gt;
+    &lt;/model&gt;
+  &lt;/world&gt;
+&lt;/sdf&gt;</code></pre><footer><hr/><a class="previous" href="../../vehicle_description/main/"><span class="direction">Previous</span><span class="title">vehicle_description</span></a><a class="next" href="../../../../computing/perception/obstacle_detector/main/"><span class="direction">Next</span><span class="title">obstacle_detector</span></a></footer></article></body></html>
