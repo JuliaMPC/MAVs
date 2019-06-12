@@ -1,0 +1,62 @@
+git add -A
+git commit -m "som"
+git push origin master
+
+
+
+**************************************
+update package
+Pkg.update("NLOptControl")
+Pkg.update("PrettyPlots")
+Pkg.update("VehicleModels")
+
+reopen julia
+
+
+update Shared control code
+cd c/Users/zhengys/OCP.jl
+
+git fetch upstream
+git merge upstream/master
+
+git merge upstream/master -m "awdnawo"
+
+**************************************
+###################################
+# TO ADD YOUR CODE TO MY MASTER
+################################
+1) push the new code to your remote repository
+git add -A
+git commit -m "say something useful here"
+git push origin master
+
+2) ask for a pull request online
+
+###################################
+# TO ADD YOUR CODE TO MY MASTER
+################################
+
+
+Run the code
+in shell
+cd c://Users/zhengys/OCP.jl/examples/sharedControl
+include("Initialization.jl")
+
+
+
+
+git remote add upstream https://github.com/huckl3b3rry87/OCP.jl.git
+
+
+http://unix.stackexchange.com/questions/93144/exit-vim-more-quickly
+
+
+git request-pull master https://github.com/huckl3b3rry87/OCP.jl master
+
+###################################
+# TO Pull (HUCK)
+################################
+git pull origin master
+###################################
+# TO Pull (HUCK)
+################################

@@ -1,0 +1,19 @@
+TODO
+
+==================
+# High Priority #
+==================
+
+===================
+# Medium Priority #
+===================
+
+=================
+# Low Priority #
+=================
+1) all constraints might be better met if they are added in order, lidar constraints obstacle avoidance constraints etc..
+2)  #XL=[NaN,NaN, NaN, NaN, psi_min, sa_min, u_min, NaN]; #NOTE this creates problems
+ #XU=[NaN,NaN, NaN, NaN, psi_max, sa_max, u_max, NaN];
+3) #  sm=createParallelModels(n,c,pa)
+4)  # save case data TODO    case_data, obs_data = case2dfs(c);
+5) make sure that the atan in lieu of atan2 is OK
