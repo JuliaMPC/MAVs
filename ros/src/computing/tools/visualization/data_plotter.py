@@ -153,7 +153,7 @@ class DataPlotter():
         self.tSolve_subplot.tick_params('both', labelsize='x-small')
         self.tSolve_subplot.grid(True)
         self.tSolve_subplot.set_xlim(1,self.solve_num_band)
-        self.tSolve_subplot.set_ylim(0,1.0)
+        self.tSolve_subplot.set_ylim(0,10.)
 
     def draw_frame(self):
         try:
